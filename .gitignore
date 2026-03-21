@@ -1,7 +1,9 @@
-# Compiled class file
+# ── Java / Maven ─────────────────────────────────────────────────────────────
+
+# Compiled class files
 *.class
 
-# Log file
+# Log files
 *.log
 
 # BlueJ files
@@ -10,7 +12,7 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package / archive files
 *.jar
 *.war
 *.nar
@@ -19,6 +21,38 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# JVM crash logs
 hs_err_pid*
 replay_pid*
+
+# Maven build output
+backend/target/
+
+# ── Node / Frontend ───────────────────────────────────────────────────────────
+
+# npm dependencies
+frontend/node_modules/
+
+# Vite production build output
+frontend/dist/
+
+# Test coverage reports (uploaded as CI artefacts)
+frontend/coverage/
+
+# Local environment files
+frontend/.env.local
+frontend/.env.*.local
+
+# ── Editor / IDE ──────────────────────────────────────────────────────────────
+
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# ── SonarQube ─────────────────────────────────────────────────────────────────
+
+.sonar/
+.scannerwork/
