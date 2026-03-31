@@ -92,24 +92,27 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- Surefire – unit tests (src/test/java/**/*Test.java) -->
+            <!-- Surefire – unit, security and architecture tests (*Test.java) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <includes>
                         <include>**/unit/**/*Test.java</include>
+                        <include>**/security/**/*Test.java</include>
+                        <include>**/architecture/**/*Test.java</include>
                     </includes>
                 </configuration>
             </plugin>
 
-            <!-- Failsafe – integration tests (*IT.java) -->
+            <!-- Failsafe – integration and security integration tests (*IT.java) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <includes>
                         <include>**/integration/**/*IT.java</include>
+                        <include>**/security/**/*IT.java</include>
                     </includes>
                 </configuration>
                 <executions>
