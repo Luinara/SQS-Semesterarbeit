@@ -17,8 +17,7 @@ SQS-Semesterarbeit/
 │       │   │   ├── service/          # Business logic
 │       │   │   ├── domain/           # Core models (user, task, pokemon, …)
 │       │   │   ├── repository/       # Data access layer (Spring Data JPA)
-│       │   │   ├── integration/      # External service communication (PokeAPI)
-│       │   │   └── util/             # Helper utilities
+│       │   │   └── integration/      # External service communication (PokeAPI)
 │       │   └── resources/
 │       │       ├── application.properties      # Base configuration
 │       │       └── application-dev.properties  # Development overrides
@@ -30,12 +29,7 @@ SQS-Semesterarbeit/
 │   ├── src/
 │   │   ├── api/                      # Backend communication layer
 │   │   ├── components/               # Reusable UI elements
-│   │   ├── features/                 # Domain-based modules (pokemon, tasks, user)
-│   │   ├── pages/                    # Routing-level views
-│   │   ├── hooks/                    # Reusable React hooks
-│   │   ├── store/                    # State management
-│   │   ├── types/                    # Shared TypeScript type definitions
-│   │   └── utils/                    # Pure helper functions
+│   │   └── pages/                    # Routing-level views
 │   ├── public/                       # Static assets
 │   ├── .env.example                  # Environment variable template
 │   ├── package.json
