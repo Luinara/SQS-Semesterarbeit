@@ -1,26 +1,27 @@
 # Testing Structure
 
-This directory contains cross-system tests that require the full stack to be running.
+This is the **single location** for all cross-system tests. Backend and frontend no longer have their own test folder hierarchies — all test categories live here.
 
-| Directory      | Purpose                                                                              |
-|----------------|--------------------------------------------------------------------------------------|
-| `unit/`        | Shared unit-test helpers or fixtures used by both backend and frontend               |
-| `integration/` | Full-stack integration tests — backend + frontend running together                   |
-| `e2e/`         | Browser-based end-to-end tests (Playwright) covering complete user journeys          |
-| `security/`    | Security / penetration tests — auth flows, protected endpoint access, injection checks |
-| `architecture/`| Architecture conformance tests (e.g. ArchUnit rules for the overall system)          |
+| Directory      | Purpose                                                                                   | Primary tools |
+|----------------|-------------------------------------------------------------------------------------------|---------------|
+| `unit/`        | Unit tests for isolated components/classes; also contains the Vitest global setup file    | JUnit 5 + Mockito, Vitest |
+| `integration/` | Full-stack integration tests — backend + frontend running together                        | Spring Boot Test, Testcontainers |
+| `e2e/`         | Browser-based end-to-end tests covering complete user journeys                            | Playwright |
+| `security/`    | Security / auth tests — protected endpoint access, JWT validation, injection checks       | Spring Security Test, OWASP ZAP |
+| `architecture/`| Architecture conformance tests (layer dependencies, naming rules)                         | ArchUnit |
 
-## Where tests live
+## Tooling wiring
 
-| Scope | Location | Tool |
-|---|---|---|
-| Backend unit tests | `backend/src/test/java/.../unit/` | JUnit 5 + Mockito |
-| Backend integration tests | `backend/src/test/java/.../integration/` | Spring Boot Test + H2 |
-| Backend security tests | `backend/src/test/java/.../security/` | Spring Security Test |
-| Backend architecture tests | `backend/src/test/java/.../architecture/` | ArchUnit |
-| Frontend unit tests | `frontend/tests/unit/` | Vitest + Testing Library |
-| Frontend e2e tests | `frontend/tests/e2e/` | Playwright |
-| Cross-system integration | `tests/integration/` | Custom / Testcontainers |
-| Cross-system e2e | `tests/e2e/` | Playwright |
-| Cross-system security | `tests/security/` | OWASP ZAP / custom |
-| Cross-system architecture | `tests/architecture/` | ArchUnit / custom |
+- **Vitest** (frontend unit tests) looks for test files in `tests/unit/**/*.{test,spec}.{ts,tsx}` — configured via `frontend/vite.config.ts`
+- **Playwright** (e2e) scans `tests/e2e/` — configured via `frontend/playwright.config.ts`
+- **Maven Surefire** picks up `**/*Test.java` inside `backend/src/test/java/`
+- **Maven Failsafe** picks up `**/*IT.java` inside `backend/src/test/java/`
+
+## Naming conventions
+
+| Type | Suffix | Example |
+|------|--------|---------|
+| Backend unit | `*Test.java` | `PokemonServiceTest.java` |
+| Backend integration | `*IT.java` | `PokemonControllerIT.java` |
+| Frontend unit | `*.test.ts(x)` | `pokemonService.test.ts` |
+| Frontend e2e | `*.spec.ts` | `homepage.spec.ts` |

@@ -21,14 +21,15 @@ export default defineConfig({
     },
   },
   test: {
-    // Vitest configuration
+    // Vitest configuration – test files live in the root tests/ directory
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./tests/unit/setup.ts'],
+    setupFiles: ['../tests/unit/setup.ts'],
+    include: ['../tests/unit/**/*.{test,spec}.{ts,tsx}'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
-      exclude: ['node_modules/', 'tests/'],
+      exclude: ['node_modules/'],
     },
   },
 });

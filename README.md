@@ -23,13 +23,8 @@ SQS-Semesterarbeit/
 │       │       ├── application.properties      # Base configuration
 │       │       └── application-dev.properties  # Development overrides
 │       └── test/
-│           ├── java/com/example/app/
-│           │   ├── unit/             # Unit tests (*Test.java)
-│           │   ├── integration/      # Integration tests (*IT.java)
-│           │   ├── security/         # Security / auth tests
-│           │   └── architecture/     # ArchUnit architecture rules
 │           └── resources/
-│               └── application-test.properties
+│               └── application-test.properties # Test datasource (H2)
 │
 ├── frontend/                         # TypeScript / React frontend
 │   ├── src/
@@ -41,22 +36,19 @@ SQS-Semesterarbeit/
 │   │   ├── store/                    # State management
 │   │   ├── types/                    # Shared TypeScript type definitions
 │   │   └── utils/                    # Pure helper functions
-│   ├── tests/
-│   │   ├── unit/                     # Vitest unit tests
-│   │   └── e2e/                      # Playwright end-to-end tests
 │   ├── public/                       # Static assets
 │   ├── .env.example                  # Environment variable template
 │   ├── package.json
-│   ├── playwright.config.ts          # Playwright (e2e) configuration
+│   ├── playwright.config.ts          # Playwright → points at tests/e2e/
 │   ├── tsconfig.json
-│   └── vite.config.ts                # Vite / Vitest configuration
+│   └── vite.config.ts                # Vite / Vitest → points at tests/unit/
 │
-├── tests/                            # Cross-system tests
-│   ├── unit/                         # Shared test utilities
+├── tests/                            # ALL tests live here (single source of truth)
+│   ├── unit/                         # Unit tests + Vitest setup file
 │   ├── integration/                  # Full-stack integration tests
-│   ├── e2e/                          # Full-stack browser tests
-│   ├── security/                     # Security / auth / penetration tests
-│   └── architecture/                 # System-level architecture conformance
+│   ├── e2e/                          # Browser end-to-end tests (Playwright)
+│   ├── security/                     # Auth / protected endpoint / security tests
+│   └── architecture/                 # Architecture conformance tests (ArchUnit)
 │
 ├── docs/                             # Project documentation
 │   ├── arc42/                        # Architecture documentation (arc42 template)
@@ -135,19 +127,23 @@ npm run dev
 
 ## Running Tests
 
+All tests live in `tests/`. Tooling is wired automatically:
+
 ```bash
-# Backend unit + architecture + security tests
+# Backend unit tests  (**/*Test.java  via Maven Surefire)
 cd backend && mvn test
 
-# Backend integration tests
+# Backend integration tests  (**/*IT.java  via Maven Failsafe)
 cd backend && mvn verify
 
-# Frontend unit tests
+# Frontend unit tests  (tests/unit/**/*.{test,spec}.{ts,tsx}  via Vitest)
 cd frontend && npm test
 
-# Frontend e2e tests (dev server must be running)
+# E2E tests  (tests/e2e/**/*.spec.ts  via Playwright)
 cd frontend && npm run test:e2e
 ```
+
+See [`tests/README.md`](tests/README.md) for full details on naming conventions and test runners.
 
 ---
 
