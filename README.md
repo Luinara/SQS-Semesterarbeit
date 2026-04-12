@@ -148,3 +148,21 @@ Architecture documentation lives in [`docs/`](docs/):
 - [`docs/arc42/`](docs/arc42/) – arc42 architecture documentation
 - [`docs/adr/`](docs/adr/) – Architecture Decision Records
 - [`docs/diagrams/`](docs/diagrams/) – System and component diagrams
+
+
+## Tasks
+
+- CI/CD:
+- Figma Frontend design:
+  - Startseite (öffentlicher endpunkt)
+  - Login/ Sign up seite
+  - Pokemon task liste
+- Datenbank Design:
+  - ex design user, tasks mit haken?, -> was für pokemon/entwicklung
+- Frontent API:
+  - wann schickt die API was für requests mit welcher erwarteten Antwort
+- Implementierung mit halbem TTD
+
+Fragen an den Prof
+
+- Externer Dienst PokeAPI genug? Wann muss aufgerufen werden?
