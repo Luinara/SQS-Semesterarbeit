@@ -1,0 +1,46 @@
+services:
+
+  # ── PostgreSQL database ─────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sqs_db
+      POSTGRES_USER: sqs_user
+      POSTGRES_PASSWORD: sqs_password   # TODO: replace with a secret in production
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  # ── Java / Spring Boot backend ──────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile             # TODO: create Dockerfile
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sqs_db
+      SPRING_DATASOURCE_USERNAME: sqs_user
+      SPRING_DATASOURCE_PASSWORD: sqs_password
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  # ── TypeScript / React frontend ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile             # TODO: create Dockerfile
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
