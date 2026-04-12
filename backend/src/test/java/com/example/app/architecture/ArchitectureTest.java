@@ -1,4 +1,4 @@
-package com.sqs.selfcare.architecture;
+package com.example.app.architecture;
 
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -16,16 +16,20 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  *
  * <p>Expected package structure:
  * <pre>
- *   com.sqs.selfcare
+ *   com.example.app
  *   ├── controller   – HTTP entry points (@RestController / @Controller)
  *   ├── service      – Business logic (@Service)
- *   └── repository   – Data access (@Repository)
+ *   ├── repository   – Data access (@Repository)
+ *   ├── domain       – Core models (entities, value objects)
+ *   ├── config       – Spring configuration
+ *   └── integration  – External service communication
  * </pre>
  *
- * <p>These rules pass vacuously when no matching classes exist yet,
- * and will automatically enforce the architecture as the codebase grows.
+ * <p>Rules pass vacuously while packages are still empty (controlled by
+ * {@code archunit.properties}). They will automatically enforce the
+ * architecture as the codebase grows.
  */
-@AnalyzeClasses(packages = "com.sqs.selfcare")
+@AnalyzeClasses(packages = "com.example.app")
 class ArchitectureTest {
 
     @ArchTest

@@ -1,17 +1,24 @@
 # CI Pipeline – SQS Self-Care Companion
 #
-# Stages: build → test → analyze
+# Stages (in dependency order):
+#   1. backend-build   – compile the Java backend
+#   2. backend-test    – unit tests (Surefire) + integration tests (Failsafe) + JaCoCo coverage
+#   3. backend-analyze – Checkstyle, SpotBugs, SonarQube
+#   4. frontend-build  – TypeScript type-check + Vite production build
+#   5. frontend-test   – Vitest unit tests with v8 coverage
+#   6. frontend-analyze – ESLint, Prettier format-check, SonarQube
+#   7. e2e             – Playwright browser tests (runs after backend + frontend pass)
 #
 # To extend this pipeline, add new jobs below the existing ones.
 # For example, add a "security-scan" job after "backend-analyze" or
-# an "e2e-test" job that depends on both "backend-test" and "frontend-test".
+# a "performance-test" job that depends on "e2e".
 #
 # Required repository secrets (Settings → Secrets and variables → Actions):
 #   SONAR_TOKEN     – SonarQube / SonarCloud authentication token
 #   SONAR_HOST_URL  – SonarQube server URL (e.g. https://sonarcloud.io)
 #                     Leave unset to skip SonarQube analysis gracefully.
 
-name: CI Pipeline
+name: CI
 
 on:
   push:
@@ -19,15 +26,15 @@ on:
   pull_request:
     branches: [main, develop]
 
-env:
-  JAVA_VERSION: '17'
-  NODE_VERSION: '20'
-
 # Restrict default GITHUB_TOKEN permissions to the minimum required.
 # Jobs that need additional access (e.g. SonarQube PR decoration) may override
 # this at the job level with a more specific `permissions` block.
 permissions:
   contents: read
+
+env:
+  JAVA_VERSION: '21'
+  NODE_VERSION: '20'
 
 jobs:
 
@@ -114,7 +121,7 @@ jobs:
         run: mvn --batch-mode --no-transfer-progress checkstyle:check
 
       - name: SpotBugs
-        run: mvn --batch-mode --no-transfer-progress spotbugs:check
+        run: mvn --batch-mode --no-transfer-progress compile spotbugs:check
 
       - name: SonarQube analysis
         # Re-runs verify to produce fresh coverage data, then sends it to SonarQube.
@@ -150,10 +157,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
-        # Use "npm ci" once a package-lock.json has been committed to the repository.
-        run: npm install
+        run: npm ci
 
       - name: TypeScript type check
         run: npm run type-check
@@ -178,9 +186,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run tests with coverage
         run: npm run test:coverage
@@ -212,9 +222,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: ESLint
         run: npm run lint
@@ -243,3 +255,42 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # END-TO-END TESTS
+  # ──────────────────────────────────────────────────────────────────────────
+
+  e2e:
+    name: 'End-to-End Tests (Playwright)'
+    runs-on: ubuntu-latest
+    needs: [backend-test, frontend-test]
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run e2e tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+          retention-days: 14
