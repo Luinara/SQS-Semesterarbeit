@@ -28,14 +28,11 @@
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <archunit.version>1.3.0</archunit.version>
-        <!-- JaCoCo XML report path consumed by the SonarQube Maven plugin -->
+        <!-- JaCoCo XML report path – used when running `mvn sonar:sonar` locally.
+             The CI uses sonarqube-scan-action with root sonar-project.properties instead. -->
         <sonar.coverage.jacoco.xmlReportPaths>
             ${project.build.directory}/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
-        <!-- Checkstyle report path consumed by the SonarQube Maven plugin -->
-        <sonar.java.checkstyle.reportPaths>
-            ${project.build.directory}/checkstyle-result.xml
-        </sonar.java.checkstyle.reportPaths>
     </properties>
 
     <!-- ─── Dependencies ─────────────────────────────────────────────────── -->

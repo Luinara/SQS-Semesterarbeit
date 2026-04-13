@@ -1,22 +1,18 @@
 # CI Pipeline – SQS Self-Care Companion
 #
-# Stages (in dependency order):
-#   1. backend-build   – compile the Java backend
-#   2. backend-test    – unit tests (Surefire) + integration tests (Failsafe) + JaCoCo coverage
-#   3. backend-analyze – Checkstyle, SpotBugs, SonarQube
-#   4. frontend-build  – TypeScript type-check + Vite production build
-#   5. frontend-test   – Vitest unit tests with v8 coverage
-#   6. frontend-analyze – ESLint, Prettier format-check, SonarQube
-#   7. e2e             – Playwright browser tests (runs after backend + frontend pass)
+# Job dependency graph:
 #
-# To extend this pipeline, add new jobs below the existing ones.
-# For example, add a "security-scan" job after "backend-analyze" or
-# a "performance-test" job that depends on "e2e".
+#   backend-build ──► backend-test ──► backend-analyze ──────────────┐
+#                          │                                          ├──► sonarqube
+#   frontend-build ─┬─► frontend-test ──► (coverage artifact) ───────┤
+#                   └─► frontend-analyze ──────────────────────────── ┘
+#
+#   backend-test + frontend-test ──► e2e
 #
 # Required repository secrets (Settings → Secrets and variables → Actions):
 #   SONAR_TOKEN     – SonarQube / SonarCloud authentication token
 #   SONAR_HOST_URL  – SonarQube server URL (e.g. https://sonarcloud.io)
-#                     Leave unset to skip SonarQube analysis gracefully.
+#                     Both secrets must be set; analysis is skipped if either is absent.
 
 name: CI
 
@@ -27,8 +23,6 @@ on:
     branches: [main, develop]
 
 # Restrict default GITHUB_TOKEN permissions to the minimum required.
-# Jobs that need additional access (e.g. SonarQube PR decoration) may override
-# this at the job level with a more specific `permissions` block.
 permissions:
   contents: read
 
@@ -98,7 +92,7 @@ jobs:
   # ──────────────────────────────────────────────────────────────────────────
 
   backend-analyze:
-    name: 'Backend – Static Analysis & SonarQube'
+    name: 'Backend – Checkstyle & SpotBugs'
     runs-on: ubuntu-latest
     needs: backend-test
     defaults:
@@ -107,8 +101,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Full history required for accurate SonarQube blame data
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
@@ -122,22 +114,6 @@ jobs:
 
       - name: SpotBugs
         run: mvn --batch-mode --no-transfer-progress compile spotbugs:check
-
-      - name: SonarQube analysis
-        # Re-runs verify to produce fresh coverage data, then sends it to SonarQube.
-        # Skips gracefully when SONAR_TOKEN is not configured.
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        run: |
-          if [ -z "$SONAR_TOKEN" ]; then
-            echo "⚠️  SONAR_TOKEN is not configured – skipping SonarQube analysis."
-            echo "   Set SONAR_TOKEN and SONAR_HOST_URL as repository secrets to enable it."
-            exit 0
-          fi
-          mvn --batch-mode --no-transfer-progress verify sonar:sonar \
-            -Dsonar.host.url="$SONAR_HOST_URL" \
-            -Dsonar.token="$SONAR_TOKEN"
 
   # ──────────────────────────────────────────────────────────────────────────
   # FRONTEND
@@ -206,7 +182,7 @@ jobs:
   # ──────────────────────────────────────────────────────────────────────────
 
   frontend-analyze:
-    name: 'Frontend – Lint, Format & SonarQube'
+    name: 'Frontend – Lint & Format'
     runs-on: ubuntu-latest
     needs: frontend-build
     defaults:
@@ -215,8 +191,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Full history required for accurate SonarQube blame data
 
       - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
@@ -234,24 +208,81 @@ jobs:
       - name: Prettier format check
         run: npm run format:check
 
-      - name: Check SonarQube configuration
+  # ──────────────────────────────────────────────────────────────────────────
+  # SONARQUBE – single analysis for the whole repository
+  # ──────────────────────────────────────────────────────────────────────────
+
+  sonarqube:
+    name: 'SonarQube Analysis'
+    runs-on: ubuntu-latest
+    # Needs the analyze jobs (so Checkstyle/SpotBugs/ESLint/Prettier pass first)
+    # and the test jobs (which upload the coverage artifacts consumed below).
+    needs: [backend-analyze, frontend-analyze, frontend-test]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history is required for accurate SonarQube blame data and
+          # new-code detection on pull requests.
+          fetch-depth: 0
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # Compile the backend so SonarQube can perform bytecode analysis.
+      # Tests are skipped here because coverage data comes from artifacts.
+      - name: Compile backend
+        run: mvn --batch-mode --no-transfer-progress compile -DskipTests
+        working-directory: backend
+
+      # Install frontend dependencies so SonarQube can resolve TypeScript types.
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      # Download coverage reports produced by the test jobs.
+      - name: Download JaCoCo coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jacoco-report
+          path: backend/target/site/jacoco
+
+      - name: Download frontend coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage
+
+      - name: Check SonarQube secrets
         id: sonar-check
         run: |
-          if [ -n "$SONAR_TOKEN" ]; then
+          if [ -n "$SONAR_TOKEN" ] && [ -n "$SONAR_HOST_URL" ]; then
             echo "configured=true" >> "$GITHUB_OUTPUT"
           else
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "⚠️  SONAR_TOKEN is not configured – skipping SonarQube analysis."
-            echo "   Set SONAR_TOKEN and SONAR_HOST_URL as repository secrets to enable it."
+            echo "⚠️  SONAR_TOKEN or SONAR_HOST_URL is not configured – skipping SonarQube analysis."
+            echo "   Set both secrets in Settings → Secrets and variables → Actions."
           fi
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: SonarQube analysis
+      # Runs the SonarQube Scanner using the root sonar-project.properties.
+      # Analyses both the Java backend and the TypeScript frontend in one pass.
+      - name: SonarQube scan
         if: steps.sonar-check.outputs.configured == 'true'
         uses: sonarsource/sonarqube-scan-action@v5
-        with:
-          projectBaseDir: frontend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
