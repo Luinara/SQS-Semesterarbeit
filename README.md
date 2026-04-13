@@ -148,3 +148,118 @@ Architecture documentation lives in [`docs/`](docs/):
 - [`docs/arc42/`](docs/arc42/) – arc42 architecture documentation
 - [`docs/adr/`](docs/adr/) – Architecture Decision Records
 - [`docs/diagrams/`](docs/diagrams/) – System and component diagrams
+
+# Project Roadmap & TODOs
+
+## Project Setup (Bootstrap Phase)
+
+* [x] Set up CI/CD pipeline (GitHub Actions)
+* [x] Integrate static analysis (Checkstyle, SpotBugs, ESLint, Prettier)
+* [x] Prepare SonarQube integration (analysis + coverage reporting)
+* [ ] Enable SonarQube Quality Gate (later phase)
+* [ ] Define coding conventions and project structure
+
+---
+
+## Frontend (React + TypeScript)
+
+* [ ] Create UI design in Figma
+
+    * [ ] Landing page (public endpoint)
+    * [ ] Login / Sign-up page
+    * [ ] Pokémon task dashboard
+* [ ] Implement component structure (clean separation of concerns)
+* [ ] Connect frontend to backend API
+* [ ] Add frontend unit tests (Vitest)
+* [ ] Add E2E tests (Playwright user flows)
+
+---
+
+## Backend (Spring Boot)
+
+* [ ] Define layered architecture (Controller / Service / Repository)
+* [ ] Implement REST endpoints
+
+    * [ ] Public endpoint (e.g. landing / health)
+    * [ ] Protected endpoints (user + tasks)
+* [ ] Implement authentication (login & signup)
+* [ ] Implement business logic (task tracking → Pokémon progression)
+* [ ] Integrate external service (PokeAPI)
+* [ ] Add resilience (timeouts, retries, fallback handling)
+
+---
+
+## Data & Persistence
+
+* [ ] Design database schema
+
+    * [ ] User entity
+    * [ ] Task entity (completion tracking)
+    * [ ] Pokémon / progression model
+* [ ] Implement JPA repositories
+* [ ] Add integration tests with H2 database
+
+---
+
+## API Design
+
+* [ ] Define API contract (request/response structure)
+* [ ] Document endpoints (e.g. OpenAPI/Swagger)
+* [ ] Ensure consistent error handling
+* [ ] Validate input (DTO validation)
+
+---
+
+## Testing Strategy (Test Pyramid)
+
+* [ ] Unit tests (business logic)
+* [ ] Integration tests (database + API)
+* [ ] E2E tests (user flows via UI)
+* [ ] Security tests (protected endpoints → 401/403 cases)
+* [ ] Architecture tests (ArchUnit rules)
+
+---
+
+## Quality & CI/CD
+
+* [ ] Enforce ≥80% test coverage (JaCoCo + SonarQube)
+* [ ] Enable SonarQube Quality Gate (fail pipeline on issues)
+* [ ] Fix all critical/high SonarQube issues
+* [ ] Ensure all PRs pass CI before merge
+
+---
+
+## Architecture & Documentation
+
+* [ ] Create arc42 documentation
+* [ ] Create C4 diagrams (Context, Container, Component)
+* [ ] Document architectural decisions (ADRs)
+* [ ] Document test concept and CI pipeline
+
+---
+
+## Deployment & Runability
+
+* [ ] Provide reproducible setup (max. 2 commands)
+
+    * e.g. Docker Compose or startup script
+* [ ] Ensure project runs locally without manual setup
+* [ ] Prepare demo scenario
+
+---
+
+## Open Questions
+
+* [ ] Is PokeAPI sufficient as external service?
+* [ ] When should external API calls be triggered?
+* [ ] How is Pokémon progression mapped to user tasks?
+* [ ] What authentication strategy is used (JWT, session, etc.)?
+
+---
+
+## Current Mode
+
+The project is currently in **bootstrap phase**:
+
+* CI/CD and tooling are set up with relaxed constraints
+* Quality gates (coverage ≥80%, strict SonarQube checks) will be enforced in a later phase
