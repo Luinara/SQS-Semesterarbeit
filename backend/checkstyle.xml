@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+  Checkstyle configuration for the SQS Self-Care Companion backend.
+
+  Enforces a pragmatic subset of Java coding standards that keeps the codebase
+  consistent without being overly prescriptive.  Extend this file to add
+  stricter rules as the project matures (e.g. Javadoc requirements, stricter
+  coupling metrics, or additional import ordering rules).
+
+  Applied to src/main/java only (test sources are excluded – see pom.xml).
+-->
+<module name="Checker">
+    <property name="severity" value="error"/>
+    <property name="fileExtensions" value="java"/>
+
+    <!-- Every source file must use spaces, not tabs -->
+    <module name="FileTabCharacter"/>
+
+    <!-- Every source file must end with a newline character -->
+    <module name="NewlineAtEndOfFile"/>
+
+    <module name="TreeWalker">
+
+        <!-- ── Imports ──────────────────────────────────────────────────── -->
+
+        <!-- Wildcard imports hide dependencies and reduce readability -->
+        <module name="AvoidStarImport"/>
+
+        <!-- Unused imports are dead code -->
+        <module name="UnusedImports"/>
+
+        <!-- ── Naming conventions ───────────────────────────────────────── -->
+
+        <!-- Package names must be fully lower-case (e.g. com.example.service) -->
+        <module name="PackageName">
+            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+        </module>
+
+        <!-- Class / interface / enum / annotation names: UpperCamelCase -->
+        <module name="TypeName"/>
+
+        <!-- Method names: lowerCamelCase -->
+        <module name="MethodName"/>
+
+        <!-- Parameter names: lowerCamelCase -->
+        <module name="ParameterName"/>
+
+        <!-- Local variable names: lowerCamelCase -->
+        <module name="LocalVariableName"/>
+
+        <!-- Instance field names: lowerCamelCase -->
+        <module name="MemberName"/>
+
+        <!-- Static final constants: UPPER_SNAKE_CASE -->
+        <module name="ConstantName"/>
+
+        <!-- ── Code quality ─────────────────────────────────────────────── -->
+
+        <!-- Overriding equals() without hashCode() (or vice-versa) breaks contracts -->
+        <module name="EqualsHashCode"/>
+
+        <!-- Avoid redundant boolean comparisons like "if (flag == true)" -->
+        <module name="SimplifyBooleanExpression"/>
+
+        <!-- Avoid "if (cond) return true; else return false;" patterns -->
+        <module name="SimplifyBooleanReturn"/>
+
+        <!-- String comparison must use .equals(), not == -->
+        <module name="StringLiteralEquality"/>
+
+    </module>
+
+    <!-- ── Formatting ────────────────────────────────────────────────────── -->
+
+    <!-- Lines should not exceed 120 characters (Checker-level, not TreeWalker) -->
+    <module name="LineLength">
+        <property name="max" value="120"/>
+    </module>
+
+</module>
