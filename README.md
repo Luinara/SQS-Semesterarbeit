@@ -172,6 +172,9 @@ Architecture documentation lives in [`docs/`](docs/):
 * [ ] Connect frontend to backend API
 * [ ] Add frontend unit tests (Vitest)
 * [ ] Add E2E tests (Playwright user flows)
+  > **TODO:** `tests/e2e/placeholder.spec.ts` is a temporary smoke test that
+  > only checks the app loads. It must be replaced with real user-flow tests
+  > once the application features are implemented (login, task dashboard, etc.).
 
 ---
 
@@ -215,6 +218,9 @@ Architecture documentation lives in [`docs/`](docs/):
 * [ ] Unit tests (business logic)
 * [ ] Integration tests (database + API)
 * [ ] E2E tests (user flows via UI)
+  > **TODO:** Placeholder test exists in `tests/e2e/placeholder.spec.ts` to
+  > keep CI green. Replace with real Playwright user-flow tests once the
+  > application is running.
 * [ ] Security tests (protected endpoints → 401/403 cases)
 * [ ] Architecture tests (ArchUnit rules)
 
