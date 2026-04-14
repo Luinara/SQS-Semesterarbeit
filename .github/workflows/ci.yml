@@ -1,3 +1,19 @@
+# CI Pipeline – SQS Self-Care Companion
+#
+# Job dependency graph:
+#
+#   backend-build ──► backend-test ──► backend-analyze ──────────────┐
+#                          │                                          ├──► sonarqube
+#   frontend-build ─┬─► frontend-test ──► (coverage artifact) ───────┤
+#                   └─► frontend-analyze ──────────────────────────── ┘
+#
+#   backend-test + frontend-test ──► e2e
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   SONAR_TOKEN     – SonarQube / SonarCloud authentication token
+#   SONAR_HOST_URL  – SonarQube server URL (e.g. https://sonarcloud.io)
+#                     Both secrets must be set; analysis is skipped if either is absent.
+
 name: CI
 
 on:
@@ -6,79 +22,306 @@ on:
   pull_request:
     branches: [main, develop]
 
+# Restrict default GITHUB_TOKEN permissions to the minimum required.
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: '21'
+  NODE_VERSION: '20'
+
 jobs:
-  backend:
-    name: Backend – Build & Test
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # BACKEND
+  # ──────────────────────────────────────────────────────────────────────────
+
+  backend-build:
+    name: 'Backend – Build'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Java 21
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
           cache: maven
 
-      - name: Build and run unit tests
-        run: mvn --no-transfer-progress test
-        working-directory: backend
+      - name: Compile
+        run: mvn --batch-mode --no-transfer-progress clean compile -DskipTests
 
-      - name: Run integration tests
-        run: mvn --no-transfer-progress verify -P integration-tests
-        working-directory: backend
+  # ──────────────────────────────────────────────────────────────────────────
 
-  frontend:
-    name: Frontend – Lint, Type-check & Test
+  backend-test:
+    name: 'Backend – Unit & Integration Tests'
     runs-on: ubuntu-latest
+    needs: backend-build
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js 20
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
+
+      # "verify" runs unit tests (Surefire), integration tests (Failsafe),
+      # and then generates the JaCoCo coverage report.
+      - name: Run tests and generate JaCoCo coverage report
+        run: mvn --batch-mode --no-transfer-progress verify
+
+      - name: Upload JaCoCo coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jacoco-report
+          path: backend/target/site/jacoco
+          retention-days: 14
+
+  # ──────────────────────────────────────────────────────────────────────────
+
+  backend-analyze:
+    name: 'Backend – Checkstyle & SpotBugs'
+    runs-on: ubuntu-latest
+    needs: backend-test
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
+
+      - name: Checkstyle
+        run: mvn --batch-mode --no-transfer-progress checkstyle:check
+
+      - name: SpotBugs
+        run: mvn --batch-mode --no-transfer-progress compile spotbugs:check
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # FRONTEND
+  # ──────────────────────────────────────────────────────────────────────────
+
+  frontend-build:
+    name: 'Frontend – Build & Type Check'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        working-directory: frontend
 
-      - name: Type-check
+      - name: TypeScript type check
         run: npm run type-check
+
+      - name: Production build
+        run: npm run build
+
+  # ──────────────────────────────────────────────────────────────────────────
+
+  frontend-test:
+    name: 'Frontend – Unit Tests & Coverage'
+    runs-on: ubuntu-latest
+    needs: frontend-build
+    defaults:
+      run:
         working-directory: frontend
 
-      - name: Lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage
+          retention-days: 14
+
+  # ──────────────────────────────────────────────────────────────────────────
+
+  frontend-analyze:
+    name: 'Frontend – Lint & Format'
+    runs-on: ubuntu-latest
+    needs: frontend-build
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint
         run: npm run lint
+
+      - name: Prettier format check
+        run: npm run format:check
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # SONARQUBE – single analysis for the whole repository
+  # ──────────────────────────────────────────────────────────────────────────
+
+  sonarqube:
+    name: 'SonarQube Analysis'
+    runs-on: ubuntu-latest
+    # Needs the analyze jobs (so Checkstyle/SpotBugs/ESLint/Prettier pass first)
+    # and the test jobs (which upload the coverage artifacts consumed below).
+    needs: [backend-analyze, frontend-analyze, frontend-test]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history is required for accurate SonarQube blame data and
+          # new-code detection on pull requests.
+          fetch-depth: 0
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # Compile the backend so SonarQube can perform bytecode analysis.
+      # Tests are skipped here because coverage data comes from artifacts.
+      - name: Compile backend
+        run: mvn --batch-mode --no-transfer-progress compile -DskipTests
+        working-directory: backend
+
+      # Install frontend dependencies so SonarQube can resolve TypeScript types.
+      - name: Install frontend dependencies
+        run: npm ci
         working-directory: frontend
 
-      - name: Unit tests
-        run: npm test
-        working-directory: frontend
+      # Download coverage reports produced by the test jobs.
+      - name: Download JaCoCo coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-jacoco-report
+          path: backend/target/site/jacoco
+
+      - name: Download frontend coverage report
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage
+
+      - name: Check SonarQube secrets
+        id: sonar-check
+        run: |
+          if [ -n "$SONAR_TOKEN" ] && [ -n "$SONAR_HOST_URL" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "⚠️  SONAR_TOKEN or SONAR_HOST_URL is not configured – skipping SonarQube analysis."
+            echo "   Set both secrets in Settings → Secrets and variables → Actions."
+          fi
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      # Runs the SonarQube Scanner using the root sonar-project.properties.
+      # Analyses both the Java backend and the TypeScript frontend in one pass.
+      - name: SonarQube scan
+        if: steps.sonar-check.outputs.configured == 'true'
+        uses: sonarsource/sonarqube-scan-action@2f77a1ec69fb1d595b06f35ab27e97605bdef703 # v5.3.2
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+  # ──────────────────────────────────────────────────────────────────────────
+  # END-TO-END TESTS
+  # ──────────────────────────────────────────────────────────────────────────
 
   e2e:
-    name: End-to-End Tests
+    name: 'End-to-End Tests (Playwright)'
     runs-on: ubuntu-latest
-    needs: [backend, frontend]
+    needs: [backend-test, frontend-test]
+    defaults:
+      run:
+        working-directory: frontend
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Node.js 20
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
         run: npm ci
-        working-directory: frontend
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-        working-directory: frontend
 
       - name: Run e2e tests
         run: npm run test:e2e
-        working-directory: frontend
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+          retention-days: 14

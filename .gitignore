@@ -77,6 +77,10 @@ pnpm-debug.log*
 # Vite
 .vite/
 
+# Playwright test results
+playwright-report/
+test-results/
+
 ##############################################
 # IDE / Editor files
 ##############################################
@@ -86,7 +90,6 @@ pnpm-debug.log*
 *.iml
 *.iws
 *.ipr
-out/
 
 # Eclipse
 .classpath
@@ -100,7 +103,6 @@ out/
 # NetBeans
 nbproject/
 nbbuild/
-dist/
 nbdist/
 .nb-gradle/
 
@@ -120,6 +122,13 @@ nbdist/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+##############################################
+# SonarQube
+##############################################
+
+.sonar/
+.scannerwork/
 
 ##############################################
 # Miscellaneous

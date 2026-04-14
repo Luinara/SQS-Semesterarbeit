@@ -6,9 +6,28 @@ import { resolve } from 'path';
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-    },
+    // Explicit aliases ensure that bare module imports made by test files in
+    // ../tests/unit/ (outside this Vite project root) still resolve to the
+    // correct packages installed in frontend/node_modules.
+    alias: [
+      { find: '@', replacement: resolve(__dirname, './src') },
+      // React runtime – must be a singleton so all hooks work correctly
+      { find: 'react', replacement: resolve(__dirname, 'node_modules/react') },
+      { find: 'react-dom', replacement: resolve(__dirname, 'node_modules/react-dom') },
+      // Testing helpers used by unit tests
+      {
+        find: '@testing-library/react',
+        replacement: resolve(__dirname, 'node_modules/@testing-library/react'),
+      },
+      {
+        find: '@testing-library/jest-dom',
+        replacement: resolve(__dirname, 'node_modules/@testing-library/jest-dom'),
+      },
+      {
+        find: '@testing-library/user-event',
+        replacement: resolve(__dirname, 'node_modules/@testing-library/user-event'),
+      },
+    ],
   },
   server: {
     port: 3000,
@@ -19,12 +38,19 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    // Allow Vitest/Vite server to load files from the root tests/ directory,
+    // which is one level above this frontend/ package.
+    fs: {
+      allow: ['..'],
+    },
   },
   test: {
     // Vitest configuration – test files live in the root tests/ directory
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['../tests/unit/setup.ts'],
+    // Setup file is kept inside frontend/ so Vite can resolve its dependencies
+    // (e.g. @testing-library/jest-dom) from the correct node_modules folder.
+    setupFiles: ['./vitest.setup.ts'],
     include: ['../tests/unit/**/*.{test,spec}.{ts,tsx}'],
     coverage: {
       provider: 'v8',
