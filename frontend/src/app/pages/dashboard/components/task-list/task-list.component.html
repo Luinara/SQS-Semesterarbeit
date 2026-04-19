@@ -1,0 +1,31 @@
+<section class="task-list">
+  <header class="task-list__header">
+    <div>
+      <span class="eyebrow">Heute im Fokus</span>
+      <h2>Deine Aufgaben</h2>
+      <p>Jede erledigte Mini-Routine schenkt deinem Pet neue Futterpunkte.</p>
+    </div>
+
+    <div class="task-list__summary">
+      <div class="task-list__summary-item">
+        <strong>{{ completedTasks() }}/{{ tasks().length }}</strong>
+        <span>erledigt</span>
+      </div>
+      <div class="task-list__summary-item">
+        <strong>{{ availableFoodPoints() }}</strong>
+        <span>Futterpunkte</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="task-list__meter">
+    <span>Offen: {{ pendingTasks() }}</span>
+    <span>Schritt fuer Schritt statt Alles-oder-Nichts.</span>
+  </div>
+
+  <div class="task-list__items">
+    @for (task of tasks(); track task.id) {
+      <sqs-task-card [task]="task" (completeRequested)="finishTask($event)" />
+    }
+  </div>
+</section>

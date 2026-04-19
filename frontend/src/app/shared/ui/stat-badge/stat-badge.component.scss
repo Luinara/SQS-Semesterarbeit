@@ -1,0 +1,66 @@
+.stat-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  min-width: 0;
+  padding: 1rem 1.05rem;
+  border: 1px solid rgba(140, 108, 96, 0.08);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 250, 246, 0.9);
+  box-shadow: var(--shadow-card);
+}
+
+.stat-badge--peach {
+  background: linear-gradient(180deg, rgba(251, 242, 234, 0.95) 0%, rgba(248, 231, 216, 0.9) 100%);
+}
+
+.stat-badge--taupe {
+  background: linear-gradient(180deg, rgba(248, 244, 240, 0.95) 0%, rgba(236, 226, 220, 0.9) 100%);
+}
+
+.stat-badge--sage {
+  background: linear-gradient(180deg, rgba(246, 250, 246, 0.95) 0%, rgba(232, 241, 232, 0.92) 100%);
+}
+
+.stat-badge__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--color-rose);
+}
+
+.stat-badge__icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+  fill: currentColor;
+  stroke: none;
+}
+
+.stat-badge__stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.stat-badge__content {
+  display: grid;
+  min-width: 0;
+}
+
+.stat-badge__value {
+  font-family: var(--font-display);
+  font-size: 1.28rem;
+  color: var(--color-text);
+}
+
+.stat-badge__label {
+  color: var(--color-text-soft);
+  font-size: 0.86rem;
+}

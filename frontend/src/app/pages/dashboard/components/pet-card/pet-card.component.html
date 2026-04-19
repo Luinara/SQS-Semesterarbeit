@@ -1,0 +1,52 @@
+@if (pet(); as currentPet) {
+  <section class="pet-card">
+    <div class="pet-card__header">
+      <div>
+        <span class="eyebrow">Dein virtuelles Pet</span>
+        <h2>{{ currentPet.name }} waechst mit deinem Alltag</h2>
+        <p>
+          Erledige kleine Schritte, sammle Punkte und investiere sie in Fuetterungen,
+          damit dein Pet sichtbar staerker wird.
+        </p>
+      </div>
+
+      <div class="pet-card__microcopy">
+        <strong>{{ completedTasks() }}/{{ totalTasks() }}</strong>
+        <span>heutige Aufgaben abgeschlossen</span>
+      </div>
+    </div>
+
+    <div class="pet-card__body">
+      <sqs-pet-visual [petName]="currentPet.name" [level]="currentPet.level" />
+
+      <div class="pet-card__details">
+        <sqs-progress-bar
+          [label]="'Wachstum bis Level ' + (currentPet.level + 1)"
+          [value]="currentPet.growthProgress"
+          [max]="currentPet.growthGoal"
+          [hint]="currentPet.growthProgress + ' / ' + currentPet.growthGoal + ' Wachstum'"
+        />
+
+        <div class="pet-card__stats">
+          <sqs-stat-badge label="Futterpunkte" [value]="currentPet.availableFoodPoints" icon="berries" tone="rose" />
+          <sqs-stat-badge label="Happiness" [value]="currentPet.happiness + '%'" icon="hearts" tone="peach" />
+          <sqs-stat-badge label="Herzen" [value]="currentPet.hearts + ' / 5'" icon="hearts" tone="sage" />
+          <sqs-stat-badge label="Mahlzeiten" [value]="currentPet.mealsServed" icon="tasks" tone="taupe" />
+        </div>
+
+        <div class="pet-card__footer">
+          <div class="pet-card__hint">
+            <strong>Fuetterung kostet {{ feedCost }} Punkte.</strong>
+            <span>
+              Sobald der Balken voll ist, steigt {{ currentPet.name }} ein Level auf und behaelt ueberschuessigen Fortschritt.
+            </span>
+          </div>
+
+          <sqs-button [disabled]="!canFeed()" [variant]="canFeed() ? 'primary' : 'secondary'" (click)="requestFeeding()">
+            Pet fuettern
+          </sqs-button>
+        </div>
+      </div>
+    </div>
+  </section>
+}

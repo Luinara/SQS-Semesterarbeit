@@ -1,0 +1,31 @@
+@if (appState.user(); as currentUser) {
+  <section class="dashboard-page page-shell">
+    <sqs-top-bar
+      [userName]="currentUser.userName"
+      [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
+      [completedTasks]="appState.completedTaskCount()"
+      [totalTasks]="appState.totalTaskCount()"
+      (resetRequested)="resetDemoData()"
+      (logoutRequested)="logout()"
+    />
+
+    <div class="dashboard-page__layout">
+      <aside class="dashboard-page__sidebar">
+        <sqs-task-list
+          [tasks]="appState.tasks()"
+          [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
+          (taskCompleted)="completeTask($event)"
+        />
+      </aside>
+
+      <section class="dashboard-page__content">
+        <sqs-pet-card
+          [pet]="appState.pet()"
+          [completedTasks]="appState.completedTaskCount()"
+          [totalTasks]="appState.totalTaskCount()"
+          (feedRequested)="feedPet()"
+        />
+      </section>
+    </div>
+  </section>
+}

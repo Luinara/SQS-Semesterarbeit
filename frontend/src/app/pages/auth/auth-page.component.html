@@ -1,0 +1,91 @@
+<section class="auth-page page-shell">
+  <div class="auth-page__layout">
+    <article class="auth-page__story">
+      <span class="eyebrow">Sanfter Einstieg ohne Backend</span>
+      <h1>Starte deine Reise mit deinem ersten Pet.</h1>
+      <p>
+        SQS simuliert Login, Fortschritt und Wachstum komplett lokal im Browser.
+        So bleibt das MVP sofort startbar und fuer das Hochschulprojekt leicht nachvollziehbar.
+      </p>
+
+      <div class="auth-page__story-card">
+        <div>
+          <strong>Demo-Zugang</strong>
+          <span>{{ demoEmail }}</span>
+        </div>
+        <div>
+          <strong>Passwort</strong>
+          <span>{{ demoPassword }}</span>
+        </div>
+      </div>
+
+      <div class="auth-page__story-grid">
+        <div class="auth-page__story-tile">
+          <strong>1</strong>
+          <span>Task erledigen</span>
+        </div>
+        <div class="auth-page__story-tile">
+          <strong>2</strong>
+          <span>Punkte sammeln</span>
+        </div>
+        <div class="auth-page__story-tile">
+          <strong>3</strong>
+          <span>Pet fuettern</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="auth-page__card">
+      <div class="auth-page__mode-switch" role="tablist" aria-label="Anmeldemodus waehlen">
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="mode() === 'login'"
+          [class.auth-page__mode-switch-button--active]="mode() === 'login'"
+          (click)="showMode('login')"
+        >
+          Login
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="mode() === 'register'"
+          [class.auth-page__mode-switch-button--active]="mode() === 'register'"
+          (click)="showMode('register')"
+        >
+          Registrieren
+        </button>
+      </div>
+
+      <div class="auth-page__card-header">
+        <h2>{{ mode() === 'login' ? 'Willkommen zurueck' : 'Lege dein SQS-Profil an' }}</h2>
+        <p>
+          {{ mode() === 'login'
+            ? 'Melde dich lokal an und fuere dein Pet weiter durch den Tag.'
+            : 'Erstelle in wenigen Sekunden ein lokales Demo-Profil mit persistenter Mock-State-Verwaltung.' }}
+        </p>
+      </div>
+
+      @if (mode() === 'login') {
+        <sqs-auth-form
+          [mode]="'login'"
+          [feedbackMessage]="feedbackMessage()"
+          [hasError]="hasError()"
+          (credentialsSubmitted)="submitCredentials($event)"
+        />
+      } @else {
+        <sqs-auth-form
+          [mode]="'register'"
+          [feedbackMessage]="feedbackMessage()"
+          [hasError]="hasError()"
+          (credentialsSubmitted)="submitCredentials($event)"
+        />
+      }
+
+      <p class="auth-page__hint">
+        Alles bleibt lokal im <code>localStorage</code>. Es gibt keine echte Authentifizierung und keine API-Aufrufe.
+      </p>
+    </article>
+  </div>
+</section>

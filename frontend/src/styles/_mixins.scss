@@ -1,0 +1,23 @@
+@use 'tokens' as *;
+
+@mixin respond-down($breakpoint) {
+  @media (max-width: $breakpoint) {
+    @content;
+  }
+}
+
+@mixin surface-panel($padding: 1.5rem) {
+  padding: $padding;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(180deg, rgba(255, 253, 250, 0.92) 0%, rgba(255, 248, 243, 0.9) 100%);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px);
+}
+
+@mixin focus-ring {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(184, 124, 113, 0.18),
+    0 0 0 6px rgba(255, 250, 246, 0.9);
+}
