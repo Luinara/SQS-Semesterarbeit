@@ -1,0 +1,48 @@
+<section class="splash-page page-shell">
+  <div class="splash-page__card">
+    <div class="splash-page__copy">
+      <span class="eyebrow">Game trifft Productivity App</span>
+      <div class="splash-page__brand">SQS</div>
+      <h1>Dein produktives Pet-Abenteuer beginnt.</h1>
+      <p>
+        Erledige fokussierte Alltagsaufgaben, sammle Punkte und verwandle kleine Routinen
+        in sichtbares Wachstum fuer dein virtuelles Pet.
+      </p>
+
+      <div class="splash-page__flow">
+        <span>Tasks</span>
+        <span>Punkte</span>
+        <span>Fuetterung</span>
+        <span>Level-Up</span>
+      </div>
+
+      <div class="splash-page__actions">
+        <sqs-button (click)="navigateForward()">{{ ctaLabel() }}</sqs-button>
+
+        <div class="splash-page__loader-block" aria-hidden="true">
+          <span>Lade deinen cozy Startmoment</span>
+          <div class="splash-page__loader">
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="splash-page__scene">
+      <div class="splash-page__scene-card splash-page__scene-card--top">
+        <strong>+18 Punkte</strong>
+        <span>fuer eine Sport-Session</span>
+      </div>
+
+      <div class="splash-page__scene-card splash-page__scene-card--bottom">
+        <strong>Level 1 -> 2</strong>
+        <span>wenn dein Wachstumsbalken voll ist</span>
+      </div>
+
+      <div class="splash-page__hero">
+        <div class="splash-page__hero-halo" aria-hidden="true"></div>
+        <img src="pet-placeholder.svg" alt="Platzhaltergrafik fuer das virtuelle SQS-Pet" />
+      </div>
+    </div>
+  </div>
+</section>

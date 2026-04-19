@@ -1,0 +1,58 @@
+<article class="task-card" [class.task-card--done]="task().isCompleted">
+  <div class="task-card__icon" [class.task-card__icon--sage]="task().tone === 'sage'" [class.task-card__icon--taupe]="task().tone === 'taupe'" [class.task-card__icon--peach]="task().tone === 'peach'">
+    @switch (task().icon) {
+      @case ('drop') {
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3s5 5.4 5 9a5 5 0 1 1-10 0c0-3.6 5-9 5-9Z" />
+        </svg>
+      }
+      @case ('study') {
+        <svg viewBox="0 0 24 24">
+          <path d="M4 7.5 12 4l8 3.5-8 3.5L4 7.5Z" />
+          <path d="M7 9.8V14c0 1.8 2.4 3.3 5 3.3s5-1.5 5-3.3V9.8" />
+        </svg>
+      }
+      @case ('pulse') {
+        <svg viewBox="0 0 24 24">
+          <path d="M4 12h4l2-4 4 8 2-4h4" class="task-card__stroke" />
+        </svg>
+      }
+      @case ('spark') {
+        <svg viewBox="0 0 24 24">
+          <path d="m12 4 1.9 4.2L18 10l-4.1 1.8L12 16l-1.9-4.2L6 10l4.1-1.8L12 4Z" />
+        </svg>
+      }
+      @default {
+        <svg viewBox="0 0 24 24">
+          <path d="M7 5.5h8.8A2.2 2.2 0 0 1 18 7.7v9.1c0-1.1-.9-2-2-2H7.2A2.2 2.2 0 0 0 5 17V7.7a2.2 2.2 0 0 1 2-2.2Z" />
+          <path d="M8.7 9.2h5.6M8.7 11.8h4.4" class="task-card__stroke" />
+        </svg>
+      }
+    }
+  </div>
+
+  <div class="task-card__content">
+    <div class="task-card__header">
+      <div>
+        <h3>{{ task().title }}</h3>
+        <p>{{ task().description }}</p>
+      </div>
+      <span class="task-card__points">+{{ task().points }}</span>
+    </div>
+
+    <div class="task-card__footer">
+      <span class="task-card__state">
+        {{ task().isCompleted ? 'Erledigt fuer heute' : 'Bereit fuer einen Fokus-Moment' }}
+      </span>
+
+      <sqs-button
+        size="sm"
+        [disabled]="task().isCompleted"
+        [variant]="task().isCompleted ? 'secondary' : 'primary'"
+        (click)="markTaskAsCompleted()"
+      >
+        {{ task().isCompleted ? 'Abgeschlossen' : 'Abschliessen' }}
+      </sqs-button>
+    </div>
+  </div>
+</article>

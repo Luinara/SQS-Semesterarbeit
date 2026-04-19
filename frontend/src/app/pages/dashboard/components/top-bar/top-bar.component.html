@@ -1,0 +1,28 @@
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="top-bar__logo">SQS</span>
+
+    <div>
+      <p class="top-bar__eyebrow">Pet Productivity Dashboard</p>
+      <h1>Dein Fokus-Zuhause</h1>
+    </div>
+  </div>
+
+  <div class="top-bar__meta">
+    <div class="top-bar__pill">
+      <span class="top-bar__avatar" aria-hidden="true">{{ userInitial() }}</span>
+      <div>
+        <strong>{{ userName() }}</strong>
+        <span>{{ completedTasks() }}/{{ totalTasks() }} Aufgaben erledigt</span>
+      </div>
+    </div>
+
+    <div class="top-bar__pill top-bar__pill--soft">
+      <strong>{{ availableFoodPoints() }}</strong>
+      <span>Futterpunkte bereit</span>
+    </div>
+
+    <sqs-button size="sm" variant="secondary" (click)="requestReset()">Demo-Daten zuruecksetzen</sqs-button>
+    <sqs-button size="sm" variant="ghost" (click)="requestLogout()">Abmelden</sqs-button>
+  </div>
+</header>

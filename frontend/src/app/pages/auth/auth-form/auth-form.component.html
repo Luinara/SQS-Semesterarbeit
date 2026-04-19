@@ -1,0 +1,52 @@
+<form class="auth-form" [formGroup]="form" (ngSubmit)="submitForm()" novalidate>
+  <div class="auth-form__field">
+    <label for="email">E-Mail</label>
+    <input id="email" type="email" formControlName="email" autocomplete="email" placeholder="du@sqs.app" />
+
+    @if (shouldShowError(form.controls.email)) {
+      <p class="auth-form__error">{{ emailErrorText() }}</p>
+    }
+  </div>
+
+  @if (mode() === 'register') {
+    <div class="auth-form__field">
+      <label for="user-name">Benutzername</label>
+      <input
+        id="user-name"
+        type="text"
+        formControlName="userName"
+        autocomplete="nickname"
+        placeholder="Wie soll dein Profil heissen?"
+      />
+
+      @if (shouldShowError(form.controls.userName)) {
+        <p class="auth-form__error">{{ userNameErrorText() }}</p>
+      }
+    </div>
+  }
+
+  <div class="auth-form__field">
+    <label for="password">Passwort</label>
+    <input
+      id="password"
+      type="password"
+      formControlName="password"
+      [attr.autocomplete]="mode() === 'register' ? 'new-password' : 'current-password'"
+      placeholder="Mindestens 6 Zeichen"
+    />
+
+    @if (shouldShowError(form.controls.password)) {
+      <p class="auth-form__error">{{ passwordErrorText() }}</p>
+    }
+  </div>
+
+  @if (feedbackMessage()) {
+    <div class="auth-form__feedback" [class.auth-form__feedback--error]="hasError()">
+      {{ feedbackMessage() }}
+    </div>
+  }
+
+  <sqs-button type="submit" [fullWidth]="true">
+    {{ mode() === 'register' ? 'Profil anlegen und starten' : 'Einloggen und weitermachen' }}
+  </sqs-button>
+</form>
