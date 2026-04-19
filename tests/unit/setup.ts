@@ -1,7 +1,12 @@
-// Shared Vitest test setup reference.
-// The actual setup import (@testing-library/jest-dom) is done in
-// frontend/vitest.setup.ts so that Vite can resolve it from the correct
-// node_modules directory (frontend/node_modules/).
-//
-// Add any shared test utilities or global mocks here that do not require
-// package resolution from within the frontend/ directory.
+import { afterEach, beforeEach, vi } from "vitest";
+
+// Die Tests arbeiten bewusst mit sauberem Browser-Zustand.
+// So bleibt jeder Testfall reproduzierbar und haengt nicht an Restdaten
+// aus einem vorherigen Lauf.
+beforeEach(() => {
+  globalThis.localStorage?.clear();
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});

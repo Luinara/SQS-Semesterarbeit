@@ -1,4 +1,9 @@
-import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { AuthMode, AuthSubmission } from '../../../shared/models/auth.model';
 import { UiButtonComponent } from '../../../shared/ui/button/ui-button.component';
@@ -33,7 +38,11 @@ export class AuthFormComponent {
       const userNameControl = this.form.controls.userName;
 
       if (this.mode() === 'register') {
-        userNameControl.setValidators([Validators.required, Validators.minLength(2), Validators.maxLength(24)]);
+        userNameControl.setValidators([
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(24),
+        ]);
       } else {
         userNameControl.clearValidators();
         userNameControl.setValue('', { emitEvent: false });

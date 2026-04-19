@@ -1,7 +1,13 @@
 <form class="auth-form" [formGroup]="form" (ngSubmit)="submitForm()" novalidate>
   <div class="auth-form__field">
     <label for="email">E-Mail</label>
-    <input id="email" type="email" formControlName="email" autocomplete="email" placeholder="du@sqs.app" />
+    <input
+      id="email"
+      type="email"
+      formControlName="email"
+      autocomplete="email"
+      placeholder="du@sqs.app"
+    />
 
     @if (shouldShowError(form.controls.email)) {
       <p class="auth-form__error">{{ emailErrorText() }}</p>

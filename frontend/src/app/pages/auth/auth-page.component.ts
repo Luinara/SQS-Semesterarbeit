@@ -30,7 +30,10 @@ export class AuthPageComponent {
   }
 
   async submitCredentials(submission: AuthSubmission): Promise<void> {
-    const result = 'userName' in submission ? this.appState.register(submission) : this.appState.login(submission);
+    const result =
+      'userName' in submission
+        ? this.appState.register(submission)
+        : this.appState.login(submission);
 
     if (!result.success) {
       this.feedbackMessage.set(result.message);

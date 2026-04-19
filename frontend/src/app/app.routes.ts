@@ -16,13 +16,16 @@ export const routes: Routes = [
   {
     path: 'auth',
     canActivate: [guestGuard],
-    loadComponent: () => import('./pages/auth/auth-page.component').then((module) => module.AuthPageComponent),
+    loadComponent: () =>
+      import('./pages/auth/auth-page.component').then((module) => module.AuthPageComponent),
   },
   {
     path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./pages/dashboard/dashboard-page.component').then((module) => module.DashboardPageComponent),
+      import('./pages/dashboard/dashboard-page.component').then(
+        (module) => module.DashboardPageComponent
+      ),
   },
   {
     path: '**',
