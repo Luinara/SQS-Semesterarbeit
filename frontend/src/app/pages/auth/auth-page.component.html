@@ -4,8 +4,8 @@
       <span class="eyebrow">Sanfter Einstieg ohne Backend</span>
       <h1>Starte deine Reise mit deinem ersten Pet.</h1>
       <p>
-        SQS simuliert Login, Fortschritt und Wachstum komplett lokal im Browser.
-        So bleibt das MVP sofort startbar und fuer das Hochschulprojekt leicht nachvollziehbar.
+        SQS simuliert Login, Fortschritt und Wachstum komplett lokal im Browser. So bleibt das MVP
+        sofort startbar und fuer das Hochschulprojekt leicht nachvollziehbar.
       </p>
 
       <div class="auth-page__story-card">
@@ -61,9 +61,11 @@
       <div class="auth-page__card-header">
         <h2>{{ mode() === 'login' ? 'Willkommen zurueck' : 'Lege dein SQS-Profil an' }}</h2>
         <p>
-          {{ mode() === 'login'
-            ? 'Melde dich lokal an und fuere dein Pet weiter durch den Tag.'
-            : 'Erstelle in wenigen Sekunden ein lokales Demo-Profil mit persistenter Mock-State-Verwaltung.' }}
+          {{
+            mode() === 'login'
+              ? 'Melde dich lokal an und fuere dein Pet weiter durch den Tag.'
+              : 'Erstelle in wenigen Sekunden ein lokales Demo-Profil mit persistenter Mock-State-Verwaltung.'
+          }}
         </p>
       </div>
 
@@ -84,7 +86,8 @@
       }
 
       <p class="auth-page__hint">
-        Alles bleibt lokal im <code>localStorage</code>. Es gibt keine echte Authentifizierung und keine API-Aufrufe.
+        Alles bleibt lokal im <code>localStorage</code>. Es gibt keine echte Authentifizierung und
+        keine API-Aufrufe.
       </p>
     </article>
   </div>

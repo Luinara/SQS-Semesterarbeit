@@ -1,27 +1,40 @@
 # Testing Structure
 
-This is the **single location** for all cross-system tests. Backend and frontend no longer have their own test folder hierarchies — all test categories live here.
+Dieser Ordner ist die zentrale Sammelstelle fuer repository-weite Tests.
+Die Anwendung selbst bleibt in `frontend/` und `backend/`, aber die Tests sind bewusst nach Testart getrennt.
 
-| Directory      | Purpose                                                                                   | Primary tools |
-|----------------|-------------------------------------------------------------------------------------------|---------------|
-| `unit/`        | Unit tests for isolated components/classes; also contains the Vitest global setup file    | JUnit 5 + Mockito, Vitest |
-| `integration/` | Full-stack integration tests — backend + frontend running together                        | Spring Boot Test, Testcontainers |
-| `e2e/`         | Browser-based end-to-end tests covering complete user journeys                            | Playwright |
-| `security/`    | Security / auth tests — protected endpoint access, JWT validation, injection checks       | Spring Security Test, OWASP ZAP |
-| `architecture/`| Architecture conformance tests (layer dependencies, naming rules)                         | ArchUnit |
+| Directory       | Purpose                                               | Primary tools                    |
+| --------------- | ----------------------------------------------------- | -------------------------------- |
+| `unit/`         | Kleine, isolierte Tests fuer reine Logik und Services | JUnit 5, Mockito, Vitest         |
+| `integration/`  | Integrationspruefungen ueber mehrere Schichten hinweg | Spring Boot Test, Testcontainers |
+| `e2e/`          | Browserbasierte Nutzerfluesse                         | Playwright                       |
+| `security/`     | Sicherheits- und Zugriffstests                        | Spring Security Test, OWASP ZAP  |
+| `architecture/` | Architekturregeln und Konformitaetschecks             | ArchUnit                         |
 
 ## Tooling wiring
 
-- **Vitest** (frontend unit tests) looks for test files in `tests/unit/**/*.{test,spec}.{ts,tsx}` — configured via `frontend/vite.config.ts`
-- **Playwright** (e2e) scans `tests/e2e/` — configured via `frontend/playwright.config.ts`
-- **Maven Surefire** picks up `**/*Test.java` inside `backend/src/test/java/`
-- **Maven Failsafe** picks up `**/*IT.java` inside `backend/src/test/java/`
+- Frontend-Unit-Tests laufen ueber `frontend/vitest.config.ts`.
+- Die Vitest-Tests liegen zentral unter `tests/unit/`.
+- Frontend-E2E-Tests laufen ueber `frontend/playwright.config.ts`.
+- Die Playwright-Spezifikationen liegen zentral unter `tests/e2e/`.
+- Backend-Tests bleiben technisch unter `backend/src/test/java/`, folgen aber derselben fachlichen Einteilung in Unit-, Integrations- und Architekturtests.
+
+## Aktueller Frontend-Fokus
+
+Die Frontend-Unit-Tests pruefen aktuell vor allem:
+
+- Mock-Daten und Initialzustand
+- lokale Speicherlogik
+- reine Fachlogik fuer Login, Task-Abschluss, Pet-Fuetterung und Reset
+
+Der wichtigste Gedanke dabei ist:
+Fachregeln sollen ohne Angular-UI testbar sein, damit die Tests schnell, robust und fuer die CI leicht wartbar bleiben.
 
 ## Naming conventions
 
-| Type | Suffix | Example |
-|------|--------|---------|
-| Backend unit | `*Test.java` | `PokemonServiceTest.java` |
-| Backend integration | `*IT.java` | `PokemonControllerIT.java` |
-| Frontend unit | `*.test.ts(x)` | `pokemonService.test.ts` |
-| Frontend e2e | `*.spec.ts` | `homepage.spec.ts` |
+| Type                | Suffix       | Example                    |
+| ------------------- | ------------ | -------------------------- |
+| Backend unit        | `*Test.java` | `PokemonServiceTest.java`  |
+| Backend integration | `*IT.java`   | `PokemonControllerIT.java` |
+| Frontend unit       | `*.test.ts`  | `app-state.logic.test.ts`  |
+| Frontend e2e        | `*.spec.ts`  | `placeholder.spec.ts`      |

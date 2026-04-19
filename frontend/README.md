@@ -97,6 +97,27 @@ npm run build
 npm run type-check
 ```
 
+## Tests
+
+Unit-Tests mit Coverage:
+
+```bash
+npm run test:coverage
+```
+
+E2E-Test mit Playwright:
+
+```bash
+npm run test:e2e
+```
+
+Code-Qualitaet pruefen:
+
+```bash
+npm run lint
+npm run format:check
+```
+
 ## Was das Setup-Skript macht
 
 Das Skript fuehrt nacheinander folgende Schritte aus:
@@ -106,6 +127,8 @@ Das Skript fuehrt nacheinander folgende Schritte aus:
 3. `npm run build`
 
 Damit wird nicht nur installiert, sondern direkt geprueft, ob das Frontend in deinem lokalen Zustand sauber kompiliert.
+
+Die eigentlichen Testbefehle bleiben bewusst separat, damit man bei Bedarf schneller nur Build oder nur Tests laufen lassen kann.
 
 ## Demo-Zugang
 
@@ -155,8 +178,12 @@ frontend/
 |-- scripts/
 |   |-- setup.ps1
 |   `-- setup.sh
+|-- testing/
+|   `-- playwright-test.ts
 |-- tsconfig.json
-`-- tsconfig.app.json
+|-- tsconfig.app.json
+|-- vitest.config.ts
+`-- playwright.config.ts
 ```
 
 ## Mock-State-Verwaltung
@@ -198,6 +225,7 @@ Dadurch kann spaeter ein Sprite, ein PNG oder eine neue SVG-Datei ersetzt werden
 - lokale Persistenz ueber `localStorage`
 - keine API-Calls, kein Backend-Zwang, keine externe State-Library
 - klares Design-System ueber globale SCSS-Tokens und Mixins
+- reine Fachlogik aus dem State-Service in testbare Funktionen ausgelagert
 
 ## Wenn etwas nicht startet
 

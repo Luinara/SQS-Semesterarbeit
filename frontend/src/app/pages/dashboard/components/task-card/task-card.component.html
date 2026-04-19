@@ -1,5 +1,10 @@
 <article class="task-card" [class.task-card--done]="task().isCompleted">
-  <div class="task-card__icon" [class.task-card__icon--sage]="task().tone === 'sage'" [class.task-card__icon--taupe]="task().tone === 'taupe'" [class.task-card__icon--peach]="task().tone === 'peach'">
+  <div
+    class="task-card__icon"
+    [class.task-card__icon--sage]="task().tone === 'sage'"
+    [class.task-card__icon--taupe]="task().tone === 'taupe'"
+    [class.task-card__icon--peach]="task().tone === 'peach'"
+  >
     @switch (task().icon) {
       @case ('drop') {
         <svg viewBox="0 0 24 24">
@@ -24,7 +29,9 @@
       }
       @default {
         <svg viewBox="0 0 24 24">
-          <path d="M7 5.5h8.8A2.2 2.2 0 0 1 18 7.7v9.1c0-1.1-.9-2-2-2H7.2A2.2 2.2 0 0 0 5 17V7.7a2.2 2.2 0 0 1 2-2.2Z" />
+          <path
+            d="M7 5.5h8.8A2.2 2.2 0 0 1 18 7.7v9.1c0-1.1-.9-2-2-2H7.2A2.2 2.2 0 0 0 5 17V7.7a2.2 2.2 0 0 1 2-2.2Z"
+          />
           <path d="M8.7 9.2h5.6M8.7 11.8h4.4" class="task-card__stroke" />
         </svg>
       }
