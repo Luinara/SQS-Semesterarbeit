@@ -126,14 +126,14 @@
   <path d="M885 518 H925" class="arrow" />
   <path d="M1020 518 H1060" class="arrow" />
   <path d="M1155 518 H1195" class="arrow" />
-  <rect x="925" y="695" width="230" height="55" class="container" />
-  <text x="1040" y="717" text-anchor="middle" class="label">Dashboard Components</text>
-  <text x="1040" y="736" text-anchor="middle" class="tiny">TaskList, PetCard, Progress</text>
-  <rect x="1190" y="695" width="110" height="55" class="system" />
-  <text x="1245" y="717" text-anchor="middle" class="label">Backend</text>
-  <text x="1245" y="736" text-anchor="middle" class="tiny">geplant</text>
-  <path d="M1107 545 V695" class="arrow" />
-  <path d="M1237 545 V695 H1190" class="arrow dash" />
+  <rect x="925" y="570" width="230" height="45" class="container" />
+  <text x="1040" y="589" text-anchor="middle" class="label">Dashboard Components</text>
+  <text x="1040" y="607" text-anchor="middle" class="tiny">TaskList, PetCard, Progress</text>
+  <rect x="1190" y="570" width="110" height="45" class="system" />
+  <text x="1245" y="589" text-anchor="middle" class="label">Backend</text>
+  <text x="1245" y="607" text-anchor="middle" class="tiny">geplant</text>
+  <path d="M1107 545 V570" class="arrow" />
+  <path d="M1237 545 V570 H1190" class="arrow dash" />
 
   <rect x="730" y="665" width="620" height="225" class="panel" />
   <text x="755" y="700" class="panelTitle">Deployment</text>
