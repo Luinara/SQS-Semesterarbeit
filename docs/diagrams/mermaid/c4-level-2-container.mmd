@@ -1,0 +1,15 @@
+flowchart LR
+    USER["Person: Nutzer"]
+
+    subgraph APP["Self-Care Companion"]
+        FE["Frontend: Angular / TypeScript SPA"]
+        BE["Backend API: Java 21 / Spring Boot"]
+        DB[(Datenbank: PostgreSQL)]
+    end
+
+    POKEAPI["PokeAPI: Externe REST API"]
+
+    USER -->|HTTPS / Browser| FE
+    FE -->|REST JSON /api| BE
+    BE -->|JDBC / JPA| DB
+    BE -->|HTTPS / JSON| POKEAPI

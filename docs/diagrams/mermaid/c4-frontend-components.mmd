@@ -1,0 +1,23 @@
+flowchart TB
+    BROWSER["Browser"]
+
+    subgraph FRONTEND["Angular Frontend"]
+        ROUTES["Routing: Splash, Auth, Dashboard"]
+        GUARDS["Guards: authGuard, guestGuard"]
+        PAGES["Pages: SplashPage, AuthPage, DashboardPage"]
+        DASH["Dashboard Components: TopBar, TaskList, TaskCard, PetCard, PetVisual"]
+        UI["Shared UI: Button, ProgressBar, StatBadge"]
+        STATE["Core State & Services: AppStateService, BrowserStorageService"]
+        MODELS["Models: User, Auth, Task, Pet, AppState"]
+    end
+
+    API["Backend API"]
+
+    BROWSER --> ROUTES
+    ROUTES --> GUARDS
+    ROUTES --> PAGES
+    PAGES --> DASH
+    PAGES --> UI
+    PAGES --> STATE
+    STATE --> MODELS
+    STATE -.-> API

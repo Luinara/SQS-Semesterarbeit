@@ -6,17 +6,22 @@ Dieses Dokument beschreibt die Architektur der Self-Care Companion Webanwendung 
 
 ![C4 Diagramm - Self-Care Companion](./c4-diagram.svg)
 
+## Diagramm-Dateien
+
+Die Mermaid-Diagramme sind ausgelagert:
+
+| Dateityp | Zweck |
+| --- | --- |
+| `.mmd` | Bearbeitbare Mermaid-Quelle |
+| `.svg` | Sichtbar gerendertes Diagramm fuer Markdown-Preview |
+
+Markdown kann externe `.mmd`-Dateien nicht portabel direkt rendern. Deshalb wird pro Abschnitt die passende `.svg` sichtbar eingebettet und die zugehoerige `.mmd`-Quelle direkt darunter verlinkt.
+
 ## Level 1: System Context
 
-```mermaid
-flowchart LR
-    USER["Person: Nutzer der Self-Care App"]
-    SCS["Self-Care Companion: Aufgaben, Fortschritt und pet-basierte Gamification"]
-    POKEAPI["PokeAPI: Externer REST-Service fuer Pokemon-Daten"]
+![C4 Level 1 System Context](./mermaid/c4-level-1-system-context.svg)
 
-    USER -->|nutzt im Browser| SCS
-    SCS -->|liest Pokemon-Daten per HTTPS| POKEAPI
-```
+Mermaid-Quelle: [c4-level-1-system-context.mmd](./mermaid/c4-level-1-system-context.mmd)
 
 ### Beschreibung
 
@@ -28,23 +33,9 @@ flowchart LR
 
 ## Level 2: Container
 
-```mermaid
-flowchart LR
-    USER["Person: Nutzer"]
+![C4 Level 2 Container](./mermaid/c4-level-2-container.svg)
 
-    subgraph APP["Self-Care Companion"]
-        FE["Frontend: Angular / TypeScript SPA"]
-        BE["Backend API: Java 21 / Spring Boot"]
-        DB[(Datenbank: PostgreSQL)]
-    end
-
-    POKEAPI["PokeAPI: Externe REST API"]
-
-    USER -->|HTTPS / Browser| FE
-    FE -->|REST JSON /api| BE
-    BE -->|JDBC / JPA| DB
-    BE -->|HTTPS / JSON| POKEAPI
-```
+Mermaid-Quelle: [c4-level-2-container.mmd](./mermaid/c4-level-2-container.mmd)
 
 ### Container-Verantwortlichkeiten
 
@@ -57,31 +48,9 @@ flowchart LR
 
 ## Level 3: Backend Component View
 
-```mermaid
-flowchart TB
-    FE["Angular Frontend"]
+![C4 Level 3 Backend Components](./mermaid/c4-level-3-backend-components.svg)
 
-    subgraph BACKEND["Spring Boot Backend"]
-        CTRL["Controller: REST-Endpunkte"]
-        SEC["Config / Security: Auth, Autorisierung, CORS"]
-        SVC["Service: Businesslogik"]
-        DOM["Domain: User, Task, Pet/Pokemon"]
-        REPO["Repository: Spring Data JPA"]
-        INT["Integration: PokeAPI Client"]
-    end
-
-    DB[(PostgreSQL)]
-    POKEAPI["PokeAPI"]
-
-    FE -->|REST JSON| CTRL
-    CTRL --> SEC
-    CTRL --> SVC
-    SVC --> DOM
-    SVC --> REPO
-    SVC --> INT
-    REPO -->|JPA JDBC| DB
-    INT -->|HTTPS JSON| POKEAPI
-```
+Mermaid-Quelle: [c4-level-3-backend-components.mmd](./mermaid/c4-level-3-backend-components.mmd)
 
 ### Backend-Komponenten
 
@@ -96,31 +65,9 @@ flowchart TB
 
 ## Frontend Component View
 
-```mermaid
-flowchart TB
-    BROWSER["Browser"]
+![C4 Frontend Components](./mermaid/c4-frontend-components.svg)
 
-    subgraph FRONTEND["Angular Frontend"]
-        ROUTES["Routing: Splash, Auth, Dashboard"]
-        GUARDS["Guards: authGuard, guestGuard"]
-        PAGES["Pages: SplashPage, AuthPage, DashboardPage"]
-        DASH["Dashboard Components: TopBar, TaskList, TaskCard, PetCard, PetVisual"]
-        UI["Shared UI: Button, ProgressBar, StatBadge"]
-        STATE["Core State & Services: AppStateService, BrowserStorageService"]
-        MODELS["Models: User, Auth, Task, Pet, AppState"]
-    end
-
-    API["Backend API"]
-
-    BROWSER --> ROUTES
-    ROUTES --> GUARDS
-    ROUTES --> PAGES
-    PAGES --> DASH
-    PAGES --> UI
-    PAGES --> STATE
-    STATE --> MODELS
-    STATE -.-> API
-```
+Mermaid-Quelle: [c4-frontend-components.mmd](./mermaid/c4-frontend-components.mmd)
 
 ### Frontend-Komponenten
 
@@ -136,23 +83,9 @@ flowchart TB
 
 ## Deployment View
 
-```mermaid
-flowchart LR
-    DEV["Entwicklerrechner / Docker Host"]
+![C4 Deployment](./mermaid/c4-deployment.svg)
 
-    subgraph COMPOSE["Docker Compose Umgebung"]
-        FE["Frontend Container: Port 3000"]
-        BE["Backend Container: Port 8080"]
-        PG[(PostgreSQL Container: Port 5432, Volume db_data)]
-    end
-
-    POKEAPI["PokeAPI: Internet"]
-
-    DEV -->|localhost 3000| FE
-    FE -->|backend 8080 REST| BE
-    BE -->|jdbc postgresql db 5432 sqs_db| PG
-    BE -->|HTTPS| POKEAPI
-```
+Mermaid-Quelle: [c4-deployment.mmd](./mermaid/c4-deployment.mmd)
 
 ### Deployment-Hinweise
 
