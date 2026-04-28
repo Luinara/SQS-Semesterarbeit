@@ -14,10 +14,20 @@ export default defineConfig({
     include: ['../tests/unit/**/*.test.ts'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html'],
+      reporter: ['text', 'html', 'lcov'],
       reportsDirectory: './coverage',
-      include: ['src/app/core/**/*.ts', 'src/app/shared/**/*.ts'],
+      include: [
+        'src/app/core/state/**/*.ts',
+        'src/app/core/services/browser-storage.service.ts',
+        'src/app/shared/mock/**/*.ts',
+      ],
       exclude: ['**/*.model.ts'],
+      thresholds: {
+        branches: 80,
+        functions: 80,
+        lines: 80,
+        statements: 80,
+      },
     },
   },
 });
