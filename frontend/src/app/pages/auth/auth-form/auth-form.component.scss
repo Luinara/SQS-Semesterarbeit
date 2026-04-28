@@ -30,7 +30,7 @@
 }
 
 .auth-form__field input::placeholder {
-  color: rgba(121, 99, 91, 0.6);
+  color: var(--color-text-soft);
 }
 
 .auth-form__field input:focus-visible {
@@ -41,7 +41,7 @@
 }
 
 .auth-form__error {
-  color: #a65d56;
+  color: #8f3f3a;
   font-size: 0.84rem;
 }
 
@@ -55,5 +55,5 @@
 
 .auth-form__feedback--error {
   background: rgba(251, 232, 229, 0.95);
-  color: #a65d56;
+  color: #8f3f3a;
 }
