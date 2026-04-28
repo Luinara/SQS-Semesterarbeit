@@ -3,7 +3,7 @@ import { expect, test } from "../../frontend/testing/playwright-test";
 test.describe("SQS MVP", () => {
   test("fuehrt vom Splash-Screen bis ins Dashboard", async ({ page }) => {
     await page.addInitScript(() => {
-      window.localStorage.clear();
+      globalThis.localStorage.clear();
     });
 
     await page.goto("/");

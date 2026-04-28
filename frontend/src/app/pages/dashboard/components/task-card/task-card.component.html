@@ -56,7 +56,7 @@
         size="sm"
         [disabled]="task().isCompleted"
         [variant]="task().isCompleted ? 'secondary' : 'primary'"
-        (click)="markTaskAsCompleted()"
+        (pressed)="markTaskAsCompleted()"
       >
         {{ task().isCompleted ? 'Abgeschlossen' : 'Abschliessen' }}
       </sqs-button>

@@ -7,6 +7,7 @@
   [class.ui-button--soft]="variant() === 'soft'"
   [class.ui-button--small]="size() === 'sm'"
   [class.ui-button--full-width]="fullWidth()"
+  (click)="handleClick($event)"
 >
   <ng-content />
 </button>

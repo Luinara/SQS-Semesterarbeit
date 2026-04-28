@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 type UiButtonVariant = 'primary' | 'secondary' | 'ghost' | 'soft';
 type UiButtonSize = 'sm' | 'md';
@@ -17,4 +17,9 @@ export class UiButtonComponent {
   readonly type = input<UiButtonType>('button');
   readonly disabled = input(false);
   readonly fullWidth = input(false);
+  readonly pressed = output<MouseEvent>();
+
+  handleClick(event: MouseEvent): void {
+    this.pressed.emit(event);
+  }
 }
