@@ -1,4 +1,4 @@
-# ADR-002: Use Angular for frontend
+# ADR-005: Use TypeScript for frontend
 
 ## Status
 Accepted
@@ -8,18 +8,18 @@ We need a component-based frontend with static type checking to improve
 maintainability and catch errors early.
 
 ## Alternatives
-React
+Dart 
+JavaScript
 
 ## Decision
-Use Angular (with TypeScript 5), bundled by Vite.
-Reasons: Developer resources, structural
+Use TypeScript 5.
+Reasons: Developer resources, typed
 
 ## Consequences
 - Strong typing across the codebase reduces runtime errors.
 - Vite offers fast HMR and optimised production builds.
-- Vitest integrates natively for unit tests; Playwright handles e2e.
 
 ## Downsides
-- Updates can contain breaking changes 
-
+- No realtime runtime protection
+- Slower than JavaScript because of types
 
