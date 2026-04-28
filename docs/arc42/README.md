@@ -16,3 +16,9 @@ This directory follows the [arc42](https://arc42.org/) template for software arc
 | 10 | [10-quality-requirements.md](10-quality-requirements.md) | Quality tree and scenarios |
 | 11 | [11-risks-and-technical-debt.md](11-risks-and-technical-debt.md) | Known risks and technical debt |
 | 12 | [12-glossary.md](12-glossary.md) | Domain and technical terms |
+
+## Additional Views
+
+| View | File | Description |
+|------|------|-------------|
+| Frontend Component Architecture | [frontend-component-architecture.md](frontend-component-architecture.md) | Angular component structure, data flow, and frontend patterns |
