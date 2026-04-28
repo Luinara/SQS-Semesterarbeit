@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="360" viewBox="0 0 1000 360" role="img" aria-labelledby="title desc">
+  <title id="title">C4 Level 2 Container</title>
+  <desc id="desc">Container Diagramm fuer Frontend, Backend, Datenbank und PokeAPI.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#344054"/></marker>
+    <style>.bg{fill:#f8fafc}.group{fill:#fff;stroke:#98a2b3;stroke-width:2;stroke-dasharray:8 6;rx:16}.box{stroke-width:2;rx:12}.person{fill:#fff0d6;stroke:#b66a00}.container{fill:#e7f8ef;stroke:#138a4e}.external{fill:#f4e7ff;stroke:#7a3fb0}.db{fill:#fff5e8;stroke:#b65f00;stroke-width:2}.title{font:700 24px Arial,sans-serif;fill:#101828}.label{font:700 15px Arial,sans-serif;fill:#101828}.small{font:13px Arial,sans-serif;fill:#475467}.arrow{stroke:#344054;stroke-width:2.2;fill:none;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect class="bg" width="1000" height="360"/>
+  <text x="40" y="45" class="title">Level 2: Container</text>
+  <rect x="40" y="145" width="135" height="70" class="box person"/>
+  <text x="107" y="176" text-anchor="middle" class="label">Nutzer</text>
+  <text x="107" y="196" text-anchor="middle" class="small">Browser</text>
+  <rect x="245" y="85" width="560" height="190" class="group"/>
+  <text x="270" y="115" class="label">Self-Care Companion</text>
+  <rect x="285" y="160" width="135" height="65" class="box container"/>
+  <text x="352" y="186" text-anchor="middle" class="label">Frontend</text>
+  <text x="352" y="206" text-anchor="middle" class="small">Angular SPA</text>
+  <rect x="495" y="160" width="145" height="65" class="box container"/>
+  <text x="567" y="186" text-anchor="middle" class="label">Backend API</text>
+  <text x="567" y="206" text-anchor="middle" class="small">Spring Boot</text>
+  <ellipse cx="735" cy="193" rx="62" ry="36" class="db"/>
+  <text x="735" y="189" text-anchor="middle" class="label">PostgreSQL</text>
+  <text x="735" y="209" text-anchor="middle" class="small">Daten</text>
+  <rect x="855" y="160" width="105" height="65" class="box external"/>
+  <text x="907" y="186" text-anchor="middle" class="label">PokeAPI</text>
+  <text x="907" y="206" text-anchor="middle" class="small">REST</text>
+  <path d="M175 180 H285" class="arrow"/><text x="230" y="168" text-anchor="middle" class="small">HTTPS</text>
+  <path d="M420 193 H495" class="arrow"/><text x="457" y="181" text-anchor="middle" class="small">REST JSON</text>
+  <path d="M640 193 H673" class="arrow"/><text x="657" y="181" text-anchor="middle" class="small">JPA</text>
+  <path d="M640 163 C705 90,830 100,885 160" class="arrow"/><text x="765" y="105" text-anchor="middle" class="small">HTTPS JSON</text>
+</svg>

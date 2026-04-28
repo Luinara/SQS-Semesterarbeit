@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="440" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">C4 Level 3 Backend Components</title>
+  <desc id="desc">Backend-Komponentendiagramm fuer das Spring Boot Backend.</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#344054"/></marker><style>.bg{fill:#f8fafc}.group{fill:#fff;stroke:#98a2b3;stroke-width:2;stroke-dasharray:8 6;rx:16}.box{fill:#eef2ff;stroke:#4357ad;stroke-width:2;rx:10}.frontend{fill:#e7f8ef;stroke:#138a4e;stroke-width:2;rx:12}.external{fill:#f4e7ff;stroke:#7a3fb0;stroke-width:2;rx:12}.db{fill:#fff5e8;stroke:#b65f00;stroke-width:2}.title{font:700 24px Arial,sans-serif;fill:#101828}.label{font:700 15px Arial,sans-serif;fill:#101828}.small{font:13px Arial,sans-serif;fill:#475467}.arrow{stroke:#344054;stroke-width:2.2;fill:none;marker-end:url(#arrow)}</style></defs>
+  <rect class="bg" width="1000" height="440"/><text x="40" y="45" class="title">Level 3: Backend Component View</text>
+  <rect x="40" y="185" width="145" height="65" class="frontend"/><text x="112" y="214" text-anchor="middle" class="label">Angular Frontend</text><text x="112" y="234" text-anchor="middle" class="small">REST JSON</text>
+  <rect x="250" y="85" width="540" height="260" class="group"/><text x="275" y="115" class="label">Spring Boot Backend</text>
+  <rect x="285" y="150" width="120" height="55" class="box"/><text x="345" y="173" text-anchor="middle" class="label">Controller</text><text x="345" y="192" text-anchor="middle" class="small">REST</text>
+  <rect x="465" y="150" width="120" height="55" class="box"/><text x="525" y="173" text-anchor="middle" class="label">Service</text><text x="525" y="192" text-anchor="middle" class="small">Logik</text>
+  <rect x="645" y="150" width="120" height="55" class="box"/><text x="705" y="173" text-anchor="middle" class="label">Domain</text><text x="705" y="192" text-anchor="middle" class="small">Modelle</text>
+  <rect x="285" y="250" width="120" height="55" class="box"/><text x="345" y="273" text-anchor="middle" class="label">Security</text><text x="345" y="292" text-anchor="middle" class="small">Config</text>
+  <rect x="465" y="250" width="120" height="55" class="box"/><text x="525" y="273" text-anchor="middle" class="label">Repository</text><text x="525" y="292" text-anchor="middle" class="small">JPA</text>
+  <rect x="645" y="250" width="120" height="55" class="box"/><text x="705" y="273" text-anchor="middle" class="label">Integration</text><text x="705" y="292" text-anchor="middle" class="small">PokeAPI Client</text>
+  <ellipse cx="525" cy="385" rx="65" ry="34" class="db"/><text x="525" y="381" text-anchor="middle" class="label">PostgreSQL</text><text x="525" y="400" text-anchor="middle" class="small">Daten</text>
+  <rect x="835" y="250" width="105" height="60" class="external"/><text x="887" y="276" text-anchor="middle" class="label">PokeAPI</text><text x="887" y="295" text-anchor="middle" class="small">extern</text>
+  <path d="M185 218 H285" class="arrow"/><path d="M405 178 H465" class="arrow"/><path d="M585 178 H645" class="arrow"/><path d="M345 205 V250" class="arrow"/><path d="M525 205 V250" class="arrow"/><path d="M585 278 H645" class="arrow"/><path d="M525 305 V351" class="arrow"/><path d="M765 280 H835" class="arrow"/>
+</svg>

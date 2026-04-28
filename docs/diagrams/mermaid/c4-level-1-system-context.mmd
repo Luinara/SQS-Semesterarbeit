@@ -1,0 +1,7 @@
+flowchart LR
+    USER["Person: Nutzer der Self-Care App"]
+    SCS["Self-Care Companion: Aufgaben, Fortschritt und pet-basierte Gamification"]
+    POKEAPI["PokeAPI: Externer REST-Service fuer Pokemon-Daten"]
+
+    USER -->|nutzt im Browser| SCS
+    SCS -->|liest Pokemon-Daten per HTTPS| POKEAPI
