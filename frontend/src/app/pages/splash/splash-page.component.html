@@ -17,7 +17,7 @@
       </div>
 
       <div class="splash-page__actions">
-        <sqs-button (pressed)="navigateForward()">{{ ctaLabel() }}</sqs-button>
+        <button sqsButton (click)="navigateForward()">{{ ctaLabel() }}</button>
 
         <div class="splash-page__loader-block" aria-hidden="true">
           <span>Lade deinen cozy Startmoment</span>

@@ -22,9 +22,9 @@
       <span>Futterpunkte bereit</span>
     </div>
 
-    <sqs-button size="sm" variant="secondary" (pressed)="requestReset()"
-      >Demo-Daten zuruecksetzen</sqs-button
-    >
-    <sqs-button size="sm" variant="ghost" (pressed)="requestLogout()">Abmelden</sqs-button>
+    <button sqsButton size="sm" variant="secondary" (click)="requestReset()">
+      Demo-Daten zuruecksetzen
+    </button>
+    <button sqsButton size="sm" variant="ghost" (click)="requestLogout()">Abmelden</button>
   </div>
 </header>
