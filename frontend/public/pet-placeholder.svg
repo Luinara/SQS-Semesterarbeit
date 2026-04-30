@@ -1,0 +1,34 @@
+<svg width="420" height="420" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bodyGradient" x1="94" y1="81" x2="308" y2="355" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FCE9E1" />
+      <stop offset="1" stop-color="#E7C9BC" />
+    </linearGradient>
+    <linearGradient id="shadowGradient" x1="210" y1="296" x2="210" y2="386" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C79182" stop-opacity="0.34" />
+      <stop offset="1" stop-color="#C79182" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="211" cy="350" rx="110" ry="34" fill="url(#shadowGradient)" />
+  <path
+    d="M142 122C142 83.3401 173.34 52 212 52C250.66 52 282 83.3401 282 122V140C282 151.046 273.046 160 262 160H162C150.954 160 142 151.046 142 140V122Z"
+    fill="url(#bodyGradient)"
+  />
+  <path
+    d="M123.904 126.084C104.389 106.569 104.389 74.9308 123.904 55.4159L153.61 25.7098C160.693 18.6272 172.18 18.6272 179.262 25.7098C186.345 32.7924 186.345 44.2794 179.262 51.362L149.556 81.0681C145.688 84.9366 145.688 91.209 149.556 95.0774L160.167 105.689C167.25 112.771 167.25 124.258 160.167 131.341C153.085 138.423 141.598 138.423 134.515 131.341L123.904 126.084Z"
+    fill="#F6D8CB"
+  />
+  <path
+    d="M296.096 126.084C315.611 106.569 315.611 74.9308 296.096 55.4159L266.39 25.7098C259.307 18.6272 247.82 18.6272 240.738 25.7098C233.655 32.7924 233.655 44.2794 240.738 51.362L270.444 81.0681C274.312 84.9366 274.312 91.209 270.444 95.0774L259.833 105.689C252.75 112.771 252.75 124.258 259.833 131.341C266.915 138.423 278.402 138.423 285.485 131.341L296.096 126.084Z"
+    fill="#F6D8CB"
+  />
+  <rect x="103" y="118" width="214" height="177" rx="86" fill="url(#bodyGradient)" />
+  <circle cx="163" cy="191" r="13" fill="#6F4F46" />
+  <circle cx="257" cy="191" r="13" fill="#6F4F46" />
+  <path d="M185 235C199.667 247.667 220.333 247.667 235 235" stroke="#8F6559" stroke-width="12" stroke-linecap="round" />
+  <path d="M210 201L201 214H219L210 201Z" fill="#E3A79D" />
+  <path d="M154 226C146.676 226 140.41 230.588 137.95 237.046" stroke="#E7A9A0" stroke-width="8" stroke-linecap="round" />
+  <path d="M266 226C273.324 226 279.59 230.588 282.05 237.046" stroke="#E7A9A0" stroke-width="8" stroke-linecap="round" />
+  <path d="M158 297C158 269.938 179.938 248 207 248H213C240.062 248 262 269.938 262 297V313H158V297Z" fill="#F4DBD1" />
+</svg>

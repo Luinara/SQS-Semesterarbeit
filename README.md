@@ -228,7 +228,7 @@ Architecture documentation lives in [`docs/`](docs/):
 
 ## Quality & CI/CD
 
-* [ ] Enforce ≥80% test coverage (JaCoCo + SonarQube)
+* [x] Enforce >=80% frontend test coverage (Vitest coverage thresholds)
 * [ ] Enable SonarQube Quality Gate (fail pipeline on issues)
 * [ ] Fix all critical/high SonarQube issues
 * [ ] Ensure all PRs pass CI before merge
@@ -268,4 +268,4 @@ Architecture documentation lives in [`docs/`](docs/):
 The project is currently in **bootstrap phase**:
 
 * CI/CD and tooling are set up with relaxed constraints
-* Quality gates (coverage ≥80%, strict SonarQube checks) will be enforced in a later phase
+* Frontend coverage gates (>=80%) are enforced by Vitest; backend and strict SonarQube checks will be enforced in a later phase

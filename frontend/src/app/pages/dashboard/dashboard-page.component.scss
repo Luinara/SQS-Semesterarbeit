@@ -1,0 +1,22 @@
+.dashboard-page {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.dashboard-page__layout {
+  display: grid;
+  grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.dashboard-page__sidebar,
+.dashboard-page__content {
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-page__layout {
+    grid-template-columns: 1fr;
+  }
+}

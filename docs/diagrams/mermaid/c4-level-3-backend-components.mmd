@@ -1,0 +1,23 @@
+flowchart TB
+    FE["Angular Frontend"]
+
+    subgraph BACKEND["Spring Boot Backend"]
+        CTRL["Controller: REST-Endpunkte"]
+        SEC["Config / Security: Auth, Autorisierung, CORS"]
+        SVC["Service: Businesslogik"]
+        DOM["Domain: User, Task, Pet/Pokemon"]
+        REPO["Repository: Spring Data JPA"]
+        INT["Integration: PokeAPI Client"]
+    end
+
+    DB[(PostgreSQL)]
+    POKEAPI["PokeAPI"]
+
+    FE -->|REST JSON| CTRL
+    CTRL --> SEC
+    CTRL --> SVC
+    SVC --> DOM
+    SVC --> REPO
+    SVC --> INT
+    REPO -->|JPA JDBC| DB
+    INT -->|HTTPS JSON| POKEAPI

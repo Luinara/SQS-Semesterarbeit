@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="980" viewBox="0 0 1400 980" role="img" aria-labelledby="title desc">
+  <title id="title">C4 Diagramm - Self-Care Companion</title>
+  <desc id="desc">Visuelle C4-Uebersicht mit System Context, Container, Komponenten und Deployment.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#344054" />
+    </marker>
+    <style>
+      .bg { fill: #f7f9fc; }
+      .panel { fill: #ffffff; stroke: #c9d4e5; stroke-width: 2; rx: 14; }
+      .system { fill: #dff3ff; stroke: #1677a3; stroke-width: 2; rx: 12; }
+      .person { fill: #fff0d6; stroke: #b66a00; stroke-width: 2; rx: 12; }
+      .external { fill: #f4e7ff; stroke: #7a3fb0; stroke-width: 2; rx: 12; }
+      .container { fill: #e7f8ef; stroke: #138a4e; stroke-width: 2; rx: 12; }
+      .component { fill: #eef2ff; stroke: #4357ad; stroke-width: 2; rx: 10; }
+      .database { fill: #fff5e8; stroke: #b65f00; stroke-width: 2; }
+      .deploy { fill: #edf7f6; stroke: #19756d; stroke-width: 2; rx: 12; }
+      .title { font: 700 30px Arial, sans-serif; fill: #101828; }
+      .panelTitle { font: 700 20px Arial, sans-serif; fill: #182230; }
+      .label { font: 700 15px Arial, sans-serif; fill: #101828; }
+      .small { font: 13px Arial, sans-serif; fill: #344054; }
+      .tiny { font: 12px Arial, sans-serif; fill: #475467; }
+      .arrow { stroke: #344054; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .dash { stroke-dasharray: 7 6; }
+      .group { fill: none; stroke: #98a2b3; stroke-width: 1.6; stroke-dasharray: 8 6; rx: 16; }
+    </style>
+  </defs>
+
+  <rect class="bg" width="1400" height="980" />
+  <text x="60" y="55" class="title">C4 Diagramm - Self-Care Companion</text>
+  <text x="60" y="82" class="small">Angular Frontend, Spring Boot Backend, PostgreSQL und PokeAPI</text>
+
+  <rect x="50" y="115" width="620" height="220" class="panel" />
+  <text x="75" y="150" class="panelTitle">Level 1: System Context</text>
+  <rect x="90" y="190" width="145" height="70" class="person" />
+  <text x="162" y="218" text-anchor="middle" class="label">Nutzer</text>
+  <text x="162" y="239" text-anchor="middle" class="tiny">Browser</text>
+  <rect x="300" y="178" width="190" height="95" class="system" />
+  <text x="395" y="210" text-anchor="middle" class="label">Self-Care</text>
+  <text x="395" y="231" text-anchor="middle" class="label">Companion</text>
+  <text x="395" y="252" text-anchor="middle" class="tiny">Aufgaben + Fortschritt</text>
+  <rect x="545" y="190" width="90" height="70" class="external" />
+  <text x="590" y="219" text-anchor="middle" class="label">PokeAPI</text>
+  <text x="590" y="240" text-anchor="middle" class="tiny">REST</text>
+  <path d="M235 225 H300" class="arrow" />
+  <text x="267" y="214" text-anchor="middle" class="tiny">nutzt</text>
+  <path d="M490 225 H545" class="arrow" />
+  <text x="518" y="214" text-anchor="middle" class="tiny">liest Daten</text>
+
+  <rect x="730" y="115" width="620" height="220" class="panel" />
+  <text x="755" y="150" class="panelTitle">Level 2: Container</text>
+  <rect x="760" y="178" width="540" height="130" class="group" />
+  <text x="780" y="202" class="small">Self-Care Companion</text>
+  <rect x="790" y="225" width="135" height="55" class="container" />
+  <text x="857" y="247" text-anchor="middle" class="label">Frontend</text>
+  <text x="857" y="266" text-anchor="middle" class="tiny">Angular</text>
+  <rect x="985" y="225" width="135" height="55" class="container" />
+  <text x="1052" y="247" text-anchor="middle" class="label">Backend API</text>
+  <text x="1052" y="266" text-anchor="middle" class="tiny">Spring Boot</text>
+  <ellipse cx="1220" cy="253" rx="62" ry="34" class="database" />
+  <text x="1220" y="248" text-anchor="middle" class="label">PostgreSQL</text>
+  <text x="1220" y="267" text-anchor="middle" class="tiny">Persistenz</text>
+  <rect x="760" y="225" width="0" height="0" fill="none" />
+  <path d="M925 253 H985" class="arrow" />
+  <text x="955" y="242" text-anchor="middle" class="tiny">REST/JSON</text>
+  <path d="M1120 253 H1158" class="arrow" />
+  <text x="1139" y="242" text-anchor="middle" class="tiny">JPA</text>
+  <rect x="1270" y="215" width="65" height="75" class="external" />
+  <text x="1302" y="247" text-anchor="middle" class="label">Poke</text>
+  <text x="1302" y="266" text-anchor="middle" class="label">API</text>
+  <path d="M1120 225 C1175 170,1265 174,1302 215" class="arrow" />
+  <text x="1210" y="190" text-anchor="middle" class="tiny">HTTPS</text>
+
+  <rect x="50" y="375" width="620" height="515" class="panel" />
+  <text x="75" y="410" class="panelTitle">Level 3: Backend Komponenten</text>
+  <rect x="80" y="440" width="560" height="360" class="group" />
+  <text x="105" y="465" class="small">Spring Boot Backend</text>
+  <rect x="105" y="500" width="130" height="58" class="component" />
+  <text x="170" y="523" text-anchor="middle" class="label">Controller</text>
+  <text x="170" y="542" text-anchor="middle" class="tiny">REST</text>
+  <rect x="280" y="500" width="130" height="58" class="component" />
+  <text x="345" y="523" text-anchor="middle" class="label">Service</text>
+  <text x="345" y="542" text-anchor="middle" class="tiny">Businesslogik</text>
+  <rect x="455" y="500" width="130" height="58" class="component" />
+  <text x="520" y="523" text-anchor="middle" class="label">Domain</text>
+  <text x="520" y="542" text-anchor="middle" class="tiny">Modelle</text>
+  <rect x="280" y="610" width="130" height="58" class="component" />
+  <text x="345" y="633" text-anchor="middle" class="label">Repository</text>
+  <text x="345" y="652" text-anchor="middle" class="tiny">Spring Data JPA</text>
+  <rect x="455" y="610" width="130" height="58" class="component" />
+  <text x="520" y="633" text-anchor="middle" class="label">Integration</text>
+  <text x="520" y="652" text-anchor="middle" class="tiny">PokeAPI Client</text>
+  <rect x="105" y="610" width="130" height="58" class="component" />
+  <text x="170" y="633" text-anchor="middle" class="label">Config</text>
+  <text x="170" y="652" text-anchor="middle" class="tiny">Security / CORS</text>
+  <ellipse cx="345" cy="745" rx="70" ry="36" class="database" />
+  <text x="345" y="741" text-anchor="middle" class="label">PostgreSQL</text>
+  <text x="345" y="760" text-anchor="middle" class="tiny">Daten</text>
+  <rect x="485" y="712" width="95" height="66" class="external" />
+  <text x="532" y="740" text-anchor="middle" class="label">PokeAPI</text>
+  <text x="532" y="759" text-anchor="middle" class="tiny">extern</text>
+  <path d="M235 529 H280" class="arrow" />
+  <path d="M410 529 H455" class="arrow" />
+  <path d="M345 558 V610" class="arrow" />
+  <path d="M410 639 H455" class="arrow" />
+  <path d="M280 529 H235 C210 555,190 585,170 610" class="arrow dash" />
+  <path d="M345 668 V709" class="arrow" />
+  <path d="M520 668 V712" class="arrow" />
+
+  <rect x="730" y="375" width="620" height="250" class="panel" />
+  <text x="755" y="410" class="panelTitle">Frontend Komponenten</text>
+  <rect x="760" y="438" width="540" height="150" class="group" />
+  <text x="785" y="463" class="small">Angular Frontend</text>
+  <rect x="790" y="490" width="95" height="55" class="component" />
+  <text x="837" y="513" text-anchor="middle" class="label">Routing</text>
+  <text x="837" y="532" text-anchor="middle" class="tiny">Routes</text>
+  <rect x="925" y="490" width="95" height="55" class="component" />
+  <text x="972" y="513" text-anchor="middle" class="label">Guards</text>
+  <text x="972" y="532" text-anchor="middle" class="tiny">Auth</text>
+  <rect x="1060" y="490" width="95" height="55" class="component" />
+  <text x="1107" y="513" text-anchor="middle" class="label">Pages</text>
+  <text x="1107" y="532" text-anchor="middle" class="tiny">UI Views</text>
+  <rect x="1195" y="490" width="85" height="55" class="component" />
+  <text x="1237" y="513" text-anchor="middle" class="label">State</text>
+  <text x="1237" y="532" text-anchor="middle" class="tiny">Services</text>
+  <path d="M885 518 H925" class="arrow" />
+  <path d="M1020 518 H1060" class="arrow" />
+  <path d="M1155 518 H1195" class="arrow" />
+  <rect x="925" y="570" width="230" height="45" class="container" />
+  <text x="1040" y="589" text-anchor="middle" class="label">Dashboard Components</text>
+  <text x="1040" y="607" text-anchor="middle" class="tiny">TaskList, PetCard, Progress</text>
+  <rect x="1190" y="570" width="110" height="45" class="system" />
+  <text x="1245" y="589" text-anchor="middle" class="label">Backend</text>
+  <text x="1245" y="607" text-anchor="middle" class="tiny">geplant</text>
+  <path d="M1107 545 V570" class="arrow" />
+  <path d="M1237 545 V570 H1190" class="arrow dash" />
+
+  <rect x="730" y="665" width="620" height="225" class="panel" />
+  <text x="755" y="700" class="panelTitle">Deployment</text>
+  <rect x="760" y="735" width="540" height="120" class="group" />
+  <text x="785" y="760" class="small">Docker Compose auf Entwicklerrechner</text>
+  <rect x="795" y="785" width="125" height="48" class="deploy" />
+  <text x="857" y="805" text-anchor="middle" class="label">Frontend</text>
+  <text x="857" y="823" text-anchor="middle" class="tiny">Port 3000</text>
+  <rect x="970" y="785" width="125" height="48" class="deploy" />
+  <text x="1032" y="805" text-anchor="middle" class="label">Backend</text>
+  <text x="1032" y="823" text-anchor="middle" class="tiny">Port 8080</text>
+  <ellipse cx="1215" cy="809" rx="64" ry="31" class="database" />
+  <text x="1215" y="806" text-anchor="middle" class="label">Postgres</text>
+  <text x="1215" y="824" text-anchor="middle" class="tiny">5432</text>
+  <rect x="1225" y="680" width="85" height="55" class="external" />
+  <text x="1267" y="704" text-anchor="middle" class="label">PokeAPI</text>
+  <text x="1267" y="723" text-anchor="middle" class="tiny">Internet</text>
+  <path d="M920 809 H970" class="arrow" />
+  <path d="M1095 809 H1151" class="arrow" />
+  <path d="M1060 785 C1110 720,1195 705,1225 707" class="arrow" />
+  <text x="945" y="798" text-anchor="middle" class="tiny">REST</text>
+  <text x="1125" y="798" text-anchor="middle" class="tiny">JDBC</text>
+
+  <text x="60" y="940" class="small">Hinweis: Backend-Komponenten beschreiben die vorgesehene Architektur; einige Implementierungen sind laut Projektstand noch im Aufbau.</text>
+</svg>

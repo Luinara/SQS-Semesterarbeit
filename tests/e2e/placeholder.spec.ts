@@ -1,17 +1,33 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from "../../frontend/testing/playwright-test";
 
-/**
- * Placeholder E2E test — keeps the CI pipeline green while the application
- * is not yet fully implemented.
- *
- * TODO: Replace this file with real user-flow tests once the application
- *       features are built (see README "Project Roadmap & TODOs" section).
- */
-test('placeholder: app loads without errors', async ({ page }) => {
-  await page.goto('/');
+test.describe("SQS MVP", () => {
+  test("fuehrt vom Splash-Screen bis ins Dashboard", async ({ page }) => {
+    await page.addInitScript(() => {
+      globalThis.localStorage.clear();
+    });
 
-  // Verify that the page renders with some content.
-  // The Vite dev server serves the React scaffold, so this will pass
-  // immediately; replace with meaningful assertions when the UI is in place.
-  await expect(page).toHaveTitle(/.+/);
+    await page.goto("/");
+
+    await expect(
+      page.getByRole("heading", {
+        name: "Dein produktives Pet-Abenteuer beginnt.",
+      }),
+    ).toBeVisible();
+    await page.waitForURL("**/auth");
+
+    await page.getByLabel("E-Mail").fill("demo@sqs.app");
+    await page.getByLabel("Passwort").fill("cozyfocus");
+    await page
+      .getByRole("button", { name: "Einloggen und weitermachen" })
+      .click();
+
+    await page.waitForURL("**/dashboard");
+    await expect(
+      page.getByRole("heading", { name: "Dein Fokus-Zuhause" }),
+    ).toBeVisible();
+    await expect(page.getByText("Deine Aufgaben")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Pet fuettern" }),
+    ).toBeVisible();
+  });
 });

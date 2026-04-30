@@ -1,0 +1,114 @@
+.task-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  padding: 1.1rem;
+  border: 1px solid rgba(133, 101, 91, 0.08);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 251, 248, 0.92);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base),
+    opacity var(--transition-base);
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.task-card--done {
+  opacity: 0.84;
+  border-color: rgba(138, 171, 143, 0.25);
+  background: linear-gradient(180deg, rgba(248, 252, 248, 0.95) 0%, rgba(241, 248, 241, 0.92) 100%);
+}
+
+.task-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1.15rem;
+  background: linear-gradient(180deg, rgba(245, 219, 214, 0.95) 0%, rgba(238, 206, 201, 0.95) 100%);
+  color: var(--color-rose);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.task-card__icon--peach {
+  background: linear-gradient(180deg, rgba(251, 237, 224, 0.98) 0%, rgba(243, 215, 188, 0.95) 100%);
+  color: #8c4f2f;
+}
+
+.task-card__icon--taupe {
+  background: linear-gradient(180deg, rgba(242, 236, 232, 0.98) 0%, rgba(225, 215, 209, 0.95) 100%);
+  color: #665047;
+}
+
+.task-card__icon--sage {
+  background: linear-gradient(180deg, rgba(238, 247, 239, 0.98) 0%, rgba(215, 231, 217, 0.95) 100%);
+  color: #4f7054;
+}
+
+.task-card__icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+  fill: currentColor;
+}
+
+.task-card__stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.task-card__content {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.task-card__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.task-card__header h3 {
+  margin-bottom: 0.35rem;
+  font-size: 1rem;
+}
+
+.task-card__header p {
+  color: var(--color-text-soft);
+  font-size: 0.92rem;
+}
+
+.task-card__points {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.8rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 244, 238, 0.95);
+  color: var(--color-rose);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.task-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.task-card__state {
+  color: var(--color-text-soft);
+  font-size: 0.88rem;
+}
