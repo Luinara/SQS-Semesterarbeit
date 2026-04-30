@@ -52,14 +52,15 @@
         {{ task().isCompleted ? 'Erledigt fuer heute' : 'Bereit fuer einen Fokus-Moment' }}
       </span>
 
-      <sqs-button
+      <button
+        sqsButton
         size="sm"
         [disabled]="task().isCompleted"
         [variant]="task().isCompleted ? 'secondary' : 'primary'"
-        (pressed)="markTaskAsCompleted()"
+        (click)="markTaskAsCompleted()"
       >
         {{ task().isCompleted ? 'Abgeschlossen' : 'Abschliessen' }}
-      </sqs-button>
+      </button>
     </div>
   </div>
 </article>

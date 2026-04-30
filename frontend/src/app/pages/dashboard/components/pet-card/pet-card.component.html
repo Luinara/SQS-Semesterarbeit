@@ -63,13 +63,14 @@
             </span>
           </div>
 
-          <sqs-button
+          <button
+            sqsButton
             [disabled]="!canFeed()"
             [variant]="canFeed() ? 'primary' : 'secondary'"
-            (pressed)="requestFeeding()"
+            (click)="requestFeeding()"
           >
             Pet fuettern
-          </sqs-button>
+          </button>
         </div>
       </div>
     </div>
