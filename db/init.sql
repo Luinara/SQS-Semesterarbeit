@@ -33,7 +33,6 @@ CREATE TABLE IF NOT EXISTS environment_backgrounds (
 
     weather_type TEXT NOT NULL,
     time_of_day TEXT NOT NULL,
-    location TEXT NOT NULL,
 
     image_url TEXT NOT NULL,
 
