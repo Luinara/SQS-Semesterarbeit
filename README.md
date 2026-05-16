@@ -124,7 +124,7 @@ npm run dev
 All tests live in `tests/`. Tooling is wired automatically:
 
 ```bash
-# Backend unit tests  (**/*Test.java  via Maven Surefire)
+# Backend unit tests  (**/*UserTest.java  via Maven Surefire)
 cd backend && mvn test
 
 # Backend integration tests  (**/*IT.java  via Maven Failsafe)
