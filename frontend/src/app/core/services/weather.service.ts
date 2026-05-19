@@ -13,6 +13,8 @@ const DEFAULT_LOCATION: WeatherLocation = {
   longitude: 13.41,
   label: 'Berlin',
 };
+const WEATHER_LOCATION_STORAGE_KEY = 'sqs-weather-location';
+const WEATHER_REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 
 interface WeatherLocation {
   latitude: number;
@@ -36,14 +38,16 @@ interface GeocodingResponse {
   providedIn: 'root',
 })
 export class WeatherService {
-  readonly location = signal<WeatherLocation>(DEFAULT_LOCATION);
+  readonly location = signal<WeatherLocation>(readStoredLocation());
   readonly snapshot = signal<WeatherSnapshot | null>(null);
   readonly isLoading = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly scene = computed(() => resolveWeatherScene(this.snapshot()));
+  private refreshIntervalId: ReturnType<typeof setInterval> | null = null;
 
   constructor() {
     void this.refresh();
+    this.startAutoRefresh();
   }
 
   async refresh(): Promise<void> {
@@ -64,11 +68,18 @@ export class WeatherService {
     try {
       const location = await this.resolveCity(normalizedCityName);
       this.location.set(location);
+      storeLocation(location);
       await this.loadWeatherForLocation(location, false);
     } catch {
       this.errorMessage.set(`Für "${normalizedCityName}" wurden keine Wetterdaten gefunden.`);
       this.isLoading.set(false);
     }
+  }
+
+  private startAutoRefresh(): void {
+    this.refreshIntervalId ??= setInterval(() => {
+      void this.refresh();
+    }, WEATHER_REFRESH_INTERVAL_MS);
   }
 
   private async loadWeatherForLocation(
@@ -132,4 +143,37 @@ export class WeatherService {
 
     return url.toString();
   }
+}
+
+function readStoredLocation(): WeatherLocation {
+  try {
+    const rawValue = globalThis.localStorage?.getItem(WEATHER_LOCATION_STORAGE_KEY);
+
+    if (!rawValue) {
+      return DEFAULT_LOCATION;
+    }
+
+    const parsedValue = JSON.parse(rawValue) as Partial<WeatherLocation>;
+
+    if (
+      typeof parsedValue.latitude === 'number' &&
+      typeof parsedValue.longitude === 'number' &&
+      typeof parsedValue.label === 'string' &&
+      parsedValue.label.trim()
+    ) {
+      return {
+        latitude: parsedValue.latitude,
+        longitude: parsedValue.longitude,
+        label: parsedValue.label,
+      };
+    }
+  } catch {
+    globalThis.localStorage?.removeItem(WEATHER_LOCATION_STORAGE_KEY);
+  }
+
+  return DEFAULT_LOCATION;
+}
+
+function storeLocation(location: WeatherLocation): void {
+  globalThis.localStorage?.setItem(WEATHER_LOCATION_STORAGE_KEY, JSON.stringify(location));
 }
