@@ -229,7 +229,9 @@ Das Dashboard lädt Wetterdaten über Open-Meteo und nutzt sie für den Pet-Hint
 - Mapping von Wettercode, Tag und Nacht: `src/app/core/state/weather-appearance.logic.ts`
 - Anzeige: `src/app/pages/dashboard/components/pet-visual/`
 
-Der aktuelle Stand startet mit Berlin als Demo-Standort. Im Dashboard kann aber eine eigene Stadt eingegeben werden; Open-Meteo Geocoding übersetzt den Stadtnamen in Koordinaten und der Wetterabruf lädt danach die aktuelle Szene. Der Hintergrund unterscheidet Tag, Nacht, Sonne, Wolken, Regen, Schnee, Hagel, Sturm und Nebel. Falls die Wetter-API nicht erreichbar ist, bleibt automatisch ein heller Standard-Hintergrund aktiv.
+Der aktuelle Stand startet mit Berlin als Demo-Standort. Im Dashboard kann aber eine eigene Stadt eingegeben werden; Open-Meteo Geocoding übersetzt den Stadtnamen in Koordinaten und Wetter Heute lädt danach die aktuelle Szene. Der Hintergrund unterscheidet Tag, Nacht, Sonne, Wolken, Regen, Schnee, Hagel, Sturm und Nebel. Falls Wetter Heute nicht erreichbar ist, bleibt automatisch ein heller Standard-Hintergrund aktiv.
+
+Die zuletzt gewählte Stadt wird im `localStorage` gespeichert und beim nächsten Öffnen wiederverwendet. Danach aktualisiert Wetter Heute die Daten automatisch alle 5 Minuten.
 
 ## Wichtige Screens
 

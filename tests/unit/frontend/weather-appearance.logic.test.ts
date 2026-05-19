@@ -14,7 +14,7 @@ describe("weather-appearance.logic", () => {
     expect(mapWeatherCodeToCondition(96)).toBe("hail");
   });
 
-  it("liest Tag und Nacht aus der Weather-API-Antwort", () => {
+  it("liest Tag und Nacht aus der Wetter-Heute-Antwort", () => {
     const snapshot = parseWeatherSnapshot(
       {
         current: {
