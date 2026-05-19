@@ -15,6 +15,11 @@
   min-width: 0;
 }
 
+.dashboard-page__content {
+  display: grid;
+  gap: 1.25rem;
+}
+
 @media (max-width: 1024px) {
   .dashboard-page__layout {
     grid-template-columns: 1fr;

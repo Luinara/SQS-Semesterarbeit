@@ -16,6 +16,11 @@ export const PET_RULES = {
   initialGrowthGoal: 100,
 } as const;
 
+export const HYDRATION_RULES = {
+  dailyGoalMl: 3000,
+  quickAddMl: [250, 500, 750],
+} as const;
+
 export const DEMO_ACCOUNT = {
   email: 'demo@sqs.app',
   password: 'cozyfocus',
@@ -48,9 +53,14 @@ export function createMockAccount(credentials: RegisterCredentials): MockAccount
 }
 
 export function createInitialGameState(): GameState {
+  const now = new Date().toISOString();
+
   return {
     pet: createInitialPetState(),
     tasks: createInitialTasks(),
+    hydrationMl: 0,
+    hydrationGoalMl: HYDRATION_RULES.dailyGoalMl,
+    hydrationLastResetAt: now,
     totalCompletedTasks: 0,
     totalEarnedPoints: 0,
   };

@@ -19,6 +19,12 @@
       </aside>
 
       <section class="dashboard-page__content">
+        <sqs-hydration-card
+          [currentMl]="appState.hydrationMl()"
+          [goalMl]="appState.hydrationGoalMl()"
+          (hydrationAdded)="addHydration($event)"
+        />
+
         <sqs-pet-card
           [pet]="appState.pet()"
           [completedTasks]="appState.completedTaskCount()"
