@@ -1,5 +1,6 @@
 import {
   completeTaskInGameState,
+  addHydrationInGameState,
   createRegisteredAccount,
   feedPetInGameState,
   findAccountForLogin,
@@ -119,6 +120,18 @@ describe("app-state.logic", () => {
 
     expect(resetState.pet.name).toBe("Mochi");
     expect(resetState.totalCompletedTasks).toBe(0);
+    expect(resetState.hydrationMl).toBe(0);
+    expect(resetState.hydrationGoalMl).toBe(3000);
     expect(resetState.tasks.every((task) => !task.isCompleted)).toBe(true);
+  });
+
+  it("erhöht Wasserfortschritt bis maximal zum Tagesziel", () => {
+    const initialGameState = createInitialGameState();
+
+    const hydratedGameState = addHydrationInGameState(initialGameState, 500);
+    const cappedGameState = addHydrationInGameState(hydratedGameState, 9999);
+
+    expect(hydratedGameState.hydrationMl).toBe(500);
+    expect(cappedGameState.hydrationMl).toBe(initialGameState.hydrationGoalMl);
   });
 });

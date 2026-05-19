@@ -4,6 +4,7 @@ import {
   calculateNextGrowthGoal,
   createInitialGameState,
   createMockAccount,
+  HYDRATION_RULES,
   normalizeEmail,
   PET_RULES,
 } from '../../shared/mock/mock-data';
@@ -96,6 +97,20 @@ export function feedPetInGameState(gameState: GameState): GameState {
       hearts: Math.min(PET_RULES.maxHearts, currentPet.hearts + 1),
       mealsServed: currentPet.mealsServed + 1,
     },
+  };
+}
+
+export function addHydrationInGameState(gameState: GameState, amountMl: number): GameState {
+  if (amountMl <= 0) {
+    return gameState;
+  }
+
+  const hydrationGoalMl = gameState.hydrationGoalMl || HYDRATION_RULES.dailyGoalMl;
+
+  return {
+    ...gameState,
+    hydrationGoalMl,
+    hydrationMl: Math.min(hydrationGoalMl, (gameState.hydrationMl ?? 0) + amountMl),
   };
 }
 

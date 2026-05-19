@@ -5,6 +5,9 @@ import { AppUser } from './user.model';
 export interface GameState {
   pet: PetState;
   tasks: TaskItem[];
+  hydrationMl: number;
+  hydrationGoalMl: number;
+  hydrationLastResetAt: string;
   totalCompletedTasks: number;
   totalEarnedPoints: number;
 }

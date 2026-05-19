@@ -1,9 +1,10 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
 import { BrowserStorageService } from './browser-storage.service';
-import { MockAccount, StorageSnapshot } from '../../shared/models/app-state.model';
+import { GameState, MockAccount, StorageSnapshot } from '../../shared/models/app-state.model';
 import { AuthResult, LoginCredentials, RegisterCredentials } from '../../shared/models/auth.model';
-import { createInitialSnapshot, STORAGE_KEY } from '../../shared/mock/mock-data';
+import { createInitialSnapshot, HYDRATION_RULES, STORAGE_KEY } from '../../shared/mock/mock-data';
 import {
+  addHydrationInGameState,
   completeTaskInGameState,
   createRegisteredAccount,
   feedPetInGameState,
@@ -33,6 +34,10 @@ export class AppStateService {
   readonly user = computed(() => this.activeAccount()?.user ?? null);
   readonly pet = computed(() => this.activeAccount()?.gameState.pet ?? null);
   readonly tasks = computed(() => this.activeAccount()?.gameState.tasks ?? []);
+  readonly hydrationMl = computed(() => this.activeAccount()?.gameState.hydrationMl ?? 0);
+  readonly hydrationGoalMl = computed(
+    () => this.activeAccount()?.gameState.hydrationGoalMl ?? 3000
+  );
   readonly totalTaskCount = computed(() => this.tasks().length);
   readonly completedTaskCount = computed(
     () => this.tasks().filter((task) => task.isCompleted).length
@@ -117,6 +122,15 @@ export class AppStateService {
     });
   }
 
+  addHydration(amountMl: number): void {
+    this.updateActiveAccount((account) => {
+      return {
+        ...account,
+        gameState: addHydrationInGameState(account.gameState, amountMl),
+      };
+    });
+  }
+
   resetCurrentProgress(): void {
     this.updateActiveAccount((account) => ({
       ...account,
@@ -131,11 +145,44 @@ export class AppStateService {
       return createInitialSnapshot();
     }
 
-    return savedSnapshot;
+    return this.normalizeSnapshot(savedSnapshot);
   }
 
   private isValidSnapshot(snapshot: StorageSnapshot | null): snapshot is StorageSnapshot {
     return Boolean(snapshot && Array.isArray(snapshot.accounts) && 'activeUserId' in snapshot);
+  }
+
+  private normalizeSnapshot(snapshot: StorageSnapshot): StorageSnapshot {
+    return {
+      ...snapshot,
+      accounts: snapshot.accounts.map((account) => ({
+        ...account,
+        gameState: this.resetHydrationIfExpired({
+          ...account.gameState,
+          hydrationMl: account.gameState.hydrationMl ?? 0,
+          hydrationGoalMl: account.gameState.hydrationGoalMl ?? HYDRATION_RULES.dailyGoalMl,
+          hydrationLastResetAt:
+            account.gameState.hydrationLastResetAt ?? new Date().toISOString(),
+        }),
+      })),
+    };
+  }
+
+  private resetHydrationIfExpired(gameState: GameState): GameState {
+    const lastReset = new Date(gameState.hydrationLastResetAt);
+    const resetAt = Number.isNaN(lastReset.getTime())
+      ? new Date(0)
+      : lastReset;
+
+    if (Date.now() - resetAt.getTime() < 24 * 60 * 60 * 1000) {
+      return gameState;
+    }
+
+    return {
+      ...gameState,
+      hydrationMl: 0,
+      hydrationLastResetAt: new Date().toISOString(),
+    };
   }
 
   // Das Update des aktiven Kontos kapselt die Array-Manipulation an einer Stelle.
@@ -147,10 +194,15 @@ export class AppStateService {
       return;
     }
 
+    const normalizedAccount: MockAccount = {
+      ...activeAccount,
+      gameState: this.resetHydrationIfExpired(activeAccount.gameState),
+    };
+
     this.snapshot.update((currentSnapshot) => ({
       ...currentSnapshot,
       accounts: currentSnapshot.accounts.map((account) =>
-        account.user.id === activeAccount.user.id ? mapAccount(account) : account
+        account.user.id === activeAccount.user.id ? mapAccount(normalizedAccount) : account
       ),
     }));
   }
