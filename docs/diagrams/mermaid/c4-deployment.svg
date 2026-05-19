@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="330" viewBox="0 0 1000 330" role="img" aria-labelledby="title desc">
   <title id="title">C4 Deployment</title>
-  <desc id="desc">Deployment Diagramm fuer Docker Compose, PostgreSQL und PokeAPI.</desc>
+  <desc id="desc">Deployment Diagramm für Docker Compose, PostgreSQL und PokeAPI.</desc>
   <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#344054"/></marker><style>.bg{fill:#f8fafc}.group{fill:#fff;stroke:#98a2b3;stroke-width:2;stroke-dasharray:8 6;rx:16}.box{fill:#edf7f6;stroke:#19756d;stroke-width:2;rx:12}.host{fill:#fff0d6;stroke:#b66a00;stroke-width:2;rx:12}.external{fill:#f4e7ff;stroke:#7a3fb0;stroke-width:2;rx:12}.db{fill:#fff5e8;stroke:#b65f00;stroke-width:2}.title{font:700 24px Arial,sans-serif;fill:#101828}.label{font:700 15px Arial,sans-serif;fill:#101828}.small{font:13px Arial,sans-serif;fill:#475467}.arrow{stroke:#344054;stroke-width:2.2;fill:none;marker-end:url(#arrow)}</style></defs>
   <rect class="bg" width="1000" height="330"/><text x="40" y="45" class="title">Deployment View</text>
   <rect x="45" y="135" width="170" height="70" class="host"/><text x="130" y="164" text-anchor="middle" class="label">Entwicklerrechner</text><text x="130" y="184" text-anchor="middle" class="small">Docker Host</text>

@@ -57,6 +57,63 @@
   gap: 1.3rem;
 }
 
+.pet-card__weather {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(128, 97, 87, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.pet-card__weather div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.pet-card__weather-form {
+  display: grid;
+  grid-template-columns: minmax(9rem, 1fr) auto auto;
+  gap: 0.65rem;
+  min-width: min(100%, 27rem);
+}
+
+.pet-card__weather-form input {
+  width: 100%;
+  min-height: 2.55rem;
+  padding: 0 0.85rem;
+  border: 1px solid rgba(128, 97, 87, 0.16);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--color-text);
+  font: inherit;
+  outline: none;
+}
+
+.pet-card__weather-form input:focus {
+  border-color: rgba(128, 97, 87, 0.34);
+  box-shadow: 0 0 0 3px rgba(128, 97, 87, 0.09);
+}
+
+.pet-card__weather-label {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pet-card__weather strong {
+  color: var(--color-text);
+}
+
+.pet-card__weather small {
+  color: var(--color-text-soft);
+  line-height: 1.45;
+}
+
 .pet-card__stats {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -95,8 +152,10 @@
 
 @include respond-down(640px) {
   .pet-card__header,
-  .pet-card__footer {
+  .pet-card__footer,
+  .pet-card__weather {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .pet-card__stats {
@@ -105,5 +164,9 @@
 
   .pet-card__microcopy {
     width: 100%;
+  }
+
+  .pet-card__weather-form {
+    grid-template-columns: 1fr;
   }
 }

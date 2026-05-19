@@ -1,7 +1,7 @@
 import { expect, test } from "../../frontend/testing/playwright-test";
 
 test.describe("SQS MVP", () => {
-  test("fuehrt vom Splash-Screen bis ins Dashboard", async ({ page }) => {
+  test("führt vom Splash-Screen bis ins Dashboard", async ({ page }) => {
     await page.addInitScript(() => {
       globalThis.localStorage.clear();
     });
@@ -27,7 +27,7 @@ test.describe("SQS MVP", () => {
     ).toBeVisible();
     await expect(page.getByText("Deine Aufgaben")).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Pet fuettern" }),
+      page.getByRole("button", { name: "Pet füttern" }),
     ).toBeVisible();
   });
 });

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="980" viewBox="0 0 1400 980" role="img" aria-labelledby="title desc">
   <title id="title">C4 Diagramm - Self-Care Companion</title>
-  <desc id="desc">Visuelle C4-Uebersicht mit System Context, Container, Komponenten und Deployment.</desc>
+  <desc id="desc">Visuelle C4-Übersicht mit System Context, Container, Komponenten und Deployment.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#344054" />

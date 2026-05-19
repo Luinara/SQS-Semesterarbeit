@@ -11,7 +11,7 @@ import {
 // Die Service-Klasse soll nur orchestrieren:
 // lesen, schreiben, Signals pflegen.
 // Die eigentlichen Fachregeln liegen deshalb als pure Funktionen hier,
-// damit sie leicht testbar und spaeter auch ausserhalb von Angular nutzbar bleiben.
+// damit sie leicht testbar und später auch außerhalb von Angular nutzbar bleiben.
 
 export function findAccountForLogin(
   accounts: MockAccount[],
@@ -75,8 +75,8 @@ export function feedPetInGameState(gameState: GameState): GameState {
   let nextGrowthProgress = currentPet.growthProgress + PET_RULES.growthPerFeeding;
   let nextHappiness = Math.min(PET_RULES.maxHappiness, currentPet.happiness + 8);
 
-  // Ueberschuessiger Fortschritt bleibt erhalten.
-  // Dadurch fuehlt sich Fuettern nicht nach "verschwendeten" Punkten an.
+  // Überschüssiger Fortschritt bleibt erhalten.
+  // Dadurch fühlt sich Füttern nicht nach "verschwendeten" Punkten an.
   while (nextGrowthProgress >= nextGrowthGoal) {
     nextGrowthProgress -= nextGrowthGoal;
     nextLevel += 1;

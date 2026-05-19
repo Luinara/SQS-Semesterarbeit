@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="360" viewBox="0 0 1000 360" role="img" aria-labelledby="title desc">
   <title id="title">C4 Frontend Components</title>
-  <desc id="desc">Frontend-Komponentendiagramm fuer das Angular Frontend.</desc>
+  <desc id="desc">Frontend-Komponentendiagramm für das Angular Frontend.</desc>
   <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#344054"/></marker><style>.bg{fill:#f8fafc}.group{fill:#fff;stroke:#98a2b3;stroke-width:2;stroke-dasharray:8 6;rx:16}.box{fill:#eef2ff;stroke:#4357ad;stroke-width:2;rx:10}.browser{fill:#fff0d6;stroke:#b66a00;stroke-width:2;rx:12}.api{fill:#dff3ff;stroke:#1677a3;stroke-width:2;rx:12}.title{font:700 24px Arial,sans-serif;fill:#101828}.label{font:700 15px Arial,sans-serif;fill:#101828}.small{font:13px Arial,sans-serif;fill:#475467}.arrow{stroke:#344054;stroke-width:2.2;fill:none;marker-end:url(#arrow)}.dash{stroke-dasharray:7 6}</style></defs>
   <rect class="bg" width="1000" height="360"/><text x="40" y="45" class="title">Frontend Component View</text>
   <rect x="40" y="145" width="120" height="65" class="browser"/><text x="100" y="182" text-anchor="middle" class="label">Browser</text>

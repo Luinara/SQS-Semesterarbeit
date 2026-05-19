@@ -6,11 +6,11 @@ import {
 } from "../../../frontend/src/app/shared/mock/mock-data";
 
 describe("mock-data", () => {
-  it("normalisiert E-Mail-Adressen fuer stabile Vergleiche", () => {
+  it("normalisiert E-Mail-Adressen für stabile Vergleiche", () => {
     expect(normalizeEmail("  User@Example.COM ")).toBe("user@example.com");
   });
 
-  it("berechnet das naechste Wachstumsziel nachvollziehbar groesser", () => {
+  it("berechnet das nächste Wachstumsziel nachvollziehbar größer", () => {
     expect(calculateNextGrowthGoal(100)).toBe(123);
     expect(calculateNextGrowthGoal(123)).toBeGreaterThan(123);
   });

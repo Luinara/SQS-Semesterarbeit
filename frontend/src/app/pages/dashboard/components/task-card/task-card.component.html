@@ -49,7 +49,7 @@
 
     <div class="task-card__footer">
       <span class="task-card__state">
-        {{ task().isCompleted ? 'Erledigt fuer heute' : 'Bereit fuer einen Fokus-Moment' }}
+        {{ task().isCompleted ? 'Erledigt für heute' : 'Bereit für einen Fokus-Moment' }}
       </span>
 
       <button
@@ -59,7 +59,7 @@
         [variant]="task().isCompleted ? 'secondary' : 'primary'"
         (click)="markTaskAsCompleted()"
       >
-        {{ task().isCompleted ? 'Abgeschlossen' : 'Abschliessen' }}
+        {{ task().isCompleted ? 'Abgeschlossen' : 'Abschließen' }}
       </button>
     </div>
   </div>

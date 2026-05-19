@@ -1,7 +1,7 @@
 import { BrowserStorageService } from "../../../frontend/src/app/core/services/browser-storage.service";
 
 describe("BrowserStorageService", () => {
-  it("liest gueltige JSON-Werte aus dem localStorage", () => {
+  it("liest gültige JSON-Werte aus dem localStorage", () => {
     const storageService = new BrowserStorageService();
 
     globalThis.localStorage.setItem("demo-key", JSON.stringify({ value: 42 }));
@@ -11,10 +11,10 @@ describe("BrowserStorageService", () => {
     expect(result).toEqual({ value: 42 });
   });
 
-  it("liefert den Fallback-Wert bei defektem JSON zurueck", () => {
+  it("liefert den Fallback-Wert bei defektem JSON zurück", () => {
     const storageService = new BrowserStorageService();
 
-    globalThis.localStorage.setItem("demo-key", "{ungueltig");
+    globalThis.localStorage.setItem("demo-key", "{ungültig");
 
     const result = storageService.read("demo-key", { value: 7 });
 
@@ -37,7 +37,7 @@ describe("BrowserStorageService", () => {
     expect(globalThis.localStorage.getItem("demo-key")).toBe('{"ready":true}');
   });
 
-  it("nutzt den Fallback und schreibt nichts, wenn kein localStorage verfuegbar ist", () => {
+  it("nutzt den Fallback und schreibt nichts, wenn kein localStorage verfügbar ist", () => {
     const originalLocalStorage = Object.getOwnPropertyDescriptor(
       globalThis,
       "localStorage",

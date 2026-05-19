@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="360" viewBox="0 0 1000 360" role="img" aria-labelledby="title desc">
   <title id="title">C4 Level 2 Container</title>
-  <desc id="desc">Container Diagramm fuer Frontend, Backend, Datenbank und PokeAPI.</desc>
+  <desc id="desc">Container Diagramm für Frontend, Backend, Datenbank und PokeAPI.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#344054"/></marker>
     <style>.bg{fill:#f8fafc}.group{fill:#fff;stroke:#98a2b3;stroke-width:2;stroke-dasharray:8 6;rx:16}.box{stroke-width:2;rx:12}.person{fill:#fff0d6;stroke:#b66a00}.container{fill:#e7f8ef;stroke:#138a4e}.external{fill:#f4e7ff;stroke:#7a3fb0}.db{fill:#fff5e8;stroke:#b65f00;stroke-width:2}.title{font:700 24px Arial,sans-serif;fill:#101828}.label{font:700 15px Arial,sans-serif;fill:#101828}.small{font:13px Arial,sans-serif;fill:#475467}.arrow{stroke:#344054;stroke-width:2.2;fill:none;marker-end:url(#arrow)}</style>
