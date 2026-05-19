@@ -33,7 +33,7 @@ export class AuthFormComponent {
 
   constructor() {
     // Der Benutzername wird nur im Registrierungsmodus gebraucht.
-    // Die Validierung bleibt dadurch praezise und vermeidet Sonderfaelle im Submit-Flow.
+    // Die Validierung bleibt dadurch präzise und vermeidet Sonderfälle im Submit-Flow.
     effect(() => {
       const userNameControl = this.form.controls.userName;
 
@@ -87,7 +87,7 @@ export class AuthFormComponent {
       return 'Bitte gib eine E-Mail-Adresse ein.';
     }
 
-    return 'Bitte verwende ein gueltiges E-Mail-Format.';
+    return 'Bitte verwende ein gültiges E-Mail-Format.';
   }
 
   passwordErrorText(): string {
@@ -100,11 +100,11 @@ export class AuthFormComponent {
 
   userNameErrorText(): string {
     if (this.form.controls.userName.hasError('required')) {
-      return 'Bitte waehle einen Benutzernamen.';
+      return 'Bitte wähle einen Benutzernamen.';
     }
 
     if (this.form.controls.userName.hasError('maxlength')) {
-      return 'Der Benutzername darf hoechstens 24 Zeichen lang sein.';
+      return 'Der Benutzername darf höchstens 24 Zeichen lang sein.';
     }
 
     return 'Der Benutzername sollte mindestens 2 Zeichen lang sein.';

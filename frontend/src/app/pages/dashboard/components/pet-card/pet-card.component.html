@@ -3,10 +3,10 @@
     <div class="pet-card__header">
       <div>
         <span class="eyebrow">Dein virtuelles Pet</span>
-        <h2>{{ currentPet.name }} waechst mit deinem Alltag</h2>
+        <h2>{{ currentPet.name }} wächst mit deinem Alltag</h2>
         <p>
-          Erledige kleine Schritte, sammle Punkte und investiere sie in Fuetterungen, damit dein Pet
-          sichtbar staerker wird.
+          Erledige kleine Schritte, sammle Punkte und investiere sie in Fütterungen, damit dein Pet
+          sichtbar stärker wird.
         </p>
       </div>
 
@@ -17,9 +17,58 @@
     </div>
 
     <div class="pet-card__body">
-      <sqs-pet-visual [petName]="currentPet.name" [level]="currentPet.level" />
+      <sqs-pet-visual
+        [petName]="currentPet.name"
+        [level]="currentPet.level"
+        [weatherScene]="weatherScene()"
+      />
 
       <div class="pet-card__details">
+        <div class="pet-card__weather">
+          <div>
+            <span class="pet-card__weather-label">Wetter-API</span>
+            <strong>{{ weatherScene().headline }}</strong>
+            <small>{{ weatherStatus() }}</small>
+          </div>
+
+          <form
+            class="pet-card__weather-form"
+            (submit)="
+              submitWeatherCity($event, weatherCityInput.value); weatherCityInput.value = ''
+            "
+          >
+            <input
+              #weatherCityInput
+              type="search"
+              name="weather-city"
+              autocomplete="address-level2"
+              [disabled]="weatherLoading()"
+              [placeholder]="weatherSnapshot()?.locationLabel ?? 'Stadt eingeben'"
+            />
+
+            <button
+              sqsButton
+              size="sm"
+              variant="secondary"
+              [disabled]="weatherLoading()"
+              type="submit"
+            >
+              Stadt laden
+            </button>
+
+            <button
+              sqsButton
+              size="sm"
+              variant="ghost"
+              [disabled]="weatherLoading()"
+              type="button"
+              (click)="requestWeatherRefresh()"
+            >
+              Aktualisieren
+            </button>
+          </form>
+        </div>
+
         <sqs-progress-bar
           [label]="'Wachstum bis Level ' + (currentPet.level + 1)"
           [value]="currentPet.growthProgress"
@@ -56,10 +105,10 @@
 
         <div class="pet-card__footer">
           <div class="pet-card__hint">
-            <strong>Fuetterung kostet {{ feedCost }} Punkte.</strong>
+            <strong>Fütterung kostet {{ feedCost }} Punkte.</strong>
             <span>
-              Sobald der Balken voll ist, steigt {{ currentPet.name }} ein Level auf und behaelt
-              ueberschuessigen Fortschritt.
+              Sobald der Balken voll ist, steigt {{ currentPet.name }} ein Level auf und behält
+              überschüssigen Fortschritt.
             </span>
           </div>
 
@@ -69,7 +118,7 @@
             [variant]="canFeed() ? 'primary' : 'secondary'"
             (click)="requestFeeding()"
           >
-            Pet fuettern
+            Pet füttern
           </button>
         </div>
       </div>

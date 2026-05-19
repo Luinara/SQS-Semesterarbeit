@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppStateService } from '../../core/services/app-state.service';
+import { WeatherService } from '../../core/services/weather.service';
 import { PetCardComponent } from './components/pet-card/pet-card.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
 import { TopBarComponent } from './components/top-bar/top-bar.component';
@@ -16,6 +17,7 @@ import { TopBarComponent } from './components/top-bar/top-bar.component';
 export class DashboardPageComponent {
   private readonly router = inject(Router);
   readonly appState = inject(AppStateService);
+  readonly weather = inject(WeatherService);
 
   completeTask(taskId: string): void {
     this.appState.completeTask(taskId);
@@ -23,6 +25,14 @@ export class DashboardPageComponent {
 
   feedPet(): void {
     this.appState.feedPet();
+  }
+
+  refreshWeather(): void {
+    void this.weather.refresh();
+  }
+
+  searchWeatherCity(cityName: string): void {
+    void this.weather.searchCity(cityName);
   }
 
   resetDemoData(): void {

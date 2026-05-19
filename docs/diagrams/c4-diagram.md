@@ -1,8 +1,8 @@
 # C4 Diagramm - Self-Care Companion
 
-Dieses Dokument beschreibt die Architektur der Self-Care Companion Webanwendung im C4-Stil. Die Diagramme bilden den aktuellen Projektstand und die geplante Zielarchitektur ab: ein Angular-Frontend, ein Spring-Boot-Backend, PostgreSQL als Datenbank und die externe PokeAPI fuer Pokemon-Daten.
+Dieses Dokument beschreibt die Architektur der Self-Care Companion Webanwendung im C4-Stil. Die Diagramme bilden den aktuellen Projektstand und die geplante Zielarchitektur ab: ein Angular-Frontend, ein Spring-Boot-Backend, PostgreSQL als Datenbank und die externe PokeAPI für Pokemon-Daten.
 
-## Visuelle Uebersicht
+## Visuelle Übersicht
 
 ![C4 Diagramm - Self-Care Companion](./c4-diagram.svg)
 
@@ -13,9 +13,9 @@ Die Mermaid-Diagramme sind ausgelagert:
 | Dateityp | Zweck |
 | --- | --- |
 | `.mmd` | Bearbeitbare Mermaid-Quelle |
-| `.svg` | Sichtbar gerendertes Diagramm fuer Markdown-Preview |
+| `.svg` | Sichtbar gerendertes Diagramm für Markdown-Preview |
 
-Markdown kann externe `.mmd`-Dateien nicht portabel direkt rendern. Deshalb wird pro Abschnitt die passende `.svg` sichtbar eingebettet und die zugehoerige `.mmd`-Quelle direkt darunter verlinkt.
+Markdown kann externe `.mmd`-Dateien nicht portabel direkt rendern. Deshalb wird pro Abschnitt die passende `.svg` sichtbar eingebettet und die zugehörige `.mmd`-Quelle direkt darunter verlinkt.
 
 ## Level 1: System Context
 
@@ -44,7 +44,7 @@ Mermaid-Quelle: [c4-level-2-container.mmd](./mermaid/c4-level-2-container.mmd)
 | Frontend | Angular, TypeScript, SCSS | Zeigt Splash-, Login- und Dashboard-Seiten, verwaltet UI-Zustand und ruft Backend-Endpunkte auf. |
 | Backend API | Java 21, Spring Boot 3, Spring Web, Spring Data JPA | Kapselt REST-Endpunkte, Authentifizierung, Aufgabenlogik, Fortschrittsberechnung und externe Integrationen. |
 | Datenbank | PostgreSQL | Persistiert Nutzer, Aufgaben, Aufgabenstatus und pet-bezogene Fortschrittsdaten. |
-| PokeAPI | Externer REST-Service | Liefert Pokemon-Daten fuer die Gamification. |
+| PokeAPI | Externer REST-Service | Liefert Pokemon-Daten für die Gamification. |
 
 ## Level 3: Backend Component View
 
@@ -56,11 +56,11 @@ Mermaid-Quelle: [c4-level-3-backend-components.mmd](./mermaid/c4-level-3-backend
 
 | Komponente | Package | Verantwortung |
 | --- | --- | --- |
-| Controller | `com.example.app.controller` | Definiert public und protected REST-Endpunkte fuer Authentifizierung, Dashboard und Aufgaben. |
-| Config / Security | `com.example.app.config` | Konfiguriert Spring, Security-Regeln, CORS und spaetere Authentifizierungsmechanismen. |
-| Service | `com.example.app.service` | Enthaelt die fachliche Logik, z. B. Aufgaben abschliessen, Fortschritt berechnen und Pokemon-Daten anreichern. |
+| Controller | `com.example.app.controller` | Definiert public und protected REST-Endpunkte für Authentifizierung, Dashboard und Aufgaben. |
+| Config / Security | `com.example.app.config` | Konfiguriert Spring, Security-Regeln, CORS und spätere Authentifizierungsmechanismen. |
+| Service | `com.example.app.service` | Enthält die fachliche Logik, z. B. Aufgaben abschließen, Fortschritt berechnen und Pokemon-Daten anreichern. |
 | Domain | `com.example.app.domain` | Modelliert zentrale Fachobjekte wie Nutzer, Aufgaben, Status und Pet/Pokemon-Fortschritt. |
-| Repository | `com.example.app.repository` | Kapselt Datenzugriff ueber Spring Data JPA. |
+| Repository | `com.example.app.repository` | Kapselt Datenzugriff über Spring Data JPA. |
 | Integration | `com.example.app.integration` | Kapselt Kommunikation mit externen Diensten, insbesondere PokeAPI. |
 
 ## Frontend Component View
@@ -74,12 +74,12 @@ Mermaid-Quelle: [c4-frontend-components.mmd](./mermaid/c4-frontend-components.mm
 | Komponente | Verantwortung |
 | --- | --- |
 | Routing | Definiert Navigation zwischen Splash, Auth und Dashboard. |
-| Guards | Schuetzen Routen fuer angemeldete bzw. nicht angemeldete Nutzer. |
+| Guards | Schützen Routen für angemeldete bzw. nicht angemeldete Nutzer. |
 | Pages | Bilden die groben fachlichen Ansichten der Anwendung. |
 | Dashboard Components | Stellen Aufgabenliste, einzelne Aufgaben, Fortschritt und Pet-Darstellung dar. |
-| Shared UI | Wiederverwendbare UI-Bausteine fuer Buttons, Fortschrittsbalken und Statusanzeigen. |
+| Shared UI | Wiederverwendbare UI-Bausteine für Buttons, Fortschrittsbalken und Statusanzeigen. |
 | Core State & Services | Verwaltet App-Zustand und lokale Browser-Speicherung. |
-| Models | Typisiert Datenstrukturen fuer Nutzer, Authentifizierung, Aufgaben und Pet-Zustand. |
+| Models | Typisiert Datenstrukturen für Nutzer, Authentifizierung, Aufgaben und Pet-Zustand. |
 
 ## Deployment View
 
@@ -91,9 +91,9 @@ Mermaid-Quelle: [c4-deployment.mmd](./mermaid/c4-deployment.mmd)
 
 | Node | Beschreibung |
 | --- | --- |
-| Entwicklerrechner / Docker Host | Lokale Ausfuehrungsumgebung fuer Entwicklung und Demo. |
+| Entwicklerrechner / Docker Host | Lokale Ausführungsumgebung für Entwicklung und Demo. |
 | Frontend Container | Liefert die Angular-Anwendung aus und kommuniziert mit dem Backend. |
-| Backend Container | Fuehrt die Spring-Boot-Anwendung aus. |
+| Backend Container | Führt die Spring-Boot-Anwendung aus. |
 | PostgreSQL Container | Speichert persistente Daten im Docker-Volume `db_data`. |
 | PokeAPI | Externer Internetdienst, der nicht Teil des eigenen Deployments ist. |
 
@@ -103,9 +103,9 @@ Mermaid-Quelle: [c4-deployment.mmd](./mermaid/c4-deployment.mmd)
 | --- | --- |
 | Backend mit Spring Boot | `docs/adr/ADR-001-use-spring-boot.md` |
 | Persistenz mit PostgreSQL | `docs/adr/ADR-003-use-postgresql.md` |
-| Pokemon-Daten ueber PokeAPI | `docs/adr/ADR-004-use-pokeapi.md` |
+| Pokemon-Daten über PokeAPI | `docs/adr/ADR-004-use-pokeapi.md` |
 | Frontend aktuell mit Angular | Abgeleitet aus `frontend/package.json` und `frontend/src/app/` |
 
 ## Abgrenzung
 
-Das Backend enthaelt aktuell erst die Paketstruktur fuer Controller, Services, Domain, Repository und Integration. Die C4-Komponentensicht beschreibt daher die vorgesehene Architektur, die bereits durch Projektstruktur, README, ADRs und Testkonzept vorbereitet ist. Die konkrete Implementierung der REST-Endpunkte, Security-Regeln, Persistenzmodelle und PokeAPI-Integration ist noch auszubauen.
+Das Backend enthält aktuell erst die Paketstruktur für Controller, Services, Domain, Repository und Integration. Die C4-Komponentensicht beschreibt daher die vorgesehene Architektur, die bereits durch Projektstruktur, README, ADRs und Testkonzept vorbereitet ist. Die konkrete Implementierung der REST-Endpunkte, Security-Regeln, Persistenzmodelle und PokeAPI-Integration ist noch auszubauen.

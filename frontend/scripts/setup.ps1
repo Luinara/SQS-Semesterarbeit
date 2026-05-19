@@ -1,4 +1,4 @@
-# Dieses Skript buendelt den lokalen Frontend-Setup fuer PowerShell.
+# Dieses Skript bündelt den lokalen Frontend-Setup für PowerShell.
 # Gerade auf Windows wird dadurch ein reproduzierbarer Start ohne manuelle Einzelschritte einfacher.
 $ErrorActionPreference = 'Stop'
 
@@ -26,9 +26,9 @@ function Invoke-NpmStep {
 Write-Host '==> Wechsle in das Frontend-Verzeichnis...'
 Set-Location $frontendDirectory
 
-Invoke-NpmStep -Label 'Installiere npm-Abhaengigkeiten...' -Arguments @('install')
-Invoke-NpmStep -Label 'Pruefe TypeScript-Typen...' -Arguments @('run', 'type-check')
+Invoke-NpmStep -Label 'Installiere npm-Abhängigkeiten...' -Arguments @('install')
+Invoke-NpmStep -Label 'Prüfe TypeScript-Typen...' -Arguments @('run', 'type-check')
 Invoke-NpmStep -Label 'Erzeuge einen Produktions-Build zur Verifikation...' -Arguments @('run', 'build')
 
 Write-Host '==> Frontend-Setup abgeschlossen.'
-Write-Host '==> Starte die App anschliessend mit: npm start'
+Write-Host '==> Starte die App anschließend mit: npm start'

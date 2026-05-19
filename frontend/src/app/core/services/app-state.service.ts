@@ -65,7 +65,7 @@ export class AppStateService {
 
     return {
       success: true,
-      message: `Willkommen zurueck, ${account.user.userName}. Dein Pet hat dich schon vermisst.`,
+      message: `Willkommen zurück, ${account.user.userName}. Dein Pet hat dich schon vermisst.`,
     };
   }
 
@@ -88,7 +88,7 @@ export class AppStateService {
 
     return {
       success: true,
-      message: `Schoen, dass du da bist, ${newAccount.user.userName}. Dein erstes Pet ist bereit.`,
+      message: `Schön, dass du da bist, ${newAccount.user.userName}. Dein erstes Pet ist bereit.`,
     };
   }
 

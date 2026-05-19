@@ -6,8 +6,8 @@ import { AppUser } from '../models/user.model';
 
 export const STORAGE_KEY = 'sqs.frontend.mvp.state';
 
-// Die Regeln stehen zentral an einer Stelle, damit man die Demo spaeter
-// leicht in ein echtes Balancing oder eine Backend-Konfiguration ueberfuehren kann.
+// Die Regeln stehen zentral an einer Stelle, damit man die Demo später
+// leicht in ein echtes Balancing oder eine Backend-Konfiguration überführen kann.
 export const PET_RULES = {
   feedCost: 12,
   growthPerFeeding: 34,
@@ -91,7 +91,7 @@ function createInitialTasks(): TaskItem[] {
     {
       id: createId('task'),
       title: 'Wasser trinken',
-      description: 'Eine kurze Pause, die Energie fuer Kopf und Fokus zurueckbringt.',
+      description: 'Eine kurze Pause, die Energie für Kopf und Fokus zurückbringt.',
       icon: 'drop',
       tone: 'peach',
       points: 8,
@@ -100,7 +100,7 @@ function createInitialTasks(): TaskItem[] {
     {
       id: createId('task'),
       title: '30 Minuten lernen',
-      description: 'Ein klarer Lernblock fuer stetigen Fortschritt ohne Perfektionsdruck.',
+      description: 'Ein klarer Lernblock für stetigen Fortschritt ohne Perfektionsdruck.',
       icon: 'study',
       tone: 'rose',
       points: 16,
@@ -117,8 +117,8 @@ function createInitialTasks(): TaskItem[] {
     },
     {
       id: createId('task'),
-      title: 'Zimmer aufraeumen',
-      description: 'Ein ruhiger Raum hilft dabei, den Kopf spuerbar freier zu machen.',
+      title: 'Zimmer aufräumen',
+      description: 'Ein ruhiger Raum hilft dabei, den Kopf spürbar freier zu machen.',
       icon: 'spark',
       tone: 'taupe',
       points: 12,
@@ -127,7 +127,7 @@ function createInitialTasks(): TaskItem[] {
     {
       id: createId('task'),
       title: '10 Seiten lesen',
-      description: 'Ein kleiner Leseschritt fuer Konzentration und konstante Routine.',
+      description: 'Ein kleiner Leseschritt für Konzentration und konstante Routine.',
       icon: 'book',
       tone: 'peach',
       points: 10,

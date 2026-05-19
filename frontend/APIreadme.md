@@ -1,6 +1,6 @@
-# Frontend API Dokumentation fuer Dummies
+# Frontend API Dokumentation für Dummies
 
-Diese Datei erklaert die aktuelle "API" des Frontends. Wichtig: Im Moment spricht das Frontend noch nicht mit einem echten Backend per HTTP. Die App nutzt eine lokale Demo-API ueber Angular-Services, Mock-Daten und `localStorage`.
+Diese Datei erklärt die aktuelle "API" des Frontends. Wichtig: Im Moment spricht das Frontend noch nicht mit einem echten Backend per HTTP. Die App nutzt eine lokale Demo-API über Angular-Services, Mock-Daten und `localStorage`.
 
 Kurz gesagt:
 
@@ -11,13 +11,13 @@ Kurz gesagt:
 
 ## Wo liegt die Frontend-API?
 
-| Datei | Aufgabe |
-| --- | --- |
-| `src/app/core/services/app-state.service.ts` | Zentrale Service-API fuer Komponenten |
-| `src/app/core/services/browser-storage.service.ts` | Lesen und Schreiben in `localStorage` |
-| `src/app/core/state/app-state.logic.ts` | Reine Fachlogik fuer Login, Tasks, Pet und Reset |
-| `src/app/shared/mock/mock-data.ts` | Demo-Daten und Pet-Regeln |
-| `src/app/shared/models/*.ts` | TypeScript-Datentypen |
+| Datei                                              | Aufgabe                                         |
+| -------------------------------------------------- | ----------------------------------------------- |
+| `src/app/core/services/app-state.service.ts`       | Zentrale Service-API für Komponenten            |
+| `src/app/core/services/browser-storage.service.ts` | Lesen und Schreiben in `localStorage`           |
+| `src/app/core/state/app-state.logic.ts`            | Reine Fachlogik für Login, Tasks, Pet und Reset |
+| `src/app/shared/mock/mock-data.ts`                 | Demo-Daten und Pet-Regeln                       |
+| `src/app/shared/models/*.ts`                       | TypeScript-Datentypen                           |
 
 ## Grundidee
 
@@ -43,7 +43,7 @@ localStorage im Browser
 
 ## AppStateService
 
-Der `AppStateService` ist die wichtigste API fuer das Frontend.
+Der `AppStateService` ist die wichtigste API für das Frontend.
 
 Import:
 
@@ -63,7 +63,7 @@ Oder mit `inject`:
 const appState = inject(AppStateService);
 ```
 
-## So benutzt man die Frontend-API Schritt fuer Schritt
+## So benutzt man die Frontend-API Schritt für Schritt
 
 Dieser Abschnitt zeigt den typischen Weg, wie eine Angular-Komponente die Frontend-API benutzt.
 
@@ -75,9 +75,9 @@ In der Komponente wird zuerst der `AppStateService` importiert:
 import { AppStateService } from '../../core/services/app-state.service';
 ```
 
-Der genaue Pfad haengt davon ab, wo die Komponente liegt.
+Der genaue Pfad hängt davon ab, wo die Komponente liegt.
 
-### 2. Service in der Komponente verfuegbar machen
+### 2. Service in der Komponente verfügbar machen
 
 Variante A: mit `inject`
 
@@ -95,7 +95,7 @@ export class ExampleComponent {
 }
 ```
 
-Variante B: ueber den Constructor
+Variante B: über den Constructor
 
 ```ts
 import { Component } from '@angular/core';
@@ -111,7 +111,7 @@ export class ExampleComponent {
 }
 ```
 
-Im Projekt ist beides moeglich. Wichtig ist nur: Komponenten sollen den `AppStateService` benutzen und nicht direkt `localStorage` oder Mock-Daten manipulieren.
+Im Projekt ist beides möglich. Wichtig ist nur: Komponenten sollen den `AppStateService` benutzen und nicht direkt `localStorage` oder Mock-Daten manipulieren.
 
 ### 3. Daten im Template anzeigen
 
@@ -119,12 +119,10 @@ Da viele Werte Signals sind, werden sie im Template mit Klammern gelesen:
 
 ```html
 @if (appState.user(); as user) {
-  <p>Hallo {{ user.userName }}</p>
-}
-
-@if (appState.pet(); as pet) {
-  <p>Level: {{ pet.level }}</p>
-  <p>Futterpunkte: {{ pet.availableFoodPoints }}</p>
+<p>Hallo {{ user.userName }}</p>
+} @if (appState.pet(); as pet) {
+<p>Level: {{ pet.level }}</p>
+<p>Futterpunkte: {{ pet.availableFoodPoints }}</p>
 }
 ```
 
@@ -132,13 +130,11 @@ Tasks anzeigen:
 
 ```html
 @for (task of appState.tasks(); track task.id) {
-  <article>
-    <h3>{{ task.title }}</h3>
-    <p>{{ task.description }}</p>
-    <button type="button" (click)="completeTask(task.id)">
-      Erledigen
-    </button>
-  </article>
+<article>
+  <h3>{{ task.title }}</h3>
+  <p>{{ task.description }}</p>
+  <button type="button" (click)="completeTask(task.id)">Erledigen</button>
+</article>
 }
 ```
 
@@ -150,9 +146,9 @@ completeTask(taskId: string): void {
 }
 ```
 
-### 4. Login aus einem Formular ausloesen
+### 4. Login aus einem Formular auslösen
 
-Beispiel fuer eine einfache Login-Methode:
+Beispiel für eine einfache Login-Methode:
 
 ```ts
 login(): void {
@@ -171,12 +167,12 @@ login(): void {
 
 Wichtig:
 
-- `login` gibt ein `AuthResult` zurueck.
+- `login` gibt ein `AuthResult` zurück.
 - `success: true` bedeutet: Login war erfolgreich.
 - `success: false` bedeutet: Login war nicht erfolgreich.
 - Die Fehlermeldung steht in `message`.
 
-### 5. Registrierung ausloesen
+### 5. Registrierung auslösen
 
 ```ts
 register(): void {
@@ -190,9 +186,9 @@ register(): void {
 }
 ```
 
-Nach erfolgreicher Registrierung ist das neue Konto direkt aktiv. Die Komponente muss also kein zweites Login ausfuehren.
+Nach erfolgreicher Registrierung ist das neue Konto direkt aktiv. Die Komponente muss also kein zweites Login ausführen.
 
-### 6. Logout ausloesen
+### 6. Logout auslösen
 
 ```ts
 logout(): void {
@@ -202,7 +198,7 @@ logout(): void {
 
 Danach ist `appState.isAuthenticated()` wieder `false`.
 
-### 7. Pet fuettern
+### 7. Pet füttern
 
 ```ts
 feedPet(): void {
@@ -210,9 +206,9 @@ feedPet(): void {
 }
 ```
 
-Die Methode prueft selbst, ob genug Futterpunkte vorhanden sind. Die Komponente muss diese Regel nicht nachbauen.
+Die Methode prüft selbst, ob genug Futterpunkte vorhanden sind. Die Komponente muss diese Regel nicht nachbauen.
 
-### 8. Fortschritt zuruecksetzen
+### 8. Fortschritt zurücksetzen
 
 ```ts
 resetProgress(): void {
@@ -220,9 +216,9 @@ resetProgress(): void {
 }
 ```
 
-Das setzt Tasks, Punkte und Pet-Fortschritt zurueck, aber nicht das Konto.
+Das setzt Tasks, Punkte und Pet-Fortschritt zurück, aber nicht das Konto.
 
-## Vollstaendiges Mini-Beispiel
+## Vollständiges Mini-Beispiel
 
 Dieses Beispiel zeigt eine kleine Komponente, die mehrere API-Funktionen benutzt.
 
@@ -243,7 +239,7 @@ import { AppStateService } from '../../core/services/app-state.service';
       <p>Futterpunkte: {{ pet.availableFoodPoints }}</p>
     }
 
-    <button type="button" (click)="feedPet()">Pet fuettern</button>
+    <button type="button" (click)="feedPet()">Pet füttern</button>
     <button type="button" (click)="logout()">Logout</button>
   `,
 })
@@ -264,16 +260,16 @@ export class MiniDashboardComponent {
 
 Diese Werte sind Angular Signals bzw. Computed Signals. Man liest sie mit Klammern aus, zum Beispiel `appState.user()`.
 
-| Wert | Typ | Bedeutung |
-| --- | --- | --- |
-| `activeAccount()` | `MockAccount | null` | Aktuell angemeldetes lokales Konto oder `null` |
-| `isAuthenticated()` | `boolean` | Sagt, ob ein Nutzer angemeldet ist |
-| `user()` | `AppUser | null` | Aktueller Nutzer |
-| `pet()` | `PetState | null` | Aktueller Pet-Zustand |
-| `tasks()` | `TaskItem[]` | Aufgabenliste des aktiven Nutzers |
-| `totalTaskCount()` | `number` | Anzahl aller Aufgaben |
-| `completedTaskCount()` | `number` | Anzahl erledigter Aufgaben |
-| `feedCost` | `number` | Kosten fuer eine Pet-Fuetterung |
+| Wert                   | Typ          | Bedeutung                          |
+| ---------------------- | ------------ | ---------------------------------- | ---------------------------------------------- |
+| `activeAccount()`      | `MockAccount | null`                              | Aktuell angemeldetes lokales Konto oder `null` |
+| `isAuthenticated()`    | `boolean`    | Sagt, ob ein Nutzer angemeldet ist |
+| `user()`               | `AppUser     | null`                              | Aktueller Nutzer                               |
+| `pet()`                | `PetState    | null`                              | Aktueller Pet-Zustand                          |
+| `tasks()`              | `TaskItem[]` | Aufgabenliste des aktiven Nutzers  |
+| `totalTaskCount()`     | `number`     | Anzahl aller Aufgaben              |
+| `completedTaskCount()` | `number`     | Anzahl erledigter Aufgaben         |
+| `feedCost`             | `number`     | Kosten für eine Pet-Fütterung      |
 
 Beispiel:
 
@@ -285,7 +281,7 @@ if (user) {
 }
 ```
 
-Beispiel fuer Tasks:
+Beispiel für Tasks:
 
 ```ts
 const tasks = this.appState.tasks();
@@ -294,16 +290,16 @@ const openTasks = tasks.filter((task) => !task.isCompleted);
 
 ## Schreibende API
 
-Diese Methoden veraendern den Zustand der App.
+Diese Methoden verändern den Zustand der App.
 
-| Methode | Parameter | Rueckgabe | Bedeutung |
-| --- | --- | --- | --- |
-| `login(credentials)` | `LoginCredentials` | `AuthResult` | Meldet einen lokalen Demo-Nutzer an |
-| `register(credentials)` | `RegisterCredentials` | `AuthResult` | Erstellt ein lokales Konto und meldet es direkt an |
-| `logout()` | keine | `void` | Meldet den aktuellen Nutzer ab |
-| `completeTask(taskId)` | `string` | `void` | Markiert eine Aufgabe als erledigt und gibt Punkte |
-| `feedPet()` | keine | `void` | Fuettert das Pet, falls genug Punkte vorhanden sind |
-| `resetCurrentProgress()` | keine | `void` | Setzt den Spielfortschritt des aktiven Kontos zurueck |
+| Methode                  | Parameter             | Rückgabe     | Bedeutung                                            |
+| ------------------------ | --------------------- | ------------ | ---------------------------------------------------- |
+| `login(credentials)`     | `LoginCredentials`    | `AuthResult` | Meldet einen lokalen Demo-Nutzer an                  |
+| `register(credentials)`  | `RegisterCredentials` | `AuthResult` | Erstellt ein lokales Konto und meldet es direkt an   |
+| `logout()`               | keine                 | `void`       | Meldet den aktuellen Nutzer ab                       |
+| `completeTask(taskId)`   | `string`              | `void`       | Markiert eine Aufgabe als erledigt und gibt Punkte   |
+| `feedPet()`              | keine                 | `void`       | Füttert das Pet, falls genug Punkte vorhanden sind   |
+| `resetCurrentProgress()` | keine                 | `void`       | Setzt den Spielfortschritt des aktiven Kontos zurück |
 
 ## Login
 
@@ -329,7 +325,7 @@ if (result.success) {
 }
 ```
 
-Moegliche Rueckgabe:
+Mögliche Rückgabe:
 
 ```ts
 interface AuthResult {
@@ -381,9 +377,9 @@ Was passiert:
 
 - `activeUserId` wird auf `null` gesetzt.
 - Die lokalen Konten bleiben erhalten.
-- Der Nutzer kann sich spaeter wieder anmelden.
+- Der Nutzer kann sich später wieder anmelden.
 
-## Aufgabe abschliessen
+## Aufgabe abschließen
 
 Beispiel:
 
@@ -396,14 +392,14 @@ Was passiert:
 - Die Aufgabe wird auf `isCompleted: true` gesetzt.
 - `totalCompletedTasks` steigt um 1.
 - `totalEarnedPoints` steigt um die Punkte der Aufgabe.
-- Das Pet bekommt verfuegbare Futterpunkte.
+- Das Pet bekommt verfügbare Futterpunkte.
 - Happiness und Hearts steigen bis zu ihrem Maximum.
 
 Wichtig:
 
 Wenn eine Aufgabe schon erledigt ist, passiert beim zweiten Klick nichts.
 
-## Pet fuettern
+## Pet füttern
 
 Beispiel:
 
@@ -413,13 +409,13 @@ this.appState.feedPet();
 
 Regeln aus `PET_RULES`:
 
-| Regel | Wert | Bedeutung |
-| --- | --- | --- |
-| `feedCost` | `12` | So viele Punkte kostet eine Fuetterung |
-| `growthPerFeeding` | `34` | So viel Wachstumsfortschritt bringt eine Fuetterung |
-| `maxHappiness` | `100` | Maximale Happiness |
-| `maxHearts` | `5` | Maximale Herzen |
-| `initialGrowthGoal` | `100` | Erstes Wachstumsziel |
+| Regel               | Wert  | Bedeutung                                          |
+| ------------------- | ----- | -------------------------------------------------- |
+| `feedCost`          | `12`  | So viele Punkte kostet eine Fütterung              |
+| `growthPerFeeding`  | `34`  | So viel Wachstumsfortschritt bringt eine Fütterung |
+| `maxHappiness`      | `100` | Maximale Happiness                                 |
+| `maxHearts`         | `5`   | Maximale Herzen                                    |
+| `initialGrowthGoal` | `100` | Erstes Wachstumsziel                               |
 
 Was passiert:
 
@@ -427,9 +423,9 @@ Was passiert:
 - Wenn genug Punkte da sind, werden `12` Punkte abgezogen.
 - Das Pet bekommt Wachstumsfortschritt.
 - Wenn das Wachstumsziel erreicht wird, steigt das Level.
-- Ueberschuessiger Fortschritt bleibt erhalten.
+- Überschüssiger Fortschritt bleibt erhalten.
 
-## Fortschritt zuruecksetzen
+## Fortschritt zurücksetzen
 
 Beispiel:
 
@@ -465,10 +461,10 @@ interface StorageSnapshot {
 
 Das bedeutet:
 
-- `accounts` enthaelt alle lokal registrierten Demo-Konten.
+- `accounts` enthält alle lokal registrierten Demo-Konten.
 - `activeUserId` merkt sich, welches Konto gerade angemeldet ist.
 
-Wenn keine gueltigen Daten im Browser liegen, erstellt die App automatisch den Demo-Startzustand.
+Wenn keine gültigen Daten im Browser liegen, erstellt die App automatisch den Demo-Startzustand.
 
 ## Datenmodelle
 
@@ -533,16 +529,16 @@ interface MockAccount {
 }
 ```
 
-Hinweis: Das Passwort wird aktuell nur lokal fuer die Demo gespeichert. Fuer ein echtes Backend duerfte das Frontend niemals Passwoerter dauerhaft speichern.
+Hinweis: Das Passwort wird aktuell nur lokal für die Demo gespeichert. Für ein echtes Backend dürfte das Frontend niemals Passwörter dauerhaft speichern.
 
 ## Routen und Zugriff
 
-| Route | Komponente | Schutz |
-| --- | --- | --- |
-| `/splash` | Splash-Seite | frei |
-| `/auth` | Login/Register | nur fuer Gaeste |
-| `/dashboard` | Dashboard | nur fuer angemeldete Nutzer |
-| `/**` | Weiterleitung | zur Splash-Seite |
+| Route        | Komponente     | Schutz                     |
+| ------------ | -------------- | -------------------------- |
+| `/splash`    | Splash-Seite   | frei                       |
+| `/auth`      | Login/Register | nur für Gäste              |
+| `/dashboard` | Dashboard      | nur für angemeldete Nutzer |
+| `/**`        | Weiterleitung  | zur Splash-Seite           |
 
 Guards:
 
@@ -556,28 +552,29 @@ E-Mail: demo@sqs.app
 Passwort: cozyfocus
 ```
 
-## Was waere spaeter eine echte Backend-API?
+## Was wäre später eine echte Backend-API?
 
-Aktuell ist alles lokal. Spaeter koennte man die Methoden im `AppStateService` durch HTTP-Calls ersetzen oder einen neuen API-Service daneben bauen.
+Aktuell ist alles lokal. Später könnte man die Methoden im `AppStateService` durch HTTP-Calls ersetzen oder einen neuen API-Service daneben bauen.
+Eine kleine Ausnahme ist der Wetter-Hintergrund des Pets: `WeatherService` ruft Open-Meteo direkt aus dem Frontend ab. Eine eingegebene Stadt wird über Open-Meteo Geocoding in Koordinaten übersetzt, danach werden Wettercode und Tag/Nacht in eine visuelle Szene für Sonne, Wolken, Regen, Schnee, Hagel, Sturm oder Nebel gemappt.
 
-Moegliche spaetere REST-Endpunkte waeren zum Beispiel:
+Mögliche spätere REST-Endpunkte wären zum Beispiel:
 
-| Frontend-Aktion | Moeglicher Backend-Endpunkt |
-| --- | --- |
-| Login | `POST /api/auth/login` |
-| Registrierung | `POST /api/auth/register` |
-| Aktuellen Nutzer laden | `GET /api/me` |
-| Tasks laden | `GET /api/tasks` |
-| Task abschliessen | `POST /api/tasks/{id}/complete` |
-| Pet laden | `GET /api/pet` |
-| Pet fuettern | `POST /api/pet/feed` |
-| Fortschritt zuruecksetzen | `POST /api/progress/reset` |
+| Frontend-Aktion          | Möglicher Backend-Endpunkt      |
+| ------------------------ | ------------------------------- |
+| Login                    | `POST /api/auth/login`          |
+| Registrierung            | `POST /api/auth/register`       |
+| Aktuellen Nutzer laden   | `GET /api/me`                   |
+| Tasks laden              | `GET /api/tasks`                |
+| Task abschließen         | `POST /api/tasks/{id}/complete` |
+| Pet laden                | `GET /api/pet`                  |
+| Pet füttern              | `POST /api/pet/feed`            |
+| Fortschritt zurücksetzen | `POST /api/progress/reset`      |
 
-Diese Endpunkte existieren aktuell noch nicht im Frontend. Sie sind nur eine Orientierung fuer die spaetere Anbindung.
+Diese Endpunkte existieren aktuell noch nicht im Frontend. Sie sind nur eine Orientierung für die spätere Anbindung.
 
 ## Merksatz
 
-Fuer Komponenten gilt:
+Für Komponenten gilt:
 
 ```text
 Nicht direkt localStorage anfassen.

@@ -2,7 +2,7 @@
   "name": "sqs-frontend",
   "version": "0.1.0",
   "private": true,
-  "description": "Angular-Frontend fuer das pet-basierte SQS Productivity MVP",
+  "description": "Angular-Frontend für das pet-basierte SQS Productivity MVP",
   "scripts": {
     "start": "ng serve",
     "dev": "ng serve",
@@ -13,6 +13,9 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "security:audit": "npm audit --audit-level=moderate --omit=optional",
+    "security:lockfile": "vitest run ../tests/unit/frontend/npm-security.test.ts",
+    "security:frontend": "npm run security:lockfile && npm run security:audit",
     "lint": "eslint \"src/**/*.ts\" \"testing/**/*.ts\" \"playwright.config.ts\" \"vitest.config.ts\"",
     "format:check": "prettier --check \"src/**/*.{ts,scss,html}\" \"../tests/**/*.{ts,md}\"",
     "format": "prettier --write \"src/**/*.{ts,scss,html}\" \"../tests/**/*.{ts,md}\""
@@ -29,19 +32,22 @@
     "zone.js": "0.16.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.1",
-    "@angular-devkit/build-angular": "21.2.7",
-    "@angular/cli": "21.2.7",
+    "@angular-devkit/build-angular": "21.2.11",
+    "@angular/cli": "21.2.11",
     "@angular/compiler-cli": "21.2.9",
+    "@playwright/test": "^1.56.1",
+    "@types/node": "25.6.0",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
-    "@types/node": "25.6.0",
     "@vitest/coverage-v8": "^4.0.3",
     "eslint": "^9.38.0",
     "jsdom": "^27.0.1",
-    "prettier": "^3.6.2",
     "playwright": "^1.56.1",
+    "prettier": "^3.6.2",
     "typescript": "5.9.3",
     "vitest": "^4.0.3"
+  },
+  "overrides": {
+    "webpack-dev-server": "5.2.4"
   }
 }

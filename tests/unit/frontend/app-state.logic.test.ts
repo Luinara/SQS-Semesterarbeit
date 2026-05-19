@@ -24,7 +24,7 @@ describe("app-state.logic", () => {
     expect(account?.user.userName).toBe("Lina");
   });
 
-  it("erkennt vorhandene Konten unabhaengig von Gross- und Kleinschreibung", () => {
+  it("erkennt vorhandene Konten unabhängig von Groß- und Kleinschreibung", () => {
     const snapshot = createInitialSnapshot();
 
     expect(hasAccountWithEmail(snapshot.accounts, " Demo@Sqs.App ")).toBe(true);
@@ -64,7 +64,7 @@ describe("app-state.logic", () => {
     );
   });
 
-  it("laesst eine bereits erledigte Aufgabe beim zweiten Versuch unveraendert", () => {
+  it("lässt eine bereits erledigte Aufgabe beim zweiten Versuch unverändert", () => {
     const initialGameState = createInitialGameState();
     const firstTaskId = initialGameState.tasks[0].id;
 
@@ -77,7 +77,7 @@ describe("app-state.logic", () => {
     expect(twiceCompleted).toEqual(onceCompleted);
   });
 
-  it("fuettert das Pet nur, wenn genug Punkte vorhanden sind", () => {
+  it("füttert das Pet nur, wenn genug Punkte vorhanden sind", () => {
     const initialGameState = createInitialGameState();
 
     const unchangedGameState = feedPetInGameState(initialGameState);
@@ -85,7 +85,7 @@ describe("app-state.logic", () => {
     expect(unchangedGameState).toEqual(initialGameState);
   });
 
-  it("erhoeht Level und behaelt Ueberschuss-Fortschritt beim Fuettern", () => {
+  it("erhöht Level und behält Überschuss-Fortschritt beim Füttern", () => {
     const initialGameState = createInitialGameState();
     const preparedGameState = {
       ...initialGameState,
@@ -114,7 +114,7 @@ describe("app-state.logic", () => {
     );
   });
 
-  it("setzt den Spielzustand auf die Demo-Ausgangswerte zurueck", () => {
+  it("setzt den Spielzustand auf die Demo-Ausgangswerte zurück", () => {
     const resetState = resetGameState();
 
     expect(resetState.pet.name).toBe("Mochi");

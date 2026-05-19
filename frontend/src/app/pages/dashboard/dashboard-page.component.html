@@ -23,7 +23,13 @@
           [pet]="appState.pet()"
           [completedTasks]="appState.completedTaskCount()"
           [totalTasks]="appState.totalTaskCount()"
+          [weatherScene]="weather.scene()"
+          [weatherSnapshot]="weather.snapshot()"
+          [weatherLoading]="weather.isLoading()"
+          [weatherError]="weather.errorMessage()"
           (feedRequested)="feedPet()"
+          (weatherRefreshRequested)="refreshWeather()"
+          (weatherCitySubmitted)="searchWeatherCity($event)"
         />
       </section>
     </div>
