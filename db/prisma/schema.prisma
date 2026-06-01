@@ -4,5 +4,58 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+model Pokemon {
+  id          Int     @id
+  name        String
+  imageUrl    String  @map("image_url")
+  evolutionId Int?    @map("evolution_id")
+
+  evolution     Pokemon?  @relation("PokemonEvolution", fields: [evolutionId], references: [id])
+  preEvolutions Pokemon[] @relation("PokemonEvolution")
+
+  users User[]
+
+  @@map("pokemon")
+}
+
+model User {
+  id        Int    @id @default(autoincrement())
+  username  String @unique
+  passwordHash String @map("password_hash")
+
+  currentPokemonId Int?     @map("current_pokemon_id")
+  currentPokemon   Pokemon? @relation(fields: [currentPokemonId], references: [id])
+
+  isEgg     Boolean  @default(true) @map("is_egg")
+  happiness Int      @default(0)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  hatchedAt DateTime? @map("hatched_at")
+
+  stats UserStats?
+
+  @@map("users")
+}
+
+model EnvironmentBackground {
+  id          Int    @id @default(autoincrement())
+  weatherType String @map("weather_type")
+  timeOfDay   String @map("time_of_day")
+  imageUrl    String @map("image_url")
+
+  @@unique([weatherType, timeOfDay])
+  @@map("environment_backgrounds")
+}
+
+model UserStats {
+  userId Int @id @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  totalLogins          Int @default(0) @map("total_logins")
+  totalHappinessGained Int @default(0) @map("total_happiness_gained")
+  lastLogin            DateTime? @map("last_login")
+
+  @@map("user_stats")
 }
