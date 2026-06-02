@@ -117,6 +117,32 @@ npm install
 npm run dev
 ```
 
+**Database**
+- start the database locally
+```bash
+docker compose up -d db
+```
+- apply prisma migrations
+```bash
+cd db
+npx prisma migrate deploy
+```
+- reset the database locally
+```bash
+cd db
+npx prisma migrate reset
+```
+- execute seed
+```bash
+cd db
+npx prisma db seed
+```
+- prisma studio
+```bash
+cd db
+npx prisma studio
+```
+
 ---
 
 ## Running Tests
