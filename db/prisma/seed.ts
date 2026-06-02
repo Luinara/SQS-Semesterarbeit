@@ -29,22 +29,37 @@ async function main() {
         },
     });
 
-    await prisma.environmentBackground.upsert({
-        where: {
-            weatherType_timeOfDay: {
-                weatherType: "sunny",
-                timeOfDay: "day",
-            },
-        },
-        update: {},
-        create: {
-            weatherType: "sunny",
-            timeOfDay: "day",
-            imageUrl: "/backgrounds/sunny_day.png",
-        },
-    });
+    const backgrounds = [
+        "sunny",
+        "cloudy",
+        "rain",
+        "thunderstorm",
+        "snow",
+        "fog",
+        "windy",
+        "clear",
+    ];
 
-    console.log("Seed completed: testuser and sunny_day background created.");
+    for (const weatherType of backgrounds) {
+        for (const timeOfDay of ["day", "night"]) {
+            await prisma.environmentBackground.upsert({
+                where: {
+                    weatherType_timeOfDay: {
+                        weatherType,
+                        timeOfDay,
+                    },
+                },
+                update: {},
+                create: {
+                    weatherType,
+                    timeOfDay,
+                    imageUrl: `/backgrounds/${weatherType}_${timeOfDay}.png`,
+                },
+            });
+        }
+    }
+
+    console.log("Seed completed");
 }
 
 main()
