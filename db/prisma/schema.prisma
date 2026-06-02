@@ -15,7 +15,8 @@ model Pokemon {
   evolution     Pokemon?  @relation("PokemonEvolution", fields: [evolutionId], references: [id])
   preEvolutions Pokemon[] @relation("PokemonEvolution")
 
-  users User[]
+  currentUsers User[] @relation("CurrentPokemon")
+  eggUsers     User[] @relation("EggPokemon")
 
   @@map("pokemon")
 }
@@ -25,8 +26,11 @@ model User {
   username  String @unique
   passwordHash String @map("password_hash")
 
-  currentPokemonId Int?     @map("current_pokemon_id")
-  currentPokemon   Pokemon? @relation(fields: [currentPokemonId], references: [id])
+currentPokemonId Int?     @map("current_pokemon_id")
+currentPokemon   Pokemon? @relation("CurrentPokemon", fields: [currentPokemonId], references: [id])
+
+eggPokemonId     Int?     @map("egg_pokemon_id")
+eggPokemon       Pokemon? @relation("EggPokemon", fields: [eggPokemonId], references: [id])
 
   isEgg     Boolean  @default(true) @map("is_egg")
   happiness Int      @default(0)

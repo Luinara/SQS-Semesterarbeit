@@ -11,7 +11,14 @@ const prisma = new PrismaClient({ adapter });
 
 async function main() {
     await seedPokemon();
+    await seedEvolutions();
+
     const passwordHash = await bcrypt.hash("test123", 10);
+
+    const pokemonCount = await prisma.pokemon.count();
+
+    const randomPokemonId =
+        Math.floor(Math.random() * pokemonCount) + 1;
 
     await prisma.user.upsert({
         where: { username: "testuser" },
@@ -21,6 +28,9 @@ async function main() {
             passwordHash,
             isEgg: true,
             happiness: 0,
+
+            eggPokemonId: randomPokemonId,
+
             stats: {
                 create: {
                     totalLogins: 0,
@@ -93,6 +103,56 @@ async function seedPokemon() {
 
     console.log("Pokemon loaded.");
 }
+async function seedEvolutions() {
+    console.log("Loading evolutions...");
+
+    for (let id = 1; id <= 151; id++) {
+        const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
+        const speciesData = await speciesResponse.json();
+
+        const evolutionChainResponse = await fetch(speciesData.evolution_chain.url);
+        const evolutionChainData = await evolutionChainResponse.json();
+
+        const evolutionPairs: { from: string; to: string }[] = [];
+
+        function extractEvolutions(chain: any) {
+            for (const next of chain.evolves_to) {
+                evolutionPairs.push({
+                    from: chain.species.name,
+                    to: next.species.name,
+                });
+
+                extractEvolutions(next);
+            }
+        }
+
+        extractEvolutions(evolutionChainData.chain);
+
+        for (const pair of evolutionPairs) {
+            const fromPokemon = await prisma.pokemon.findFirst({
+                where: { name: pair.from },
+            });
+
+            const toPokemon = await prisma.pokemon.findFirst({
+                where: { name: pair.to },
+            });
+
+            if (fromPokemon && toPokemon && fromPokemon.id <= 151 && toPokemon.id <= 151) {
+                await prisma.pokemon.update({
+                    where: { id: fromPokemon.id },
+                    data: {
+                        evolutionId: toPokemon.id,
+                    },
+                });
+
+                console.log(`${pair.from} -> ${pair.to}`);
+            }
+        }
+    }
+
+    console.log("Evolutions loaded.");
+}
+
 
 main()
     .catch((error) => {
