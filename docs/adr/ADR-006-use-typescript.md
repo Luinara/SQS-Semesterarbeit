@@ -1,4 +1,4 @@
-# ADR-005: Use TypeScript for frontend
+# ADR-006: Use TypeScript for frontend
 
 ## Status
 Accepted
