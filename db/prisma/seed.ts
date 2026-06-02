@@ -10,6 +10,7 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
+    await seedPokemon();
     const passwordHash = await bcrypt.hash("test123", 10);
 
     await prisma.user.upsert({
@@ -60,6 +61,37 @@ async function main() {
     }
 
     console.log("Seed completed");
+}
+
+async function seedPokemon() {
+    console.log("Loading Pokemon...");
+
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+    const data = await response.json();
+
+    for (const entry of data.results) {
+        const pokemonResponse = await fetch(entry.url);
+        const pokemonData = await pokemonResponse.json();
+
+        await prisma.pokemon.upsert({
+            where: {
+                id: pokemonData.id,
+            },
+            update: {
+                name: pokemonData.name,
+                imageUrl: pokemonData.sprites.other["official-artwork"].front_default,
+            },
+            create: {
+                id: pokemonData.id,
+                name: pokemonData.name,
+                imageUrl: pokemonData.sprites.other["official-artwork"].front_default,
+            },
+        });
+
+        console.log(`Saved ${pokemonData.id}: ${pokemonData.name}`);
+    }
+
+    console.log("Pokemon loaded.");
 }
 
 main()
