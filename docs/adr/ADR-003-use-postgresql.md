@@ -13,7 +13,7 @@ The application requires persistent storage for user and task data.
 
 ## Decision
 Use PostgreSQL as the primary database. H2 in-memory is used during automated tests.
-Reasons: Safe for user data, no corrupted states, excellent for structured data, scaleing, industry standard 
+Reasons: Safe for user data, no corrupted states, excellent for structured data, scaling, industry standard, docker-friendly.
 
 ## Consequences
 - Proven relational database with good Spring Data JPA support.
