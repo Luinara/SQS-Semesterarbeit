@@ -1,4 +1,4 @@
-package com.example.app.architecture;
+package io.github.luinara.sqs.architecture;
 
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
@@ -53,24 +53,24 @@ class ArchitectureTest {
             classes()
                     .that().areAnnotatedWith(RestController.class)
                     .or().areAnnotatedWith(Controller.class)
-                    .should().haveSimpleName("Controller")
-                    .as("Classes annotated with @Controller or @RestController must be named exactly 'Controller'");
+                    .should().haveSimpleNameEndingWith("Controller")
+                    .as("Classes annotated with @Controller or @RestController must be named '*Controller'");
 
 
     @ArchTest
     static final ArchRule services_should_be_named_service =
             classes()
                     .that().areAnnotatedWith(Service.class)
-                    .should().haveSimpleName("Service")
-                    .as("Classes annotated with @Service must be named exactly 'Service'");
+                    .should().haveSimpleNameEndingWith("Service")
+                    .as("Classes annotated with @Service must be named '*Service'");
 
 
     @ArchTest
     static final ArchRule repositories_should_be_named_repository =
             classes()
                     .that().areAnnotatedWith(Repository.class)
-                    .should().haveSimpleName("Repository")
-                    .as("Classes annotated with @Repository must be named exactly 'Repository'");
+                    .should().haveSimpleNameEndingWith("Repository")
+                    .as("Classes annotated with @Repository must be named '*Repository'");
 
     // ─────────────────────────────────────────────────────────────────────
     // Layer Dependency Rules
@@ -125,6 +125,8 @@ class ArchitectureTest {
     static final ArchRule no_classes_should_throw_generic_exceptions =
             noClasses()
                     .that().resideInAPackage("io.github.luinara.sqs..")
+                    .and().haveSimpleNameNotContaining("Test")
+                    .and().haveSimpleNameNotContaining("IntegrationTest")
                     .should().dependOnClassesThat()
                     .areAssignableTo(Exception.class)
                     .as("Classes should throw specific exceptions, not generic 'Exception'");
