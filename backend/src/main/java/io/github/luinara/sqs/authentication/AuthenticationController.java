@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-public class Controller {
+public class AuthenticationController {
     @PostMapping("/signup")
     public void signup() {
         // TODO: implement
