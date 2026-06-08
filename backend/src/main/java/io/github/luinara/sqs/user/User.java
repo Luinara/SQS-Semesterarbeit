@@ -15,7 +15,9 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String passwordHash, Long currentPokemonId, boolean isEgg, int happiness, OffsetDateTime createdAt, OffsetDateTime hatchedAt) {
+    public User(Long id, String username, String passwordHash,
+                int currentPokemonId, boolean isEgg, int happiness,
+                OffsetDateTime createdAt, OffsetDateTime hatchedAt) {
         this.id = id;
         this.username = username;
         this.passwordHash = passwordHash;
@@ -50,11 +52,11 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public Long getCurrentPokemonId() {
+    public int getCurrentPokemonId() {
         return currentPokemonId;
     }
 
-    public void setCurrentPokemonId(Long currentPokemonId) {
+    public void setCurrentPokemonId(int currentPokemonId) {
         this.currentPokemonId = currentPokemonId;
     }
 
