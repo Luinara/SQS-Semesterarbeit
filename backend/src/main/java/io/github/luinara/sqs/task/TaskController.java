@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/tasks")
-public class Controller {
+public class TaskController {
     @GetMapping
     public void getTasks() {
         // TODO: implement

@@ -18,8 +18,8 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  * <pre>
  *   io.github.luinara.sqs
  *   ├── user/
- *   │   ├── Controller.java
- *   │   ├── Service.java
+ *   │   ├── TaskController.java
+ *   │   ├── UserService.java
  *   │   └── Repository.java
  *   ├── task/
  *   ├── authentication/
@@ -125,9 +125,8 @@ class ArchitectureTest {
     static final ArchRule no_classes_should_throw_generic_exceptions =
             noClasses()
                     .that().resideInAPackage("io.github.luinara.sqs..")
-                    .should().throwClassesThat()
-                    .areAssignableTo(Throwable.class)
-                    .and().haveSimpleName("Exception")
+                    .should().dependOnClassesThat()
+                    .areAssignableTo(Exception.class)
                     .as("Classes should throw specific exceptions, not generic 'Exception'");
 
     @ArchTest
