@@ -128,7 +128,7 @@ async function seedPokemon() {
             },
         });
 
-        console.log(`Saved Pokemon with ID ${pokemonData.id}`);
+        console.log("Pokemon saved.");
     }
 
     console.log("Pokemon loaded.");
