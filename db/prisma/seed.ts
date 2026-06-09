@@ -79,8 +79,13 @@ async function seedPokemon() {
     const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
     const data = await response.json();
 
-    for (const entry of data.results) {
-        const pokemonResponse = await fetch(entry.url);
+    for (let i = 0; i < data.results.length; i++) {
+        const pokemonId = i + 1;
+
+        const pokemonResponse = await fetch(
+            `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+        );
+
         const pokemonData = await pokemonResponse.json();
 
         await prisma.pokemon.upsert({
@@ -103,6 +108,22 @@ async function seedPokemon() {
 
     console.log("Pokemon loaded.");
 }
+type EvolutionPair = {
+    from: string;
+    to: string;
+};
+
+function extractEvolutions(chain: any, evolutionPairs: EvolutionPair[]) {
+    for (const next of chain.evolves_to) {
+        evolutionPairs.push({
+            from: chain.species.name,
+            to: next.species.name,
+        });
+
+        extractEvolutions(next, evolutionPairs);
+    }
+}
+
 async function seedEvolutions() {
     console.log("Loading evolutions...");
 
@@ -115,18 +136,7 @@ async function seedEvolutions() {
 
         const evolutionPairs: { from: string; to: string }[] = [];
 
-        function extractEvolutions(chain: any) {
-            for (const next of chain.evolves_to) {
-                evolutionPairs.push({
-                    from: chain.species.name,
-                    to: next.species.name,
-                });
-
-                extractEvolutions(next);
-            }
-        }
-
-        extractEvolutions(evolutionChainData.chain);
+        extractEvolutions(evolutionChainData.chain, evolutionPairs);
 
         for (const pair of evolutionPairs) {
             const fromPokemon = await prisma.pokemon.findFirst({
