@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcrypt";
+import { randomInt } from "crypto";
 
 const adapter = new PrismaPg({
     connectionString: process.env.DATABASE_URL!,
@@ -18,8 +19,7 @@ async function main() {
 
     const pokemonCount = await prisma.pokemon.count();
 
-    const randomPokemonId =
-        Math.floor(Math.random() * pokemonCount) + 1;
+    const randomPokemonId = randomInt(1, pokemonCount + 1);
 
     await prisma.user.upsert({
         where: { username: "testuser" },
