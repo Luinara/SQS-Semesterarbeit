@@ -128,7 +128,7 @@ async function seedPokemon() {
             },
         });
 
-        console.log(`Saved ${pokemonData.id}: ${pokemonData.name}`);
+        console.log(`Saved Pokemon with ID ${pokemonData.id}`);
     }
 
     console.log("Pokemon loaded.");
@@ -156,7 +156,13 @@ async function seedEvolutions() {
         const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
         const speciesData = await speciesResponse.json();
 
-        const evolutionChainResponse = await fetch(speciesData.evolution_chain.url);
+        const evolutionChainUrl = new URL(speciesData.evolution_chain.url);
+
+        if (evolutionChainUrl.hostname !== "pokeapi.co") {
+            throw new Error("Invalid evolution chain URL");
+        }
+
+        const evolutionChainResponse = await fetch(evolutionChainUrl.toString());
         const evolutionChainData = await evolutionChainResponse.json();
 
         const evolutionPairs: { from: string; to: string }[] = [];
@@ -180,7 +186,7 @@ async function seedEvolutions() {
                     },
                 });
 
-                console.log(`${pair.from} -> ${pair.to}`);
+                console.log("Evolution relation saved.");
             }
         }
     }
