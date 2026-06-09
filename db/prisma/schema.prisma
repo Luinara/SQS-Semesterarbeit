@@ -26,19 +26,29 @@ model User {
   id        Int    @id @default(autoincrement())
   username  String @unique
   passwordHash String @map("password_hash")
+  lastLoginAt DateTime? @map("last_login_at")
 
-currentPokemonId Int?     @map("current_pokemon_id")
-currentPokemon   Pokemon? @relation("CurrentPokemon", fields: [currentPokemonId], references: [id])
+  currentPokemonId Int?     @map("current_pokemon_id")
+  currentPokemon   Pokemon? @relation("CurrentPokemon", fields: [currentPokemonId], references: [id])
 
-eggPokemonId     Int?     @map("egg_pokemon_id")
-eggPokemon       Pokemon? @relation("EggPokemon", fields: [eggPokemonId], references: [id])
+  eggPokemonId     Int?     @map("egg_pokemon_id")
+  eggPokemon       Pokemon? @relation("EggPokemon", fields: [eggPokemonId], references: [id])
 
   isEgg     Boolean  @default(true) @map("is_egg")
   happiness Int      @default(0)
+
+  streak Int @default(0)
+  lastTaskCompletionDate DateTime? @map("last_task_completion_date")
+
   pokemonLevel Int @default(1) @map("pokemon_level")
+  pokemonXp Int @default(0) @map("pokemon_xp")
+  lastLevelUpAt DateTime? @map("last_level_up_at")
 
   createdAt DateTime @default(now()) @map("created_at")
   hatchedAt DateTime? @map("hatched_at")
+
+  hydrationMl Int @default(0) @map("hydration_ml")
+  hunger Int @default(0)
 
   stats UserStats?
 
