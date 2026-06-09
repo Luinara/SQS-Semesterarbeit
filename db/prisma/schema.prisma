@@ -34,11 +34,14 @@ eggPokemon       Pokemon? @relation("EggPokemon", fields: [eggPokemonId], refere
 
   isEgg     Boolean  @default(true) @map("is_egg")
   happiness Int      @default(0)
+  pokemonLevel Int @default(1) @map("pokemon_level")
 
   createdAt DateTime @default(now()) @map("created_at")
   hatchedAt DateTime? @map("hatched_at")
 
   stats UserStats?
+
+  userTasks UserTask[]
 
   @@map("users")
 }
@@ -62,4 +65,28 @@ model UserStats {
   lastLogin            DateTime? @map("last_login")
 
   @@map("user_stats")
+}
+model Task {
+  id          Int    @id @default(autoincrement())
+  title       String @unique
+  description String
+
+  userTasks UserTask[]
+
+  @@map("tasks")
+}
+
+model UserTask {
+  id     Int @id @default(autoincrement())
+
+  userId Int @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  taskId Int  @map("task_id")
+  task   Task @relation(fields: [taskId], references: [id])
+
+  completed Boolean @default(false)
+
+  @@unique([userId, taskId])
+  @@map("user_tasks")
 }

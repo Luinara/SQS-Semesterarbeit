@@ -70,6 +70,58 @@ async function main() {
         }
     }
 
+    const tasks = [
+        {
+            title: "Complete one study session",
+            description: "Finish at least one focused learning session.",
+        },
+        {
+            title: "Drink water",
+            description: "Drink enough water during the day.",
+        },
+        {
+            title: "Clean workspace",
+            description: "Clean your desk or learning area.",
+        },
+    ];
+
+    for (const task of tasks) {
+        await prisma.task.upsert({
+            where: {
+                title: task.title,
+            },
+            update: {
+                description: task.description,
+            },
+            create: task,
+        });
+    }
+
+    const testUser = await prisma.user.findUnique({
+        where: { username: "testuser" },
+    });
+
+    const allTasks = await prisma.task.findMany();
+
+    if (testUser) {
+        for (const task of allTasks) {
+            await prisma.userTask.upsert({
+                where: {
+                    userId_taskId: {
+                        userId: testUser.id,
+                        taskId: task.id,
+                    },
+                },
+                update: {},
+                create: {
+                    userId: testUser.id,
+                    taskId: task.id,
+                    completed: false,
+                },
+            });
+        }
+    }
+
     console.log("Seed completed");
 }
 
