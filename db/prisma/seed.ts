@@ -12,6 +12,7 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
     await seedPokemon();
     await seedEvolutions();
+    await seedEvolutionStages();
 
     const passwordHash = await bcrypt.hash("test123", 10);
 
@@ -40,35 +41,7 @@ async function main() {
         },
     });
 
-    const backgrounds = [
-        "sunny",
-        "cloudy",
-        "rain",
-        "thunderstorm",
-        "snow",
-        "fog",
-        "windy",
-        "clear",
-    ];
 
-    for (const weatherType of backgrounds) {
-        for (const timeOfDay of ["day", "night"]) {
-            await prisma.environmentBackground.upsert({
-                where: {
-                    weatherType_timeOfDay: {
-                        weatherType,
-                        timeOfDay,
-                    },
-                },
-                update: {},
-                create: {
-                    weatherType,
-                    timeOfDay,
-                    imageUrl: `/backgrounds/${weatherType}_${timeOfDay}.png`,
-                },
-            });
-        }
-    }
 
     const tasks = [
         {
@@ -215,6 +188,47 @@ async function seedEvolutions() {
     console.log("Evolutions loaded.");
 }
 
+async function seedEvolutionStages() {
+    console.log("Loading evolution stages...");
+
+    await prisma.pokemon.updateMany({
+        data: {
+            evolutionStage: 0,
+        },
+    });
+
+    await prisma.pokemon.updateMany({
+        where: {
+            name: {
+                in: [
+                    "ivysaur",
+                    "charmeleon",
+                    "wartortle",
+                ],
+            },
+        },
+        data: {
+            evolutionStage: 1,
+        },
+    });
+
+    await prisma.pokemon.updateMany({
+        where: {
+            name: {
+                in: [
+                    "venusaur",
+                    "charizard",
+                    "blastoise",
+                ],
+            },
+        },
+        data: {
+            evolutionStage: 2,
+        },
+    });
+
+    console.log("Evolution stages loaded.");
+}
 
 main()
     .catch((error) => {

@@ -11,6 +11,7 @@ model Pokemon {
   name        String
   imageUrl    String  @map("image_url")
   evolutionId Int?    @map("evolution_id")
+  evolutionStage Int @default(0) @map("evolution_stage")
 
   evolution     Pokemon?  @relation("PokemonEvolution", fields: [evolutionId], references: [id])
   preEvolutions Pokemon[] @relation("PokemonEvolution")
@@ -46,15 +47,6 @@ eggPokemon       Pokemon? @relation("EggPokemon", fields: [eggPokemonId], refere
   @@map("users")
 }
 
-model EnvironmentBackground {
-  id          Int    @id @default(autoincrement())
-  weatherType String @map("weather_type")
-  timeOfDay   String @map("time_of_day")
-  imageUrl    String @map("image_url")
-
-  @@unique([weatherType, timeOfDay])
-  @@map("environment_backgrounds")
-}
 
 model UserStats {
   userId Int @id @map("user_id")
