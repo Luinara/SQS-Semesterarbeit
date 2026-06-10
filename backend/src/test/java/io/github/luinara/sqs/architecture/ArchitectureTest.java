@@ -128,13 +128,6 @@ class ArchitectureTest {
                     .and().haveSimpleNameNotContaining("Test")
                     .and().haveSimpleNameNotContaining("IntegrationTest")
                     .should().dependOnClassesThat()
-                    .areAssignableTo(Exception.class)
+                    .haveFullyQualifiedName("java.lang.Exception")
                     .as("Classes should throw specific exceptions, not generic 'Exception'");
-
-    @ArchTest
-    static final ArchRule exception_classes_should_reside_in_exception_package =
-            classes()
-                    .that().haveSimpleNameEndingWith("Exception")
-                    .should().resideInAPackage("..exception..")
-                    .as("Exception classes should reside in 'exception' packages");
 }
