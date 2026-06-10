@@ -3,6 +3,7 @@ package io.github.luinara.sqs.authentication;
 import io.github.luinara.sqs.user.UserEntity;
 import io.github.luinara.sqs.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,17 +17,14 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Authentication service — simple in-memory implementation for development and tests.
  *
- * - Stores users in a ConcurrentHashMap with BCrypt-hashed passwords.
- * - Creates simple opaque tokens (UUID) on successful login and keeps a token->username map.
- *
- * This is intentionally simple; later this will be replaced by a persistent repository
- * (Postgres + Prisma) behind a UserRepository interface.
+ * - Stores users in a ConcurrentHashMap with BCrypt-hashed passwords (fallback).
+ * - In DB-mode uses UserRepository. For DB-mode we rely on HttpSession (session-based auth).
  */
 @Service
 public class AuthenticationService {
 
-    private final Map<String, String> users = new ConcurrentHashMap<>(); // username(lowercase) -> passwordHash
-    private final Map<String, String> sessions = new ConcurrentHashMap<>(); // token -> username
+    private final Map<String, String> users = new ConcurrentHashMap<>(); // username(lowercase) -> passwordHash (fallback)
+    private final Map<String, String> sessions = new ConcurrentHashMap<>(); // token -> username (only used in in-memory mode)
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final UserRepository userRepository; // optional
@@ -53,14 +51,20 @@ public class AuthenticationService {
 
         // If repository is present, persist to DB
         if (userRepository != null) {
+            // quick existence check, but also handle race via catching constraint exception
             if (userRepository.existsByUsernameIgnoreCase(username)) {
                 return false;
             }
             String hash = passwordEncoder.encode(password);
             UserEntity entity = new UserEntity(username, hash);
             entity.setCreatedAt(OffsetDateTime.now());
-            userRepository.save(entity);
-            return true;
+            try {
+                userRepository.save(entity);
+                return true;
+            } catch (DataIntegrityViolationException ex) {
+                // Unique constraint violated by concurrent request -> treat as "already exists"
+                return false;
+            }
         }
 
         // Fallback to in-memory store
@@ -74,7 +78,7 @@ public class AuthenticationService {
 
     /**
      * Authenticate a user with username and password.
-     * Returns an Optional token (empty when authentication fails).
+     * Returns an Optional token (in in-memory mode) or Optional username (in DB-mode).
      */
     public Optional<String> login(String username, String password) {
         if (username == null || password == null) {
@@ -93,25 +97,26 @@ public class AuthenticationService {
         }
 
         if (passwordEncoder.matches(password, storedHash)) {
-            String token = UUID.randomUUID().toString();
-            sessions.put(token, key);
-
-            // update lastLoginAt when using DB
             if (userRepository != null) {
+                // DB-mode: update lastLoginAt and rely on HttpSession for persistence
                 Optional<UserEntity> optEntity = userRepository.findByUsernameIgnoreCase(username);
-                if (optEntity.isPresent()) {
-                    UserEntity entity = optEntity.get();
+                optEntity.ifPresent(entity -> {
                     entity.setLastLoginAt(OffsetDateTime.now());
                     userRepository.save(entity);
-                }
+                });
+                return Optional.of(key); // return canonical username (lowercased key)
+            } else {
+                // In-memory mode: create token and store in sessions map
+                String token = UUID.randomUUID().toString();
+                sessions.put(token, key);
+                return Optional.of(token);
             }
-            return Optional.of(token);
         }
         return Optional.empty();
     }
 
     /**
-     * Logout the current user / invalidate token.
+     * Logout the current user / invalidate token (in-memory mode).
      */
     public void logout(String token) {
         if (token == null) return;
@@ -119,7 +124,7 @@ public class AuthenticationService {
     }
 
     /**
-     * Validate a token and return the associated username if valid.
+     * Validate a token and return the associated username if valid (in-memory mode).
      */
     public Optional<String> validateToken(String token) {
         if (token == null) return Optional.empty();
