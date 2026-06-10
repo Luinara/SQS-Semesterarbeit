@@ -1,9 +1,13 @@
 package io.github.luinara.sqs.authentication;
 
+import io.github.luinara.sqs.user.UserEntity;
+import io.github.luinara.sqs.user.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.OffsetDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,8 +29,17 @@ public class AuthenticationService {
     private final Map<String, String> sessions = new ConcurrentHashMap<>(); // token -> username
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    private final UserRepository userRepository; // optional
+
+    @Autowired
+    public AuthenticationService(Optional<UserRepository> userRepository) {
+        // If a JPA repository is available (e.g., when running with database profile), use it.
+        this.userRepository = userRepository.orElse(null);
+    }
+
+    // Backwards-compatible no-arg constructor used by unit tests that instantiate the service directly
     public AuthenticationService() {
-        // ...existing code... (constructor)
+        this.userRepository = null;
     }
 
     /**
@@ -37,6 +50,20 @@ public class AuthenticationService {
             throw new InvalidRequestException("username and password must be provided");
         }
         String key = username.toLowerCase();
+
+        // If repository is present, persist to DB
+        if (userRepository != null) {
+            if (userRepository.existsByUsernameIgnoreCase(username)) {
+                return false;
+            }
+            String hash = passwordEncoder.encode(password);
+            UserEntity entity = new UserEntity(username, hash);
+            entity.setCreatedAt(OffsetDateTime.now());
+            userRepository.save(entity);
+            return true;
+        }
+
+        // Fallback to in-memory store
         if (users.containsKey(key)) {
             return false;
         }
@@ -54,13 +81,30 @@ public class AuthenticationService {
             return Optional.empty();
         }
         String key = username.toLowerCase();
-        String storedHash = users.get(key);
-        if (storedHash == null) {
-            return Optional.empty();
+
+        String storedHash = null;
+        if (userRepository != null) {
+            Optional<UserEntity> opt = userRepository.findByUsernameIgnoreCase(username);
+            if (opt.isEmpty()) return Optional.empty();
+            storedHash = opt.get().getPasswordHash();
+        } else {
+            storedHash = users.get(key);
+            if (storedHash == null) return Optional.empty();
         }
+
         if (passwordEncoder.matches(password, storedHash)) {
             String token = UUID.randomUUID().toString();
             sessions.put(token, key);
+
+            // update lastLoginAt when using DB
+            if (userRepository != null) {
+                Optional<UserEntity> optEntity = userRepository.findByUsernameIgnoreCase(username);
+                if (optEntity.isPresent()) {
+                    UserEntity entity = optEntity.get();
+                    entity.setLastLoginAt(OffsetDateTime.now());
+                    userRepository.save(entity);
+                }
+            }
             return Optional.of(token);
         }
         return Optional.empty();
