@@ -29,13 +29,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiError> handleDataIntegrity(DataIntegrityViolationException ex) {
-        ApiError err = new ApiError(HttpStatus.CONFLICT.value(), "Conflict", "data conflict or unique constraint violation");
+        ApiError err = new ApiError(
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
+                "data conflict or unique constraint violation");
         return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGeneric(Exception ex) {
-        ApiError err = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error", "An unexpected error occurred");
+        ApiError err = new ApiError(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                "An unexpected error occurred");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
     }
 }

@@ -1,6 +1,5 @@
 package io.github.luinara.sqs.user;
 
-import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -17,11 +16,23 @@ public class UserEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+    @Column(name = "current_pokemon_id")
+    private Integer currentPokemonId;
+
+    @Column(name = "is_egg")
+    private boolean isEgg = true;
+
+    @Column(name = "happiness")
+    private int happiness = 0;
+
     @Column(name = "last_login_at")
     private OffsetDateTime lastLoginAt;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt = OffsetDateTime.now();
+
+    @Column(name = "hatched_at")
+    private OffsetDateTime hatchedAt;
 
     public UserEntity() {
     }
@@ -30,6 +41,8 @@ public class UserEntity {
         this.username = username;
         this.passwordHash = passwordHash;
         this.createdAt = OffsetDateTime.now();
+        this.isEgg = true;
+        this.happiness = 0;
     }
 
     public Long getId() {
@@ -56,6 +69,30 @@ public class UserEntity {
         this.passwordHash = passwordHash;
     }
 
+    public Integer getCurrentPokemonId() {
+        return currentPokemonId;
+    }
+
+    public void setCurrentPokemonId(Integer currentPokemonId) {
+        this.currentPokemonId = currentPokemonId;
+    }
+
+    public boolean isEgg() {
+        return isEgg;
+    }
+
+    public void setEgg(boolean egg) {
+        isEgg = egg;
+    }
+
+    public int getHappiness() {
+        return happiness;
+    }
+
+    public void setHappiness(int happiness) {
+        this.happiness = happiness;
+    }
+
     public OffsetDateTime getLastLoginAt() {
         return lastLoginAt;
     }
@@ -70,5 +107,13 @@ public class UserEntity {
 
     public void setCreatedAt(OffsetDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public OffsetDateTime getHatchedAt() {
+        return hatchedAt;
+    }
+
+    public void setHatchedAt(OffsetDateTime hatchedAt) {
+        this.hatchedAt = hatchedAt;
     }
 }

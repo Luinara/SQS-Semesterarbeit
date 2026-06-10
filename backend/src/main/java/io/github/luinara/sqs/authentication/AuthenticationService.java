@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Authentication service — simple in-memory implementation for development and tests.
@@ -23,8 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class AuthenticationService {
 
-    private final Map<String, String> users = new ConcurrentHashMap<>(); // username(lowercase) -> passwordHash (fallback)
-    private final Map<String, String> sessions = new ConcurrentHashMap<>(); // token -> username (only used in in-memory mode)
+    private final Map<String, String> users = new ConcurrentHashMap<>();
+    private final Map<String, String> sessions = new ConcurrentHashMap<>();
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final UserRepository userRepository; // optional
@@ -35,7 +36,7 @@ public class AuthenticationService {
         this.userRepository = userRepository.orElse(null);
     }
 
-    // Backwards-compatible no-arg constructor used by unit tests that instantiate the service directly
+
     public AuthenticationService() {
         this.userRepository = null;
     }
@@ -44,25 +45,31 @@ public class AuthenticationService {
      * Create a new user. Returns true when created, false when username already exists.
      */
     public boolean createUser(String username, String password) {
+
         if (username == null || username.trim().isEmpty() || password == null) {
             throw new InvalidRequestException("username and password must be provided");
         }
         String key = username.toLowerCase();
 
-        // If repository is present, persist to DB
         if (userRepository != null) {
-            // quick existence check, but also handle race via catching constraint exception
             if (userRepository.existsByUsernameIgnoreCase(username)) {
                 return false;
             }
+
             String hash = passwordEncoder.encode(password);
             UserEntity entity = new UserEntity(username, hash);
             entity.setCreatedAt(OffsetDateTime.now());
+
+            // assign random pokemon id (1..151) and default domain values
+            int pkmnId = ThreadLocalRandom.current().nextInt(1, 152);
+            entity.setCurrentPokemonId(pkmnId);
+            entity.setEgg(true);
+            entity.setHappiness(0);
+
             try {
                 userRepository.save(entity);
                 return true;
             } catch (DataIntegrityViolationException ex) {
-                // Unique constraint violated by concurrent request -> treat as "already exists"
                 return false;
             }
         }
