@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,8 +28,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest req, HttpSession session) {
+    public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest req, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         boolean created;
+
         try {
             created = authenticationService.createUser(req.getUsername(), req.getPassword());
         } catch (InvalidRequestException ex) {
@@ -36,31 +40,53 @@ public class AuthenticationController {
         if (!created) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "username already exists"));
         }
+
         // Auto-login on signup
-        authenticationService.login(
-                req.getUsername(),
-                req.getPassword()).ifPresent(token -> session.setAttribute(USER_TOKEN, token));
+        Optional<String> maybe = authenticationService.login(req.getUsername(), req.getPassword());
+        if (maybe.isPresent()) {
+            String value = maybe.get();
+            try {
+                request.changeSessionId();
+            } catch (UnsupportedOperationException ignore) {
+                session.invalidate();
+                session = request.getSession(true);
+            }
+            session.setAttribute(USER_TOKEN, value);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "user created"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req, HttpSession session) {
-        return authenticationService.login(req.getUsername(), req.getPassword())
-                .map(token -> {
-                    session.setAttribute(USER_TOKEN, token);
-                    return ResponseEntity.ok(Map.of("token", token));
-                })
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("error", "invalid username or password")));
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest req, HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        Optional<String> maybe = authenticationService.login(req.getUsername(), req.getPassword());
+        if (maybe.isPresent()) {
+            String value = maybe.get();
+            try {
+                request.changeSessionId();
+            } catch (UnsupportedOperationException ignore) {
+                session.invalidate();
+                session = request.getSession(true);
+            }
+            session.setAttribute(USER_TOKEN, value);
+            return ResponseEntity.ok(Map.of("message", "authenticated"));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("error", "invalid username or password"));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpSession session) {
-        Object token = session.getAttribute(USER_TOKEN);
-        if (token instanceof String) {
-            authenticationService.logout((String) token);
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Object tokenOrUser = session.getAttribute(USER_TOKEN);
+            if (tokenOrUser instanceof String) {
+                authenticationService.logout((String) tokenOrUser);
+            }
+            session.invalidate();
         }
-        session.removeAttribute(USER_TOKEN);
         return ResponseEntity.noContent().build();
     }
 }
