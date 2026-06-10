@@ -1,4 +1,4 @@
-package io.github.luinara.sqs.domain;
+package io.github.luinara.sqs.user;
 
 import java.time.OffsetDateTime;
 
