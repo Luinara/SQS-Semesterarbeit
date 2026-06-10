@@ -80,14 +80,32 @@ jobs:
       # Run unit tests only (Surefire). We avoid `verify` here because it runs Failsafe
       # integration tests which may start full Spring contexts and can hang in CI.
       - name: Run unit tests (Surefire)
-        run: mvn --batch-mode --no-transfer-progress test
+        run: mvn --batch-mode --no-transfer-progress -DskipITs=true verify
+
+      - name: Debug JaCoCo output
+        if: always()
+        run: |
+          echo 'Listing target directory'
+          ls -la target || true
+          echo 'Listing target/site'
+          ls -la target/site || true
+          echo 'Listing target/site/jacoco'
+          ls -la target/site/jacoco || true
+          if [ -f target/site/jacoco/jacoco.xml ]; then
+            echo 'JaCoCo report exists';
+            wc -c target/site/jacoco/jacoco.xml || true
+          else
+            echo 'JaCoCo report NOT found at target/site/jacoco/jacoco.xml';
+            echo 'Contents of target/site/jacoco:'; ls -la target/site/jacoco || true;
+            exit 0
+          fi
 
       - name: Upload JaCoCo coverage report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: backend-jacoco-report
-          path: backend/target/site/jacoco
+          path: target/site/jacoco/jacoco.xml
           retention-days: 14
 
   # ──────────────────────────────────────────────────────────────────────────
