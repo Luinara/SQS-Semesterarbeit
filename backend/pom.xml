@@ -121,6 +121,7 @@
                     <!-- Exclude integration tests from the unit-test phase -->
                     <excludes>
                         <exclude>**/*IT.java</exclude>
+                        <exclude>**/*IntegrationTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
