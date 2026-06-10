@@ -7,11 +7,27 @@ Accepted
 The self-care app needs gamification elements. PokeAPI provides a free, well-documented
 REST API for Pokémon data.
 
+## ALternatives
+- Manual database maintenance
+- Local Pokémon dataset
+- Commercial Pokémon APIs
+
 ## Decision
-Use PokeAPI (https://pokeapi.co/api/v2/) as the external service. All calls are
-encapsulated in the `integration/` package of the backend.
+Use PokeAPI (https://pokeapi.co/api/v2/) as the authoritative source for Pokémon data during database seeding.
+
+Imported data:
+
+- Pokémon ID
+- Name
+- Official artwork
+- Evolution chain
 
 ## Consequences
-- No API key required; the service is publicly available.
+- No manual maintenance of Pokémon data.
+- No API key is required; the service is publicly available.
 - WireMock stubs the external API in integration tests to avoid network dependency.
 - Rate limits apply; caching should be considered before production use.
+
+## Downsides
+- Dependence on this particular service
+- no commercial licenses
