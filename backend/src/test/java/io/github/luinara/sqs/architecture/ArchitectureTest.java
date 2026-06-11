@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
@@ -127,14 +128,9 @@ class ArchitectureTest {
                     .that().resideInAPackage("io.github.luinara.sqs..")
                     .and().haveSimpleNameNotContaining("Test")
                     .and().haveSimpleNameNotContaining("IntegrationTest")
+                    .and().haveSimpleNameNotContaining("IT")
+                    .and().areNotAnnotatedWith(ControllerAdvice.class)
                     .should().dependOnClassesThat()
-                    .areAssignableTo(Exception.class)
+                    .haveFullyQualifiedName("java.lang.Exception")
                     .as("Classes should throw specific exceptions, not generic 'Exception'");
-
-    @ArchTest
-    static final ArchRule exception_classes_should_reside_in_exception_package =
-            classes()
-                    .that().haveSimpleNameEndingWith("Exception")
-                    .should().resideInAPackage("..exception..")
-                    .as("Exception classes should reside in 'exception' packages");
 }

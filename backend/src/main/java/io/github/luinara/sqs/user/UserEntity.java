@@ -2,30 +2,55 @@ package io.github.luinara.sqs.user;
 
 import java.time.OffsetDateTime;
 
-public class User {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+
+@Entity
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
+public class UserEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
-    private int currentPokemonId;
+
+    @Column(name = "current_pokemon_id")
+    private Integer currentPokemonId;
+
+    @Column(name = "is_egg")
     private boolean isEgg = true;
+
+    @Column(name = "happiness")
     private int happiness = 0;
-    private OffsetDateTime createdAt;
+
+    @Column(name = "last_login_at")
+    private OffsetDateTime lastLoginAt;
+
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt = OffsetDateTime.now();
+
+    @Column(name = "hatched_at")
     private OffsetDateTime hatchedAt;
 
-    public User() {
+    public UserEntity() {
     }
 
-    public User(Long id, String username, String passwordHash,
-                int currentPokemonId, boolean isEgg, int happiness,
-                OffsetDateTime createdAt, OffsetDateTime hatchedAt) {
-        this.id = id;
+    public UserEntity(String username, String passwordHash) {
         this.username = username;
         this.passwordHash = passwordHash;
-        this.currentPokemonId = currentPokemonId;
-        this.isEgg = isEgg;
-        this.happiness = happiness;
-        this.createdAt = createdAt;
-        this.hatchedAt = hatchedAt;
+        this.createdAt = OffsetDateTime.now();
+        this.isEgg = true;
+        this.happiness = 0;
     }
 
     public Long getId() {
@@ -52,11 +77,11 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public int getCurrentPokemonId() {
+    public Integer getCurrentPokemonId() {
         return currentPokemonId;
     }
 
-    public void setCurrentPokemonId(int currentPokemonId) {
+    public void setCurrentPokemonId(Integer currentPokemonId) {
         this.currentPokemonId = currentPokemonId;
     }
 
@@ -76,6 +101,14 @@ public class User {
         this.happiness = happiness;
     }
 
+    public OffsetDateTime getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(OffsetDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
+    }
+
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
@@ -91,19 +124,4 @@ public class User {
     public void setHatchedAt(OffsetDateTime hatchedAt) {
         this.hatchedAt = hatchedAt;
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", currentPokemonId=" + currentPokemonId +
-                ", isEgg=" + isEgg +
-                ", happiness=" + happiness +
-                ", createdAt=" + createdAt +
-                ", hatchedAt=" + hatchedAt +
-                '}';
-    }
-
-    // TODO: add domain-specific behaviour if needed
 }
