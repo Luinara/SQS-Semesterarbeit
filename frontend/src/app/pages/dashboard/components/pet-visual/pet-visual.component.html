@@ -1,0 +1,21 @@
+<div [class]="sceneClass()">
+  <span class="pet-visual__bubble pet-visual__bubble--left" aria-hidden="true"></span>
+  <span class="pet-visual__bubble pet-visual__bubble--right" aria-hidden="true"></span>
+  <span class="pet-visual__sky-mark" aria-hidden="true"></span>
+  <span class="pet-visual__sun-haze" aria-hidden="true"></span>
+  <span class="pet-visual__cloud pet-visual__cloud--one" aria-hidden="true"></span>
+  <span class="pet-visual__cloud pet-visual__cloud--two" aria-hidden="true"></span>
+
+  <div class="pet-visual__frame">
+    <!-- Der Platzhalter lebt bewusst als eigene Datei in /public,
+         damit später ein Sprite oder eine Illustration ohne Code-Umbau ersetzt werden kann. -->
+    <img [src]="'pet-placeholder.svg'" [alt]="'Platzhaltergrafik für ' + petName()" />
+  </div>
+
+  <div class="pet-visual__meta">
+    <span class="pet-visual__tag">{{ weatherScene().badge }}</span>
+    <strong>{{ petName() }}</strong>
+  </div>
+
+  <div class="pet-visual__level">Level {{ level() }}</div>
+</div>

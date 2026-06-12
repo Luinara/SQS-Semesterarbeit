@@ -1,0 +1,42 @@
+<div
+  class="stat-badge"
+  [class.stat-badge--peach]="tone() === 'peach'"
+  [class.stat-badge--taupe]="tone() === 'taupe'"
+  [class.stat-badge--sage]="tone() === 'sage'"
+>
+  <span class="stat-badge__icon" aria-hidden="true">
+    @switch (icon()) {
+      @case ('hearts') {
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M12 20s-6.5-4.3-8.6-8.2C1.6 8.4 3 5 6.3 5c2 0 3.1 1.1 3.7 2 0.7-0.9 1.8-2 3.7-2 3.3 0 4.7 3.4 2.9 6.8C18.5 15.7 12 20 12 20Z"
+          />
+        </svg>
+      }
+      @case ('berries') {
+        <svg viewBox="0 0 24 24">
+          <path d="M12 8.5c-3.8 0-6.5 2.6-6.5 6.1S8.2 21 12 21s6.5-2.7 6.5-6.4S15.8 8.5 12 8.5Z" />
+          <path
+            d="M11.9 4c1.8 0 3.3 0.8 4.4 2.3-2.1 0.2-3.8 1.1-5 2.5C10.5 7.1 9.3 6 7.7 5.5 8.8 4.5 10.2 4 11.9 4Z"
+          />
+        </svg>
+      }
+      @case ('tasks') {
+        <svg viewBox="0 0 24 24">
+          <path d="M7 5h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" />
+          <path d="m9 12 2 2 4-4" class="stat-badge__stroke" />
+        </svg>
+      }
+      @default {
+        <svg viewBox="0 0 24 24">
+          <path d="m12 3 2.2 4.4 4.8.7-3.5 3.4.8 4.7L12 14l-4.3 2.3.8-4.7L5 8.1l4.8-.7L12 3Z" />
+        </svg>
+      }
+    }
+  </span>
+
+  <div class="stat-badge__content">
+    <span class="stat-badge__value">{{ value() }}</span>
+    <span class="stat-badge__label">{{ label() }}</span>
+  </div>
+</div>

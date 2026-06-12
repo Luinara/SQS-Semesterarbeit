@@ -1,0 +1,15 @@
+flowchart LR
+    DEV["Entwicklerrechner / Docker Host"]
+
+    subgraph COMPOSE["Docker Compose Umgebung"]
+        FE["Frontend Container: Port 3000"]
+        BE["Backend Container: Port 8080"]
+        PG[(PostgreSQL Container: Port 5432, Volume db_data)]
+    end
+
+    POKEAPI["PokeAPI: Internet"]
+
+    DEV -->|localhost 3000| FE
+    FE -->|backend 8080 REST| BE
+    BE -->|jdbc postgresql db 5432 sqs_db| PG
+    BE -->|HTTPS| POKEAPI
