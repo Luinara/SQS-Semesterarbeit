@@ -51,6 +51,21 @@ class UserControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
+    // New: check body JSON for unauthenticated water/feed
+    @Test
+    void water_requiresAuth_returnsJsonErrorBody() throws Exception {
+        mockMvc.perform(post("/api/user/water").contentType("application/json").content("{\"ml\":10}"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"error\":\"unauthenticated\"}"));
+    }
+
+    @Test
+    void feed_requiresAuth_returnsJsonErrorBody() throws Exception {
+        mockMvc.perform(post("/api/user/feed"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"error\":\"unauthenticated\"}"));
+    }
+
     @Test
     void water_success_returnsGameState() throws Exception {
         when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
@@ -96,5 +111,33 @@ class UserControllerTest {
         mockMvc.perform(get("/api/user/game-state").session(session))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string("unauthenticated"));
+    }
+
+    @Test
+    void getGameState_authenticated_butUserNotFound_returns404() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+
+        when(userService.getGameStateForUsername("tester")).thenReturn(null);
+
+        mockMvc.perform(get("/api/user/game-state").session(session))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("user not found"));
+    }
+
+    @Test
+    void getGameState_authenticated_returnsDtoJson() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+
+        GameStateDto dto = new GameStateDto();
+        dto.setHappiness(77);
+        when(userService.getGameStateForUsername("tester")).thenReturn(dto);
+
+        mockMvc.perform(get("/api/user/game-state").session(session))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/json"));
     }
 }

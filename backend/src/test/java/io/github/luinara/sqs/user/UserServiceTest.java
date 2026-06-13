@@ -138,4 +138,60 @@ class UserServiceTest {
         assertThat(dto.getPokemonLevel()).isEqualTo(5);
         assertThat(dto.getGrowth()).isEqualTo(30);
     }
+
+    // New edge-case tests requested
+    @Test
+    void getGameState_userNotFound_returnsNull() {
+        when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
+        GameStateDto dto = userService.getGameStateForUsername("nouser");
+        assertThat(dto).isNull();
+    }
+
+    @Test
+    void getGameState_pokemonIdNull_setsPokemonImageNull() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setEgg(false);
+        entity.setCurrentPokemonId(null);
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.getGameStateForUsername("tester");
+        assertThat(dto).isNotNull();
+        assertThat(dto.getPokemonImageUrl()).isNull();
+        // pokemonRepository.findById should not be called when pId is null
+        verifyNoInteractions(pokemonRepository);
+    }
+
+    @Test
+    void waterUser_userNotFound_returnsNull() {
+        when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
+        GameStateDto dto = userService.waterUser("nouser", 10);
+        assertThat(dto).isNull();
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void feedUser_userNotFound_returnsNull() {
+        when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
+        GameStateDto dto = userService.feedUser("nouser");
+        assertThat(dto).isNull();
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void feedUser_pendingZero_returnsDto_andDoesNotSave() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setPendingFeedPoints(0);
+        entity.setHappiness(50);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.feedUser("tester");
+
+        assertThat(dto).isNotNull();
+        // when pending <= 0, feedUser should not modify or save the user
+        verify(userRepository, never()).save(entity);
+        assertThat(dto.getHappiness()).isEqualTo(50);
+    }
 }
