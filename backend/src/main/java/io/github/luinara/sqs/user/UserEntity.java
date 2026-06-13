@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
@@ -41,6 +42,30 @@ public class UserEntity {
 
     @Column(name = "hatched_at")
     private OffsetDateTime hatchedAt;
+
+    @Column(name = "hydration_ml")
+    private int hydrationMl = 0;
+
+    @Column(name = "hunger")
+    private int hunger = 0;
+
+    @Column(name = "pokemon_level")
+    private int pokemonLevel = 1;
+
+    @Column(name = "pokemon_xp")
+    private int pokemonXp = 0;
+
+    @Column(name = "streak")
+    private int streak = 0;
+
+    @Column(name = "last_task_completion_date")
+    private OffsetDateTime lastTaskCompletionDate;
+
+    @Column(name = "pending_feed_points")
+    private int pendingFeedPoints = 0;
+
+    @Version
+    private Long version;
 
     public UserEntity() {
     }
@@ -123,5 +148,69 @@ public class UserEntity {
 
     public void setHatchedAt(OffsetDateTime hatchedAt) {
         this.hatchedAt = hatchedAt;
+    }
+
+    public int getHydrationMl() {
+        return hydrationMl;
+    }
+
+    public void setHydrationMl(int hydrationMl) {
+        this.hydrationMl = hydrationMl;
+    }
+
+    public int getHunger() {
+        return hunger;
+    }
+
+    public void setHunger(int hunger) {
+        this.hunger = hunger;
+    }
+
+    public int getPokemonLevel() {
+        return pokemonLevel;
+    }
+
+    public void setPokemonLevel(int pokemonLevel) {
+        this.pokemonLevel = pokemonLevel;
+    }
+
+    public int getPokemonXp() {
+        return pokemonXp;
+    }
+
+    public void setPokemonXp(int pokemonXp) {
+        this.pokemonXp = pokemonXp;
+    }
+
+    public int getStreak() {
+        return streak;
+    }
+
+    public void setStreak(int streak) {
+        this.streak = streak;
+    }
+
+    public OffsetDateTime getLastTaskCompletionDate() {
+        return lastTaskCompletionDate;
+    }
+
+    public void setLastTaskCompletionDate(OffsetDateTime lastTaskCompletionDate) {
+        this.lastTaskCompletionDate = lastTaskCompletionDate;
+    }
+
+    public int getPendingFeedPoints() {
+        return pendingFeedPoints;
+    }
+
+    public void setPendingFeedPoints(int pendingFeedPoints) {
+        this.pendingFeedPoints = pendingFeedPoints;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }
