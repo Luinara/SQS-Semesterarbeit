@@ -21,6 +21,9 @@ public class TaskEntity {
     @Column(columnDefinition = "text")
     private String description;
 
+    @Column(name = "feed_points")
+    private Integer feedPoints = 0;
+
     public TaskEntity() {}
 
     public Long getId() { return id; }
@@ -31,4 +34,7 @@ public class TaskEntity {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public Integer getFeedPoints() { return feedPoints; }
+    public void setFeedPoints(Integer feedPoints) { this.feedPoints = feedPoints; }
 }

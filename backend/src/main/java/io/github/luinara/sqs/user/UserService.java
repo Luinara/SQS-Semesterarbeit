@@ -66,4 +66,27 @@ public class UserService {
         dto.setServerNow(now.toString());
         return dto;
     }
+
+    public GameStateDto waterUser(String username, int ml) {
+        var opt = userRepository.findByUsernameIgnoreCase(username);
+        if (opt.isEmpty()) return null;
+        UserEntity user = opt.get();
+        user.setHydrationMl(user.getHydrationMl() + ml);
+        userRepository.save(user);
+        return getGameStateForUsername(username);
+    }
+
+    public GameStateDto feedUser(String username) {
+        var opt = userRepository.findByUsernameIgnoreCase(username);
+        if (opt.isEmpty()) return null;
+        UserEntity user = opt.get();
+        int pending = user.getPendingFeedPoints();
+        if (pending <= 0) return getGameStateForUsername(username);
+        int needed = 100 - user.getHappiness();
+        int toApply = Math.min(needed, pending);
+        user.setHappiness(Math.min(100, user.getHappiness() + toApply));
+        user.setPendingFeedPoints(pending - toApply);
+        userRepository.save(user);
+        return getGameStateForUsername(username);
+    }
 }

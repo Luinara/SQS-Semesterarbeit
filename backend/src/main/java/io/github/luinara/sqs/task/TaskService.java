@@ -74,8 +74,8 @@ public class TaskService {
 
         // apply effects: happiness increment and growth
         int totalTasks = (int) taskRepository.count();
-        int increment = totalTasks > 0 ? Math.round(100.0f / totalTasks) : 0;
-        int newHappiness = Math.min(100, user.getHappiness() + increment);
+        int feedPoints = task.getFeedPoints() == null ? 0 : task.getFeedPoints();
+        int newPendingFeed = user.getPendingFeedPoints() + feedPoints;
 
         // Growth and level logic
         int growthIncrease = 10; // configurable later
@@ -86,7 +86,7 @@ public class TaskService {
 
         int oldLevel = user.getPokemonLevel();
 
-        user.setHappiness(newHappiness);
+        user.setPendingFeedPoints(newPendingFeed);
         user.setPokemonXp(newXp);
         user.setPokemonLevel(newLevel);
 
@@ -128,6 +128,7 @@ public class TaskService {
         dto.setPokemonLevel(user.getPokemonLevel());
         dto.setGrowth(user.getPokemonXp());
         dto.setHappiness(user.getHappiness());
+        dto.setPendingFeedPoints(user.getPendingFeedPoints());
         dto.setTasks(List.of());
         dto.setStreak(user.getStreak());
         dto.setYesterdayLoggedIn(false);
