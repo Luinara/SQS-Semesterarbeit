@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -105,10 +107,29 @@ public class AuthenticationService {
 
         if (passwordEncoder.matches(password, storedHash)) {
             if (userRepository != null) {
-                // DB-mode: update lastLoginAt and rely on HttpSession for persistence
+                // DB-mode: update lastLoginAt and streak, then persist
                 Optional<UserEntity> optEntity = userRepository.findByUsernameIgnoreCase(username);
                 optEntity.ifPresent(entity -> {
-                    entity.setLastLoginAt(OffsetDateTime.now());
+                    OffsetDateTime nowUtc = OffsetDateTime.now(ZoneOffset.UTC);
+                    OffsetDateTime last = entity.getLastLoginAt();
+                    entity.setLastLoginAt(nowUtc);
+
+                    // compute streak using UTC day boundaries
+                    LocalDate today = nowUtc.toLocalDate();
+                    if (last == null) {
+                        entity.setStreak(1);
+                    } else {
+                        LocalDate lastDate = last.withOffsetSameInstant(ZoneOffset.UTC).toLocalDate();
+                        if (lastDate.isEqual(today)) {
+                            // already logged in today, no change
+                        } else if (lastDate.isEqual(today.minusDays(1))) {
+                            entity.setStreak(entity.getStreak() + 1);
+                        } else {
+                            entity.setStreak(1);
+                        }
+                    }
+
+                    entity.setLastLoginAt(nowUtc);
                     userRepository.save(entity);
                 });
                 return Optional.of(key); // return canonical username (lowercased key)
