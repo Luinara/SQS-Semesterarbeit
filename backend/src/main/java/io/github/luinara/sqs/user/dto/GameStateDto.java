@@ -9,7 +9,7 @@ public class GameStateDto {
     private int pokemonLevel;
     private int growth;
     private int happiness;
-    private List<TaskDto> tasks;
+    private List<TaskCompletionDto> tasks;
     private int streak;
     private boolean yesterdayLoggedIn;
     private String serverNow;
@@ -35,8 +35,8 @@ public class GameStateDto {
     public int getHappiness() { return happiness; }
     public void setHappiness(int happiness) { this.happiness = happiness; }
 
-    public List<TaskDto> getTasks() { return tasks; }
-    public void setTasks(List<TaskDto> tasks) { this.tasks = tasks; }
+    public List<TaskCompletionDto> getTasks() { return tasks; }
+    public void setTasks(List<TaskCompletionDto> tasks) { this.tasks = tasks; }
 
     public int getStreak() { return streak; }
     public void setStreak(int streak) { this.streak = streak; }
