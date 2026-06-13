@@ -61,6 +61,9 @@ public class UserEntity {
     @Column(name = "last_task_completion_date")
     private OffsetDateTime lastTaskCompletionDate;
 
+    @Column(name = "pending_feed_points")
+    private int pendingFeedPoints = 0;
+
     @Version
     private Long version;
 
@@ -193,6 +196,14 @@ public class UserEntity {
 
     public void setLastTaskCompletionDate(OffsetDateTime lastTaskCompletionDate) {
         this.lastTaskCompletionDate = lastTaskCompletionDate;
+    }
+
+    public int getPendingFeedPoints() {
+        return pendingFeedPoints;
+    }
+
+    public void setPendingFeedPoints(int pendingFeedPoints) {
+        this.pendingFeedPoints = pendingFeedPoints;
     }
 
     public Long getVersion() {

@@ -57,6 +57,7 @@ class TaskServiceTest {
         TaskEntity task = new TaskEntity();
         task.setId(2L);
         task.setTitle("Do something");
+        task.setFeedPoints(5);
         when(taskRepository.findById(2L)).thenReturn(Optional.of(task));
 
         when(userTaskRepository.findByUserIdAndTaskId(1L, 2L)).thenReturn(Optional.empty());
@@ -66,8 +67,8 @@ class TaskServiceTest {
 
         assertThat(res.status).isEqualTo(200);
         assertThat(res.gameState).isNotNull();
-        // happiness increment should be round(100/5) = 20
-        assertThat(res.gameState.getHappiness()).isEqualTo(20);
+        // tasks grant feedPoints (5) so pendingFeedPoints increased accordingly
+        assertThat(res.gameState.getPendingFeedPoints()).isEqualTo(5);
         // xp increased by 10
         assertThat(res.gameState.getGrowth()).isEqualTo(10);
 
@@ -75,7 +76,7 @@ class TaskServiceTest {
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepository).save(captor.capture());
         UserEntity saved = captor.getValue();
-        assertThat(saved.getHappiness()).isEqualTo(20);
+        assertThat(saved.getPendingFeedPoints()).isEqualTo(5);
         assertThat(saved.getPokemonXp()).isEqualTo(10);
     }
 

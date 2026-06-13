@@ -9,6 +9,7 @@ public class GameStateDto {
     private int pokemonLevel;
     private int growth;
     private int happiness;
+    private int pendingFeedPoints; // new
     private List<TaskCompletionDto> tasks;
     private int streak;
     private boolean yesterdayLoggedIn;
@@ -34,6 +35,9 @@ public class GameStateDto {
 
     public int getHappiness() { return happiness; }
     public void setHappiness(int happiness) { this.happiness = happiness; }
+
+    public int getPendingFeedPoints() { return pendingFeedPoints; }
+    public void setPendingFeedPoints(int pendingFeedPoints) { this.pendingFeedPoints = pendingFeedPoints; }
 
     public List<TaskCompletionDto> getTasks() { return tasks; }
     public void setTasks(List<TaskCompletionDto> tasks) { this.tasks = tasks; }
