@@ -1,5 +1,7 @@
 package io.github.luinara.sqs.task;
 
+import io.github.luinara.sqs.pokemon.PokemonEntity;
+import io.github.luinara.sqs.pokemon.PokemonRepository;
 import io.github.luinara.sqs.task.entity.TaskEntity;
 import io.github.luinara.sqs.task.entity.UserTaskEntity;
 import io.github.luinara.sqs.user.UserEntity;
@@ -18,14 +20,17 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserTaskRepository userTaskRepository;
     private final UserRepository userRepository;
+    private final PokemonRepository pokemonRepository;
 
     public TaskService(TaskRepository taskRepository,
                        UserTaskRepository userTaskRepository,
-                       UserRepository userRepository)
+                       UserRepository userRepository,
+                       PokemonRepository pokemonRepository)
     {
         this.taskRepository = taskRepository;
         this.userTaskRepository = userTaskRepository;
         this.userRepository = userRepository;
+        this.pokemonRepository = pokemonRepository;
     }
 
     public List<TaskPublicDto> findAllTasks() {
@@ -79,16 +84,47 @@ public class TaskService {
         int newLevel = user.getPokemonLevel() + levelUps;
         newXp = newXp % 100;
 
+        int oldLevel = user.getPokemonLevel();
+
         user.setHappiness(newHappiness);
         user.setPokemonXp(newXp);
         user.setPokemonLevel(newLevel);
+
+        // Hatch logic: if was egg and now >= 10 -> hatch
+        if (user.isEgg() && newLevel >= 10) {
+            user.setEgg(false);
+            user.setHatchedAt(OffsetDateTime.now(ZoneOffset.UTC));
+        }
+
+        // Evolution logic: attempt to evolve when crossing thresholds 25 and 50
+        // We will attempt evolutions for each threshold crossed
+        if (oldLevel < 25 && newLevel >= 25) {
+            attemptEvolution(user);
+        }
+        if (oldLevel < 50 && newLevel >= 50) {
+            attemptEvolution(user);
+        }
+
         userRepository.save(user);
 
         // Build GameStateDto-like result (minimal)
         var dto = new io.github.luinara.sqs.user.dto.GameStateDto();
         dto.setWaterLevel(user.getHydrationMl());
         dto.setFoodLevel(user.getHunger());
-        dto.setPokemonImageUrl(null);
+
+        // determine image: if egg -> egg image placeholder, else pokemon image
+        if (user.isEgg()) {
+            dto.setPokemonImageUrl("/assets/egg.png");
+        } else {
+            Integer pId = user.getCurrentPokemonId();
+            if (pId != null) {
+                var pOpt = pokemonRepository.findById(pId);
+                dto.setPokemonImageUrl(pOpt.map(PokemonEntity::getImageUrl).orElse(null));
+            } else {
+                dto.setPokemonImageUrl(null);
+            }
+        }
+
         dto.setPokemonLevel(user.getPokemonLevel());
         dto.setGrowth(user.getPokemonXp());
         dto.setHappiness(user.getHappiness());
@@ -98,6 +134,19 @@ public class TaskService {
         dto.setServerNow(OffsetDateTime.now(ZoneOffset.UTC).toString());
 
         return new GameStateResult(200, "ok", dto);
+    }
+
+    private void attemptEvolution(UserEntity user) {
+        Integer currentId = user.getCurrentPokemonId();
+        if (currentId == null) return;
+        var pOpt = pokemonRepository.findById(currentId);
+        if (pOpt.isEmpty()) return;
+        PokemonEntity p = pOpt.get();
+        Integer evo = p.getEvolutionId();
+        if (evo != null) {
+            user.setCurrentPokemonId(evo);
+            // optionally update pokemon entity evolution_stage if needed
+        }
     }
 }
 

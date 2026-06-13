@@ -1,5 +1,6 @@
 package io.github.luinara.sqs.user;
 
+import io.github.luinara.sqs.pokemon.PokemonRepository;
 import io.github.luinara.sqs.user.dto.GameStateDto;
 import io.github.luinara.sqs.user.dto.TaskCompletionDto;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,11 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PokemonRepository pokemonRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PokemonRepository pokemonRepository) {
         this.userRepository = userRepository;
+        this.pokemonRepository = pokemonRepository;
     }
 
     public GameStateDto getGameStateForUsername(String username) {
@@ -28,8 +31,20 @@ public class UserService {
         GameStateDto dto = new GameStateDto();
         dto.setWaterLevel(user.getHydrationMl());
         dto.setFoodLevel(user.getHunger());
-        // no Pokemon entity mapped yet -> leave null or implement lookup later
-        dto.setPokemonImageUrl(null);
+
+        // determine image: if egg -> egg image placeholder, else pokemon image
+        if (user.isEgg()) {
+            dto.setPokemonImageUrl("/assets/egg.png");
+        } else {
+            Integer pId = user.getCurrentPokemonId();
+            if (pId != null) {
+                var pOpt = pokemonRepository.findById(pId);
+                dto.setPokemonImageUrl(pOpt.map(p -> p.getImageUrl()).orElse(null));
+            } else {
+                dto.setPokemonImageUrl(null);
+            }
+        }
+
         dto.setPokemonLevel(user.getPokemonLevel());
         dto.setGrowth(user.getPokemonXp());
         dto.setHappiness(user.getHappiness());
