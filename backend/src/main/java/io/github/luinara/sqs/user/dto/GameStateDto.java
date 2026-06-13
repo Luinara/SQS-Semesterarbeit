@@ -1,5 +1,6 @@
 package io.github.luinara.sqs.user.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameStateDto {
@@ -39,8 +40,8 @@ public class GameStateDto {
     public int getPendingFeedPoints() { return pendingFeedPoints; }
     public void setPendingFeedPoints(int pendingFeedPoints) { this.pendingFeedPoints = pendingFeedPoints; }
 
-    public List<TaskCompletionDto> getTasks() { return tasks; }
-    public void setTasks(List<TaskCompletionDto> tasks) { this.tasks = tasks; }
+    public List<TaskCompletionDto> getTasks() { return tasks == null ? List.of() : new ArrayList<>(tasks); }
+    public void setTasks(List<TaskCompletionDto> tasks) { this.tasks = tasks == null ? null : new ArrayList<>(tasks); }
 
     public int getStreak() { return streak; }
     public void setStreak(int streak) { this.streak = streak; }

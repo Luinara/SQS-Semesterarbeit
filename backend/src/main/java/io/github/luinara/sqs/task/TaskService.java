@@ -72,8 +72,7 @@ public class TaskService {
         ute.setCompleted(true);
         userTaskRepository.save(ute);
 
-        // apply effects: happiness increment and growth
-        int totalTasks = (int) taskRepository.count();
+        // apply effects: growth and feed points
         int feedPoints = task.getFeedPoints() == null ? 0 : task.getFeedPoints();
         int newPendingFeed = user.getPendingFeedPoints() + feedPoints;
 
