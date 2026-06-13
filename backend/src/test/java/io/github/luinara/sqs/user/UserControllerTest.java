@@ -17,7 +17,9 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -75,5 +77,24 @@ class UserControllerTest {
 
         mockMvc.perform(post("/api/user/feed").session(session))
                 .andExpect(status().isOk());
+    }
+
+    // new tests for getGameState unauthorized
+    @Test
+    void getGameState_withoutSession_returns401_andUnauthenticatedBody() throws Exception {
+        mockMvc.perform(get("/api/user/game-state"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("unauthenticated"));
+    }
+
+    @Test
+    void getGameState_withInvalidSessionAttribute_returns401_andUnauthenticatedBody() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        // set attribute to non-string value
+        session.setAttribute("USER_TOKEN", 12345);
+
+        mockMvc.perform(get("/api/user/game-state").session(session))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("unauthenticated"));
     }
 }
