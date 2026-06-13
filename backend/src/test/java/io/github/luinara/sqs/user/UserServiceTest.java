@@ -13,13 +13,16 @@ import java.time.ZoneOffset;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private io.github.luinara.sqs.pokemon.PokemonRepository pokemonRepository;
 
     @InjectMocks
     private UserService userService;
@@ -76,5 +79,63 @@ class UserServiceTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.isYesterdayLoggedIn()).isFalse();
+    }
+
+    // New tests
+    @Test
+    void waterUser_increasesHydration_and_returnsDto() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setHydrationMl(40);
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.waterUser("tester", 25);
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getWaterLevel()).isEqualTo(65); // 40 + 25
+        verify(userRepository).save(entity);
+    }
+
+    @Test
+    void feedUser_appliesPendingFeedPoints_and_updatesHappiness() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setPendingFeedPoints(15);
+        entity.setHappiness(90);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.feedUser("tester");
+
+        assertThat(dto).isNotNull();
+        // happiness should increase by min(needed=10, pending=15) => +10 -> 100
+        assertThat(dto.getHappiness()).isEqualTo(100);
+        assertThat(entity.getPendingFeedPoints()).isEqualTo(5);
+        verify(userRepository).save(entity);
+    }
+
+    @Test
+    void getGameStateForUsername_whenNotEgg_includesPokemonImageAndFields() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setEgg(false);
+        entity.setCurrentPokemonId(10);
+        entity.setHappiness(20);
+        entity.setPokemonLevel(5);
+        entity.setPokemonXp(30);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+        io.github.luinara.sqs.pokemon.PokemonEntity p = new io.github.luinara.sqs.pokemon.PokemonEntity();
+        p.setId(10);
+        p.setImageUrl("/img/10.png");
+        when(pokemonRepository.findById(10)).thenReturn(Optional.of(p));
+
+        GameStateDto dto = userService.getGameStateForUsername("tester");
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getPokemonImageUrl()).isEqualTo("/img/10.png");
+        assertThat(dto.getHappiness()).isEqualTo(20);
+        assertThat(dto.getPokemonLevel()).isEqualTo(5);
+        assertThat(dto.getGrowth()).isEqualTo(30);
     }
 }

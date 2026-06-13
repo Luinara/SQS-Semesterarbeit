@@ -193,4 +193,23 @@ class AuthenticationServiceTest {
         UserEntity saved = captor.getValue();
         assertThat(saved.getStreak()).isEqualTo(1);
     }
+
+    @Test
+    void login_withNullUsernameOrPassword_returnsEmpty() {
+        AuthenticationService svc = new AuthenticationService();
+        Optional<String> r1 = svc.login(null, "pw");
+        Optional<String> r2 = svc.login("user", null);
+        assertTrue(r1.isEmpty());
+        assertTrue(r2.isEmpty());
+    }
+
+    @Test
+    void login_withEmptyUsernameOrPassword_returnsEmpty_whenNoSuchUser() {
+        AuthenticationService svc = new AuthenticationService();
+        // no user created for empty username -> should return empty
+        Optional<String> r1 = svc.login("", "pw");
+        Optional<String> r2 = svc.login("user", "");
+        assertTrue(r1.isEmpty());
+        assertTrue(r2.isEmpty());
+    }
 }
