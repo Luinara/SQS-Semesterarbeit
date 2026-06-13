@@ -57,7 +57,6 @@ model User {
   @@map("users")
 }
 
-
 model UserStats {
   userId Int @id @map("user_id")
   user   User @relation(fields: [userId], references: [id])
@@ -68,6 +67,7 @@ model UserStats {
 
   @@map("user_stats")
 }
+
 model Task {
   id          Int    @id @default(autoincrement())
   title       String @unique

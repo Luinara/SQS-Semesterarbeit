@@ -1,20 +1,27 @@
 package io.github.luinara.sqs.task;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
-    @GetMapping
-    public void getTasks() {
-        // TODO: implement
+
+    private final TaskService taskService;
+
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
-    @PostMapping
-    public void createTask() {
-        // TODO: implement
+    @GetMapping
+    public ResponseEntity<List<TaskPublicDto>> getTasks() {
+        List<TaskPublicDto> tasks = taskService.findAllTasks();
+        return ResponseEntity.ok(tasks);
     }
+
 }
