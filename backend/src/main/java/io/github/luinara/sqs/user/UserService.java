@@ -1,7 +1,7 @@
 package io.github.luinara.sqs.user;
 
 import io.github.luinara.sqs.user.dto.GameStateDto;
-import io.github.luinara.sqs.user.dto.TaskDto;
+import io.github.luinara.sqs.user.dto.TaskCompletionDto;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -34,7 +34,7 @@ public class UserService {
         dto.setGrowth(user.getPokemonXp());
         dto.setHappiness(user.getHappiness());
         // tasks not implemented in this iteration -> return empty list
-        List<TaskDto> tasks = new ArrayList<>();
+        List<TaskCompletionDto> tasks = new ArrayList<>();
         dto.setTasks(tasks);
         dto.setStreak(user.getStreak());
         // yesterdayLoggedIn helper: compute from lastLoginAt

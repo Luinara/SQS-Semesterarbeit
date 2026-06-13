@@ -1,7 +1,6 @@
 package io.github.luinara.sqs.user;
 
 import io.github.luinara.sqs.authentication.AuthenticationService;
-import io.github.luinara.sqs.user.dto.GameStateDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
