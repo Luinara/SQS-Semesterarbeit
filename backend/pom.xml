@@ -123,6 +123,9 @@
                         <exclude>**/*IT.java</exclude>
                         <exclude>**/*IntegrationTest.java</exclude>
                     </excludes>
+                    <!-- Force forking so the agent is effective -->
+                    <forkCount>1</forkCount>
+                    <reuseForks>true</reuseForks>
                 </configuration>
             </plugin>
 
@@ -146,14 +149,12 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.12</version>
                 <executions>
-                    <!-- Instrument bytecode before tests run -->
                     <execution>
-                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-                    <!-- Generate the HTML/XML report after tests have run -->
+
                     <execution>
                         <id>report</id>
                         <phase>verify</phase>
@@ -161,8 +162,7 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-                    <!-- Enforce a minimum coverage threshold.
-                         TODO: raise the minimum as the project grows (target: 0.80). -->
+
                     <execution>
                         <id>check</id>
                         <phase>verify</phase>
@@ -175,9 +175,9 @@
                                     <element>BUNDLE</element>
                                     <limits>
                                         <limit>
-                                            <counter>INSTRUCTION</counter>
+                                            <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>0.00</minimum>
+                                            <minimum>0.80</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

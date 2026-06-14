@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -149,5 +150,66 @@ class AuthenticationServiceTest {
         UserEntity saved = captor.getValue();
         assertThat(saved.getLastLoginAt()).isNotNull();
         assertThat(saved.getLastLoginAt()).isBeforeOrEqualTo(OffsetDateTime.now());
+    }
+
+    @Test
+    void db_login_incrementsStreak_whenLastLoginWasYesterday() {
+        BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+        String hash = enc.encode("password123");
+
+        UserEntity entity = new UserEntity("frank", hash);
+        entity.setStreak(2);
+        entity.setLastLoginAt(OffsetDateTime.now(ZoneOffset.UTC).minusDays(1));
+        when(repo.findByUsernameIgnoreCase("frank")).thenReturn(Optional.of(entity));
+
+        AuthenticationService svc = new AuthenticationService(Optional.of(repo));
+        Optional<String> res = svc.login("frank", "password123");
+
+        assertThat(res).isPresent();
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(repo).save(captor.capture());
+        UserEntity saved = captor.getValue();
+        assertThat(saved.getStreak()).isEqualTo(3);
+    }
+
+    @Test
+    void db_login_resetsStreak_whenLastLoginOlderThanYesterday() {
+        BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+        String hash = enc.encode("password123");
+
+        UserEntity entity = new UserEntity("grace", hash);
+        entity.setStreak(5);
+        entity.setLastLoginAt(OffsetDateTime.now(ZoneOffset.UTC).minusDays(3));
+        when(repo.findByUsernameIgnoreCase("grace")).thenReturn(Optional.of(entity));
+
+        AuthenticationService svc = new AuthenticationService(Optional.of(repo));
+        Optional<String> res = svc.login("grace", "password123");
+
+        assertThat(res).isPresent();
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(repo).save(captor.capture());
+        UserEntity saved = captor.getValue();
+        assertThat(saved.getStreak()).isEqualTo(1);
+    }
+
+    @Test
+    void login_withNullUsernameOrPassword_returnsEmpty() {
+        AuthenticationService svc = new AuthenticationService();
+        Optional<String> r1 = svc.login(null, "pw");
+        Optional<String> r2 = svc.login("user", null);
+        assertTrue(r1.isEmpty());
+        assertTrue(r2.isEmpty());
+    }
+
+    @Test
+    void login_withEmptyUsernameOrPassword_returnsEmpty_whenNoSuchUser() {
+        AuthenticationService svc = new AuthenticationService();
+        // no user created for empty username -> should return empty
+        Optional<String> r1 = svc.login("", "pw");
+        Optional<String> r2 = svc.login("user", "");
+        assertTrue(r1.isEmpty());
+        assertTrue(r2.isEmpty());
     }
 }
