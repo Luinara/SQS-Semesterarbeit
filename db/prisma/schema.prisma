@@ -50,13 +50,14 @@ model User {
   hydrationMl Int @default(0) @map("hydration_ml")
   hunger Int @default(0)
 
+  pendingFeedPoints Int @default(0) @map("pending_feed_points")
+
   stats UserStats?
 
   userTasks UserTask[]
 
   @@map("users")
 }
-
 
 model UserStats {
   userId Int @id @map("user_id")
@@ -68,10 +69,13 @@ model UserStats {
 
   @@map("user_stats")
 }
+
 model Task {
   id          Int    @id @default(autoincrement())
   title       String @unique
   description String
+
+  feedPoints  Int    @default(0) @map("feed_points")
 
   userTasks UserTask[]
 

@@ -14,6 +14,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -35,10 +36,11 @@ class AuthenticationControllerConcurrentSignUpIT {
         ExecutorService ex = Executors.newFixedThreadPool(threads);
         CountDownLatch latch = new CountDownLatch(1);
 
+        // Create callables and submit them to the executor without blocking the submitting thread.
         List<Callable<Integer>> tasks = new ArrayList<>();
         for (int i = 0; i < threads; i++) {
             tasks.add(() -> {
-                latch.await();
+                latch.await(); // wait until all tasks are ready to run
                 var res = mockMvc.perform(post("/api/auth/signup")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(body))
@@ -47,20 +49,27 @@ class AuthenticationControllerConcurrentSignUpIT {
             });
         }
 
-        var futures = ex.invokeAll(tasks);
-        latch.countDown();
+        List<Future<Integer>> futures = new ArrayList<>();
+        try {
+            for (var task : tasks) {
+                futures.add(ex.submit(task));
+            }
 
-        int created = 0;
-        int conflict = 0;
-        for (var f : futures) {
-            int status = f.get();
-            if (status == 201) created++;
-            if (status == 409) conflict++;
+            // Release all workers at once
+            latch.countDown();
+
+            int created = 0;
+            int conflict = 0;
+            for (var f : futures) {
+                int status = f.get();
+                if (status == 201) created++;
+                if (status == 409) conflict++;
+            }
+
+            assertThat(created).isEqualTo(1);
+            assertThat(conflict).isEqualTo(1);
+        } finally {
+            ex.shutdownNow();
         }
-
-        assertThat(created).isEqualTo(1);
-        assertThat(conflict).isEqualTo(1);
-
-        ex.shutdownNow();
     }
 }
