@@ -6,6 +6,8 @@ theme:
   language: de
 nav:
   - Überblick: index.md
+  - Präsentationsablauf: presentation-plan.md
+  - Präsentations-Sprechzettel: presentation-cheat-sheet.md
   - API:
       - Authentifizierung: API_AUTH.md
       - Tasks: API_TASKS.md
