@@ -1,13 +1,13 @@
 <section class="quality-gate">
   <div class="quality-gate__hero">
     <div>
-      <span class="eyebrow">SQS Quality Gate</span>
-      <h2>{{ qualityScore() }}% / {{ qualityTarget() }}%</h2>
+      <span class="eyebrow">API Task Progress</span>
+      <h2>{{ qualityScore() }} / {{ qualityTarget() }}</h2>
       <p>
         @if (gateReached()) {
-          Mindestqualitaet fuer die Abgabe erreicht. Jetzt zaehlt Feinschliff.
+          Tagesziel erreicht. Dein Pokemon kann jetzt stark weiterleveln.
         } @else {
-          Noch {{ qualityTarget() - qualityScore() }} Punkte bis zum 80%-Nachweis.
+          Noch {{ qualityTarget() - qualityScore() }} Punkte bis zum Tagesziel.
         }
       </p>
     </div>
@@ -18,7 +18,7 @@
       aria-label="Quality Gate Fortschritt"
     >
       <strong>{{ progressPercent() }}%</strong>
-      <span>Gate</span>
+      <span>Tasks</span>
     </div>
   </div>
 
@@ -29,11 +29,11 @@
   <div class="quality-gate__grid">
     <div class="quality-gate__metric">
       <strong>{{ completedRequiredTasks() }}/{{ requiredTasks().length }}</strong>
-      <span>Pflichtpunkte</span>
+      <span>Backend-Tasks</span>
     </div>
     <div class="quality-gate__metric">
       <strong>{{ tasks().length - missingRequiredTasks().length }}</strong>
-      <span>aktive Nachweise</span>
+      <span>Task-Slots</span>
     </div>
   </div>
 
@@ -46,13 +46,13 @@
   </div>
 
   <div class="quality-gate__missing">
-    <span>Naechste offene Pflichtpunkte</span>
+    <span>Naechste offene Tasks</span>
     @if (missingRequiredTasks().length > 0) {
       @for (task of missingRequiredTasks(); track task.id) {
         <strong>{{ task.title }}</strong>
       }
     } @else {
-      <strong>Keine kritischen Pflichtpunkte offen.</strong>
+      <strong>Alle Backend-Tasks fuer heute erledigt.</strong>
     }
   </div>
 </section>

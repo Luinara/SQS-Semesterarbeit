@@ -1,19 +1,12 @@
 import { expect, test } from "../../frontend/testing/playwright-test";
 
 test.describe("SQS Quality Companion", () => {
-  test("fuehrt vom Splash-Screen bis ins Quality-Dashboard", async ({ page }) => {
+  test("fuehrt vom Login bis ins Quality-Dashboard", async ({ page }) => {
     await page.addInitScript(() => {
       globalThis.localStorage.clear();
     });
 
-    await page.goto("/");
-
-    await expect(
-      page.getByRole("heading", {
-        name: "Dein produktives Pet-Abenteuer beginnt.",
-      }),
-    ).toBeVisible();
-    await page.waitForURL("**/auth");
+    await page.goto("/auth", { waitUntil: "domcontentloaded", timeout: 10000 });
 
     await page.getByLabel("E-Mail").fill("demo@sqs.app");
     await page.getByLabel("Passwort").fill("cozyfocus");

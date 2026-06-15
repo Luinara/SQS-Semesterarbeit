@@ -2,14 +2,14 @@
   <header class="task-list__header">
     <div>
       <span class="eyebrow">Heute im Fokus</span>
-      <h2>SQS Checkliste</h2>
-      <p>Jeder Nachweis erhoeht den Quality-Score und trainiert dein Pokemon fuer die Demo.</p>
+      <h2>Backend Tasks</h2>
+      <p>Diese Aufgaben entsprechen dem Task-State, den das Backend-Dashboard liefern soll.</p>
     </div>
 
     <div class="task-list__summary">
       <div class="task-list__summary-item">
         <strong>{{ completedTasks() }}/{{ tasks().length }}</strong>
-        <span>Nachweise</span>
+        <span>Tasks</span>
       </div>
       <div class="task-list__summary-item">
         <strong>{{ availableFoodPoints() }}</strong>
@@ -20,13 +20,13 @@
 
   <div class="task-list__meter">
     <span>Offen: {{ qualityQuestProgress()?.pending ?? pendingTasks() }}</span>
-    <span>{{ questPercentage() }}% Checklisten-Fortschritt</span>
+    <span>{{ questPercentage() }}% Tagesfortschritt</span>
   </div>
 
   <div
     class="task-list__progress"
     role="progressbar"
-    aria-label="SQS Checklisten-Fortschritt"
+    aria-label="Backend Task Fortschritt"
     [attr.aria-valuemin]="0"
     [attr.aria-valuemax]="100"
     [attr.aria-valuenow]="questPercentage()"
