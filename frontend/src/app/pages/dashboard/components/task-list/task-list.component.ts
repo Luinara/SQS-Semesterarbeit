@@ -2,10 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { TaskItem } from '../../../../shared/models/task.model';
 import { TaskCardComponent } from '../task-card/task-card.component';
 
-interface DailyQuestProgress {
+interface QualityQuestProgress {
   completed: number;
   total: number;
   pending: number;
+  completedRequired: number;
+  totalRequired: number;
   percentage: number;
 }
 
@@ -20,15 +22,14 @@ interface DailyQuestProgress {
 export class TaskListComponent {
   readonly tasks = input.required<TaskItem[]>();
   readonly availableFoodPoints = input(0);
-  readonly dailyQuestProgress = input<DailyQuestProgress | null>(null);
-  readonly hydrationGoalReached = input(false);
+  readonly qualityQuestProgress = input<QualityQuestProgress | null>(null);
   readonly taskCompleted = output<string>();
 
   readonly completedTasks = computed(() => this.tasks().filter((task) => task.isCompleted).length);
   readonly pendingTasks = computed(() => this.tasks().filter((task) => !task.isCompleted).length);
   readonly questPercentage = computed(
     () =>
-      this.dailyQuestProgress()?.percentage ??
+      this.qualityQuestProgress()?.percentage ??
       (this.tasks().length <= 0
         ? 0
         : Math.round((this.completedTasks() / this.tasks().length) * 100))
@@ -38,11 +39,11 @@ export class TaskListComponent {
     this.taskCompleted.emit(taskId);
   }
 
-  isTaskLocked(task: TaskItem): boolean {
-    return task.icon === 'drop' && !task.isCompleted && !this.hydrationGoalReached();
+  isTaskLocked(_task: TaskItem): boolean {
+    return false;
   }
 
   getTaskLockedReason(task: TaskItem): string {
-    return this.isTaskLocked(task) ? 'Wasserziel zuerst erreichen' : '';
+    return this.isTaskLocked(task) ? 'Noch nicht bereit' : '';
   }
 }
