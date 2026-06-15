@@ -11,19 +11,25 @@ SQS-Semesterarbeit/
 ├── backend/                          # Java / Spring Boot backend
 │   └── src/
 │       ├── main/
-│       │   ├── java/com/example/app/
-│       │   │   ├── config/           # Spring configuration and security
-│       │   │   ├── controller/       # REST endpoints (public + secured)
-│       │   │   ├── service/          # Business logic
-│       │   │   ├── domain/           # Core models (user, task, pokemon, …)
-│       │   │   ├── repository/       # Data access layer (Spring Data JPA)
-│       │   │   └── integration/      # External service communication (PokeAPI)
-│       │   └── resources/
-│       │       ├── application.properties      # Base configuration
-│       │       └── application-dev.properties  # Development overrides
+│       │   ├── java/io/github/luinara/sqs/
+│       │   │   ├── SelfCareApp.java  # Spring Boot application entry point
+│       │   │   ├── authentication/   # Authentication feature
+│       │   │   ├── task/             # Task management feature
+│       │   │   ├── user/             # User management feature
+│       │   │   └── weather/          # Weather integration feature
+│       │   └── resources/            # Application configuration
 │       └── test/
+│           ├── java/io/github/luinara/sqs/
+│           │   ├── SelfCareAppTest.java
+│           │   ├── architecture/    # ArchUnit tests
+│           │   ├── authentication/ 
+│           │   ├── common/
+│           │   ├── task/
+│           │   ├── user/
+│           │   └── weather/
 │           └── resources/
-│               └── application-test.properties # Test datasource (H2)
+│               ├── application-test.properties # Test datasource (H2)
+│               └── archunit.properties         # Architecture test configuration
 │
 ├── frontend/                         # TypeScript / React frontend
 │   ├── src/
@@ -32,10 +38,13 @@ SQS-Semesterarbeit/
 │   │   └── pages/                    # Routing-level views
 │   ├── public/                       # Static assets
 │   ├── .env.example                  # Environment variable template
+│   ├── index.html
 │   ├── package.json
 │   ├── playwright.config.ts          # Playwright → points at tests/e2e/
 │   ├── tsconfig.json
-│   └── vite.config.ts                # Vite / Vitest → points at tests/unit/
+│   ├── tsconfig.node.json
+│   ├── vite.config.ts                # Vite / Vitest → points at tests/unit/
+│   └── vitest.setup.ts               # Vitest configuration
 │
 ├── tests/                            # ALL tests live here (single source of truth)
 │   ├── unit/                         # Unit tests + Vitest setup file
@@ -117,6 +126,32 @@ npm install
 npm run dev
 ```
 
+**Database**
+- start the database locally
+```bash
+docker compose up -d db
+```
+- apply prisma migrations
+```bash
+cd db
+npx prisma migrate deploy
+```
+- reset the database locally
+```bash
+cd db
+npx prisma migrate reset
+```
+- execute seed
+```bash
+cd db
+npx prisma db seed
+```
+- prisma studio
+```bash
+cd db
+npx prisma studio
+```
+
 ---
 
 ## Running Tests
@@ -124,7 +159,7 @@ npm run dev
 All tests live in `tests/`. Tooling is wired automatically:
 
 ```bash
-# Backend unit tests  (**/*Test.java  via Maven Surefire)
+# Backend unit tests  (**/*UserTest.java  via Maven Surefire)
 cd backend && mvn test
 
 # Backend integration tests  (**/*IT.java  via Maven Failsafe)
@@ -180,9 +215,8 @@ Architecture documentation lives in [`docs/`](docs/):
 
 ## Backend (Spring Boot)
 
-* [ ] Define layered architecture (Controller / Service / Repository)
+* [X] Define layered architecture (Controller / Service / Repository)
 * [ ] Implement REST endpoints
-
     * [ ] Public endpoint (e.g. landing / health)
     * [ ] Protected endpoints (user + tasks)
 * [ ] Implement authentication (login & signup)

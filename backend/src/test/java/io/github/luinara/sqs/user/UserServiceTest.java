@@ -1,0 +1,197 @@
+package io.github.luinara.sqs.user;
+
+import io.github.luinara.sqs.user.dto.GameStateDto;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class UserServiceTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private io.github.luinara.sqs.pokemon.PokemonRepository pokemonRepository;
+
+    @InjectMocks
+    private UserService userService;
+
+    private OffsetDateTime nowUtc;
+
+    @BeforeEach
+    void setUp() {
+        nowUtc = OffsetDateTime.now(ZoneOffset.UTC);
+    }
+
+    @Test
+    void getGameState_mapsFieldsCorrectly_and_setsYesterdayLoggedInTrue() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("testuser");
+        entity.setHydrationMl(120);
+        entity.setHunger(50);
+        entity.setPokemonLevel(5);
+        entity.setPokemonXp(42);
+        entity.setHappiness(7);
+        entity.setStreak(3);
+        entity.setLastLoginAt(nowUtc.minusDays(1)); // yesterday
+
+        when(userRepository.findByUsernameIgnoreCase("testuser")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.getGameStateForUsername("testuser");
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getWaterLevel()).isEqualTo(120);
+        assertThat(dto.getFoodLevel()).isEqualTo(50);
+        assertThat(dto.getPokemonLevel()).isEqualTo(5);
+        assertThat(dto.getGrowth()).isEqualTo(42);
+        assertThat(dto.getHappiness()).isEqualTo(7);
+        assertThat(dto.getStreak()).isEqualTo(3);
+        assertThat(dto.isYesterdayLoggedIn()).isTrue();
+        assertThat(dto.getServerNow()).isNotNull();
+    }
+
+    @Test
+    void getGameState_setsYesterdayLoggedInFalse_whenLastLoginOlder() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("olduser");
+        entity.setHydrationMl(10);
+        entity.setHunger(5);
+        entity.setPokemonLevel(1);
+        entity.setPokemonXp(5);
+        entity.setHappiness(1);
+        entity.setStreak(1);
+        entity.setLastLoginAt(nowUtc.minusDays(2)); // older than yesterday
+
+        when(userRepository.findByUsernameIgnoreCase("olduser")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.getGameStateForUsername("olduser");
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.isYesterdayLoggedIn()).isFalse();
+    }
+
+    // New tests
+    @Test
+    void waterUser_increasesHydration_and_returnsDto() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setHydrationMl(40);
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.waterUser("tester", 25);
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getWaterLevel()).isEqualTo(65); // 40 + 25
+        verify(userRepository).save(entity);
+    }
+
+    @Test
+    void feedUser_appliesPendingFeedPoints_and_updatesHappiness() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setPendingFeedPoints(15);
+        entity.setHappiness(90);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.feedUser("tester");
+
+        assertThat(dto).isNotNull();
+        // happiness should increase by min(needed=10, pending=15) => +10 -> 100
+        assertThat(dto.getHappiness()).isEqualTo(100);
+        assertThat(entity.getPendingFeedPoints()).isEqualTo(5);
+        verify(userRepository).save(entity);
+    }
+
+    @Test
+    void getGameStateForUsername_whenNotEgg_includesPokemonImageAndFields() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setEgg(false);
+        entity.setCurrentPokemonId(10);
+        entity.setHappiness(20);
+        entity.setPokemonLevel(5);
+        entity.setPokemonXp(30);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+        io.github.luinara.sqs.pokemon.PokemonEntity p = new io.github.luinara.sqs.pokemon.PokemonEntity();
+        p.setId(10);
+        p.setImageUrl("/img/10.png");
+        when(pokemonRepository.findById(10)).thenReturn(Optional.of(p));
+
+        GameStateDto dto = userService.getGameStateForUsername("tester");
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getPokemonImageUrl()).isEqualTo("/img/10.png");
+        assertThat(dto.getHappiness()).isEqualTo(20);
+        assertThat(dto.getPokemonLevel()).isEqualTo(5);
+        assertThat(dto.getGrowth()).isEqualTo(30);
+    }
+
+    // New edge-case tests requested
+    @Test
+    void getGameState_userNotFound_returnsNull() {
+        when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
+        GameStateDto dto = userService.getGameStateForUsername("nouser");
+        assertThat(dto).isNull();
+    }
+
+    @Test
+    void getGameState_pokemonIdNull_setsPokemonImageNull() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setEgg(false);
+        entity.setCurrentPokemonId(null);
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.getGameStateForUsername("tester");
+        assertThat(dto).isNotNull();
+        assertThat(dto.getPokemonImageUrl()).isNull();
+        // pokemonRepository.findById should not be called when pId is null
+        verifyNoInteractions(pokemonRepository);
+    }
+
+    @Test
+    void waterUser_userNotFound_returnsNull() {
+        when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
+        GameStateDto dto = userService.waterUser("nouser", 10);
+        assertThat(dto).isNull();
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void feedUser_userNotFound_returnsNull() {
+        when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
+        GameStateDto dto = userService.feedUser("nouser");
+        assertThat(dto).isNull();
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void feedUser_pendingZero_returnsDto_andDoesNotSave() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setPendingFeedPoints(0);
+        entity.setHappiness(50);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.feedUser("tester");
+
+        assertThat(dto).isNotNull();
+        // when pending <= 0, feedUser should not modify or save the user
+        verify(userRepository, never()).save(entity);
+        assertThat(dto.getHappiness()).isEqualTo(50);
+    }
+}
