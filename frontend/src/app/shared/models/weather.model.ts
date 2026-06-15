@@ -18,3 +18,9 @@ export interface WeatherScene {
   headline: string;
   description: string;
 }
+
+export interface WeatherLocation {
+  latitude: number;
+  longitude: number;
+  label: string;
+}
