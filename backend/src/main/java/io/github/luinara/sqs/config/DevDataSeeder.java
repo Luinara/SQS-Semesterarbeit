@@ -48,12 +48,16 @@ public class DevDataSeeder implements ApplicationRunner {
 
     private void seedTasks() {
         for (SeedTask task : defaultTasks()) {
-            TaskEntity entity = taskRepository.findByTitle(task.title()).orElseGet(() -> {
+            TaskEntity entity = taskRepository.findByTitle(task.title())
+                    .or(() -> task.legacyTitle() == null
+                            ? java.util.Optional.empty()
+                            : taskRepository.findByTitle(task.legacyTitle()))
+                    .orElseGet(() -> {
                 TaskEntity newTask = new TaskEntity();
-                newTask.setTitle(task.title());
                 return newTask;
             });
 
+            entity.setTitle(task.title());
             entity.setDescription(task.description());
             entity.setFeedPoints(task.feedPoints());
             taskRepository.save(entity);
@@ -62,14 +66,19 @@ public class DevDataSeeder implements ApplicationRunner {
 
     private List<SeedTask> defaultTasks() {
         return List.of(
-                new SeedTask("Wasser trinken", "Trinke Wasser und speichere deinen Fortschritt im Backend.", 10),
-                new SeedTask("30 Minuten lernen", "Schliesse eine fokussierte Lerneinheit ab.", 20),
-                new SeedTask("Sport erledigen", "Bewegung bringt Feed-Punkte fuer dein Pokemon.", 20),
-                new SeedTask("Workspace aufraeumen", "Raeume deinen Arbeitsbereich fuer besseren Fokus auf.", 15),
-                new SeedTask("10 Seiten lesen", "Lies zehn Seiten und sammle Routinepunkte.", 10)
+                new SeedTask("Wasser trinken", null, "Trinke Wasser und speichere deinen Fortschritt im Backend.", 10),
+                new SeedTask("30 Minuten lernen", null, "Schließe eine fokussierte Lerneinheit ab.", 20),
+                new SeedTask("Sport erledigen", null, "Bewegung bringt Feed-Punkte für dein Pokémon.", 20),
+                new SeedTask(
+                        "Workspace aufräumen",
+                        "Workspace aufraeumen",
+                        "Räume deinen Arbeitsbereich für besseren Fokus auf.",
+                        15
+                ),
+                new SeedTask("10 Seiten lesen", null, "Lies zehn Seiten und sammle Routinepunkte.", 10)
         );
     }
 
-    private record SeedTask(String title, String description, int feedPoints) {
+    private record SeedTask(String title, String legacyTitle, String description, int feedPoints) {
     }
 }
