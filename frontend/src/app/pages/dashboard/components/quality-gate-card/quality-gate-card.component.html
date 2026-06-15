@@ -1,0 +1,58 @@
+<section class="quality-gate">
+  <div class="quality-gate__hero">
+    <div>
+      <span class="eyebrow">SQS Quality Gate</span>
+      <h2>{{ qualityScore() }}% / {{ qualityTarget() }}%</h2>
+      <p>
+        @if (gateReached()) {
+          Mindestqualitaet fuer die Abgabe erreicht. Jetzt zaehlt Feinschliff.
+        } @else {
+          Noch {{ qualityTarget() - qualityScore() }} Punkte bis zum 80%-Nachweis.
+        }
+      </p>
+    </div>
+
+    <div
+      class="quality-gate__ring"
+      [style.--quality-progress]="progressPercent() + '%'"
+      aria-label="Quality Gate Fortschritt"
+    >
+      <strong>{{ progressPercent() }}%</strong>
+      <span>Gate</span>
+    </div>
+  </div>
+
+  <div class="quality-gate__meter" aria-hidden="true">
+    <span [style.width.%]="progressPercent()"></span>
+  </div>
+
+  <div class="quality-gate__grid">
+    <div class="quality-gate__metric">
+      <strong>{{ completedRequiredTasks() }}/{{ requiredTasks().length }}</strong>
+      <span>Pflichtpunkte</span>
+    </div>
+    <div class="quality-gate__metric">
+      <strong>{{ tasks().length - missingRequiredTasks().length }}</strong>
+      <span>aktive Nachweise</span>
+    </div>
+  </div>
+
+  <div class="quality-gate__pyramid">
+    @for (stage of stages; track stage.label) {
+      <span [class.quality-gate__stage--done]="isStageCovered(stage)">
+        {{ stage.label }}
+      </span>
+    }
+  </div>
+
+  <div class="quality-gate__missing">
+    <span>Naechste offene Pflichtpunkte</span>
+    @if (missingRequiredTasks().length > 0) {
+      @for (task of missingRequiredTasks(); track task.id) {
+        <strong>{{ task.title }}</strong>
+      }
+    } @else {
+      <strong>Keine kritischen Pflichtpunkte offen.</strong>
+    }
+  </div>
+</section>
