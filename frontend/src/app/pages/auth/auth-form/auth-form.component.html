@@ -21,7 +21,7 @@
       type="password"
       formControlName="password"
       [attr.autocomplete]="mode() === 'register' ? 'new-password' : 'current-password'"
-      placeholder="Mindestens 8 Zeichen"
+      [placeholder]="mode() === 'register' ? 'Mindestens 8 Zeichen' : 'Passwort'"
     />
 
     @if (shouldShowError(form.controls.password)) {

@@ -139,3 +139,7 @@ Desktop.ini
 gradle-app.setting
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
+
+# Local agent notes
+sqsagent.md
+SQSAGENT.md
