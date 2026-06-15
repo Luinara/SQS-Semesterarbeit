@@ -23,15 +23,6 @@
       </aside>
 
       <section class="dashboard-page__content">
-        <sqs-quality-gate-card
-          [tasks]="appState.tasks()"
-          [qualityScore]="appState.qualityScore()"
-          [qualityTarget]="appState.qualityTarget()"
-          [waterLevel]="appState.waterLevel()"
-          [foodLevel]="appState.foodLevel()"
-          [streak]="appState.streak()"
-        />
-
         <sqs-pet-card
           [pet]="appState.pet()"
           [completedTasks]="appState.completedTaskCount()"
@@ -51,6 +42,15 @@
           (feedRequested)="feedPet()"
           (weatherRefreshRequested)="refreshWeather()"
           (weatherCitySubmitted)="searchWeatherCity($event)"
+        />
+
+        <sqs-quality-gate-card
+          [tasks]="appState.tasks()"
+          [qualityScore]="appState.qualityScore()"
+          [qualityTarget]="appState.qualityTarget()"
+          [waterLevel]="appState.waterLevel()"
+          [foodLevel]="appState.foodLevel()"
+          [streak]="appState.streak()"
         />
       </section>
     </div>

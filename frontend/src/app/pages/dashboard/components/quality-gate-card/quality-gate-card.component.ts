@@ -1,6 +1,21 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TaskItem } from '../../../../shared/models/task.model';
 
+export function calculateQualityProgressPercent(score: number, target: number): number {
+  const normalizedTarget = Math.max(1, target);
+  return Math.max(0, Math.min(100, Math.round((score / normalizedTarget) * 100)));
+}
+
+export function getRequiredTasks(tasks: TaskItem[]): TaskItem[] {
+  return tasks.filter((task) => task.isRequired);
+}
+
+export function getMissingRequiredTasks(tasks: TaskItem[], limit = 3): TaskItem[] {
+  return getRequiredTasks(tasks)
+    .filter((task) => !task.isCompleted)
+    .slice(0, limit);
+}
+
 @Component({
   selector: 'sqs-quality-gate-card',
   standalone: true,
@@ -17,19 +32,14 @@ export class QualityGateCardComponent {
   readonly foodLevel = input(0);
   readonly streak = input(0);
 
-  readonly progressPercent = computed(() => {
-    const target = Math.max(1, this.qualityTarget());
-    return Math.min(100, Math.round((this.qualityScore() / target) * 100));
-  });
-  readonly requiredTasks = computed(() => this.tasks().filter((task) => task.isRequired));
+  readonly progressPercent = computed(() =>
+    calculateQualityProgressPercent(this.qualityScore(), this.qualityTarget())
+  );
+  readonly requiredTasks = computed(() => getRequiredTasks(this.tasks()));
   readonly completedRequiredTasks = computed(
     () => this.requiredTasks().filter((task) => task.isCompleted).length
   );
-  readonly missingRequiredTasks = computed(() =>
-    this.requiredTasks()
-      .filter((task) => !task.isCompleted)
-      .slice(0, 3)
-  );
+  readonly missingRequiredTasks = computed(() => getMissingRequiredTasks(this.tasks()));
   readonly gateReached = computed(() => this.qualityScore() >= this.qualityTarget());
   readonly visibleTasks = computed(() => this.tasks().slice(0, 5));
 }

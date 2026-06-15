@@ -1,13 +1,13 @@
-# API — Benutzeraktionen: Water & Feed
+# API — Benutzeraktionen: Water, Feed & Account
 
-Dieses Dokument beschreibt die zwei neuen Endpunkte, mit denen der Client das Trinken (water) und das Füttern (feed) des Pokémon des eingeloggten Users anstoßen kann.
+Dieses Dokument beschreibt die Endpunkte, mit denen der Client Wasser trinken, Pokémon füttern/trainieren und den eigenen Account löschen kann.
 
 Hinweis: Authentifizierung wie im Projektstandard (Session / USER_TOKEN) wird erwartet. Alle Zeiten und Werte verwenden UTC‑Konventionen, Responses enthalten `GameStateDto` (siehe `docs/API_USER_GAME_STATE.md`).
 
 ## Allgemeines
 
 - Basis‑Pfad: `/api/user`
-- Auth: erforderlich (Session/Token, wie in `AuthenticationController`) für beide Endpunkte.
+- Auth: erforderlich (Session/Token, wie in `AuthenticationController`) für alle Endpunkte.
 - Rückgabe: Nach erfolgreicher Aktion wird der aktuelle GameState als `GameStateDto` zurückgegeben (inkl. `waterLevel`, `pendingFeedPoints`, `happiness`, `pokemonLevel`, `pokemonImageUrl`, u.a.).
 
 ## POST /api/user/water
@@ -18,7 +18,7 @@ Hinweis: Authentifizierung wie im Projektstandard (Session / USER_TOKEN) wird er
   - Method: POST
   - Path: `/api/user/water`
   - Body (JSON):
-    - `ml` (number) — Milliliter, die dem Wasserspeicher hinzugefügt werden. (Frontend: drei Buttons senden unterschiedliche `ml`‑Werte.)
+    - `ml` (number) — Milliliter, die dem Wasserspeicher hinzugefügt werden. Das Frontend sendet aktuell `250` oder `500`.
 
 - Verhalten:
   - Der Server erhöht `user.hydrationMl += ml` und persistiert den neuen Wert.
@@ -26,7 +26,7 @@ Hinweis: Authentifizierung wie im Projektstandard (Session / USER_TOKEN) wird er
 - Ab `3000 ml` schließt der Server den Task `Wasser trinken` automatisch ab, sofern dieser Task existiert und für den User noch offen ist.
 
 - Responses:
-  - 200 OK — JSON body: aktuellers `GameStateDto`.
+  - 200 OK — JSON body: aktueller `GameStateDto`.
   - 401 Unauthorized — kein gültiger Login / Session.
   - 404 Not Found — Benutzer nicht gefunden (sollte in DB‑Mode nur bei Inkonsistenzen auftreten).
   - 500 Internal Server Error — unerwarteter Fehler.
@@ -95,8 +95,28 @@ Beispiel Response
 ## Zusammenspiel mit Tasks
 
 - Tasks haben jetzt ein Feld `feed_points` (DB‑Spalte `feed_points`).
-- Beim Abschließen einer Task (`POST /api/tasks/{id}/complete`) werden die `feed_points` dieser Task dem Feld `user.pendingFeedPoints` hinzugefügt. Die Task‑Abschluss‑Action selbst erhöht nicht mehr direkt `happiness` — das geschieht durch die separate `POST /api/user/feed` Aktion.
-- Growth (Pokemon XP), Level‑Ups, Hatch und Evolution bleiben beim Task‑Abschluss wie dokumentiert erhalten.
+- Beim Abschließen einer Task (`POST /api/tasks/{id}/complete`) werden die `feed_points` dieser Task dem Feld `user.pendingFeedPoints` hinzugefügt. Die Task‑Abschluss‑Action selbst erhöht nicht direkt `happiness` — das geschieht durch die separate `POST /api/user/feed` Aktion.
+- Growth (Pokémon XP), Level‑Ups, Hatch und Evolution bleiben beim Task‑Abschluss erhalten. Level‑Ups sind auf frühestens alle zwei Tage begrenzt.
+
+## DELETE /api/user/account
+
+- Zweck: Löscht den aktuell authentifizierten Account inklusive userbezogener Fortschrittsdaten und invalidiert die Session.
+- Auth: erforderlich.
+- Request:
+  - Method: DELETE
+  - Path: `/api/user/account`
+  - Body: none
+
+- Verhalten:
+  - Der Server leitet den User aus der Session ab.
+  - `user_tasks` werden vor dem User gelöscht.
+  - Falls die optionale Tabelle `user_stats` existiert, werden auch diese Zeilen gelöscht.
+  - Danach wird der User gelöscht, der Auth-Token invalidiert und die HTTP-Session beendet.
+
+- Responses:
+  - `204 No Content` — Account gelöscht, Session beendet.
+  - `401 Unauthorized` — keine gültige Session.
+  - `404 Not Found` — Session zeigt auf einen nicht mehr existierenden User.
 
 ## Frontend‑Hinweise
 

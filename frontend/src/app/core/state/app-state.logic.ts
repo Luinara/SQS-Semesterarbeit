@@ -79,7 +79,7 @@ export function feedPetInGameStateWithFeedback(
       gameState: normalizedGameState,
       feedback: createGameFeedback(
         'info',
-        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Quest-Punkte bis zum naechsten Training.`
+        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Quest-Punkte bis zum nächsten Training.`
       ),
     };
   }
@@ -133,7 +133,7 @@ export function feedPetInGameStateWithFeedback(
       gameState: updatedGameState,
       feedback: createGameFeedback(
         'feeding',
-        'Training verbucht. Das taegliche Motivation-Limit ist fuer heute erreicht.'
+        'Training verbucht. Das tägliche Motivation-Limit ist für heute erreicht.'
       ),
     };
   }
@@ -197,7 +197,10 @@ export function derivePetCareState(gameState: GameState): PetCareState {
     return 'growing';
   }
 
-  if (normalizedGameState.qualityScore >= normalizedGameState.qualityTarget && pet.happiness >= 70) {
+  if (
+    normalizedGameState.qualityScore >= normalizedGameState.qualityTarget &&
+    pet.happiness >= 70
+  ) {
     return 'thriving';
   }
 
@@ -297,7 +300,7 @@ function normalizePetState(pet: PetState, nowIso: string): PetState {
 
   return {
     ...pet,
-    name: pet.name || 'Pokemon Partner',
+    name: pet.name || 'Pokémon Partner',
     level,
     growthProgress: pet.growthProgress ?? 0,
     growthGoal: pet.growthGoal || PET_RULES.initialGrowthGoal,

@@ -10,7 +10,7 @@ describe("hydration gauge logic", () => {
     [3000, 100, 0],
     [3500, 100, 0],
   ])(
-    "berechnet Fortschritt und Restmenge fuer %i ml",
+    "berechnet Fortschritt und Restmenge für %i ml",
     (waterLevel, expectedProgress, expectedRemaining) => {
       expect(getHydrationProgressPercent(waterLevel)).toBe(expectedProgress);
       expect(getRemainingHydrationMl(waterLevel)).toBe(expectedRemaining);

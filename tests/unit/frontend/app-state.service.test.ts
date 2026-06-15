@@ -1,15 +1,197 @@
 import { AppStateService } from "../../../frontend/src/app/core/services/app-state.service";
-import { DashboardSnapshot } from "../../../frontend/src/app/core/services/backend-api.service";
+import {
+  BackendApiError,
+  DashboardSnapshot,
+} from "../../../frontend/src/app/core/services/backend-api.service";
 import { GameState } from "../../../frontend/src/app/shared/models/app-state.model";
 import { AppUser } from "../../../frontend/src/app/shared/models/user.model";
 
+const ACTIVE_USERNAME_STORAGE_KEY = "sqs.backend.activeUsername";
+
 describe("AppStateService", () => {
-  it("triggert Level-Up-Feedback und Animation, wenn ein Backend-Snapshot ein hoeheres Level liefert", async () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("meldet sich an, speichert den Session-Spielernamen und setzt den Dashboard-State", async () => {
+    const backendApi = createBackendApiMock({
+      login: createSnapshot(1, 25),
+    });
+    const service = new AppStateService(backendApi);
+
+    const result = await service.login({
+      username: "mira",
+      password: "password123",
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.message).toContain("mira");
+    expect(backendApi.login).toHaveBeenCalledWith("mira", "password123");
+    expect(service.isAuthenticated()).toBe(true);
+    expect(service.user()?.userName).toBe("mira");
+    expect(service.pet()?.growthProgress).toBe(25);
+    expect(globalThis.localStorage.getItem(ACTIVE_USERNAME_STORAGE_KEY)).toBe(
+      "mira",
+    );
+  });
+
+  it("registriert neue Nutzer und merkt sich die Backend-Session", async () => {
+    const backendApi = createBackendApiMock({
+      signup: createSnapshot(1, 0, "nova"),
+    });
+    const service = new AppStateService(backendApi);
+
+    const result = await service.register({
+      username: "nova",
+      password: "password123",
+      userName: "Nova",
+    });
+
+    expect(result).toEqual({
+      success: true,
+      message: "Profil erstellt: nova.",
+    });
+    expect(backendApi.signup).toHaveBeenCalledWith("nova", "password123");
+    expect(service.user()?.userName).toBe("nova");
+    expect(globalThis.localStorage.getItem(ACTIVE_USERNAME_STORAGE_KEY)).toBe(
+      "nova",
+    );
+  });
+
+  it("restauriert eine gespeicherte Session über das Backend", async () => {
+    globalThis.localStorage.setItem(ACTIVE_USERNAME_STORAGE_KEY, "mira");
+    const backendApi = createBackendApiMock({
+      loadDashboard: createSnapshot(3, 70),
+    });
+    const service = new AppStateService(backendApi);
+
+    await expect(service.restoreSession()).resolves.toBe(true);
+
+    expect(backendApi.loadDashboard).toHaveBeenCalledWith("mira");
+    expect(service.user()?.userName).toBe("mira");
+    expect(service.pet()?.level).toBe(3);
+    expect(service.isLoading()).toBe(false);
+  });
+
+  it("räumt eine gespeicherte Session auf, wenn Restore fehlschlägt", async () => {
+    globalThis.localStorage.setItem(ACTIVE_USERNAME_STORAGE_KEY, "mira");
+    const backendApi = createBackendApiMock({
+      loadDashboardError: new BackendApiError(401, "unauthenticated"),
+    });
+    const service = new AppStateService(backendApi);
+
+    await expect(service.restoreSession()).resolves.toBe(false);
+
+    expect(service.isAuthenticated()).toBe(false);
+    expect(
+      globalThis.localStorage.getItem(ACTIVE_USERNAME_STORAGE_KEY),
+    ).toBeNull();
+  });
+
+  it("meldet ab und leert lokalen Session-State", async () => {
+    globalThis.localStorage.setItem(ACTIVE_USERNAME_STORAGE_KEY, "mira");
+    const backendApi = createBackendApiMock({
+      login: createSnapshot(1, 0),
+    });
+    const service = new AppStateService(backendApi);
+
+    await service.login({ username: "mira", password: "password123" });
+    await service.logout();
+
+    expect(backendApi.logout).toHaveBeenCalledOnce();
+    expect(service.isAuthenticated()).toBe(false);
+    expect(service.user()).toBeNull();
+    expect(
+      globalThis.localStorage.getItem(ACTIVE_USERNAME_STORAGE_KEY),
+    ).toBeNull();
+  });
+
+  it("löscht den Account und beendet die lokale Session", async () => {
+    const backendApi = createBackendApiMock({
+      login: createSnapshot(1, 0),
+    });
+    const service = new AppStateService(backendApi);
+
+    await service.login({ username: "mira", password: "password123" });
+    const result = await service.deleteAccount();
+
+    expect(result).toEqual({
+      success: true,
+      message: "Profil gelöscht.",
+    });
+    expect(backendApi.deleteAccount).toHaveBeenCalledOnce();
+    expect(service.isAuthenticated()).toBe(false);
+  });
+
+  it("zeigt Server-Fehlertexte beim Login unverändert an", async () => {
+    const backendApi = createBackendApiMock({
+      loginError: new BackendApiError(404, "Server nicht erreichbar."),
+    });
+    const service = new AppStateService(backendApi);
+
+    await expect(
+      service.login({ username: "mira", password: "password123" }),
+    ).resolves.toEqual({
+      success: false,
+      message: "Server nicht erreichbar.",
+    });
+    expect(service.isAuthenticated()).toBe(false);
+  });
+
+  it("speichert Wasser über das Backend und zeigt Hydration-Feedback", async () => {
+    const waterSnapshot = createSnapshot(1, 10);
+    waterSnapshot.backendGameState.waterLevel = 500;
+
+    const backendApi = createBackendApiMock({
+      login: createSnapshot(1, 0),
+      addWater: waterSnapshot,
+    });
+    const service = new AppStateService(backendApi);
+
+    await service.login({ username: "mira", password: "password123" });
+    await service.addWater(500);
+
+    expect(backendApi.addWater).toHaveBeenCalledWith("mira", 500);
+    expect(service.waterLevel()).toBe(500);
+    expect(service.lastGameFeedback()).toMatchObject({
+      kind: "hydration",
+      message: "+500 ml Wasser getrunken.",
+    });
+  });
+
+  it("trainiert das Pokémon über Feed-Punkte und zeigt Feedback", async () => {
+    const initialSnapshot = createSnapshot(1, 0);
+    initialSnapshot.gameState.pet.availableFoodPoints = 10;
+    initialSnapshot.backendGameState.pendingFeedPoints = 10;
+
+    const fedSnapshot = createSnapshot(1, 10);
+    fedSnapshot.gameState.pet.availableFoodPoints = 9;
+    fedSnapshot.backendGameState.pendingFeedPoints = 9;
+    fedSnapshot.backendGameState.happiness = 1;
+
+    const backendApi = createBackendApiMock({
+      login: initialSnapshot,
+      feed: fedSnapshot,
+    });
+    const service = new AppStateService(backendApi);
+
+    await service.login({ username: "mira", password: "password123" });
+    await service.feedPet();
+
+    expect(backendApi.feed).toHaveBeenCalledWith("mira");
+    expect(service.pet()?.availableFoodPoints).toBe(9);
+    expect(service.lastGameFeedback()).toMatchObject({
+      kind: "feeding",
+      message: "Feed-Punkte wurden für dein Pokémon eingesetzt.",
+    });
+  });
+
+  it("triggert Level-Up-Feedback und Animation, wenn ein Backend-Snapshot ein höheres Level liefert", async () => {
     vi.useFakeTimers();
-    const backendApi = createBackendApiMock([
-      createSnapshot(1, 90),
-      createSnapshot(2, 0),
-    ]);
+    const backendApi = createBackendApiMock({
+      login: createSnapshot(1, 90),
+      completeTask: createSnapshot(2, 0),
+    });
     const service = new AppStateService(backendApi);
 
     await service.login({ username: "mira", password: "password123" });
@@ -17,19 +199,17 @@ describe("AppStateService", () => {
 
     expect(service.lastGameFeedback()?.kind).toBe("level-up");
     expect(service.isPetLevelingUp()).toBe(true);
-
     vi.advanceTimersByTime(1200);
 
     expect(service.isPetLevelingUp()).toBe(false);
-    vi.useRealTimers();
   });
 
   it("triggert keine Animation, wenn das Level gleich bleibt", async () => {
     vi.useFakeTimers();
-    const backendApi = createBackendApiMock([
-      createSnapshot(1, 20),
-      createSnapshot(1, 30),
-    ]);
+    const backendApi = createBackendApiMock({
+      login: createSnapshot(1, 20),
+      completeTask: createSnapshot(1, 30),
+    });
     const service = new AppStateService(backendApi);
 
     await service.login({ username: "mira", password: "password123" });
@@ -37,27 +217,58 @@ describe("AppStateService", () => {
 
     expect(service.lastGameFeedback()?.kind).toBe("quest");
     expect(service.isPetLevelingUp()).toBe(false);
-    vi.useRealTimers();
   });
 });
 
-function createBackendApiMock(snapshots: DashboardSnapshot[]) {
+interface BackendApiMockOptions {
+  login?: DashboardSnapshot;
+  loginError?: Error;
+  signup?: DashboardSnapshot;
+  signupError?: Error;
+  loadDashboard?: DashboardSnapshot;
+  loadDashboardError?: Error;
+  completeTask?: DashboardSnapshot;
+  addWater?: DashboardSnapshot;
+  feed?: DashboardSnapshot;
+  deleteAccountError?: Error;
+}
+
+function createBackendApiMock(options: BackendApiMockOptions) {
   return {
-    login: vi.fn().mockResolvedValue(snapshots[0]),
-    completeTask: vi.fn().mockResolvedValue(snapshots[1]),
+    login: createAsyncMock(options.login, options.loginError),
+    signup: createAsyncMock(options.signup, options.signupError),
+    loadDashboard: createAsyncMock(
+      options.loadDashboard,
+      options.loadDashboardError,
+    ),
+    completeTask: createAsyncMock(options.completeTask),
+    addWater: createAsyncMock(options.addWater),
+    feed: createAsyncMock(options.feed),
+    logout: vi.fn().mockResolvedValue(undefined),
+    deleteAccount: createAsyncMock(undefined, options.deleteAccountError),
   } as unknown as ConstructorParameters<typeof AppStateService>[0];
 }
 
-function createSnapshot(level: number, growth: number): DashboardSnapshot {
+function createAsyncMock<T>(value: T, error?: Error) {
+  return error
+    ? vi.fn().mockRejectedValue(error)
+    : vi.fn().mockResolvedValue(value);
+}
+
+function createSnapshot(
+  level: number,
+  growth: number,
+  username = "mira",
+): DashboardSnapshot {
   const user: AppUser = {
-    id: "mira",
-    email: "mira",
-    userName: "mira",
+    id: username,
+    email: username,
+    userName: username,
     joinedAt: "2026-06-15T10:00:00Z",
   };
   const gameState: GameState = {
     pet: {
-      name: "Pokemon Partner",
+      name: "Pokémon Partner",
       level,
       growthProgress: growth,
       growthGoal: 100,

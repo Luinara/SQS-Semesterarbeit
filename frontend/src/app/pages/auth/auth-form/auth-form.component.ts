@@ -3,10 +3,60 @@ import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators,
+  ValidationErrors,
 } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { AuthMode, AuthSubmission } from '../../../shared/models/auth.model';
 import { UiButtonComponent } from '../../../shared/ui/button/ui-button.component';
+
+export function createAuthSubmission(
+  mode: AuthMode,
+  username: string,
+  password: string
+): AuthSubmission {
+  const trimmedUsername = username.trim();
+
+  if (mode === 'register') {
+    return {
+      username: trimmedUsername,
+      password,
+      userName: trimmedUsername,
+    };
+  }
+
+  return {
+    username: trimmedUsername,
+    password,
+  };
+}
+
+export function getUsernameErrorText(errors: ValidationErrors | null): string {
+  if (errors?.['required']) {
+    return 'Bitte gib deinen Spielernamen ein.';
+  }
+
+  if (errors?.['maxlength']) {
+    return 'Der Spielername darf höchstens 32 Zeichen lang sein.';
+  }
+
+  if (errors?.['pattern']) {
+    return 'Erlaubt sind Buchstaben, Zahlen, Punkt, Unterstrich und Bindestrich.';
+  }
+
+  return 'Der Spielername sollte mindestens 2 Zeichen lang sein.';
+}
+
+export function getPasswordErrorText(errors: ValidationErrors | null): string {
+  if (errors?.['required']) {
+    return 'Bitte gib ein Passwort ein.';
+  }
+
+  if (errors?.['minlength']) {
+    return 'Das Passwort sollte mindestens 8 Zeichen haben.';
+  }
+
+  return 'Bitte prüfe das Passwort.';
+}
 
 @Component({
   selector: 'sqs-auth-form',
@@ -57,22 +107,9 @@ export class AuthFormComponent {
     }
 
     const formValue = this.form.getRawValue();
-    const username = formValue.username.trim();
-
-    if (this.mode() === 'register') {
-      this.credentialsSubmitted.emit({
-        username,
-        password: formValue.password,
-        userName: username,
-      });
-
-      return;
-    }
-
-    this.credentialsSubmitted.emit({
-      username,
-      password: formValue.password,
-    });
+    this.credentialsSubmitted.emit(
+      createAuthSubmission(this.mode(), formValue.username, formValue.password)
+    );
   }
 
   shouldShowError(control: AbstractControl): boolean {
@@ -80,30 +117,10 @@ export class AuthFormComponent {
   }
 
   usernameErrorText(): string {
-    if (this.form.controls.username.hasError('required')) {
-      return 'Bitte gib deinen Spielernamen ein.';
-    }
-
-    if (this.form.controls.username.hasError('maxlength')) {
-      return 'Der Username darf hoechstens 32 Zeichen lang sein.';
-    }
-
-    if (this.form.controls.username.hasError('pattern')) {
-      return 'Erlaubt sind Buchstaben, Zahlen, Punkt, Unterstrich und Bindestrich.';
-    }
-
-    return 'Der Username sollte mindestens 2 Zeichen lang sein.';
+    return getUsernameErrorText(this.form.controls.username.errors);
   }
 
   passwordErrorText(): string {
-    if (this.form.controls.password.hasError('required')) {
-      return 'Bitte gib ein Passwort ein.';
-    }
-
-    if (this.form.controls.password.hasError('minlength')) {
-      return 'Das Passwort sollte mindestens 8 Zeichen haben.';
-    }
-
-    return 'Bitte pruefe das Passwort.';
+    return getPasswordErrorText(this.form.controls.password.errors);
   }
 }

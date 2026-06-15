@@ -12,6 +12,34 @@ interface QualityQuestProgress {
   percentage: number;
 }
 
+export const WATER_TASK_TITLE = 'Wasser trinken';
+
+export function findWaterTask(tasks: TaskItem[]): TaskItem | null {
+  return tasks.find((task) => task.title === WATER_TASK_TITLE) ?? null;
+}
+
+export function getVisibleQuestTasks(tasks: TaskItem[]): TaskItem[] {
+  const waterTask = findWaterTask(tasks);
+
+  return waterTask ? tasks.filter((task) => task.id !== waterTask.id) : tasks;
+}
+
+export function calculateQuestProgressPercentage(
+  tasks: TaskItem[],
+  progress: QualityQuestProgress | null = null
+): number {
+  if (progress) {
+    return clampPercentage(progress.percentage);
+  }
+
+  if (tasks.length <= 0) {
+    return 0;
+  }
+
+  const completedTasks = tasks.filter((task) => task.isCompleted).length;
+  return clampPercentage(Math.round((completedTasks / tasks.length) * 100));
+}
+
 @Component({
   selector: 'sqs-task-list',
   standalone: true,
@@ -30,18 +58,10 @@ export class TaskListComponent {
 
   readonly completedTasks = computed(() => this.tasks().filter((task) => task.isCompleted).length);
   readonly pendingTasks = computed(() => this.tasks().filter((task) => !task.isCompleted).length);
-  readonly waterTask = computed(
-    () => this.tasks().find((task) => task.title === 'Wasser trinken') ?? null
-  );
-  readonly visibleTasks = computed(() =>
-    this.tasks().filter((task) => task.id !== this.waterTask()?.id)
-  );
-  readonly questPercentage = computed(
-    () =>
-      this.qualityQuestProgress()?.percentage ??
-      (this.tasks().length <= 0
-        ? 0
-        : Math.round((this.completedTasks() / this.tasks().length) * 100))
+  readonly waterTask = computed(() => findWaterTask(this.tasks()));
+  readonly visibleTasks = computed(() => getVisibleQuestTasks(this.tasks()));
+  readonly questPercentage = computed(() =>
+    calculateQuestProgressPercentage(this.tasks(), this.qualityQuestProgress())
   );
 
   finishTask(taskId: string): void {
@@ -59,4 +79,8 @@ export class TaskListComponent {
   getTaskLockedReason(task: TaskItem): string {
     return this.isTaskLocked(task) ? 'Noch nicht bereit' : '';
   }
+}
+
+function clampPercentage(value: number): number {
+  return Math.max(0, Math.min(100, value));
 }
