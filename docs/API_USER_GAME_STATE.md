@@ -116,7 +116,7 @@ Delete the currently authenticated user's account, including user-owned progress
   - If `yesterdayLoggedIn == false`, treat all `tasks[].completed` as `false` for display purposes (the user did not log in yesterday, so per-day completions should appear reset).
   - If `yesterdayLoggedIn == true`, display `tasks[].completed` as returned by the backend.
 - `serverNow` is provided to help the client avoid local clock drift.
-- Eine robuste serverseitige Tageshistorie mit append‑only Completions und Eindeutigkeit pro Tag ist weiterhin ein späterer Ausbau. Für den aktuellen Stand verlässt sich das Frontend bei Taskabschluss und Wasser-Autoabschluss auf die Serverantwort.
+- Eine robuste serverseitige Tageshistorie mit append-only Completions und Eindeutigkeit pro Tag ist als bekannte fachliche Erweiterung dokumentiert. Für den aktuellen Abgabestand verlässt sich das Frontend bei Taskabschluss und Wasser-Autoabschluss auf die Serverantwort.
 
 ## Implementation notes
 
@@ -129,14 +129,14 @@ Delete the currently authenticated user's account, including user-owned progress
   - `streak` -> `streak` (int)
   - `pendingFeedPoints` -> `pending_feed_points` (int)
   - `lastLevelUpAt` -> `last_level_up_at` (timestamp)
-- The controller that serves this endpoint should live in the `user` feature package (e.g. `io.github.luinara.sqs.user.UserController`) and delegate to a `UserService` which builds a DTO specifically for the client. Do not return the JPA entity directly (it contains internal fields such as password hash).
+- The controller lives in the `user` feature package (`io.github.luinara.sqs.user.UserController`) and delegates to `UserService`, which builds DTOs specifically for the client. The API does not return JPA entities directly.
 - Timezone policy: server timestamps are provided in UTC. All date comparisons for daily boundaries should use UTC.
 
-## Testing suggestions
+## Testabdeckung
 
-- Unit tests for the service mapping entity -> DTO, covering presence/absence of `currentPokemonId` and correct resolution of `pokemonImageUrl`.
-- Unit tests for calculation/interpretation of `growth` if any logic is added later.
-- Controller tests (MockMvc) to assert `401` for unauthenticated requests and full payload for authenticated ones.
+- Unit- und Controller-Tests decken Service-Mapping, unauthentifizierte Requests, Account-Löschung und Spielstand-Aktionen ab.
+- Frontend-Service-Tests prüfen das Mapping der Backend-Payloads in die UI-Modelle.
+- Der Docker Quality Hub führt Backend-, Frontend-, Security-, Coverage- und E2E-Checks gesammelt aus.
 
 ## File location
 
@@ -146,8 +146,7 @@ This documentation is stored at `docs/API_USER_GAME_STATE.md`.
 
 - `growth` ist der numerische Fortschritt zum nächsten Level. Es steigt beim Abschluss von Tasks. Wenn `growth >= 100` und der 2-Tage-Cooldown seit `lastLevelUpAt` erfüllt ist, erhöht das Backend `pokemonLevel`, setzt `growth` zurück und aktualisiert `lastLevelUpAt`.
 
-## Next steps
+## Bekannte Erweiterungen
 
-1. Serverseitigen Daily-Reset beziehungsweise append‑only Task-Completions modellieren.
-2. E2E-Tests mit echtem Backend statt API-Mocks ergänzen.
-3. Security-Hardening für Cookie-Session, CSRF und Login-Limits dokumentieren und testen.
+1. Serverseitigen Daily-Reset beziehungsweise append-only Task-Completions modellieren.
+2. Optional weitere echte Backend-E2E-Flows ergänzen, wenn Testdaten-Isolation für parallele Runs eingeführt wird.

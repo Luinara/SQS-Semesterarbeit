@@ -4,6 +4,8 @@ import io.github.luinara.sqs.user.UserEntity;
 import io.github.luinara.sqs.user.UserRepository;
 import io.github.luinara.sqs.pokemon.PokemonEntity;
 import io.github.luinara.sqs.pokemon.PokemonRepository;
+import io.github.luinara.sqs.pokemon.PokeApiPokemonService;
+import io.github.luinara.sqs.pokemon.StarterPokemonCatalog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +35,9 @@ class AuthenticationServiceTest {
 
     @Mock
     PokemonRepository pokemonRepository;
+
+    @Mock
+    PokeApiPokemonService pokeApiPokemonService;
 
     @BeforeEach
     void setUp() {
@@ -189,6 +194,43 @@ class AuthenticationServiceTest {
                         tuple(4, "charmander", 5),
                         tuple(5, "charmeleon", 6),
                         tuple(6, "charizard", null)
+                );
+    }
+
+    @Test
+    void db_createUser_usesExternalPokemonDetailsWhenAvailable() {
+        when(repo.existsByUsernameIgnoreCase("apiuser")).thenReturn(false);
+        when(pokemonRepository.findById(any())).thenReturn(Optional.empty());
+        when(repo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(pokeApiPokemonService.fetchPokemon(
+                anyInt(),
+                any(StarterPokemonCatalog.StarterPokemonSeed.class)
+        )).thenAnswer(invocation -> {
+            StarterPokemonCatalog.StarterPokemonSeed seed = invocation.getArgument(1);
+            return new PokeApiPokemonService.PokemonDetails(
+                    seed.id(),
+                    seed.name() + "-api",
+                    "https://assets.example.test/" + seed.id() + ".png"
+            );
+        });
+
+        AuthenticationService svc = new AuthenticationService(
+                Optional.of(repo),
+                Optional.of(pokemonRepository),
+                Optional.of(pokeApiPokemonService)
+        );
+        boolean created = svc.createUser("apiuser", "password123", 1);
+
+        assertThat(created).isTrue();
+
+        ArgumentCaptor<PokemonEntity> pokemonCaptor = ArgumentCaptor.forClass(PokemonEntity.class);
+        verify(pokemonRepository, times(3)).save(pokemonCaptor.capture());
+        assertThat(pokemonCaptor.getAllValues())
+                .extracting(PokemonEntity::getId, PokemonEntity::getName, PokemonEntity::getImageUrl)
+                .containsExactly(
+                        tuple(1, "bulbasaur-api", "https://assets.example.test/1.png"),
+                        tuple(2, "ivysaur-api", "https://assets.example.test/2.png"),
+                        tuple(3, "venusaur-api", "https://assets.example.test/3.png")
                 );
     }
 

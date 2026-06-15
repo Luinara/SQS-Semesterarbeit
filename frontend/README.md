@@ -430,12 +430,9 @@ Befehl:
 npm run test:e2e
 ```
 
-Noch auszubauen:
-
-- Registrierung
-- Stadt suchen
-- Wetter aktualisieren
-- Fehlerfall bei nicht erreichbarem Backend
+Zusätzlich decken Unit- und Service-Tests Registrierung, Stadt- und Wetterlogik,
+Backend-Fehler und Fallback-Verhalten ab. Der Quality Hub führt die wichtigsten
+Checks gesammelt aus und verlinkt die Reports.
 
 ## Clean-Code-Methodik
 
@@ -461,19 +458,16 @@ Aktueller Stand:
 - Nur der aktive Spielername wird für Session-Restore lokal gespeichert.
 - Fehlertexte werden für Spieler verständlich gekapselt.
 
-Noch offen für die Abgabe:
+Abgabe-Status:
 
-- CSRF-Schutz für cookie-basierte POST-Requests klären.
-- Rate-Limiting oder Lockout für Login und Signup prüfen.
-- Produktiv-Cookie-Flags prüfen: `HttpOnly`, `Secure`, `SameSite`.
-- Keine Secrets im Frontend.
-- `npm audit` ausführen.
-- Security-Tests für unauthentifizierte Requests und doppelte Quest-Abschlüsse ergänzen.
-- Content Security Policy für Deployment prüfen.
+- Keine Passwörter oder Secrets im Frontend.
+- `npm run security:frontend` kombiniert Offline-Lockfile-Guards mit `npm audit`.
+- Bekannte Frontend-Supply-Chain-Risiken sind in `docs/frontend-npm-security.md` dokumentiert.
+- Cookie- und CSP-Hardening bleiben Teil eines echten Produktionsdeployments.
 
 ## Checks vor Abgabe
 
-Mindestens:
+Lokal im Frontend:
 
 ```powershell
 npm run type-check
@@ -481,11 +475,10 @@ npm test
 npm run lint
 ```
 
-Wenn möglich:
+Im Docker-Quality-Hub:
 
 ```powershell
-npm run test:e2e
-npm run build
+docker compose --profile quality up --build
 ```
 
 ## Troubleshooting
@@ -531,10 +524,8 @@ docker ps
 demo / password123
 ```
 
-## Was als Nächstes wichtig ist
+## Abgabe-Stand
 
-- Mehr User-Flow-Tests schreiben.
-- Doku rechtschreibprüfen.
-- Security-Hardening sauber dokumentieren.
-- UI weiter auf moderne Pokémon-/Game-App trimmen.
-- Legacy-Wording konsequent aus sichtbaren Stellen entfernen.
+Der aktuelle Stand ist auf eine reproduzierbare Demo ausgelegt: App starten,
+Demo-Login nutzen, Quality Hub öffnen und dort Test-, Coverage-, Security-,
+Analyse- und E2E-Nachweise zeigen.
