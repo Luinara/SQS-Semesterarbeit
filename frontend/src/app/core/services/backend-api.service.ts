@@ -392,7 +392,7 @@ function isHtmlErrorResponse(response: Response, text: string): boolean {
 
 function createConnectionErrorMessage(status: number): string {
   if (status === 404) {
-    return 'Server nicht erreichbar. Bitte prüfe, ob die Verbindung aktiv ist.';
+    return BACKEND_UNREACHABLE_MESSAGE;
   }
 
   if (status >= 500) {

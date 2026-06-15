@@ -22,7 +22,13 @@ const checks = [
       'mvn --batch-mode --no-transfer-progress test org.jacoco:jacoco-maven-plugin:0.8.12:report',
     cwd: 'backend',
     required: true,
-    artifacts: [{ source: 'backend/target/site/jacoco', target: 'backend-jacoco' }],
+    artifacts: [
+      {
+        source: 'backend/target/site/jacoco',
+        target: 'backend-jacoco',
+        label: 'Backend JaCoCo Report',
+      },
+    ],
   },
   {
     id: 'backend-checkstyle',
@@ -71,7 +77,13 @@ const checks = [
     command: 'npm run test:coverage',
     cwd: 'frontend',
     required: true,
-    artifacts: [{ source: 'frontend/coverage', target: 'frontend-coverage' }],
+    artifacts: [
+      {
+        source: 'frontend/coverage',
+        target: 'frontend-coverage',
+        label: 'Frontend Coverage Report',
+      },
+    ],
   },
   {
     id: 'frontend-lint',
@@ -113,9 +125,16 @@ const checks = [
     env: {
       PLAYWRIGHT_SKIP_WEB_SERVER: '1',
       PLAYWRIGHT_BASE_URL: 'http://frontend:3000',
+      PLAYWRIGHT_EVIDENCE: '1',
       PLAYWRIGHT_HTML_OPEN: 'never',
     },
-    artifacts: [{ source: 'frontend/playwright-report', target: 'playwright-report' }],
+    artifacts: [
+      {
+        source: 'frontend/playwright-report',
+        target: 'playwright-report',
+        label: 'Playwright HTML Report',
+      },
+    ],
   },
 ];
 
@@ -257,7 +276,7 @@ function collectArtifacts(check) {
 
     const indexFile = existsSync(join(target, 'index.html')) ? 'index.html' : '';
     artifacts.push({
-      label: artifact.target,
+      label: artifact.label ?? artifact.target,
       path: `artifacts/${artifact.target}/${indexFile}`,
     });
   }
