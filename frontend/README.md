@@ -17,6 +17,16 @@ Wichtig für die Abgabe: Im sichtbaren UI soll die App nicht nach Technik-Demo a
 
 ## Lokaler Start
 
+### Ein Kommando
+
+Im Repo-Root:
+
+```powershell
+.\scripts\dev.ps1
+```
+
+Das Skript startet PostgreSQL und Backend per Docker Compose, wartet auf `http://localhost:8181` und startet danach das Angular-Frontend auf `http://localhost:4200`.
+
 ### Datenbank starten
 
 Im Repo-Root:
