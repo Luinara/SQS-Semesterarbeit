@@ -1,11 +1,11 @@
 # Building Block View
 
 This section describes the static decomposition of the Self-Care Companion.
-The system is split into a browser-based Angular frontend, a planned Spring Boot
-backend, a PostgreSQL database, and the external PokeAPI integration.
+The system is split into a browser-based Angular frontend, a Spring Boot
+backend, a PostgreSQL database, external weather/Pokemon integrations, and a
+dockerized Quality Hub.
 
-The current implementation focus is the Angular frontend. Its component
-structure is documented in detail in
+The Angular component structure is documented in detail in
 [Frontend Component Architecture](frontend-component-architecture.md).
 That additional view also contains a design pattern analysis and clarifies that
 Domain-Driven Design is only used in a lightweight, domain-inspired way, not as
@@ -15,10 +15,12 @@ a complete DDD architecture.
 
 | Building block | Responsibility |
 | --- | --- |
-| Angular Frontend | Provides the user interface for splash, authentication, dashboard, tasks, pet progress, and local demo state. |
-| Backend API | Planned REST API for authentication, task management, progress calculation, persistence access, and external integrations. |
-| PostgreSQL Database | Planned persistent storage for users, tasks, task state, and pet progress. |
+| Angular Frontend | Provides the user interface for splash, authentication, dashboard, tasks, hydration, pet progress, starter evolution, and weather scene. |
+| Backend API | REST API for authentication, tasks, user game state, hydration, feed/training, account deletion, and persistence access. |
+| PostgreSQL Database | Persistent storage for users, tasks, task state, user stats, and pet progress. |
 | PokeAPI | External API used to enrich the gamification part with Pokemon-related data. |
+| Open-Meteo | External API used by the frontend weather adapter. |
+| Quality Hub | Dockerisiertes Dashboard mit Runner für Tests, Coverage, Lint, statische Analyse, Security und E2E-Reports. |
 
 ## Level 2 - Frontend Overview
 

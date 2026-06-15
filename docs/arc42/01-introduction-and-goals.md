@@ -4,12 +4,12 @@ This project, developed as part of a Software Quality Assurance (SQS) course, ai
 
 ## Requirements Overview
 
-The application provides a platform for users to manage their self-care tasks. To increase motivation, the system incorporates Pokémon-themed gamification:
-* **Task Management:** Users can create, track, and complete self-care tasks.
-* **Pokémon Progression:** Completing tasks is linked to Pokémon-related rewards, such as catching new Pokémon or progressing existing ones (details to be implemented).
-* **Gamified Dashboard:** A visual representation of the user's progress and their Pokémon collection.
+The application provides a platform for users to complete self-care tasks. To increase motivation, the system incorporates Pokémon-themed gamification:
+* **Task Management:** Users can view, track, and complete daily self-care tasks.
+* **Pokémon Progression:** Completing tasks, drinking water, and training convert into growth, motivation, feed points, and starter evolution progress.
+* **Gamified Dashboard:** A visual representation of the user's progress, partner Pokémon, weather scene, daily target, and available actions.
 
-The primary focus of this project is not just functionality, but the application of rigorous software quality assurance practices throughout the development lifecycle.
+Neben der eigentlichen App soll das Projekt zeigen, dass wir die wichtigsten SQS-Themen praktisch anwenden: Tests, statische Analyse, Security-Checks, Dokumentation und reproduzierbarer Start.
 
 ## Quality Goals
 
@@ -18,8 +18,8 @@ The following quality goals are prioritized for this project:
 | Priority | Goal | Description |
 | :--- | :--- | :--- |
 | 1 | **High Test Coverage** | Aim for at least 80% line coverage across the codebase using JUnit, Mockito, and Vitest. |
-| 2 | **Automated Testing** | Implementation of a comprehensive test pyramid including unit, integration (database/API), E2E (user flows), and architecture tests. |
-| 3 | **Code Quality & Maintainability** | Continuous monitoring via SonarQube, enforcing coding standards (Checkstyle, ESLint), and passing quality gates. |
+| 2 | **Automated Testing** | Unit-, Integrations-, E2E- und Architekturtests prüfen die wichtigsten Schichten des Projekts. |
+| 3 | **Code Quality & Maintainability** | Enforced by the dockerized Quality Hub, Checkstyle, SpotBugs, ESLint, npm security checks, and optional SonarQube analysis. |
 | 4 | **Resilience** | Handling external service failures (e.g., PokeAPI) gracefully through timeouts and retries. |
 
 ## Stakeholders

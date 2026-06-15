@@ -84,13 +84,9 @@ Responses:
 
 ## Other Controllers
 
-- Task Controller
-
-
-- User Controller
-
-
-- AuthenticationController (this file)
+- Task endpoints are documented in `docs/API_TASKS.md`.
+- User game-state and account endpoints are documented in `docs/API_USER_GAME_STATE.md`.
+- User action endpoints are documented in `docs/API_USER_ACTIONS.md`.
 
 
 
@@ -99,5 +95,5 @@ Responses:
 Notes
 - Sessions are server-side. On successful login/signup the server returns the standard session cookie (JSESSIONID). Keep `withCredentials` enabled in browser clients if they use fetch/XHR to include cookies.
 - Passwords are hashed using BCrypt on the server.
-- Current implementation uses an in-memory user store for development; it will be replaced by a persistent store (Postgres + Prisma) in a later branch. The API contract will remain compatible.
+- Users and game progress are persisted through the Spring/JPA backend against PostgreSQL in Docker. The Prisma schema and migrations document the database shape used by the stack.
 

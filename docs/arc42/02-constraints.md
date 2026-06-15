@@ -9,11 +9,11 @@ This section describes the technical, organizational, and political constraints 
 | **Java Platform** | The backend must be developed using Java 21 or higher. |
 | **Spring Boot Framework** | Spring Boot 3 is the mandatory framework for the backend application. |
 | **Database System** | PostgreSQL is used for persistent data storage; H2 is used as an in-memory database for testing. |
-| **Frontend Stack** | The user interface must be built with React 18 and TypeScript, using Vite as the build tool. |
+| **Frontend Stack** | The user interface is built with Angular, TypeScript, standalone components, and SCSS. |
 | **External Integration** | Integration with the PokeAPI (REST) is required for gamification elements. |
 | **Containerization** | The application must be deployable via Docker and Docker Compose to ensure environmental consistency. |
 | **CI/CD Pipeline** | Automated build and test pipelines must be implemented using GitHub Actions. |
-| **Quality Analysis** | SonarQube is used for static code analysis and enforcing quality gates. |
+| **Quality Analysis** | The dockerized Quality Hub is the local quality gate. SonarQube/SonarCloud remains available for CI-based static analysis. |
 
 ## Organizational Constraints
 

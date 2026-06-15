@@ -1,6 +1,6 @@
 # Frontend npm Security Check
 
-Stand: 2026-05-19
+Stand: 2026-06-15
 
 ## Scope
 
@@ -24,7 +24,7 @@ cd frontend
 npm run security:audit
 ```
 
-Ergebnis am 2026-05-19:
+Ergebnis am 2026-06-15:
 
 ```text
 found 0 vulnerabilities
@@ -36,7 +36,11 @@ Vor der Bereinigung meldete `npm audit` im Frontend 10 Funde:
 - 8 moderate
 - 0 critical
 
-Die Funde lagen im Build- und Test-Tooling, nicht in produktiven Runtime-Abhängigkeiten. Bereinigt wurde durch Updates im Frontend-Dependency-Tree und durch einen gezielten `webpack-dev-server`-Override auf die gepatchte Version `5.2.4`.
+Die Funde lagen im Build- und Test-Tooling, nicht in produktiven Runtime-Abhängigkeiten. Bereinigt wurde durch Updates im Frontend-Dependency-Tree und durch gezielte Overrides für gepatchte Tooling-Versionen:
+
+- `@babel/core@7.29.7`
+- `vite@7.3.5`
+- `webpack-dev-server@5.2.4`
 
 ## Current npm Supply-Chain Incidents
 

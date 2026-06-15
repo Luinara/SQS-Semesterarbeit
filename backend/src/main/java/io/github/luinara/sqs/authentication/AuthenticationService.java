@@ -2,6 +2,7 @@ package io.github.luinara.sqs.authentication;
 
 import io.github.luinara.sqs.pokemon.PokemonEntity;
 import io.github.luinara.sqs.pokemon.PokemonRepository;
+import io.github.luinara.sqs.pokemon.PokeApiPokemonService;
 import io.github.luinara.sqs.pokemon.StarterPokemonCatalog;
 import io.github.luinara.sqs.user.UserEntity;
 import io.github.luinara.sqs.user.UserRepository;
@@ -43,34 +44,46 @@ public class AuthenticationService {
 
     private final UserRepository userRepository; // optional
     private final PokemonRepository pokemonRepository; // optional
+    private final PokeApiPokemonService pokeApiPokemonService; // optional
     private final Clock clock;
 
     @Autowired
     public AuthenticationService(
             Optional<UserRepository> userRepository,
             Optional<PokemonRepository> pokemonRepository,
+            Optional<PokeApiPokemonService> pokeApiPokemonService,
             Clock clock
     ) {
         // If a JPA repository is available (e.g., when running with database profile), use it.
         this.userRepository = userRepository.orElse(null);
         this.pokemonRepository = pokemonRepository.orElse(null);
+        this.pokeApiPokemonService = pokeApiPokemonService.orElse(null);
         this.clock = clock;
+    }
+
+    public AuthenticationService(
+            Optional<UserRepository> userRepository,
+            Optional<PokemonRepository> pokemonRepository,
+            Optional<PokeApiPokemonService> pokeApiPokemonService
+    ) {
+        this(userRepository, pokemonRepository, pokeApiPokemonService, Clock.systemUTC());
     }
 
     public AuthenticationService(
             Optional<UserRepository> userRepository,
             Optional<PokemonRepository> pokemonRepository
     ) {
-        this(userRepository, pokemonRepository, Clock.systemUTC());
+        this(userRepository, pokemonRepository, Optional.empty(), Clock.systemUTC());
     }
 
     public AuthenticationService(Optional<UserRepository> userRepository) {
-        this(userRepository, Optional.empty(), Clock.systemUTC());
+        this(userRepository, Optional.empty(), Optional.empty(), Clock.systemUTC());
     }
 
     public AuthenticationService() {
         this.userRepository = null;
         this.pokemonRepository = null;
+        this.pokeApiPokemonService = null;
         this.clock = Clock.systemUTC();
     }
 
@@ -229,14 +242,25 @@ public class AuthenticationService {
     private void seedStarterChain(int selectedStarterId) {
         for (StarterPokemonCatalog.StarterPokemonSeed seed
                 : StarterPokemonCatalog.chainForStarter(selectedStarterId)) {
+            PokeApiPokemonService.PokemonDetails details = loadPokemonDetails(seed);
             PokemonEntity pokemon = pokemonRepository.findById(seed.id()).orElseGet(PokemonEntity::new);
             pokemon.setId(seed.id());
-            pokemon.setName(seed.name());
-            pokemon.setImageUrl(seed.imageUrl());
+            pokemon.setName(details.name());
+            pokemon.setImageUrl(details.imageUrl());
             pokemon.setEvolutionId(seed.evolutionId());
             pokemon.setEvolutionStage(seed.evolutionStage());
             pokemonRepository.save(pokemon);
         }
+    }
+
+    private PokeApiPokemonService.PokemonDetails loadPokemonDetails(
+            StarterPokemonCatalog.StarterPokemonSeed seed
+    ) {
+        if (pokeApiPokemonService == null) {
+            return new PokeApiPokemonService.PokemonDetails(seed.id(), seed.name(), seed.imageUrl());
+        }
+
+        return pokeApiPokemonService.fetchPokemon(seed.id(), seed);
     }
 
     private boolean isLoginBlocked(String key) {
