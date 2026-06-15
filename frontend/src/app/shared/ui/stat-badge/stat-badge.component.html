@@ -1,8 +1,9 @@
 <div
   class="stat-badge"
-  [class.stat-badge--peach]="tone() === 'peach'"
-  [class.stat-badge--taupe]="tone() === 'taupe'"
-  [class.stat-badge--sage]="tone() === 'sage'"
+  [class.stat-badge--green]="tone() === 'green'"
+  [class.stat-badge--amber]="tone() === 'amber'"
+  [class.stat-badge--rose]="tone() === 'rose'"
+  [class.stat-badge--slate]="tone() === 'slate'"
 >
   <span class="stat-badge__icon" aria-hidden="true">
     @switch (icon()) {
@@ -25,6 +26,12 @@
         <svg viewBox="0 0 24 24">
           <path d="M7 5h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" />
           <path d="m9 12 2 2 4-4" class="stat-badge__stroke" />
+        </svg>
+      }
+      @case ('pokemon') {
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18ZM3 12h18" />
+          <path d="M9.2 12a2.8 2.8 0 1 0 5.6 0 2.8 2.8 0 0 0-5.6 0Z" />
         </svg>
       }
       @default {

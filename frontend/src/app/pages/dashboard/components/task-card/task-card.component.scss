@@ -3,9 +3,9 @@
   grid-template-columns: auto 1fr;
   gap: 1rem;
   padding: 1.1rem;
-  border: 1px solid rgba(133, 101, 91, 0.08);
-  border-radius: var(--radius-lg);
-  background: rgba(255, 251, 248, 0.92);
+  border: 1px solid rgba(28, 42, 70, 0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: var(--shadow-card);
   transition:
     transform var(--transition-fast),
@@ -21,8 +21,8 @@
 
 .task-card--done {
   opacity: 0.84;
-  border-color: rgba(138, 171, 143, 0.25);
-  background: linear-gradient(180deg, rgba(248, 252, 248, 0.95) 0%, rgba(241, 248, 241, 0.92) 100%);
+  border-color: rgba(30, 126, 86, 0.22);
+  background: linear-gradient(180deg, rgba(248, 252, 250, 0.96) 0%, rgba(231, 247, 238, 0.88) 100%);
 }
 
 .task-card--locked {
@@ -41,25 +41,30 @@
   justify-content: center;
   width: 3rem;
   height: 3rem;
-  border-radius: 1.15rem;
-  background: linear-gradient(180deg, rgba(245, 219, 214, 0.95) 0%, rgba(238, 206, 201, 0.95) 100%);
-  color: var(--color-rose);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, rgba(228, 239, 255, 0.98) 0%, rgba(203, 222, 250, 0.95) 100%);
+  color: var(--color-blue);
   box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.5);
 }
 
-.task-card__icon--peach {
-  background: linear-gradient(180deg, rgba(251, 237, 224, 0.98) 0%, rgba(243, 215, 188, 0.95) 100%);
-  color: #8c4f2f;
+.task-card__icon--green {
+  background: linear-gradient(180deg, rgba(230, 248, 238, 0.98) 0%, rgba(201, 234, 216, 0.95) 100%);
+  color: #17623f;
 }
 
-.task-card__icon--taupe {
-  background: linear-gradient(180deg, rgba(242, 236, 232, 0.98) 0%, rgba(225, 215, 209, 0.95) 100%);
-  color: #665047;
+.task-card__icon--amber {
+  background: linear-gradient(180deg, rgba(255, 244, 213, 0.98) 0%, rgba(246, 218, 148, 0.95) 100%);
+  color: #8a5a00;
 }
 
-.task-card__icon--sage {
-  background: linear-gradient(180deg, rgba(238, 247, 239, 0.98) 0%, rgba(215, 231, 217, 0.95) 100%);
-  color: #4f7054;
+.task-card__icon--rose {
+  background: linear-gradient(180deg, rgba(255, 231, 236, 0.98) 0%, rgba(246, 201, 211, 0.95) 100%);
+  color: var(--color-rose);
+}
+
+.task-card__icon--slate {
+  background: linear-gradient(180deg, rgba(239, 243, 248, 0.98) 0%, rgba(219, 226, 236, 0.95) 100%);
+  color: #42526b;
 }
 
 .task-card__icon svg {
@@ -105,8 +110,8 @@
   min-height: 2rem;
   padding: 0 0.8rem;
   border-radius: var(--radius-pill);
-  background: rgba(255, 244, 238, 0.95);
-  color: var(--color-rose);
+  background: rgba(228, 239, 255, 0.95);
+  color: var(--color-blue);
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -121,4 +126,23 @@
 .task-card__state {
   color: var(--color-text-soft);
   font-size: 0.88rem;
+}
+
+.task-card__category {
+  display: inline-flex;
+  margin-bottom: 0.35rem;
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.task-card__reference {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(28, 42, 70, 0.08);
+  border-radius: var(--radius-sm);
+  background: rgba(247, 249, 252, 0.86);
+  color: var(--color-text-soft);
+  font-size: 0.82rem;
 }

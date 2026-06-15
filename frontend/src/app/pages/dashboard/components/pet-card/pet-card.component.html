@@ -2,17 +2,17 @@
   <section class="pet-card">
     <div class="pet-card__header">
       <div>
-        <span class="eyebrow">Dein virtuelles Pet</span>
-        <h2>{{ currentPet.name }} wächst mit deinem Alltag</h2>
+        <span class="eyebrow">Pokemon Quality Companion</span>
+        <h2>{{ pokemon()?.displayName ?? currentPet.name }} levelt mit euren SQS-Nachweisen</h2>
         <p>
-          Erledige Tagesquests, sammle Punkte und investiere sie in Fütterungen, damit dein Pet
-          sichtbar stärker wird.
+          Quality-Quests geben Trainingspunkte. Training steigert Motivation, Wachstum und die
+          Evolution von Bulbasaur zu Ivysaur und Venusaur.
         </p>
       </div>
 
       <div class="pet-card__microcopy">
         <strong>{{ completedTasks() }}/{{ totalTasks() }}</strong>
-        <span>Tagesquests abgeschlossen</span>
+        <span>Checklistenpunkte erfuellt</span>
       </div>
     </div>
 
@@ -30,10 +30,13 @@
 
     <div class="pet-card__body">
       <sqs-pet-visual
-        [petName]="currentPet.name"
+        [petName]="pokemon()?.displayName ?? currentPet.name"
         [level]="currentPet.level"
         [weatherScene]="weatherScene()"
         [careState]="petCareState()"
+        [spriteUrl]="pokemon()?.spriteUrl ?? 'pet-placeholder.svg'"
+        [pokemonTypes]="pokemon()?.types ?? []"
+        [pokemonSource]="pokemon()?.source ?? 'fallback'"
       />
 
       <div class="pet-card__details">
@@ -50,13 +53,13 @@
 
         <div class="pet-card__weather">
           <div class="pet-card__weather-copy">
-            <span class="pet-card__weather-label">Wetter Jetzt</span>
+            <span class="pet-card__weather-label">Live Wetter-Szene</span>
             <strong>{{ weatherScene().headline }}</strong>
             <small>{{ weatherStatus() }}</small>
             <span class="pet-card__weather-updated">{{ weatherUpdatedAtLabel() }}</span>
-            <span class="pet-card__weather-auto"
-              >Aktualisiert sich automatisch alle 10 Minuten.</span
-            >
+            <span class="pet-card__weather-auto">
+              Hintergrund und Lichtstimmung bleiben aus der Weather-API abgeleitet.
+            </span>
           </div>
 
           <form
@@ -105,49 +108,33 @@
         />
 
         <div class="pet-card__stats">
+          <sqs-stat-badge label="Pokemon" [value]="pokemonStatus()" icon="pokemon" tone="green" />
           <sqs-stat-badge
-            label="Futterpunkte"
+            label="Trainingspunkte"
             [value]="currentPet.availableFoodPoints"
-            icon="berries"
-            tone="rose"
+            icon="points"
+            tone="blue"
           />
           <sqs-stat-badge
-            label="Happiness"
+            label="Motivation"
             [value]="currentPet.happiness + '%'"
             icon="hearts"
-            tone="peach"
+            tone="amber"
           />
           <sqs-stat-badge
-            label="Hunger"
-            [value]="currentPet.hunger + '%'"
-            icon="berries"
-            tone="taupe"
-          />
-          <sqs-stat-badge
-            label="Herzen"
-            [value]="currentPet.hearts + ' / 3'"
-            icon="hearts"
-            tone="sage"
-          />
-          <sqs-stat-badge
-            label="Pflege-Serie"
-            [value]="currentPet.goodCareStreakDays"
-            icon="tasks"
-            tone="peach"
-          />
-          <sqs-stat-badge
-            label="Mahlzeiten"
+            label="Trainings"
             [value]="currentPet.mealsServed"
             icon="tasks"
-            tone="taupe"
+            tone="slate"
           />
         </div>
 
         <div class="pet-card__footer">
           <div class="pet-card__hint">
-            <strong>Fütterung kostet {{ feedCost }} Punkte.</strong>
+            <strong>Training kostet {{ feedCost }} Punkte.</strong>
             <span>
-              Happiness steigt pro Tag maximal um 50 Punkte. Level-Ups sind alle 48 Stunden möglich.
+              Level-Ups passieren direkt beim vollen Wachstumsbalken. Die Pokemon-Stufe folgt dem
+              Level.
             </span>
           </div>
 
@@ -157,7 +144,7 @@
             [variant]="canFeed() ? 'primary' : 'secondary'"
             (click)="requestFeeding()"
           >
-            Pet füttern
+            Pokemon trainieren
           </button>
         </div>
       </div>
