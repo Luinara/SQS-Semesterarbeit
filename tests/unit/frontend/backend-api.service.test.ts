@@ -338,7 +338,21 @@ describe("BackendApiService", () => {
     ).rejects.toMatchObject({
       status: 404,
       message:
-        "Server nicht erreichbar. Bitte prüfe, ob die Verbindung aktiv ist.",
+        "Backend ist gerade nicht erreichbar. Falls Docker frisch gestartet wurde: kurz warten und nochmal probieren.",
+    });
+  });
+
+  it("formuliert echte Verbindungsfehler ohne Browser-Fehlertext", async () => {
+    vi.spyOn(globalThis, "fetch").mockRejectedValueOnce(
+      new TypeError("Failed to fetch"),
+    );
+
+    await expect(
+      new BackendApiService().login("zoe", "secret123"),
+    ).rejects.toMatchObject({
+      status: 0,
+      message:
+        "Backend ist gerade nicht erreichbar. Falls Docker frisch gestartet wurde: kurz warten und nochmal probieren.",
     });
   });
 

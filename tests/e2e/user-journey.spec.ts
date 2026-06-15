@@ -14,7 +14,7 @@ const tasks = [
 ];
 
 test.describe("PokeHabit", () => {
-  test("führt vom Login durch Wasser, Quest und Training", async ({ page }) => {
+  test("führt vom Login durch Quest, Wasser, Training und Logout", async ({ page }, testInfo) => {
     const completions = new Map<number, boolean>([
       [1, false],
       [2, false],
@@ -146,10 +146,6 @@ test.describe("PokeHabit", () => {
     ).toBeVisible();
     await expect(page.getByText("500 / 3000 ml")).toBeVisible();
 
-    await page.getByRole("button", { name: "+500 ml" }).click();
-    await expect(page.getByText("1000 / 3000 ml")).toBeVisible();
-    await expect(page.getByText("+500 ml Wasser getrunken.")).toBeVisible();
-
     await page
       .locator("sqs-task-card")
       .filter({ hasText: "30 Minuten lernen" })
@@ -159,6 +155,10 @@ test.describe("PokeHabit", () => {
       page.getByText("Quest erledigt. Dein Spielstand wurde aktualisiert."),
     ).toBeVisible();
 
+    await page.getByRole("button", { name: "+500 ml" }).click();
+    await expect(page.getByText("1000 / 3000 ml")).toBeVisible();
+    await expect(page.getByText("+500 ml Wasser getrunken.")).toBeVisible();
+
     await page.getByRole("button", { name: "Pokémon trainieren" }).click();
     await expect(
       page.getByText("Feed-Punkte wurden für dein Pokémon eingesetzt."),
@@ -166,6 +166,11 @@ test.describe("PokeHabit", () => {
 
     await page.getByRole("button", { name: "Level-Up testen" }).click();
     await expect(page.getByText("Level-Up auf 3.")).toBeVisible();
+
+    await testInfo.attach("Demo-Screenshot nach Training", {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: "image/png",
+    });
 
     await page.getByRole("button", { name: "Abmelden" }).click();
     await page.waitForURL("**/auth");
