@@ -1,11 +1,11 @@
 <section class="auth-page page-shell">
   <div class="auth-page__layout">
     <article class="auth-page__story">
-      <span class="eyebrow">Sanfter Einstieg ohne Backend</span>
-      <h1>Starte deine Reise mit deinem ersten Pet.</h1>
+      <span class="eyebrow">Lokaler SQS Demo-Zugang</span>
+      <h1>Starte das Quality Companion Dashboard.</h1>
       <p>
-        SQS simuliert Login, Fortschritt und Wachstum komplett lokal im Browser. So bleibt das MVP
-        sofort startbar und für das Hochschulprojekt leicht nachvollziehbar.
+        SQS simuliert Login, Quality-Nachweise und Pokemon-Leveling komplett lokal im Browser. So
+        bleibt das MVP sofort startbar und fuer das Hochschulprojekt leicht nachvollziehbar.
       </p>
 
       <div class="auth-page__story-card">
@@ -22,21 +22,21 @@
       <div class="auth-page__story-grid">
         <div class="auth-page__story-tile">
           <strong>1</strong>
-          <span>Task erledigen</span>
+          <span>Nachweis erfuellen</span>
         </div>
         <div class="auth-page__story-tile">
           <strong>2</strong>
-          <span>Punkte sammeln</span>
+          <span>Quality Gate fuellen</span>
         </div>
         <div class="auth-page__story-tile">
           <strong>3</strong>
-          <span>Pet füttern</span>
+          <span>Pokemon trainieren</span>
         </div>
       </div>
     </article>
 
     <article class="auth-page__card">
-      <div class="auth-page__mode-switch" role="tablist" aria-label="Anmeldemodus wählen">
+      <div class="auth-page__mode-switch" role="tablist" aria-label="Anmeldemodus waehlen">
         <button
           type="button"
           role="tab"
@@ -59,11 +59,11 @@
       </div>
 
       <div class="auth-page__card-header">
-        <h2>{{ mode() === 'login' ? 'Willkommen zurück' : 'Lege dein SQS-Profil an' }}</h2>
+        <h2>{{ mode() === 'login' ? 'Willkommen zurueck' : 'Lege dein SQS-Profil an' }}</h2>
         <p>
           {{
             mode() === 'login'
-              ? 'Melde dich lokal an und füre dein Pet weiter durch den Tag.'
+              ? 'Melde dich lokal an und fuehre dein Quality Dashboard weiter.'
               : 'Erstelle in wenigen Sekunden ein lokales Demo-Profil mit persistenter Mock-State-Verwaltung.'
           }}
         </p>
@@ -86,8 +86,8 @@
       }
 
       <p class="auth-page__hint">
-        Alles bleibt lokal im <code>localStorage</code>. Es gibt keine echte Authentifizierung und
-        keine API-Aufrufe.
+        Alles bleibt lokal im <code>localStorage</code>. PokeAPI und Weather-API werden im
+        Dashboard resilient mit Fallbacks geladen.
       </p>
     </article>
   </div>

@@ -1,7 +1,7 @@
 import { expect, test } from "../../frontend/testing/playwright-test";
 
-test.describe("SQS MVP", () => {
-  test("führt vom Splash-Screen bis ins Dashboard", async ({ page }) => {
+test.describe("SQS Quality Companion", () => {
+  test("fuehrt vom Splash-Screen bis ins Quality-Dashboard", async ({ page }) => {
     await page.addInitScript(() => {
       globalThis.localStorage.clear();
     });
@@ -23,11 +23,12 @@ test.describe("SQS MVP", () => {
 
     await page.waitForURL("**/dashboard");
     await expect(
-      page.getByRole("heading", { name: "Dein Fokus-Zuhause" }),
+      page.getByRole("heading", { name: "Quality Companion Dashboard" }),
     ).toBeVisible();
-    await expect(page.getByText("Deine Aufgaben")).toBeVisible();
+    await expect(page.getByText("SQS Checkliste")).toBeVisible();
+    await expect(page.getByText("SQS Quality Gate")).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Pet füttern" }),
+      page.getByRole("button", { name: "Pokemon trainieren" }),
     ).toBeVisible();
   });
 });
