@@ -208,6 +208,7 @@
                 <version>4.8.6.4</version>
                 <configuration>
                     <effort>Default</effort>
+                    <excludeFilterFile>${project.basedir}/spotbugs-exclude.xml</excludeFilterFile>
                     <!-- Report bugs at Medium confidence and above -->
                     <threshold>Medium</threshold>
                     <failOnError>true</failOnError>

@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: sqs_user
       POSTGRES_PASSWORD: sqs_password
     ports:
-      - "5433:5432"
+      - "${DB_PORT:-5433}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 
@@ -22,7 +22,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: sqs_password
       SPRING_PROFILES_ACTIVE: dev
     ports:
-      - "8181:8181"
+      - "${BACKEND_PORT:-8181}:8181"
     depends_on:
       - db
 
@@ -32,9 +32,40 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT:-3000}:3000"
     depends_on:
       - backend
 
+  quality-runner:
+    profiles:
+      - quality
+    build:
+      context: .
+      dockerfile: quality/Dockerfile.runner
+    restart: "no"
+    environment:
+      QUALITY_SOURCE_DIR: /workspace
+      QUALITY_WORK_DIR: /work/repo
+      QUALITY_OUTPUT_DIR: /quality-output
+    volumes:
+      - .:/workspace:ro
+      - quality_output:/quality-output
+    depends_on:
+      - backend
+      - frontend
+
+  quality-hub:
+    profiles:
+      - quality
+    build:
+      context: .
+      dockerfile: quality/Dockerfile.hub
+    restart: unless-stopped
+    ports:
+      - "${QUALITY_HUB_PORT:-8088}:80"
+    volumes:
+      - quality_output:/usr/share/nginx/html/reports:ro
+
 volumes:
   db_data:
+  quality_output:

@@ -14,6 +14,41 @@ Wichtig für die Abgabe: Im sichtbaren UI soll die App nicht nach Technik-Demo a
 - Pokémon-Sprite aus dem Spielstand, mit Fallback
 - Unit-Tests mit Vitest
 - User-Flows mit Playwright
+- dockerisierter Quality Hub für Abgabe-Checks
+
+## Quality Hub für die Abgabe
+
+Im Repo-Root startet ein einziger Docker-Compose-Befehl die App und ein sichtbares
+Software-Qualitätssicherungs-Dashboard:
+
+```powershell
+docker compose --profile quality up --build
+```
+
+Danach:
+
+```text
+App:         http://localhost:3000
+Backend:     http://localhost:8181
+Quality Hub: http://localhost:8088
+```
+
+Falls lokal ein Port belegt ist, können die Defaults überschrieben werden, zum Beispiel:
+
+```powershell
+$env:FRONTEND_PORT = "3001"
+docker compose --profile quality up --build
+```
+
+Der Quality Hub zeigt echte Runner-Ergebnisse:
+
+- Backend-Tests mit JaCoCo
+- Checkstyle und SpotBugs
+- TypeScript-Typecheck
+- Vitest-Unit-Tests und Coverage-Gate
+- ESLint
+- npm-Security-Check
+- Playwright-E2E-Status
 
 ## Lokaler Start
 
