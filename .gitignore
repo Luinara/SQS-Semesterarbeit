@@ -67,6 +67,7 @@ out/
 # Test coverage
 coverage/
 .nyc_output/
+quality-output/
 
 # Package manager logs
 npm-debug.log*

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+    <!-- Spring injects singleton collaborators through constructors. SpotBugs reports these
+         assignments as representation exposure, but they are framework-managed dependencies,
+         not mutable state returned to callers. -->
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+        <Class name="~io\.github\.luinara\.sqs\..*"/>
+    </Match>
+</FindBugsFilter>
