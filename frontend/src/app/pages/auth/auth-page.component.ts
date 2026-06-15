@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppStateService } from '../../core/services/app-state.service';
-import { DEMO_ACCOUNT } from '../../shared/mock/mock-data';
 import { AuthMode, AuthSubmission } from '../../shared/models/auth.model';
 import { AuthFormComponent } from './auth-form/auth-form.component';
 
@@ -20,8 +19,6 @@ export class AuthPageComponent {
   readonly mode = signal<AuthMode>('login');
   readonly feedbackMessage = signal<string | null>(null);
   readonly hasError = signal(false);
-  readonly demoUsername = DEMO_ACCOUNT.username;
-  readonly demoPassword = DEMO_ACCOUNT.password;
 
   showMode(mode: AuthMode): void {
     this.mode.set(mode);

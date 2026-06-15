@@ -1,13 +1,18 @@
 package io.github.luinara.sqs.architecture;
 
-import com.tngtech.archunit.junit.AnalyzeClasses;
-import com.tngtech.archunit.junit.ArchTest;
+import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
+import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.lang.ArchRule;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.TestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+
+import java.util.stream.Stream;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
@@ -42,14 +47,31 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
  *   <li>Classes follow Java naming conventions</li>
  * </ul>
  */
-@AnalyzeClasses(packages = "io.github.luinara.sqs")
 class ArchitectureTest {
+
+    private static final JavaClasses APPLICATION_CLASSES = new ClassFileImporter()
+            .withImportOption(new ImportOption.DoNotIncludeTests())
+            .importPackages("io.github.luinara.sqs");
+
+    @TestFactory
+    Stream<DynamicTest> architecture_rules() {
+        return Stream.of(
+                controllers_should_be_named_controller,
+                services_should_be_named_service,
+                repositories_should_be_named_repository,
+                services_must_not_depend_on_controllers,
+                controllers_must_not_access_repositories_directly,
+                repositories_should_not_depend_on_controllers,
+                classes_should_follow_naming_conventions,
+                interfaces_should_follow_naming_conventions,
+                no_classes_should_throw_generic_exceptions
+        ).map(rule -> DynamicTest.dynamicTest(rule.getDescription(), () -> rule.check(APPLICATION_CLASSES)));
+    }
 
     // ─────────────────────────────────────────────────────────────────────
     // Feature Structure Rules
     // ─────────────────────────────────────────────────────────────────────
 
-    @ArchTest
     static final ArchRule controllers_should_be_named_controller =
             classes()
                     .that().areAnnotatedWith(RestController.class)
@@ -58,7 +80,6 @@ class ArchitectureTest {
                     .as("Classes annotated with @Controller or @RestController must be named '*Controller'");
 
 
-    @ArchTest
     static final ArchRule services_should_be_named_service =
             classes()
                     .that().areAnnotatedWith(Service.class)
@@ -66,7 +87,6 @@ class ArchitectureTest {
                     .as("Classes annotated with @Service must be named '*Service'");
 
 
-    @ArchTest
     static final ArchRule repositories_should_be_named_repository =
             classes()
                     .that().areAnnotatedWith(Repository.class)
@@ -77,7 +97,6 @@ class ArchitectureTest {
     // Layer Dependency Rules
     // ─────────────────────────────────────────────────────────────────────
 
-    @ArchTest
     static final ArchRule services_must_not_depend_on_controllers =
             noClasses()
                     .that().areAnnotatedWith(Service.class)
@@ -85,7 +104,6 @@ class ArchitectureTest {
                     .areAnnotatedWith(RestController.class)
                     .as("Services must not depend on controllers");
 
-    @ArchTest
     static final ArchRule controllers_must_not_access_repositories_directly =
             noClasses()
                     .that().areAnnotatedWith(RestController.class)
@@ -94,7 +112,6 @@ class ArchitectureTest {
                     .areAnnotatedWith(Repository.class)
                     .as("Controllers must not access repositories directly; use services instead");
 
-    @ArchTest
     static final ArchRule repositories_should_not_depend_on_controllers =
             noClasses()
                     .that().areAnnotatedWith(Repository.class)
@@ -106,7 +123,6 @@ class ArchitectureTest {
     // Java Best Practices
     // ─────────────────────────────────────────────────────────────────────
 
-    @ArchTest
     static final ArchRule classes_should_follow_naming_conventions =
             classes()
                     .that().resideInAPackage("io.github.luinara.sqs..")
@@ -114,7 +130,6 @@ class ArchitectureTest {
                     .should().haveSimpleNameNotContaining("_")
                     .as("Classes should not contain underscores in their names");
 
-    @ArchTest
     static final ArchRule interfaces_should_follow_naming_conventions =
             classes()
                     .that().resideInAPackage("io.github.luinara.sqs..")
@@ -122,7 +137,6 @@ class ArchitectureTest {
                     .should().haveSimpleNameNotStartingWith("Abstract")
                     .as("Interfaces should not be prefixed with 'Abstract'");
 
-    @ArchTest
     static final ArchRule no_classes_should_throw_generic_exceptions =
             noClasses()
                     .that().resideInAPackage("io.github.luinara.sqs..")

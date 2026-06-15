@@ -1,0 +1,19 @@
+{
+  "extends": "../../frontend/tsconfig.json",
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "noEmit": true,
+    "types": ["node"],
+    "typeRoots": ["../../frontend/node_modules/@types"],
+    "paths": {
+      "@angular/core/testing": [
+        "../../frontend/node_modules/@angular/core/types/testing.d.ts"
+      ],
+      "@angular/*": ["../../frontend/node_modules/@angular/*"],
+      "vitest": ["../../frontend/node_modules/vitest/dist/index.d.ts"],
+      "vitest/globals": ["../../frontend/node_modules/vitest/globals.d.ts"]
+    }
+  },
+  "include": ["../../frontend/node_modules/vitest/globals.d.ts", "./**/*.ts"]
+}

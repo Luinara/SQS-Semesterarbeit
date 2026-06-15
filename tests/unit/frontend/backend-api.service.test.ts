@@ -1,7 +1,4 @@
-import {
-  BackendApiError,
-  BackendApiService,
-} from "../../../frontend/src/app/core/services/backend-api.service";
+import { BackendApiService } from "../../../frontend/src/app/core/services/backend-api.service";
 
 describe("BackendApiService", () => {
   it("meldet sich mit Backend-Spielername an und mappt API-Tasks in den Dashboard-State", async () => {
@@ -195,7 +192,7 @@ describe("BackendApiService", () => {
 
     await expect(
       new BackendApiService().signup("zoe", "secret123"),
-    ).rejects.toMatchObject<Partial<BackendApiError>>({
+    ).rejects.toMatchObject({
       status: 404,
       message:
         "Server nicht erreichbar. Bitte prüfe, ob die Verbindung aktiv ist.",
