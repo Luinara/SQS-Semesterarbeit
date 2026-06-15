@@ -51,6 +51,7 @@ model User {
   hunger Int @default(0)
 
   pendingFeedPoints Int @default(0) @map("pending_feed_points")
+  version BigInt?
 
   stats UserStats?
 
