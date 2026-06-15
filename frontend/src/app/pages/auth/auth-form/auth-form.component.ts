@@ -4,7 +4,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { AuthMode, AuthSubmission } from '../../../shared/models/auth.model';
 import { UiButtonComponent } from '../../../shared/ui/button/ui-button.component';
 
@@ -26,31 +26,14 @@ export class AuthFormComponent {
   readonly credentialsSubmitted = output<AuthSubmission>();
 
   readonly form = this.formBuilder.group({
-    email: this.formBuilder.control('', [Validators.required, Validators.email]),
-    password: this.formBuilder.control('', [Validators.required, Validators.minLength(6)]),
-    userName: this.formBuilder.control(''),
+    username: this.formBuilder.control('', [
+      Validators.required,
+      Validators.minLength(2),
+      Validators.maxLength(32),
+      Validators.pattern(/^[a-zA-Z0-9._-]+$/),
+    ]),
+    password: this.formBuilder.control('', [Validators.required, Validators.minLength(8)]),
   });
-
-  constructor() {
-    // Der Benutzername wird nur im Registrierungsmodus gebraucht.
-    // Die Validierung bleibt dadurch präzise und vermeidet Sonderfälle im Submit-Flow.
-    effect(() => {
-      const userNameControl = this.form.controls.userName;
-
-      if (this.mode() === 'register') {
-        userNameControl.setValidators([
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(24),
-        ]);
-      } else {
-        userNameControl.clearValidators();
-        userNameControl.setValue('', { emitEvent: false });
-      }
-
-      userNameControl.updateValueAndValidity({ emitEvent: false });
-    });
-  }
 
   submitForm(): void {
     this.hasSubmittedAttempt = true;
@@ -61,19 +44,20 @@ export class AuthFormComponent {
     }
 
     const formValue = this.form.getRawValue();
+    const username = formValue.username.trim();
 
     if (this.mode() === 'register') {
       this.credentialsSubmitted.emit({
-        email: formValue.email.trim(),
+        username,
         password: formValue.password,
-        userName: formValue.userName.trim(),
+        userName: username,
       });
 
       return;
     }
 
     this.credentialsSubmitted.emit({
-      email: formValue.email.trim(),
+      username,
       password: formValue.password,
     });
   }
@@ -82,12 +66,20 @@ export class AuthFormComponent {
     return control.invalid && (control.touched || this.hasSubmittedAttempt);
   }
 
-  emailErrorText(): string {
-    if (this.form.controls.email.hasError('required')) {
-      return 'Bitte gib eine E-Mail-Adresse ein.';
+  usernameErrorText(): string {
+    if (this.form.controls.username.hasError('required')) {
+      return 'Bitte gib deinen Backend-Username ein.';
     }
 
-    return 'Bitte verwende ein gültiges E-Mail-Format.';
+    if (this.form.controls.username.hasError('maxlength')) {
+      return 'Der Username darf hoechstens 32 Zeichen lang sein.';
+    }
+
+    if (this.form.controls.username.hasError('pattern')) {
+      return 'Erlaubt sind Buchstaben, Zahlen, Punkt, Unterstrich und Bindestrich.';
+    }
+
+    return 'Der Username sollte mindestens 2 Zeichen lang sein.';
   }
 
   passwordErrorText(): string {
@@ -95,18 +87,6 @@ export class AuthFormComponent {
       return 'Bitte gib ein Passwort ein.';
     }
 
-    return 'Das Passwort sollte mindestens 6 Zeichen haben.';
-  }
-
-  userNameErrorText(): string {
-    if (this.form.controls.userName.hasError('required')) {
-      return 'Bitte wähle einen Benutzernamen.';
-    }
-
-    if (this.form.controls.userName.hasError('maxlength')) {
-      return 'Der Benutzername darf höchstens 24 Zeichen lang sein.';
-    }
-
-    return 'Der Benutzername sollte mindestens 2 Zeichen lang sein.';
+    return 'Das Passwort sollte mindestens 8 Zeichen haben.';
   }
 }

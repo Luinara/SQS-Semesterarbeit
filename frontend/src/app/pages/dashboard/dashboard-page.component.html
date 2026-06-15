@@ -24,6 +24,10 @@
           [tasks]="appState.tasks()"
           [qualityScore]="appState.qualityScore()"
           [qualityTarget]="appState.qualityTarget()"
+          [waterLevel]="appState.waterLevel()"
+          [foodLevel]="appState.foodLevel()"
+          [streak]="appState.streak()"
+          (waterAdded)="addWater($event)"
         />
 
         <sqs-pet-card
@@ -37,8 +41,10 @@
           [petCareState]="appState.petCareState()"
           [gameFeedback]="appState.lastGameFeedback()"
           [pokemon]="pokemon.snapshot()"
+          [pokemonImageUrl]="appState.pokemonImageUrl()"
           [pokemonLoading]="pokemon.isLoading()"
           [pokemonSourceLabel]="pokemon.sourceLabel()"
+          [feedCost]="appState.feedCost"
           (feedRequested)="feedPet()"
           (weatherRefreshRequested)="refreshWeather()"
           (weatherCitySubmitted)="searchWeatherCity($event)"

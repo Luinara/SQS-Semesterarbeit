@@ -21,7 +21,7 @@ export function findAccountForLogin(
   accounts: MockAccount[],
   credentials: LoginCredentials
 ): MockAccount | null {
-  const normalizedEmail = normalizeEmail(credentials.email);
+  const normalizedEmail = normalizeEmail(credentials.username);
 
   return (
     accounts.find(
@@ -39,7 +39,7 @@ export function hasAccountWithEmail(accounts: MockAccount[], email: string): boo
 export function createRegisteredAccount(credentials: RegisterCredentials): MockAccount {
   return createMockAccount({
     ...credentials,
-    email: normalizeEmail(credentials.email),
+    username: normalizeEmail(credentials.username),
     userName: credentials.userName.trim(),
   });
 }
@@ -79,7 +79,7 @@ export function feedPetInGameStateWithFeedback(
       gameState: normalizedGameState,
       feedback: createGameFeedback(
         'info',
-        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Quality-Punkte bis zum naechsten Training.`
+        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Task-Punkte bis zum naechsten Training.`
       ),
     };
   }
@@ -142,7 +142,7 @@ export function feedPetInGameStateWithFeedback(
     gameState: updatedGameState,
     feedback: createGameFeedback(
       'feeding',
-      `${currentPet.name} trainiert mit Quality-Punkten: +${happinessGain} Motivation.`
+      `${currentPet.name} trainiert mit Task-Punkten: +${happinessGain} Motivation.`
     ),
   };
 }
@@ -271,8 +271,8 @@ function completeTask(
     feedback: createGameFeedback(
       didReachGate ? 'level-up' : 'quest',
       didReachGate
-        ? `Quality Gate erreicht: ${nextQualityScore}% Projektqualitaet.`
-        : `Quality-Quest abgeschlossen: +${taskToComplete.points} Trainingspunkte.`
+        ? `Tagesziel erreicht: ${nextQualityScore} Task-Punkte.`
+        : `Backend-Task erledigt: +${taskToComplete.points} Trainingspunkte.`
     ),
   };
 }

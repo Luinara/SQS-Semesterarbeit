@@ -30,11 +30,15 @@ export class DashboardPageComponent {
   }
 
   completeTask(taskId: string): void {
-    this.appState.completeTask(taskId);
+    void this.appState.completeTask(taskId);
   }
 
   feedPet(): void {
-    this.appState.feedPet();
+    void this.appState.feedPet();
+  }
+
+  addWater(amountMl: number): void {
+    void this.appState.addWater(amountMl);
   }
 
   refreshWeather(): void {
@@ -46,11 +50,11 @@ export class DashboardPageComponent {
   }
 
   resetDemoData(): void {
-    this.appState.resetCurrentProgress();
+    void this.appState.resetCurrentProgress();
   }
 
   async logout(): Promise<void> {
-    this.appState.logout();
+    await this.appState.logout();
     await this.router.navigateByUrl('/auth');
   }
 }

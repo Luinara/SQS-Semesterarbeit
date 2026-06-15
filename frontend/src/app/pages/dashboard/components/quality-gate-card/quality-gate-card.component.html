@@ -15,7 +15,7 @@
     <div
       class="quality-gate__ring"
       [style.--quality-progress]="progressPercent() + '%'"
-      aria-label="Quality Gate Fortschritt"
+      aria-label="Backend Task Fortschritt"
     >
       <strong>{{ progressPercent() }}%</strong>
       <span>Tasks</span>
@@ -32,15 +32,32 @@
       <span>Backend-Tasks</span>
     </div>
     <div class="quality-gate__metric">
-      <strong>{{ tasks().length - missingRequiredTasks().length }}</strong>
-      <span>Task-Slots</span>
+      <strong>{{ waterLevel() }} ml</strong>
+      <span>Wasserstand API</span>
+    </div>
+    <div class="quality-gate__metric">
+      <strong>{{ foodLevel() }}%</strong>
+      <span>Food-Level API</span>
+    </div>
+    <div class="quality-gate__metric">
+      <strong>{{ streak() }}</strong>
+      <span>Login-Streak</span>
     </div>
   </div>
 
+  <div class="quality-gate__actions" aria-label="Wasser ueber Backend speichern">
+    <button sqsButton size="sm" variant="secondary" type="button" (click)="addWater(250)">
+      +250 ml
+    </button>
+    <button sqsButton size="sm" variant="secondary" type="button" (click)="addWater(500)">
+      +500 ml
+    </button>
+  </div>
+
   <div class="quality-gate__pyramid">
-    @for (stage of stages; track stage.label) {
-      <span [class.quality-gate__stage--done]="isStageCovered(stage)">
-        {{ stage.label }}
+    @for (task of visibleTasks(); track task.id) {
+      <span [class.quality-gate__stage--done]="task.isCompleted">
+        {{ task.title }}
       </span>
     }
   </div>

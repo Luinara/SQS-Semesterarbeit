@@ -34,7 +34,7 @@
         [level]="currentPet.level"
         [weatherScene]="weatherScene()"
         [careState]="petCareState()"
-        [spriteUrl]="pokemon()?.spriteUrl ?? 'pet-placeholder.svg'"
+        [spriteUrl]="pokemonImageUrl() ?? pokemon()?.spriteUrl ?? 'pet-placeholder.svg'"
         [pokemonTypes]="pokemon()?.types ?? []"
         [pokemonSource]="pokemon()?.source ?? 'fallback'"
       />
@@ -131,7 +131,7 @@
 
         <div class="pet-card__footer">
           <div class="pet-card__hint">
-            <strong>Training kostet {{ feedCost }} Punkte.</strong>
+            <strong>Training kostet {{ feedCost() }} Punkt.</strong>
             <span>
               Level-Ups passieren direkt beim vollen Wachstumsbalken. Die Pokemon-Stufe folgt dem
               Level.
