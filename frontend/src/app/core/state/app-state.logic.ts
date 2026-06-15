@@ -1,13 +1,15 @@
 import { GameFeedback, GameState, MockAccount } from '../../shared/models/app-state.model';
 import { LoginCredentials, RegisterCredentials } from '../../shared/models/auth.model';
 import { PetCareState, PetState } from '../../shared/models/pet.model';
+import { TaskItem } from '../../shared/models/task.model';
 import {
   calculateNextGrowthGoal,
   createInitialGameState,
   createMockAccount,
-  HYDRATION_RULES,
   normalizeEmail,
   PET_RULES,
+  QUALITY_RULES,
+  resolvePokemonSpeciesForLevel,
 } from '../../shared/mock/mock-data';
 
 export interface GameStateActionResult {
@@ -58,16 +60,6 @@ export function completeTaskInGameStateWithFeedback(
     };
   }
 
-  if (isHydrationQuest(taskToComplete) && !isHydrationGoalReached(normalizedGameState)) {
-    return {
-      gameState: normalizedGameState,
-      feedback: createGameFeedback(
-        'info',
-        'Diese Tagesquest wird erst abgeschlossen, wenn die Wasseranzeige voll ist.'
-      ),
-    };
-  }
-
   return completeTask(normalizedGameState, taskToComplete);
 }
 
@@ -87,7 +79,7 @@ export function feedPetInGameStateWithFeedback(
       gameState: normalizedGameState,
       feedback: createGameFeedback(
         'info',
-        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Punkte bis zur nächsten Fütterung.`
+        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Quality-Punkte bis zum naechsten Training.`
       ),
     };
   }
@@ -101,7 +93,7 @@ export function feedPetInGameStateWithFeedback(
     remainingDailyHappiness,
     PET_RULES.maxHappiness - currentPet.happiness
   );
-  const growthResult = calculateFeedingGrowth(currentPet, now);
+  const growthResult = calculateFeedingGrowth(currentPet);
 
   const updatedGameState: GameState = {
     ...normalizedGameState,
@@ -110,6 +102,7 @@ export function feedPetInGameStateWithFeedback(
       level: growthResult.level,
       growthProgress: growthResult.growthProgress,
       growthGoal: growthResult.growthGoal,
+      pokemonSpecies: resolvePokemonSpeciesForLevel(growthResult.level),
       availableFoodPoints: currentPet.availableFoodPoints - PET_RULES.feedCost,
       happiness: currentPet.happiness + happinessGain,
       hunger: PET_RULES.dailyHungerResetValue,
@@ -128,7 +121,9 @@ export function feedPetInGameStateWithFeedback(
       gameState: updatedGameState,
       feedback: createGameFeedback(
         'level-up',
-        `${currentPet.name} ist jetzt Level ${growthResult.level}.`
+        `${currentPet.name} erreicht Level ${growthResult.level}: ${formatPokemonName(
+          updatedGameState.pet.pokemonSpecies
+        )} ist bereit.`
       ),
     };
   }
@@ -138,7 +133,7 @@ export function feedPetInGameStateWithFeedback(
       gameState: updatedGameState,
       feedback: createGameFeedback(
         'feeding',
-        'Gefüttert. Das tägliche Happiness-Limit ist für heute erreicht.'
+        'Training verbucht. Das taegliche Motivation-Limit ist fuer heute erreicht.'
       ),
     };
   }
@@ -147,7 +142,7 @@ export function feedPetInGameStateWithFeedback(
     gameState: updatedGameState,
     feedback: createGameFeedback(
       'feeding',
-      `${currentPet.name} wurde gefüttert: +${happinessGain} Happiness.`
+      `${currentPet.name} trainiert mit Quality-Punkten: +${happinessGain} Motivation.`
     ),
   };
 }
@@ -156,103 +151,27 @@ export function feedPetInGameState(gameState: GameState): GameState {
   return feedPetInGameStateWithFeedback(gameState).gameState;
 }
 
-export function addHydrationInGameStateWithFeedback(
-  gameState: GameState,
-  amountMl: number
-): GameStateActionResult {
-  const normalizedGameState = normalizeGameState(gameState);
-
-  if (amountMl <= 0) {
-    return {
-      gameState: normalizedGameState,
-      feedback: null,
-    };
-  }
-
-  const hydrationGoalMl = normalizedGameState.hydrationGoalMl || HYDRATION_RULES.dailyGoalMl;
-  const nextHydrationMl = Math.min(
-    hydrationGoalMl,
-    (normalizedGameState.hydrationMl ?? 0) + amountMl
-  );
-  const updatedGameState: GameState = {
-    ...normalizedGameState,
-    hydrationGoalMl,
-    hydrationMl: nextHydrationMl,
-  };
-  const hydrationQuest = updatedGameState.tasks.find(
-    (task) => isHydrationQuest(task) && !task.isCompleted
-  );
-
-  if (nextHydrationMl >= hydrationGoalMl && hydrationQuest) {
-    const result = completeTask(updatedGameState, hydrationQuest);
-
-    return {
-      gameState: result.gameState,
-      feedback: createGameFeedback(
-        'hydration',
-        `Tagesziel erreicht: "${hydrationQuest.title}" wurde automatisch abgeschlossen.`
-      ),
-    };
-  }
-
-  return {
-    gameState: updatedGameState,
-    feedback: createGameFeedback(
-      'hydration',
-      nextHydrationMl >= hydrationGoalMl
-        ? 'Tagesziel erreicht. Dein Pet spürt den Wasser-Flow.'
-        : `+${amountMl} ml Wasser eingetragen.`
-    ),
-  };
-}
-
-export function addHydrationInGameState(gameState: GameState, amountMl: number): GameState {
-  return addHydrationInGameStateWithFeedback(gameState, amountMl).gameState;
-}
-
 export function resetDailyProgressIfExpired(gameState: GameState, now = new Date()): GameState {
   const normalizedGameState = normalizeGameState(gameState, now);
-  const dailyQuestLastResetAt = normalizedGameState.dailyQuestLastResetAt;
-  const hydrationLastResetAt = normalizedGameState.hydrationLastResetAt;
-  const shouldResetQuests = isBeforeToday(dailyQuestLastResetAt, now);
-  const shouldResetHydration = isBeforeToday(hydrationLastResetAt, now);
   const shouldResetHappinessLimit = isBeforeToday(
     normalizedGameState.pet.happinessGainLastResetAt,
     now
   );
+  const nextPet = applyHappinessDecay(normalizedGameState.pet, now);
 
-  let nextPet = applyHappinessDecay(normalizedGameState.pet, now);
-
-  if (shouldResetQuests || shouldResetHydration || shouldResetHappinessLimit) {
-    nextPet = applyGoodCareStreak(nextPet, normalizedGameState);
-  }
-
-  if (!shouldResetQuests && !shouldResetHydration && !shouldResetHappinessLimit) {
+  if (!shouldResetHappinessLimit) {
     return {
       ...normalizedGameState,
       pet: nextPet,
     };
   }
 
-  const nowIso = now.toISOString();
-
   return {
     ...normalizedGameState,
-    tasks: shouldResetQuests
-      ? normalizedGameState.tasks.map((task) => ({ ...task, isCompleted: false }))
-      : normalizedGameState.tasks,
-    hydrationMl: shouldResetHydration ? 0 : normalizedGameState.hydrationMl,
-    hydrationGoalMl: normalizedGameState.hydrationGoalMl || HYDRATION_RULES.dailyGoalMl,
-    hydrationLastResetAt: shouldResetHydration ? nowIso : hydrationLastResetAt,
-    dailyQuestLastResetAt: shouldResetQuests ? nowIso : dailyQuestLastResetAt,
     pet: {
       ...nextPet,
-      availableFoodPoints: shouldResetQuests ? 0 : nextPet.availableFoodPoints,
-      hunger: shouldResetQuests ? PET_RULES.dailyHungerResetValue : nextPet.hunger,
-      dailyHappinessGained: shouldResetHappinessLimit ? 0 : nextPet.dailyHappinessGained,
-      happinessGainLastResetAt: shouldResetHappinessLimit
-        ? nowIso
-        : nextPet.happinessGainLastResetAt,
+      dailyHappinessGained: 0,
+      happinessGainLastResetAt: now.toISOString(),
     },
   };
 }
@@ -278,7 +197,7 @@ export function derivePetCareState(gameState: GameState): PetCareState {
     return 'growing';
   }
 
-  if (pet.happiness >= 75 && pet.hearts >= PET_RULES.maxHearts) {
+  if (normalizedGameState.qualityScore >= normalizedGameState.qualityTarget && pet.happiness >= 70) {
     return 'thriving';
   }
 
@@ -289,38 +208,56 @@ export function canCompleteTaskInGameState(gameState: GameState, taskId: string)
   const normalizedGameState = normalizeGameState(gameState);
   const task = normalizedGameState.tasks.find((candidate) => candidate.id === taskId);
 
-  if (!task || task.isCompleted) {
-    return false;
-  }
-
-  return !isHydrationQuest(task) || isHydrationGoalReached(normalizedGameState);
+  return Boolean(task && !task.isCompleted);
 }
 
 export function normalizeGameState(gameState: GameState, now = new Date()): GameState {
   const nowIso = now.toISOString();
-  const hydrationLastResetAt = gameState.hydrationLastResetAt ?? nowIso;
-  const dailyQuestLastResetAt =
-    gameState.dailyQuestLastResetAt ?? gameState.hydrationLastResetAt ?? nowIso;
+  const initialGameState = createInitialGameState();
+  const normalizedTasks = normalizeTasks(gameState.tasks);
+  const qualityScore = calculateQualityScore(normalizedTasks);
 
   return {
     ...gameState,
-    hydrationMl: gameState.hydrationMl ?? 0,
-    hydrationGoalMl: gameState.hydrationGoalMl || HYDRATION_RULES.dailyGoalMl,
-    hydrationLastResetAt,
-    dailyQuestLastResetAt,
-    pet: normalizePetState(gameState.pet, nowIso),
+    tasks: normalizedTasks,
+    qualityScore,
+    qualityTarget: gameState.qualityTarget || QUALITY_RULES.targetScore,
+    qualityLastResetAt: gameState.qualityLastResetAt ?? nowIso,
+    dailyQuestLastResetAt: gameState.dailyQuestLastResetAt ?? nowIso,
+    totalCompletedTasks:
+      gameState.totalCompletedTasks ?? normalizedTasks.filter((task) => task.isCompleted).length,
+    totalEarnedPoints: gameState.totalEarnedPoints ?? qualityScore,
+    pet: normalizePetState(gameState.pet ?? initialGameState.pet, nowIso),
   };
+}
+
+export function calculateQualityScore(tasks: TaskItem[]): number {
+  return Math.min(
+    QUALITY_RULES.maxScore,
+    tasks.reduce((score, task) => score + (task.isCompleted ? task.points : 0), 0)
+  );
+}
+
+export function isQualityGateReached(gameState: GameState): boolean {
+  const normalizedGameState = normalizeGameState(gameState);
+  return normalizedGameState.qualityScore >= normalizedGameState.qualityTarget;
 }
 
 function completeTask(
   gameState: GameState,
   taskToComplete: GameState['tasks'][number]
 ): GameStateActionResult {
+  const updatedTasks = gameState.tasks.map((task) =>
+    task.id === taskToComplete.id ? { ...task, isCompleted: true } : task
+  );
+  const nextQualityScore = calculateQualityScore(updatedTasks);
+  const didReachGate =
+    gameState.qualityScore < gameState.qualityTarget && nextQualityScore >= gameState.qualityTarget;
+
   const updatedGameState: GameState = {
     ...gameState,
-    tasks: gameState.tasks.map((task) =>
-      task.id === taskToComplete.id ? { ...task, isCompleted: true } : task
-    ),
+    tasks: updatedTasks,
+    qualityScore: nextQualityScore,
     totalCompletedTasks: gameState.totalCompletedTasks + 1,
     totalEarnedPoints: gameState.totalEarnedPoints + taskToComplete.points,
     pet: {
@@ -332,15 +269,36 @@ function completeTask(
   return {
     gameState: updatedGameState,
     feedback: createGameFeedback(
-      'quest',
-      `Tagesquest abgeschlossen: +${taskToComplete.points} Futterpunkte.`
+      didReachGate ? 'level-up' : 'quest',
+      didReachGate
+        ? `Quality Gate erreicht: ${nextQualityScore}% Projektqualitaet.`
+        : `Quality-Quest abgeschlossen: +${taskToComplete.points} Trainingspunkte.`
     ),
   };
 }
 
+function normalizeTasks(tasks: TaskItem[] | undefined): TaskItem[] {
+  const initialTasks = createInitialGameState().tasks;
+
+  if (!Array.isArray(tasks) || tasks.some((task) => !('checklistReference' in task))) {
+    return initialTasks;
+  }
+
+  const savedById = new Map(tasks.map((task) => [task.id, task]));
+
+  return initialTasks.map((task) => ({
+    ...task,
+    isCompleted: savedById.get(task.id)?.isCompleted ?? false,
+  }));
+}
+
 function normalizePetState(pet: PetState, nowIso: string): PetState {
+  const level = Math.max(1, pet.level ?? 1);
+
   return {
     ...pet,
+    name: pet.name || 'Quality Companion',
+    level,
     growthProgress: pet.growthProgress ?? 0,
     growthGoal: pet.growthGoal || PET_RULES.initialGrowthGoal,
     availableFoodPoints: pet.availableFoodPoints ?? 0,
@@ -359,19 +317,16 @@ function normalizePetState(pet: PetState, nowIso: string): PetState {
     lastLevelUpAt: pet.lastLevelUpAt ?? null,
     goodCareStreakDays: Math.max(0, pet.goodCareStreakDays ?? 0),
     lastGoodCareDay: pet.lastGoodCareDay ?? null,
+    pokemonSpecies: resolvePokemonSpeciesForLevel(level),
   };
 }
 
 function calculateFeedingGrowth(
-  pet: PetState,
-  now: Date
+  pet: PetState
 ): Pick<PetState, 'level' | 'growthProgress' | 'growthGoal'> & { didLevelUp: boolean } {
-  const progressAfterFeeding = Math.min(
-    pet.growthGoal,
-    pet.growthProgress + PET_RULES.growthPerFeeding
-  );
+  const progressAfterFeeding = pet.growthProgress + PET_RULES.growthPerFeeding;
 
-  if (progressAfterFeeding < pet.growthGoal || !canLevelUp(pet, now)) {
+  if (progressAfterFeeding < pet.growthGoal) {
     return {
       level: pet.level,
       growthProgress: progressAfterFeeding,
@@ -382,24 +337,10 @@ function calculateFeedingGrowth(
 
   return {
     level: pet.level + 1,
-    growthProgress: 0,
+    growthProgress: progressAfterFeeding - pet.growthGoal,
     growthGoal: calculateNextGrowthGoal(pet.growthGoal),
     didLevelUp: true,
   };
-}
-
-function canLevelUp(pet: PetState, now: Date): boolean {
-  if (!pet.lastLevelUpAt) {
-    return true;
-  }
-
-  const lastLevelUpAt = new Date(pet.lastLevelUpAt);
-
-  if (Number.isNaN(lastLevelUpAt.getTime())) {
-    return true;
-  }
-
-  return hoursBetween(lastLevelUpAt, now) >= PET_RULES.levelUpCooldownHours;
 }
 
 function applyHappinessDecay(pet: PetState, now: Date): PetState {
@@ -441,56 +382,6 @@ function applyHappinessDecay(pet: PetState, now: Date): PetState {
   };
 }
 
-function applyGoodCareStreak(pet: PetState, gameState: GameState): PetState {
-  const caredDay = new Date(gameState.dailyQuestLastResetAt);
-
-  if (Number.isNaN(caredDay.getTime())) {
-    return pet;
-  }
-
-  const didCareOnDay =
-    gameState.hydrationMl >= (gameState.hydrationGoalMl || HYDRATION_RULES.dailyGoalMl) ||
-    isSameCalendarDay(pet.lastFedAt, caredDay);
-
-  if (!didCareOnDay) {
-    return {
-      ...pet,
-      goodCareStreakDays: 0,
-      lastGoodCareDay: null,
-    };
-  }
-
-  if (isSameCalendarDay(pet.lastGoodCareDay, caredDay)) {
-    return pet;
-  }
-
-  const wasPreviousCareDay = pet.lastGoodCareDay
-    ? isPreviousCalendarDay(new Date(pet.lastGoodCareDay), caredDay)
-    : false;
-  const nextStreakDays = wasPreviousCareDay ? pet.goodCareStreakDays + 1 : 1;
-  const shouldRecoverHeart =
-    nextStreakDays > 0 && nextStreakDays % PET_RULES.heartRecoveryStreakDays === 0;
-
-  return {
-    ...pet,
-    hearts: shouldRecoverHeart
-      ? Math.min(PET_RULES.maxHearts, pet.hearts + PET_RULES.heartRecoveryStep)
-      : pet.hearts,
-    goodCareStreakDays: nextStreakDays,
-    lastGoodCareDay: formatDay(caredDay),
-  };
-}
-
-function isHydrationQuest(task: GameState['tasks'][number]): boolean {
-  return task.icon === 'drop';
-}
-
-function isHydrationGoalReached(gameState: GameState): boolean {
-  const hydrationGoalMl = gameState.hydrationGoalMl || HYDRATION_RULES.dailyGoalMl;
-
-  return (gameState.hydrationMl ?? 0) >= hydrationGoalMl;
-}
-
 function isBeforeToday(isoDate: string, now: Date): boolean {
   const date = new Date(isoDate);
 
@@ -501,30 +392,8 @@ function isBeforeToday(isoDate: string, now: Date): boolean {
   return dayStart(date).getTime() < dayStart(now).getTime();
 }
 
-function isSameCalendarDay(isoDate: string | null, date: Date): boolean {
-  if (!isoDate) {
-    return false;
-  }
-
-  const otherDate = new Date(isoDate);
-
-  if (Number.isNaN(otherDate.getTime())) {
-    return false;
-  }
-
-  return dayStart(otherDate).getTime() === dayStart(date).getTime();
-}
-
-function isPreviousCalendarDay(previousDate: Date, currentDate: Date): boolean {
-  return dayStart(currentDate).getTime() - dayStart(previousDate).getTime() === 24 * 60 * 60 * 1000;
-}
-
 function dayStart(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-}
-
-function formatDay(date: Date): string {
-  return dayStart(date).toISOString();
 }
 
 function hoursBetween(start: Date, end: Date): number {
@@ -533,6 +402,10 @@ function hoursBetween(start: Date, end: Date): number {
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
+}
+
+function formatPokemonName(name: string): string {
+  return `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
 }
 
 function createGameFeedback(kind: GameFeedback['kind'], message: string): GameFeedback {
