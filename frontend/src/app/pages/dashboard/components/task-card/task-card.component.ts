@@ -12,9 +12,15 @@ import { UiButtonComponent } from '../../../../shared/ui/button/ui-button.compon
 })
 export class TaskCardComponent {
   readonly task = input.required<TaskItem>();
+  readonly isLocked = input(false);
+  readonly lockedReason = input('');
   readonly completeRequested = output<string>();
 
   markTaskAsCompleted(): void {
+    if (this.isLocked()) {
+      return;
+    }
+
     this.completeRequested.emit(this.task().id);
   }
 }

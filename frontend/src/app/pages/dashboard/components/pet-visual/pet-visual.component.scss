@@ -26,6 +26,8 @@
   --rain-speed: 2.4s;
   --cloud-speed: 22s;
   --sky-speed: 8s;
+  --care-color: var(--color-sage);
+  --pet-motion-speed: 4s;
 }
 
 .pet-visual__frame {
@@ -73,7 +75,7 @@
   position: relative;
   z-index: 1;
   width: min(17rem, 100%);
-  animation: float-soft 4s ease-in-out infinite;
+  animation: float-soft var(--pet-motion-speed) ease-in-out infinite;
   filter: drop-shadow(0 22px 26px rgba(127, 92, 80, 0.16));
 }
 
@@ -111,6 +113,47 @@
   box-shadow: 0 10px 18px rgba(118, 87, 74, 0.12);
   color: var(--color-brown);
   font-weight: 600;
+}
+
+.pet-visual__care-dot {
+  position: absolute;
+  right: 1.35rem;
+  bottom: 1.35rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 2px solid rgba(255, 255, 255, 0.82);
+  border-radius: 50%;
+  background: var(--care-color);
+  box-shadow: 0 0 0 0.45rem color-mix(in srgb, var(--care-color) 18%, transparent);
+}
+
+.pet-visual--needs-care {
+  --care-color: var(--color-rose);
+  --pet-motion-speed: 5.2s;
+}
+
+.pet-visual--ready-to-feed {
+  --care-color: var(--color-peach);
+  --pet-motion-speed: 3.35s;
+}
+
+.pet-visual--growing,
+.pet-visual--thriving {
+  --care-color: var(--color-sage);
+  --pet-motion-speed: 3.2s;
+}
+
+.pet-visual--ready-to-feed .pet-visual__frame,
+.pet-visual--growing .pet-visual__frame,
+.pet-visual--thriving .pet-visual__frame {
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--care-color) 34%, rgba(128, 97, 87, 0.16));
+}
+
+.pet-visual--ready-to-feed .pet-visual__care-dot,
+.pet-visual--growing .pet-visual__care-dot,
+.pet-visual--thriving .pet-visual__care-dot {
+  animation: pulse-soft 2.2s ease-in-out infinite;
 }
 
 .pet-visual__bubble {

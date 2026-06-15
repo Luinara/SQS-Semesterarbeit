@@ -8,8 +8,17 @@ export interface GameState {
   hydrationMl: number;
   hydrationGoalMl: number;
   hydrationLastResetAt: string;
+  dailyQuestLastResetAt: string;
   totalCompletedTasks: number;
   totalEarnedPoints: number;
+}
+
+export type GameFeedbackKind = 'quest' | 'hydration' | 'feeding' | 'level-up' | 'info';
+
+export interface GameFeedback {
+  id: string;
+  kind: GameFeedbackKind;
+  message: string;
 }
 
 export interface MockAccount {

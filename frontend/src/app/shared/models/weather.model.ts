@@ -9,7 +9,7 @@ export interface WeatherSnapshot {
   weatherCode: number;
   label: string;
   locationLabel: string;
-  updatedAt: string;
+  updatedAt: string | null;
 }
 
 export interface WeatherScene {

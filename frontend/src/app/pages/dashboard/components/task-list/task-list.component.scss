@@ -60,6 +60,21 @@
   font-size: 0.9rem;
 }
 
+.task-list__progress {
+  overflow: hidden;
+  height: 0.55rem;
+  border-radius: var(--radius-pill);
+  background: rgba(128, 97, 87, 0.12);
+}
+
+.task-list__progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-rose), var(--color-sage));
+  transition: width 260ms ease;
+}
+
 .task-list__items {
   display: grid;
   gap: 0.95rem;

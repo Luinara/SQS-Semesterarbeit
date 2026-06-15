@@ -2,6 +2,7 @@ import {
   calculateNextGrowthGoal,
   createInitialGameState,
   createInitialSnapshot,
+  PET_RULES,
   normalizeEmail,
 } from "../../../frontend/src/app/shared/mock/mock-data";
 
@@ -29,5 +30,16 @@ describe("mock-data", () => {
     expect(gameState.tasks).toHaveLength(5);
     expect(gameState.tasks.every((task) => !task.isCompleted)).toBe(true);
     expect(gameState.pet.level).toBe(1);
+  });
+
+  it("nutzt ein ganzzahliges, klares Punkte-Balancing", () => {
+    const gameState = createInitialGameState();
+    const taskPoints = gameState.tasks.map((task) => task.points);
+
+    expect(taskPoints).toEqual([10, 20, 20, 15, 10]);
+    expect(taskPoints.every(Number.isInteger)).toBe(true);
+    expect(Number.isInteger(PET_RULES.feedCost)).toBe(true);
+    expect(Number.isInteger(PET_RULES.growthPerFeeding)).toBe(true);
+    expect(Number.isInteger(PET_RULES.happinessPerFeeding)).toBe(true);
   });
 });

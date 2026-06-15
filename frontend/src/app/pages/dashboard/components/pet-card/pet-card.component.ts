@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { DEFAULT_WEATHER_SCENE } from '../../../../core/state/weather-appearance.logic';
 import { PET_RULES } from '../../../../shared/mock/mock-data';
-import { PetState } from '../../../../shared/models/pet.model';
+import { GameFeedback } from '../../../../shared/models/app-state.model';
+import { PetCareState, PetState } from '../../../../shared/models/pet.model';
 import { WeatherScene, WeatherSnapshot } from '../../../../shared/models/weather.model';
 import { UiButtonComponent } from '../../../../shared/ui/button/ui-button.component';
 import { ProgressBarComponent } from '../../../../shared/ui/progress-bar/progress-bar.component';
@@ -24,18 +25,69 @@ export class PetCardComponent {
   readonly weatherSnapshot = input<WeatherSnapshot | null>(null);
   readonly weatherLoading = input(false);
   readonly weatherError = input<string | null>(null);
+  readonly petCareState = input<PetCareState>('calm');
+  readonly gameFeedback = input<GameFeedback | null>(null);
   readonly feedRequested = output<void>();
   readonly weatherRefreshRequested = output<void>();
   readonly weatherCitySubmitted = output<string>();
 
   readonly feedCost = PET_RULES.feedCost;
   readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) >= this.feedCost);
+  readonly careStateLabel = computed(() => {
+    switch (this.petCareState()) {
+      case 'needs-care':
+        return 'Braucht Pflege';
+      case 'ready-to-feed':
+        return 'Bereit zum Füttern';
+      case 'growing':
+        return 'Kurz vor Wachstum';
+      case 'thriving':
+        return 'Glücklich';
+      default:
+        return 'Ruhig';
+    }
+  });
+  readonly careStateHint = computed(() => {
+    switch (this.petCareState()) {
+      case 'needs-care':
+        return 'Erledige eine Quest oder füttere dein Pet, damit die Stimmung steigt.';
+      case 'ready-to-feed':
+        return 'Du hast genug Punkte für die nächste Fütterung.';
+      case 'growing':
+        return 'Der nächste Level ist schon in Reichweite.';
+      case 'thriving':
+        return 'Dein Pet ist bestens versorgt.';
+      default:
+        return 'Ein guter Moment für die nächste kleine Quest.';
+    }
+  });
   readonly weatherStatus = computed(() => {
     if (this.weatherLoading()) {
       return 'Wetter wird geladen';
     }
 
     return this.weatherError() ?? this.weatherScene().description;
+  });
+  readonly weatherUpdatedAtLabel = computed(() => {
+    const weatherSnapshot = this.weatherSnapshot();
+
+    if (!weatherSnapshot) {
+      return 'Noch nicht aktualisiert';
+    }
+
+    const updatedAt = weatherSnapshot.updatedAt;
+
+    if (!updatedAt) {
+      return 'API-Zeit unbekannt';
+    }
+
+    const apiTimeLabel = formatWeatherApiTime(updatedAt);
+
+    if (!apiTimeLabel) {
+      return 'Aktualisierungszeit unbekannt';
+    }
+
+    return `Letzte Aktualisierung: ${apiTimeLabel}`;
   });
 
   requestFeeding(): void {
@@ -50,4 +102,29 @@ export class PetCardComponent {
     event.preventDefault();
     this.weatherCitySubmitted.emit(cityName);
   }
+}
+
+export function formatWeatherApiTime(updatedAt: string): string | null {
+  const apiTimestampMatch =
+    /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})T(?<hour>\d{2}):(?<minute>\d{2})/.exec(
+      updatedAt
+    );
+
+  if (apiTimestampMatch?.groups) {
+    return `${apiTimestampMatch.groups['hour']}:${apiTimestampMatch.groups['minute']} Uhr`;
+  }
+
+  const updatedAtDate = new Date(updatedAt);
+
+  if (Number.isNaN(updatedAtDate.getTime())) {
+    return null;
+  }
+
+  return `${new Intl.DateTimeFormat('de-DE', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(updatedAtDate)} Uhr`;
 }

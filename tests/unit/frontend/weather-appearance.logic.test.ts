@@ -30,6 +30,22 @@ describe("weather-appearance.logic", () => {
     expect(snapshot.timeOfDay).toBe("night");
     expect(snapshot.temperatureC).toBe(8);
     expect(snapshot.label).toBe("Klar");
+    expect(snapshot.updatedAt).toBe("2026-05-19T23:00");
+  });
+
+  it("erfindet keine lokale Aktualisierungszeit ohne API-Zeitstempel", () => {
+    const snapshot = parseWeatherSnapshot(
+      {
+        current: {
+          temperature_2m: 8.4,
+          weather_code: 0,
+          is_day: 0,
+        },
+      },
+      "Berlin",
+    );
+
+    expect(snapshot.updatedAt).toBeNull();
   });
 
   it("liefert eine konkrete Szene für Wetter und Tageszeit", () => {

@@ -14,7 +14,7 @@ const DEFAULT_LOCATION: WeatherLocation = {
   label: 'Berlin',
 };
 const WEATHER_LOCATION_STORAGE_KEY = 'sqs-weather-location';
-const WEATHER_REFRESH_INTERVAL_MS = 5 * 60 * 1000;
+const WEATHER_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
 
 interface WeatherLocation {
   latitude: number;

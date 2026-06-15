@@ -25,6 +25,16 @@
   background: linear-gradient(180deg, rgba(248, 252, 248, 0.95) 0%, rgba(241, 248, 241, 0.92) 100%);
 }
 
+.task-card--locked {
+  border-color: rgba(127, 166, 189, 0.18);
+  background: rgba(248, 251, 252, 0.92);
+}
+
+.task-card--locked:hover {
+  transform: none;
+  box-shadow: var(--shadow-card);
+}
+
 .task-card__icon {
   display: inline-flex;
   align-items: center;

@@ -82,7 +82,7 @@ export function parseWeatherSnapshot(
     weatherCode,
     label: WEATHER_LABELS[condition],
     locationLabel,
-    updatedAt: current.time ?? new Date().toISOString(),
+    updatedAt: current.time ?? null,
   };
 }
 
