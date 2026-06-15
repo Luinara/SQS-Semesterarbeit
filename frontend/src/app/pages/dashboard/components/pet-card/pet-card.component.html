@@ -5,30 +5,58 @@
         <span class="eyebrow">Dein virtuelles Pet</span>
         <h2>{{ currentPet.name }} wächst mit deinem Alltag</h2>
         <p>
-          Erledige kleine Schritte, sammle Punkte und investiere sie in Fütterungen, damit dein Pet
+          Erledige Tagesquests, sammle Punkte und investiere sie in Fütterungen, damit dein Pet
           sichtbar stärker wird.
         </p>
       </div>
 
       <div class="pet-card__microcopy">
         <strong>{{ completedTasks() }}/{{ totalTasks() }}</strong>
-        <span>heutige Aufgaben abgeschlossen</span>
+        <span>Tagesquests abgeschlossen</span>
       </div>
     </div>
+
+    @if (gameFeedback(); as feedback) {
+      <div
+        class="pet-card__feedback"
+        [class.pet-card__feedback--level-up]="feedback.kind === 'level-up'"
+        [class.pet-card__feedback--feeding]="feedback.kind === 'feeding'"
+        [class.pet-card__feedback--hydration]="feedback.kind === 'hydration'"
+        [class.pet-card__feedback--quest]="feedback.kind === 'quest'"
+      >
+        {{ feedback.message }}
+      </div>
+    }
 
     <div class="pet-card__body">
       <sqs-pet-visual
         [petName]="currentPet.name"
         [level]="currentPet.level"
         [weatherScene]="weatherScene()"
+        [careState]="petCareState()"
       />
 
       <div class="pet-card__details">
+        <div
+          class="pet-card__care-state"
+          [class.pet-card__care-state--needs-care]="petCareState() === 'needs-care'"
+          [class.pet-card__care-state--ready-to-feed]="petCareState() === 'ready-to-feed'"
+          [class.pet-card__care-state--growing]="petCareState() === 'growing'"
+          [class.pet-card__care-state--thriving]="petCareState() === 'thriving'"
+        >
+          <span>{{ careStateLabel() }}</span>
+          <strong>{{ careStateHint() }}</strong>
+        </div>
+
         <div class="pet-card__weather">
           <div class="pet-card__weather-copy">
             <span class="pet-card__weather-label">Wetter Jetzt</span>
             <strong>{{ weatherScene().headline }}</strong>
             <small>{{ weatherStatus() }}</small>
+            <span class="pet-card__weather-updated">{{ weatherUpdatedAtLabel() }}</span>
+            <span class="pet-card__weather-auto"
+              >Aktualisiert sich automatisch alle 10 Minuten.</span
+            >
           </div>
 
           <form
@@ -90,10 +118,22 @@
             tone="peach"
           />
           <sqs-stat-badge
+            label="Hunger"
+            [value]="currentPet.hunger + '%'"
+            icon="berries"
+            tone="taupe"
+          />
+          <sqs-stat-badge
             label="Herzen"
-            [value]="currentPet.hearts + ' / 5'"
+            [value]="currentPet.hearts + ' / 3'"
             icon="hearts"
             tone="sage"
+          />
+          <sqs-stat-badge
+            label="Pflege-Serie"
+            [value]="currentPet.goodCareStreakDays"
+            icon="tasks"
+            tone="peach"
           />
           <sqs-stat-badge
             label="Mahlzeiten"
@@ -107,8 +147,7 @@
           <div class="pet-card__hint">
             <strong>Fütterung kostet {{ feedCost }} Punkte.</strong>
             <span>
-              Sobald der Balken voll ist, steigt {{ currentPet.name }} ein Level auf und behält
-              überschüssigen Fortschritt.
+              Happiness steigt pro Tag maximal um 50 Punkte. Level-Ups sind alle 48 Stunden möglich.
             </span>
           </div>
 

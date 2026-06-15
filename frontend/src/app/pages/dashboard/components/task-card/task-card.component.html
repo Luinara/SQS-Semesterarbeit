@@ -1,4 +1,8 @@
-<article class="task-card" [class.task-card--done]="task().isCompleted">
+<article
+  class="task-card"
+  [class.task-card--done]="task().isCompleted"
+  [class.task-card--locked]="isLocked()"
+>
   <div
     class="task-card__icon"
     [class.task-card__icon--sage]="task().tone === 'sage'"
@@ -49,17 +53,23 @@
 
     <div class="task-card__footer">
       <span class="task-card__state">
-        {{ task().isCompleted ? 'Erledigt für heute' : 'Bereit für einen Fokus-Moment' }}
+        @if (task().isCompleted) {
+          Erledigt für heute
+        } @else if (isLocked()) {
+          {{ lockedReason() }}
+        } @else {
+          Bereit für einen Fokus-Moment
+        }
       </span>
 
       <button
         sqsButton
         size="sm"
-        [disabled]="task().isCompleted"
-        [variant]="task().isCompleted ? 'secondary' : 'primary'"
+        [disabled]="task().isCompleted || isLocked()"
+        [variant]="task().isCompleted || isLocked() ? 'secondary' : 'primary'"
         (click)="markTaskAsCompleted()"
       >
-        {{ task().isCompleted ? 'Abgeschlossen' : 'Abschließen' }}
+        {{ task().isCompleted ? 'Abgeschlossen' : isLocked() ? 'Gesperrt' : 'Abschließen' }}
       </button>
     </div>
   </div>

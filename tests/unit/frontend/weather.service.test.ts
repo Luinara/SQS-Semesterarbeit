@@ -79,10 +79,10 @@ describe("WeatherService", () => {
     );
   });
 
-  it("aktualisiert Wetter Heute automatisch alle fünf Minuten", () => {
+  it("aktualisiert Wetter Heute automatisch alle zehn Minuten", () => {
     const service = new WeatherService();
 
-    vi.advanceTimersByTime(5 * 60 * 1000);
+    vi.advanceTimersByTime(10 * 60 * 1000);
 
     expect(service.location().label).toBe("Berlin");
     expect(fetch).toHaveBeenCalledTimes(2);

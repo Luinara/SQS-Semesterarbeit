@@ -9,11 +9,19 @@ export const STORAGE_KEY = 'sqs.frontend.mvp.state';
 // Die Regeln stehen zentral an einer Stelle, damit man die Demo später
 // leicht in ein echtes Balancing oder eine Backend-Konfiguration überführen kann.
 export const PET_RULES = {
-  feedCost: 12,
-  growthPerFeeding: 34,
+  feedCost: 10,
+  growthPerFeeding: 25,
+  happinessPerFeeding: 10,
   maxHappiness: 100,
-  maxHearts: 5,
+  maxHearts: 3,
   initialGrowthGoal: 100,
+  heartRecoveryStep: 0.5,
+  heartRecoveryStreakDays: 2,
+  dailyHappinessGainLimit: 50,
+  happinessDecayPerMissedDay: 25,
+  levelUpCooldownHours: 48,
+  maxHunger: 100,
+  dailyHungerResetValue: 0,
 } as const;
 
 export const HYDRATION_RULES = {
@@ -61,6 +69,7 @@ export function createInitialGameState(): GameState {
     hydrationMl: 0,
     hydrationGoalMl: HYDRATION_RULES.dailyGoalMl,
     hydrationLastResetAt: now,
+    dailyQuestLastResetAt: now,
     totalCompletedTasks: 0,
     totalEarnedPoints: 0,
   };
@@ -84,15 +93,25 @@ function createUser(input: Pick<AppUser, 'email' | 'userName' | 'joinedAt'>): Ap
 }
 
 function createInitialPetState(): PetState {
+  const now = new Date().toISOString();
+
   return {
     name: 'Mochi',
     level: 1,
-    growthProgress: 28,
+    growthProgress: 0,
     growthGoal: PET_RULES.initialGrowthGoal,
-    availableFoodPoints: 10,
-    happiness: 64,
-    hearts: 3,
-    mealsServed: 1,
+    availableFoodPoints: 0,
+    happiness: 0,
+    hunger: PET_RULES.dailyHungerResetValue,
+    hearts: PET_RULES.maxHearts,
+    mealsServed: 0,
+    dailyHappinessGained: 0,
+    happinessGainLastResetAt: now,
+    lastFedAt: null,
+    lastHappinessDecayAt: null,
+    lastLevelUpAt: null,
+    goodCareStreakDays: 0,
+    lastGoodCareDay: null,
   };
 }
 
@@ -104,7 +123,7 @@ function createInitialTasks(): TaskItem[] {
       description: 'Eine kurze Pause, die Energie für Kopf und Fokus zurückbringt.',
       icon: 'drop',
       tone: 'peach',
-      points: 8,
+      points: 10,
       isCompleted: false,
     },
     {
@@ -113,7 +132,7 @@ function createInitialTasks(): TaskItem[] {
       description: 'Ein klarer Lernblock für stetigen Fortschritt ohne Perfektionsdruck.',
       icon: 'study',
       tone: 'rose',
-      points: 16,
+      points: 20,
       isCompleted: false,
     },
     {
@@ -122,7 +141,7 @@ function createInitialTasks(): TaskItem[] {
       description: 'Bewegung hebt die Stimmung und gibt deinem Pet extra Schwung.',
       icon: 'pulse',
       tone: 'sage',
-      points: 18,
+      points: 20,
       isCompleted: false,
     },
     {
@@ -131,7 +150,7 @@ function createInitialTasks(): TaskItem[] {
       description: 'Ein ruhiger Raum hilft dabei, den Kopf spürbar freier zu machen.',
       icon: 'spark',
       tone: 'taupe',
-      points: 12,
+      points: 15,
       isCompleted: false,
     },
     {

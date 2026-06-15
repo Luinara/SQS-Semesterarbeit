@@ -14,6 +14,8 @@
         <sqs-task-list
           [tasks]="appState.tasks()"
           [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
+          [dailyQuestProgress]="appState.dailyQuestProgress()"
+          [hydrationGoalReached]="appState.hydrationGoalReached()"
           (taskCompleted)="completeTask($event)"
         />
       </aside>
@@ -33,6 +35,8 @@
           [weatherSnapshot]="weather.snapshot()"
           [weatherLoading]="weather.isLoading()"
           [weatherError]="weather.errorMessage()"
+          [petCareState]="appState.petCareState()"
+          [gameFeedback]="appState.lastGameFeedback()"
           (feedRequested)="feedPet()"
           (weatherRefreshRequested)="refreshWeather()"
           (weatherCitySubmitted)="searchWeatherCity($event)"

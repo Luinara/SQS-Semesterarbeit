@@ -45,6 +45,32 @@
   font-size: 0.88rem;
 }
 
+.pet-card__feedback {
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(128, 97, 87, 0.12);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--color-text);
+  font-weight: 700;
+  animation: feedback-pop 320ms ease;
+}
+
+.pet-card__feedback--level-up {
+  border-color: rgba(159, 95, 88, 0.24);
+  background: rgba(240, 213, 208, 0.72);
+}
+
+.pet-card__feedback--feeding,
+.pet-card__feedback--quest {
+  border-color: rgba(155, 170, 149, 0.28);
+  background: rgba(232, 240, 225, 0.72);
+}
+
+.pet-card__feedback--hydration {
+  border-color: rgba(127, 166, 189, 0.28);
+  background: rgba(226, 239, 245, 0.72);
+}
+
 .pet-card__body {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
@@ -55,6 +81,44 @@
   display: grid;
   align-content: start;
   gap: 1.3rem;
+}
+
+.pet-card__care-state {
+  display: grid;
+  gap: 0.3rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(128, 97, 87, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.pet-card__care-state span {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pet-card__care-state strong {
+  color: var(--color-text);
+  line-height: 1.35;
+}
+
+.pet-card__care-state--needs-care {
+  border-color: rgba(159, 95, 88, 0.24);
+  background: rgba(240, 213, 208, 0.6);
+}
+
+.pet-card__care-state--ready-to-feed {
+  border-color: rgba(159, 95, 88, 0.2);
+  background: rgba(255, 241, 232, 0.78);
+}
+
+.pet-card__care-state--growing,
+.pet-card__care-state--thriving {
+  border-color: rgba(155, 170, 149, 0.28);
+  background: rgba(232, 240, 225, 0.7);
 }
 
 .pet-card__weather {
@@ -118,6 +182,13 @@
   color: var(--color-text-soft);
   line-height: 1.45;
   overflow-wrap: anywhere;
+}
+
+.pet-card__weather-updated,
+.pet-card__weather-auto {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
 }
 
 .pet-card__stats {
@@ -191,5 +262,17 @@
 
   .pet-card__weather-form input {
     grid-column: auto;
+  }
+}
+
+@keyframes feedback-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

@@ -2,8 +2,8 @@
   <header class="task-list__header">
     <div>
       <span class="eyebrow">Heute im Fokus</span>
-      <h2>Deine Aufgaben</h2>
-      <p>Jede erledigte Mini-Routine schenkt deinem Pet neue Futterpunkte.</p>
+      <h2>Tagesquests</h2>
+      <p>Jede erledigte Quest schenkt deinem Pet Futterpunkte und Pflegefortschritt.</p>
     </div>
 
     <div class="task-list__summary">
@@ -19,13 +19,29 @@
   </header>
 
   <div class="task-list__meter">
-    <span>Offen: {{ pendingTasks() }}</span>
-    <span>Schritt für Schritt statt Alles-oder-Nichts.</span>
+    <span>Offen: {{ dailyQuestProgress()?.pending ?? pendingTasks() }}</span>
+    <span>{{ questPercentage() }}% Quest-Fortschritt heute</span>
+  </div>
+
+  <div
+    class="task-list__progress"
+    role="progressbar"
+    aria-label="Tagesquest-Fortschritt"
+    [attr.aria-valuemin]="0"
+    [attr.aria-valuemax]="100"
+    [attr.aria-valuenow]="questPercentage()"
+  >
+    <span [style.width.%]="questPercentage()"></span>
   </div>
 
   <div class="task-list__items">
     @for (task of tasks(); track task.id) {
-      <sqs-task-card [task]="task" (completeRequested)="finishTask($event)" />
+      <sqs-task-card
+        [task]="task"
+        [isLocked]="isTaskLocked(task)"
+        [lockedReason]="getTaskLockedReason(task)"
+        (completeRequested)="finishTask($event)"
+      />
     }
   </div>
 </section>

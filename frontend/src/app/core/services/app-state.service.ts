@@ -1,15 +1,24 @@
 import { computed, effect, Injectable, signal } from '@angular/core';
 import { BrowserStorageService } from './browser-storage.service';
-import { GameState, MockAccount, StorageSnapshot } from '../../shared/models/app-state.model';
+import {
+  GameFeedback,
+  GameState,
+  MockAccount,
+  StorageSnapshot,
+} from '../../shared/models/app-state.model';
 import { AuthResult, LoginCredentials, RegisterCredentials } from '../../shared/models/auth.model';
+import { PetCareState } from '../../shared/models/pet.model';
 import { createInitialSnapshot, HYDRATION_RULES, STORAGE_KEY } from '../../shared/mock/mock-data';
 import {
-  addHydrationInGameState,
-  completeTaskInGameState,
+  addHydrationInGameStateWithFeedback,
+  completeTaskInGameStateWithFeedback,
   createRegisteredAccount,
-  feedPetInGameState,
+  derivePetCareState,
+  feedPetInGameStateWithFeedback,
   findAccountForLogin,
   hasAccountWithEmail,
+  normalizeGameState,
+  resetDailyProgressIfExpired,
   resetGameState,
 } from '../state/app-state.logic';
 import { PET_RULES } from '../../shared/mock/mock-data';
@@ -19,6 +28,7 @@ import { PET_RULES } from '../../shared/mock/mock-data';
 })
 export class AppStateService {
   private readonly snapshot = signal<StorageSnapshot>(this.loadSnapshot());
+  private feedbackClearTimeout: ReturnType<typeof setTimeout> | null = null;
 
   readonly activeAccount = computed(() => {
     const currentSnapshot = this.snapshot();
@@ -38,14 +48,38 @@ export class AppStateService {
   readonly hydrationGoalMl = computed(
     () => this.activeAccount()?.gameState.hydrationGoalMl ?? 3000
   );
+  readonly hydrationGoalReached = computed(() => this.hydrationMl() >= this.hydrationGoalMl());
   readonly totalTaskCount = computed(() => this.tasks().length);
   readonly completedTaskCount = computed(
     () => this.tasks().filter((task) => task.isCompleted).length
   );
   readonly feedCost = PET_RULES.feedCost;
+  readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) >= this.feedCost);
+  readonly petCareState = computed<PetCareState>(() => {
+    const activeAccount = this.activeAccount();
+
+    if (!activeAccount) {
+      return 'calm';
+    }
+
+    return derivePetCareState(activeAccount.gameState);
+  });
+  readonly dailyQuestProgress = computed(() => {
+    const total = this.totalTaskCount();
+    const completed = this.completedTaskCount();
+    const pending = Math.max(0, total - completed);
+
+    return {
+      completed,
+      total,
+      pending,
+      percentage: total <= 0 ? 0 : Math.round((completed / total) * 100),
+    };
+  });
+  readonly lastGameFeedback = signal<GameFeedback | null>(null);
 
   constructor(private readonly browserStorage: BrowserStorageService) {
-    // Persistenz wird direkt an die Signal-Aenderungen gekoppelt.
+    // Persistenz wird direkt an die Signal-Änderungen gekoppelt.
     // So bleibt die Service-API schlank und jede Mutation landet automatisch im localStorage.
     effect(() => {
       this.browserStorage.write(STORAGE_KEY, this.snapshot());
@@ -106,27 +140,36 @@ export class AppStateService {
 
   completeTask(taskId: string): void {
     this.updateActiveAccount((account) => {
+      const result = completeTaskInGameStateWithFeedback(account.gameState, taskId);
+      this.showFeedback(result.feedback);
+
       return {
         ...account,
-        gameState: completeTaskInGameState(account.gameState, taskId),
+        gameState: result.gameState,
       };
     });
   }
 
   feedPet(): void {
     this.updateActiveAccount((account) => {
+      const result = feedPetInGameStateWithFeedback(account.gameState);
+      this.showFeedback(result.feedback);
+
       return {
         ...account,
-        gameState: feedPetInGameState(account.gameState),
+        gameState: result.gameState,
       };
     });
   }
 
   addHydration(amountMl: number): void {
     this.updateActiveAccount((account) => {
+      const result = addHydrationInGameStateWithFeedback(account.gameState, amountMl);
+      this.showFeedback(result.feedback);
+
       return {
         ...account,
-        gameState: addHydrationInGameState(account.gameState, amountMl),
+        gameState: result.gameState,
       };
     });
   }
@@ -157,32 +200,22 @@ export class AppStateService {
       ...snapshot,
       accounts: snapshot.accounts.map((account) => ({
         ...account,
-        gameState: this.resetHydrationIfExpired({
+        gameState: this.resetExpiredDailyProgress({
           ...account.gameState,
           hydrationMl: account.gameState.hydrationMl ?? 0,
           hydrationGoalMl: account.gameState.hydrationGoalMl ?? HYDRATION_RULES.dailyGoalMl,
-          hydrationLastResetAt:
-            account.gameState.hydrationLastResetAt ?? new Date().toISOString(),
+          hydrationLastResetAt: account.gameState.hydrationLastResetAt ?? new Date().toISOString(),
+          dailyQuestLastResetAt:
+            account.gameState.dailyQuestLastResetAt ??
+            account.gameState.hydrationLastResetAt ??
+            new Date().toISOString(),
         }),
       })),
     };
   }
 
-  private resetHydrationIfExpired(gameState: GameState): GameState {
-    const lastReset = new Date(gameState.hydrationLastResetAt);
-    const resetAt = Number.isNaN(lastReset.getTime())
-      ? new Date(0)
-      : lastReset;
-
-    if (Date.now() - resetAt.getTime() < 24 * 60 * 60 * 1000) {
-      return gameState;
-    }
-
-    return {
-      ...gameState,
-      hydrationMl: 0,
-      hydrationLastResetAt: new Date().toISOString(),
-    };
+  private resetExpiredDailyProgress(gameState: GameState): GameState {
+    return resetDailyProgressIfExpired(normalizeGameState(gameState));
   }
 
   // Das Update des aktiven Kontos kapselt die Array-Manipulation an einer Stelle.
@@ -196,7 +229,7 @@ export class AppStateService {
 
     const normalizedAccount: MockAccount = {
       ...activeAccount,
-      gameState: this.resetHydrationIfExpired(activeAccount.gameState),
+      gameState: this.resetExpiredDailyProgress(activeAccount.gameState),
     };
 
     this.snapshot.update((currentSnapshot) => ({
@@ -205,5 +238,22 @@ export class AppStateService {
         account.user.id === activeAccount.user.id ? mapAccount(normalizedAccount) : account
       ),
     }));
+  }
+
+  private showFeedback(feedback: GameFeedback | null): void {
+    if (!feedback) {
+      return;
+    }
+
+    this.lastGameFeedback.set(feedback);
+
+    if (this.feedbackClearTimeout) {
+      clearTimeout(this.feedbackClearTimeout);
+    }
+
+    this.feedbackClearTimeout = setTimeout(() => {
+      this.lastGameFeedback.set(null);
+      this.feedbackClearTimeout = null;
+    }, 3600);
   }
 }
