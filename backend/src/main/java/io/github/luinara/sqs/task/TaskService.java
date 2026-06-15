@@ -2,6 +2,7 @@ package io.github.luinara.sqs.task;
 
 import io.github.luinara.sqs.pokemon.PokemonEntity;
 import io.github.luinara.sqs.pokemon.PokemonRepository;
+import io.github.luinara.sqs.task.dto.TaskPublicDto;
 import io.github.luinara.sqs.task.entity.TaskEntity;
 import io.github.luinara.sqs.task.entity.UserTaskEntity;
 import io.github.luinara.sqs.user.UserEntity;
