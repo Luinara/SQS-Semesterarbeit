@@ -54,7 +54,8 @@ export const fallbackPokemonBySpecies: Record<PokemonSpeciesName, PokemonSnapsho
     id: 1,
     name: 'bulbasaur',
     displayName: 'Bulbasaur',
-    spriteUrl: 'pet-placeholder.svg',
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png',
     types: ['grass', 'poison'],
     source: 'fallback',
   },
@@ -62,7 +63,8 @@ export const fallbackPokemonBySpecies: Record<PokemonSpeciesName, PokemonSnapsho
     id: 2,
     name: 'ivysaur',
     displayName: 'Ivysaur',
-    spriteUrl: 'pet-placeholder.svg',
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png',
     types: ['grass', 'poison'],
     source: 'fallback',
   },
@@ -70,7 +72,8 @@ export const fallbackPokemonBySpecies: Record<PokemonSpeciesName, PokemonSnapsho
     id: 3,
     name: 'venusaur',
     displayName: 'Venusaur',
-    spriteUrl: 'pet-placeholder.svg',
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png',
     types: ['grass', 'poison'],
     source: 'fallback',
   },

@@ -75,7 +75,7 @@
   <div class="task-card__content">
     <div class="task-card__header">
       <div>
-        <span class="task-card__category">{{ task().category }}</span>
+        <span class="task-card__category">Backend Task</span>
         <h3>{{ task().title }}</h3>
         <p>{{ task().description }}</p>
       </div>
@@ -87,11 +87,11 @@
     <div class="task-card__footer">
       <span class="task-card__state">
         @if (task().isCompleted) {
-          Nachweis erfuellt
+          Task erledigt
         } @else if (isLocked()) {
           {{ lockedReason() }}
         } @else {
-          Offen fuer die Abgabe
+          Offen im Tagesplan
         }
       </span>
 
@@ -102,7 +102,7 @@
         [variant]="task().isCompleted || isLocked() ? 'secondary' : 'primary'"
         (click)="markTaskAsCompleted()"
       >
-        {{ task().isCompleted ? 'Erfuellt' : isLocked() ? 'Gesperrt' : 'Erfuellen' }}
+        {{ task().isCompleted ? 'Erledigt' : isLocked() ? 'Gesperrt' : 'Erledigen' }}
       </button>
     </div>
   </div>
