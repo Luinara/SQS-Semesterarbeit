@@ -1,8 +1,10 @@
 package io.github.luinara.sqs.user;
 
 import io.github.luinara.sqs.user.dto.GameStateDto;
+import io.github.luinara.sqs.task.TaskService;
 import io.github.luinara.sqs.task.TaskRepository;
 import io.github.luinara.sqs.task.UserTaskRepository;
+import io.github.luinara.sqs.task.entity.TaskEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +38,9 @@ class UserServiceTest {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
+
+    @Mock
+    private TaskService taskService;
 
     @InjectMocks
     private UserService userService;
@@ -109,6 +114,44 @@ class UserServiceTest {
         assertThat(dto).isNotNull();
         assertThat(dto.getWaterLevel()).isEqualTo(65); // 40 + 25
         verify(userRepository).save(entity);
+        verify(taskRepository, never()).findByTitle("Wasser trinken");
+    }
+
+    @Test
+    void waterUser_reachesGoal_completesWaterTask() {
+        UserEntity entity = new UserEntity();
+        entity.setId(9L);
+        entity.setUsername("tester");
+        entity.setHydrationMl(2750);
+        TaskEntity waterTask = new TaskEntity();
+        waterTask.setId(1L);
+        waterTask.setTitle("Wasser trinken");
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+        when(taskRepository.findByTitle("Wasser trinken")).thenReturn(Optional.of(waterTask));
+
+        GameStateDto dto = userService.waterUser("tester", 250);
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getWaterLevel()).isEqualTo(3000);
+        verify(taskService).completeTaskForUserEntity(entity, waterTask);
+    }
+
+    @Test
+    void waterUser_missingWaterTask_stillSavesHydration() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setHydrationMl(2900);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+        when(taskRepository.findByTitle("Wasser trinken")).thenReturn(Optional.empty());
+
+        GameStateDto dto = userService.waterUser("tester", 250);
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getWaterLevel()).isEqualTo(3150);
+        verify(userRepository).save(entity);
+        verifyNoInteractions(taskService);
     }
 
     @Test

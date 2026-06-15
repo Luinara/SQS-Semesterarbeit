@@ -18,6 +18,7 @@ export class PetVisualComponent {
   readonly spriteUrl = input('pet-placeholder.svg');
   readonly pokemonTypes = input<string[]>([]);
   readonly pokemonSource = input<PokemonSource>('fallback');
+  readonly isLevelingUp = input(false);
   readonly sceneClass = computed(
     () => `pet-visual pet-visual--${this.weatherScene().className} pet-visual--${this.careState()}`
   );

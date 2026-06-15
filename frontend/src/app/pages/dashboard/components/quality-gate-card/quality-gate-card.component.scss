@@ -95,12 +95,6 @@
   font-size: 1.3rem;
 }
 
-.quality-gate__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
 .quality-gate__metric span,
 .quality-gate__missing span {
   color: var(--color-text-soft);

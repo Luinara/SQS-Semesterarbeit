@@ -6,8 +6,8 @@
   <span class="pet-visual__cloud pet-visual__cloud--one" aria-hidden="true"></span>
   <span class="pet-visual__cloud pet-visual__cloud--two" aria-hidden="true"></span>
 
-  <div class="pet-visual__frame">
-    <img [src]="spriteUrl()" [alt]="'Pokemon Sprite fuer ' + petName()" />
+  <div class="pet-visual__frame" [class.pet-visual__frame--level-up]="isLevelingUp()">
+    <img [src]="spriteUrl()" [alt]="'Pokémon Sprite für ' + petName()" />
   </div>
 
   <div class="pet-visual__meta">

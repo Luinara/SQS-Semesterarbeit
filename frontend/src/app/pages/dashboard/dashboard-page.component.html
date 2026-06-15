@@ -15,8 +15,10 @@
         <sqs-task-list
           [tasks]="appState.tasks()"
           [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
+          [waterLevel]="appState.waterLevel()"
           [qualityQuestProgress]="appState.qualityQuestProgress()"
           (taskCompleted)="completeTask($event)"
+          (waterAdded)="addWater($event)"
         />
       </aside>
 
@@ -28,7 +30,6 @@
           [waterLevel]="appState.waterLevel()"
           [foodLevel]="appState.foodLevel()"
           [streak]="appState.streak()"
-          (waterAdded)="addWater($event)"
         />
 
         <sqs-pet-card
@@ -46,6 +47,7 @@
           [pokemonLoading]="pokemon.isLoading()"
           [pokemonSourceLabel]="pokemon.sourceLabel()"
           [feedCost]="appState.feedCost"
+          [isLevelingUp]="appState.isPetLevelingUp()"
           (feedRequested)="feedPet()"
           (weatherRefreshRequested)="refreshWeather()"
           (weatherCitySubmitted)="searchWeatherCity($event)"

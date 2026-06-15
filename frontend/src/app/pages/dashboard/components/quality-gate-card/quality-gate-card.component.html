@@ -45,15 +45,6 @@
     </div>
   </div>
 
-  <div class="quality-gate__actions" aria-label="Wasser trinken">
-    <button sqsButton size="sm" variant="secondary" type="button" (click)="addWater(250)">
-      +250 ml
-    </button>
-    <button sqsButton size="sm" variant="secondary" type="button" (click)="addWater(500)">
-      +500 ml
-    </button>
-  </div>
-
   <div class="quality-gate__pyramid">
     @for (task of visibleTasks(); track task.id) {
       <span [class.quality-gate__stage--done]="task.isCompleted">
