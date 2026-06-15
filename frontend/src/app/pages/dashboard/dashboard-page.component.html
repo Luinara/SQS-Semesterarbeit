@@ -14,17 +14,16 @@
         <sqs-task-list
           [tasks]="appState.tasks()"
           [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
-          [dailyQuestProgress]="appState.dailyQuestProgress()"
-          [hydrationGoalReached]="appState.hydrationGoalReached()"
+          [qualityQuestProgress]="appState.qualityQuestProgress()"
           (taskCompleted)="completeTask($event)"
         />
       </aside>
 
       <section class="dashboard-page__content">
-        <sqs-hydration-card
-          [currentMl]="appState.hydrationMl()"
-          [goalMl]="appState.hydrationGoalMl()"
-          (hydrationAdded)="addHydration($event)"
+        <sqs-quality-gate-card
+          [tasks]="appState.tasks()"
+          [qualityScore]="appState.qualityScore()"
+          [qualityTarget]="appState.qualityTarget()"
         />
 
         <sqs-pet-card
@@ -37,6 +36,9 @@
           [weatherError]="weather.errorMessage()"
           [petCareState]="appState.petCareState()"
           [gameFeedback]="appState.lastGameFeedback()"
+          [pokemon]="pokemon.snapshot()"
+          [pokemonLoading]="pokemon.isLoading()"
+          [pokemonSourceLabel]="pokemon.sourceLabel()"
           (feedRequested)="feedPet()"
           (weatherRefreshRequested)="refreshWeather()"
           (weatherCitySubmitted)="searchWeatherCity($event)"

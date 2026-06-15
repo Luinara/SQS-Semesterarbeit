@@ -2,31 +2,31 @@
   <header class="task-list__header">
     <div>
       <span class="eyebrow">Heute im Fokus</span>
-      <h2>Tagesquests</h2>
-      <p>Jede erledigte Quest schenkt deinem Pet Futterpunkte und Pflegefortschritt.</p>
+      <h2>SQS Checkliste</h2>
+      <p>Jeder Nachweis erhoeht den Quality-Score und trainiert dein Pokemon fuer die Demo.</p>
     </div>
 
     <div class="task-list__summary">
       <div class="task-list__summary-item">
         <strong>{{ completedTasks() }}/{{ tasks().length }}</strong>
-        <span>erledigt</span>
+        <span>Nachweise</span>
       </div>
       <div class="task-list__summary-item">
         <strong>{{ availableFoodPoints() }}</strong>
-        <span>Futterpunkte</span>
+        <span>Trainingspunkte</span>
       </div>
     </div>
   </header>
 
   <div class="task-list__meter">
-    <span>Offen: {{ dailyQuestProgress()?.pending ?? pendingTasks() }}</span>
-    <span>{{ questPercentage() }}% Quest-Fortschritt heute</span>
+    <span>Offen: {{ qualityQuestProgress()?.pending ?? pendingTasks() }}</span>
+    <span>{{ questPercentage() }}% Checklisten-Fortschritt</span>
   </div>
 
   <div
     class="task-list__progress"
     role="progressbar"
-    aria-label="Tagesquest-Fortschritt"
+    aria-label="SQS Checklisten-Fortschritt"
     [attr.aria-valuemin]="0"
     [attr.aria-valuemax]="100"
     [attr.aria-valuenow]="questPercentage()"
