@@ -1,7 +1,7 @@
 <section class="quality-gate">
   <div class="quality-gate__hero">
     <div>
-      <span class="eyebrow">API Task Progress</span>
+      <span class="eyebrow">Tagesziel</span>
       <h2>{{ qualityScore() }} / {{ qualityTarget() }}</h2>
       <p>
         @if (gateReached()) {
@@ -15,10 +15,10 @@
     <div
       class="quality-gate__ring"
       [style.--quality-progress]="progressPercent() + '%'"
-      aria-label="Backend Task Fortschritt"
+      aria-label="Tagesziel-Fortschritt"
     >
       <strong>{{ progressPercent() }}%</strong>
-      <span>Tasks</span>
+      <span>Punkte</span>
     </div>
   </div>
 
@@ -29,15 +29,15 @@
   <div class="quality-gate__grid">
     <div class="quality-gate__metric">
       <strong>{{ completedRequiredTasks() }}/{{ requiredTasks().length }}</strong>
-      <span>Backend-Tasks</span>
+      <span>Quests</span>
     </div>
     <div class="quality-gate__metric">
       <strong>{{ waterLevel() }} ml</strong>
-      <span>Wasserstand API</span>
+      <span>Wasserstand</span>
     </div>
     <div class="quality-gate__metric">
       <strong>{{ foodLevel() }}%</strong>
-      <span>Food-Level API</span>
+      <span>Energie</span>
     </div>
     <div class="quality-gate__metric">
       <strong>{{ streak() }}</strong>
@@ -45,7 +45,7 @@
     </div>
   </div>
 
-  <div class="quality-gate__actions" aria-label="Wasser ueber Backend speichern">
+  <div class="quality-gate__actions" aria-label="Wasser trinken">
     <button sqsButton size="sm" variant="secondary" type="button" (click)="addWater(250)">
       +250 ml
     </button>
@@ -63,13 +63,13 @@
   </div>
 
   <div class="quality-gate__missing">
-    <span>Naechste offene Tasks</span>
+    <span>Naechste offene Quests</span>
     @if (missingRequiredTasks().length > 0) {
       @for (task of missingRequiredTasks(); track task.id) {
         <strong>{{ task.title }}</strong>
       }
     } @else {
-      <strong>Alle Backend-Tasks fuer heute erledigt.</strong>
+      <strong>Alle Quests fuer heute erledigt.</strong>
     }
   </div>
 </section>

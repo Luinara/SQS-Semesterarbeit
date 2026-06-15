@@ -81,7 +81,7 @@ export class AuthFormComponent {
 
   usernameErrorText(): string {
     if (this.form.controls.username.hasError('required')) {
-      return 'Bitte gib deinen Backend-Username ein.';
+      return 'Bitte gib deinen Spielernamen ein.';
     }
 
     if (this.form.controls.username.hasError('maxlength')) {

@@ -2,14 +2,14 @@
   <header class="task-list__header">
     <div>
       <span class="eyebrow">Heute im Fokus</span>
-      <h2>Backend Tasks</h2>
-      <p>Diese Aufgaben entsprechen dem Task-State, den das Backend-Dashboard liefern soll.</p>
+      <h2>Tagesquests</h2>
+      <p>Erledige deine Quests, sammle Punkte und bring dein Pokemon dem naechsten Level naeher.</p>
     </div>
 
     <div class="task-list__summary">
       <div class="task-list__summary-item">
         <strong>{{ completedTasks() }}/{{ tasks().length }}</strong>
-        <span>Tasks</span>
+        <span>Quests</span>
       </div>
       <div class="task-list__summary-item">
         <strong>{{ availableFoodPoints() }}</strong>
@@ -26,7 +26,7 @@
   <div
     class="task-list__progress"
     role="progressbar"
-    aria-label="Backend Task Fortschritt"
+    aria-label="Quest-Fortschritt"
     [attr.aria-valuemin]="0"
     [attr.aria-valuemax]="100"
     [attr.aria-valuenow]="questPercentage()"

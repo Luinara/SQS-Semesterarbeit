@@ -39,7 +39,7 @@ export class PetCardComponent {
   readonly careStateLabel = computed(() => {
     switch (this.petCareState()) {
       case 'needs-care':
-        return 'Braucht Task-Punkte';
+        return 'Braucht Quest-Punkte';
       case 'ready-to-feed':
         return 'Bereit fuer Training';
       case 'growing':
@@ -53,20 +53,20 @@ export class PetCardComponent {
   readonly careStateHint = computed(() => {
     switch (this.petCareState()) {
       case 'needs-care':
-        return 'Erledige einen Backend-Task oder trainiere dein Pokemon.';
+        return 'Erledige eine Quest oder trainiere dein Pokemon.';
       case 'ready-to-feed':
-        return 'Du hast genug Task-Punkte fuer die naechste Trainingseinheit.';
+        return 'Du hast genug Quest-Punkte fuer die naechste Trainingseinheit.';
       case 'growing':
         return 'Der naechste Level ist schon in Reichweite.';
       case 'thriving':
-        return 'Der Tagesfortschritt ist stark genug fuer die Demo.';
+        return 'Dein Tagesfortschritt sieht stark aus.';
       default:
-        return 'Ein guter Moment fuer den naechsten Backend-Task.';
+        return 'Ein guter Moment fuer die naechste Quest.';
     }
   });
   readonly pokemonStatus = computed(() => {
     if (this.pokemonImageUrl()) {
-      return 'Sprite aus dem Backend-Game-State';
+      return 'Pokemon-Sprite bereit';
     }
 
     if (this.pokemonLoading()) {
@@ -95,7 +95,7 @@ export class PetCardComponent {
     const updatedAt = weatherSnapshot.updatedAt;
 
     if (!updatedAt) {
-      return 'API-Zeit unbekannt';
+      return 'Zeit unbekannt';
     }
 
     const apiTimeLabel = formatWeatherApiTime(updatedAt);

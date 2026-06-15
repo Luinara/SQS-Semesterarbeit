@@ -1,11 +1,10 @@
 <section class="auth-page page-shell">
   <div class="auth-page__layout">
     <article class="auth-page__story">
-      <span class="eyebrow">Lokaler SQS Demo-Zugang</span>
-      <h1>Starte das Quality Companion Dashboard.</h1>
+      <span class="eyebrow">PokeHabit Demo-Zugang</span>
+      <h1>Starte dein Pokemon-Abenteuer.</h1>
       <p>
-        SQS verbindet dein Frontend mit dem Spring-Backend: Login, API-Tasks, Wasser, Feed-Punkte
-        und Pokemon-Leveling laufen ueber die Projekt-API.
+        Erledige kleine Alltagsquests, sammle Trainingspunkte und zieh dein Pokemon durch den Tag.
       </p>
 
       <div class="auth-page__story-card">
@@ -59,12 +58,12 @@
       </div>
 
       <div class="auth-page__card-header">
-        <h2>{{ mode() === 'login' ? 'Willkommen zurueck' : 'Lege dein SQS-Profil an' }}</h2>
+        <h2>{{ mode() === 'login' ? 'Willkommen zurueck' : 'Lege dein Spielerprofil an' }}</h2>
         <p>
           {{
             mode() === 'login'
-              ? 'Melde dich lokal an und fuehre dein Quality Dashboard weiter.'
-              : 'Erstelle ein Backend-Profil und starte direkt mit den API-Tasks.'
+              ? 'Melde dich an und mach mit deinen Quests weiter.'
+              : 'Erstelle dein Profil und starte direkt mit dem Training.'
           }}
         </p>
       </div>
@@ -86,8 +85,7 @@
       }
 
       <p class="auth-page__hint">
-        Die Session kommt vom Backend-Cookie. PokeAPI und Weather-API bleiben resilient mit
-        Fallbacks angebunden.
+        Dein Spielstand bleibt erhalten, und die Wetterwelt passt sich deiner Stadt an.
       </p>
     </article>
   </div>

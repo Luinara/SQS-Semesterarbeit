@@ -25,7 +25,7 @@ export class SplashPageComponent implements OnInit, OnDestroy {
   private hasNavigated = false;
 
   readonly ctaLabel = computed(() =>
-    this.appState.isAuthenticated() ? 'Zurück ins Dashboard' : 'Weiter zu SQS'
+    this.appState.isAuthenticated() ? 'Zurueck ins Spiel' : 'Spiel starten'
   );
 
   ngOnInit(): void {

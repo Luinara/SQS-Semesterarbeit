@@ -2,17 +2,17 @@
   <section class="pet-card">
     <div class="pet-card__header">
       <div>
-        <span class="eyebrow">Pokemon Quality Companion</span>
-        <h2>{{ pokemon()?.displayName ?? currentPet.name }} levelt mit euren Backend-Tasks</h2>
+        <span class="eyebrow">Pokemon Partner</span>
+        <h2>{{ pokemon()?.displayName ?? currentPet.name }} trainiert mit deinen Quests</h2>
         <p>
-          Erledigte API-Tasks geben Trainingspunkte. Training steigert Motivation, Wachstum und die
-          Evolution von Bulbasaur zu Ivysaur und Venusaur.
+          Erledigte Quests geben Trainingspunkte. Training steigert Motivation, Wachstum und die
+          Evolution deines Pokemon.
         </p>
       </div>
 
       <div class="pet-card__microcopy">
         <strong>{{ completedTasks() }}/{{ totalTasks() }}</strong>
-        <span>Backend-Tasks erledigt</span>
+        <span>Quests erledigt</span>
       </div>
     </div>
 
@@ -58,7 +58,7 @@
             <small>{{ weatherStatus() }}</small>
             <span class="pet-card__weather-updated">{{ weatherUpdatedAtLabel() }}</span>
             <span class="pet-card__weather-auto">
-              Hintergrund und Lichtstimmung bleiben aus der Weather-API abgeleitet.
+              Hintergrund und Lichtstimmung folgen dem aktuellen Wetter.
             </span>
           </div>
 
