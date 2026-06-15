@@ -3,6 +3,7 @@ package io.github.luinara.sqs.user;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.luinara.sqs.task.TaskRepository;
 import io.github.luinara.sqs.task.UserTaskRepository;
+import io.github.luinara.sqs.task.entity.TaskEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -75,6 +76,39 @@ class UserControllerIntegrationTest {
                 .andExpect(jsonPath("$.pokemonLevel").value(1))
                 .andExpect(jsonPath("$.happiness").value(0))
                 .andExpect(jsonPath("$.waterLevel").value(0));
+    }
+
+    @Test
+    @DisplayName("water endpoint completes the water task and exposes feed points")
+    void waterEndpointCompletesWaterTaskAndExposesFeedPoints() throws Exception {
+        TaskEntity waterTask = new TaskEntity();
+        waterTask.setTitle("Wasser trinken");
+        waterTask.setDescription("Trinke heute 3 Liter Wasser.");
+        waterTask.setFeedPoints(10);
+        taskRepository.save(waterTask);
+
+        MvcResult signup = mockMvc.perform(post("/api/auth/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of(
+                                "username", "hydrationuser",
+                                "password", "password123"
+                        ))))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        MockHttpSession session = (MockHttpSession) signup.getRequest().getSession(false);
+        assertThat(session).isNotNull();
+
+        mockMvc.perform(post("/api/user/water")
+                        .session(session)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"ml\":3000}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.waterLevel").value(3000))
+                .andExpect(jsonPath("$.pendingFeedPoints").value(10))
+                .andExpect(jsonPath("$.growth").value(10))
+                .andExpect(jsonPath("$.tasks[0].title").value("Wasser trinken"))
+                .andExpect(jsonPath("$.tasks[0].completed").value(true));
     }
 
     @Test

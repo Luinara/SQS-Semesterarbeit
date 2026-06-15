@@ -107,6 +107,45 @@ describe("BackendApiService", () => {
     expect(snapshot.gameState.pet.availableFoodPoints).toBe(20);
   });
 
+  it("mappt Wasser-Autoabschluss inklusive Feed-Points nach addWater", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        jsonResponse({
+          waterLevel: 3000,
+          foodLevel: 0,
+          pokemonImageUrl: null,
+          pokemonLevel: 1,
+          growth: 10,
+          happiness: 0,
+          pendingFeedPoints: 10,
+          tasks: [{ id: 1, title: "Wasser trinken", completed: true }],
+          streak: 1,
+          yesterdayLoggedIn: false,
+          serverNow: "2026-06-15T10:00:00Z",
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse([{ id: 1, title: "Wasser trinken" }]),
+      );
+
+    const snapshot = await new BackendApiService().addWater("zoe", 500);
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      "/api/user/water",
+      expect.objectContaining({
+        body: JSON.stringify({ ml: 500 }),
+        credentials: "include",
+        method: "POST",
+      }),
+    );
+    expect(snapshot.backendGameState.waterLevel).toBe(3000);
+    expect(snapshot.gameState.tasks[0].isCompleted).toBe(true);
+    expect(snapshot.gameState.pet.availableFoodPoints).toBe(10);
+    expect(snapshot.gameState.qualityScore).toBe(10);
+  });
+
   it("zeigt bei HTML-Fehlerseiten eine kurze Backend-Meldung statt Markup", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
       new Response(
@@ -123,7 +162,7 @@ describe("BackendApiService", () => {
     ).rejects.toMatchObject<Partial<BackendApiError>>({
       status: 404,
       message:
-        "Backend nicht erreichbar. Bitte pruefe, ob das Backend laeuft und der Proxy aktiv ist.",
+        "Backend nicht erreichbar. Bitte prüfe, ob das Backend läuft und der Proxy aktiv ist.",
     });
   });
 
