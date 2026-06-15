@@ -1,14 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { TaskCategory, TaskItem } from '../../../../shared/models/task.model';
-
-interface QualityStage {
-  label: string;
-  category: TaskCategory;
-}
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import { TaskItem } from '../../../../shared/models/task.model';
+import { UiButtonComponent } from '../../../../shared/ui/button/ui-button.component';
 
 @Component({
   selector: 'sqs-quality-gate-card',
   standalone: true,
+  imports: [UiButtonComponent],
   templateUrl: './quality-gate-card.component.html',
   styleUrl: './quality-gate-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -17,6 +14,10 @@ export class QualityGateCardComponent {
   readonly tasks = input.required<TaskItem[]>();
   readonly qualityScore = input(0);
   readonly qualityTarget = input(80);
+  readonly waterLevel = input(0);
+  readonly foodLevel = input(0);
+  readonly streak = input(0);
+  readonly waterAdded = output<number>();
 
   readonly progressPercent = computed(() => {
     const target = Math.max(1, this.qualityTarget());
@@ -30,15 +31,9 @@ export class QualityGateCardComponent {
     this.requiredTasks().filter((task) => !task.isCompleted).slice(0, 3)
   );
   readonly gateReached = computed(() => this.qualityScore() >= this.qualityTarget());
-  readonly stages: QualityStage[] = [
-    { label: 'Unit', category: 'testing' },
-    { label: 'Integration', category: 'integration' },
-    { label: 'E2E', category: 'delivery' },
-    { label: 'Security', category: 'security' },
-    { label: 'Architecture', category: 'architecture' },
-  ];
+  readonly visibleTasks = computed(() => this.tasks().slice(0, 5));
 
-  isStageCovered(stage: QualityStage): boolean {
-    return this.tasks().some((task) => task.category === stage.category && task.isCompleted);
+  addWater(amountMl: number): void {
+    this.waterAdded.emit(amountMl);
   }
 }

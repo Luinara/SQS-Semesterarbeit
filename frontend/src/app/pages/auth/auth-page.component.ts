@@ -20,7 +20,7 @@ export class AuthPageComponent {
   readonly mode = signal<AuthMode>('login');
   readonly feedbackMessage = signal<string | null>(null);
   readonly hasError = signal(false);
-  readonly demoEmail = DEMO_ACCOUNT.email;
+  readonly demoUsername = DEMO_ACCOUNT.username;
   readonly demoPassword = DEMO_ACCOUNT.password;
 
   showMode(mode: AuthMode): void {
@@ -32,8 +32,8 @@ export class AuthPageComponent {
   async submitCredentials(submission: AuthSubmission): Promise<void> {
     const result =
       'userName' in submission
-        ? this.appState.register(submission)
-        : this.appState.login(submission);
+        ? await this.appState.register(submission)
+        : await this.appState.login(submission);
 
     if (!result.success) {
       this.feedbackMessage.set(result.message);

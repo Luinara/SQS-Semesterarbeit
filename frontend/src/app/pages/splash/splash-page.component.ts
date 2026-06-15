@@ -46,6 +46,7 @@ export class SplashPageComponent implements OnInit, OnDestroy {
     }
 
     this.hasNavigated = true;
-    await this.router.navigateByUrl(this.appState.isAuthenticated() ? '/dashboard' : '/auth');
+    const hasSession = this.appState.isAuthenticated() || (await this.appState.restoreSession());
+    await this.router.navigateByUrl(hasSession ? '/dashboard' : '/auth');
   }
 }

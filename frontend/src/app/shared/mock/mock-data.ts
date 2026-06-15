@@ -23,14 +23,14 @@ export const PET_RULES = {
 } as const;
 
 export const QUALITY_RULES = {
-  targetScore: 80,
+  targetScore: 75,
   maxScore: 100,
 } as const;
 
 export const DEMO_ACCOUNT = {
-  email: 'demo@sqs.app',
+  username: 'demo',
   password: 'cozyfocus',
-  userName: 'Lina',
+  userName: 'demo',
 } as const;
 
 export function createInitialSnapshot(): StorageSnapshot {
@@ -43,7 +43,7 @@ export function createInitialSnapshot(): StorageSnapshot {
 }
 
 export function createMockAccount(credentials: RegisterCredentials): MockAccount {
-  const normalizedEmail = normalizeEmail(credentials.email);
+  const normalizedEmail = normalizeEmail(credentials.username);
   const now = new Date().toISOString();
   const user = createUser({
     email: normalizedEmail,
