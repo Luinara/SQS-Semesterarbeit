@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Authentication service — simple in-memory implementation for development and tests.
@@ -35,6 +35,8 @@ public class AuthenticationService {
 
     private static final int MAX_FAILED_LOGIN_ATTEMPTS = 5;
     private static final Duration LOGIN_LOCKOUT_DURATION = Duration.ofMinutes(15);
+    private static final int DEFAULT_STARTER_POKEMON_ID = 1;
+    private static final Set<Integer> ALLOWED_STARTER_POKEMON_IDS = Set.of(1, 4, 7);
 
     private final Map<String, String> users = new ConcurrentHashMap<>();
     private final Map<String, String> sessions = new ConcurrentHashMap<>();
@@ -78,6 +80,13 @@ public class AuthenticationService {
      * Create a new user. Returns true when created, false when username already exists.
      */
     public boolean createUser(String username, String password) {
+        return createUser(username, password, null);
+    }
+
+    /**
+     * Create a new user. Returns true when created, false when username already exists.
+     */
+    public boolean createUser(String username, String password, Integer starterPokemonId) {
 
         if (username == null || username.trim().isEmpty() || password == null) {
             throw new InvalidRequestException("username and password must be provided");
@@ -93,7 +102,7 @@ public class AuthenticationService {
             UserEntity entity = new UserEntity(username, hash);
             entity.setCreatedAt(OffsetDateTime.now());
 
-            assignRandomPokemonIfAvailable(entity);
+            assignStarterPokemonIfAvailable(entity, starterPokemonId);
             entity.setEgg(true);
             entity.setHappiness(0);
 
@@ -203,20 +212,29 @@ public class AuthenticationService {
         return Optional.ofNullable(username);
     }
 
-    private void assignRandomPokemonIfAvailable(UserEntity entity) {
+    private void assignStarterPokemonIfAvailable(UserEntity entity, Integer starterPokemonId) {
         if (pokemonRepository == null) {
             entity.setCurrentPokemonId(null);
             return;
         }
 
-        List<PokemonEntity> pokemon = pokemonRepository.findAll();
-        if (pokemon.isEmpty()) {
+        int selectedStarterId = starterPokemonId == null ? DEFAULT_STARTER_POKEMON_ID : starterPokemonId;
+
+        if (!ALLOWED_STARTER_POKEMON_IDS.contains(selectedStarterId)) {
+            throw new InvalidRequestException("starterPokemonId must be one of 1, 4 or 7");
+        }
+
+        Optional<PokemonEntity> selectedStarter = pokemonRepository.findById(selectedStarterId);
+        if (selectedStarter.isEmpty()) {
+            List<PokemonEntity> pokemon = pokemonRepository.findAll();
+            if (!pokemon.isEmpty()) {
+                throw new InvalidRequestException("selected starter pokemon is not available");
+            }
             entity.setCurrentPokemonId(null);
             return;
         }
 
-        PokemonEntity selected = pokemon.get(ThreadLocalRandom.current().nextInt(pokemon.size()));
-        entity.setCurrentPokemonId(selected.getId());
+        entity.setCurrentPokemonId(selectedStarter.get().getId());
     }
 
     private boolean isLoginBlocked(String key) {

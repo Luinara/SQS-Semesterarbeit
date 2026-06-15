@@ -10,6 +10,7 @@ import {
   PET_RULES,
   QUALITY_RULES,
   resolvePokemonSpeciesForLevel,
+  resolveStarterPokemonSpecies,
 } from '../../shared/mock/mock-data';
 
 export interface GameStateActionResult {
@@ -102,7 +103,10 @@ export function feedPetInGameStateWithFeedback(
       level: growthResult.level,
       growthProgress: growthResult.growthProgress,
       growthGoal: growthResult.growthGoal,
-      pokemonSpecies: resolvePokemonSpeciesForLevel(growthResult.level),
+      pokemonSpecies: resolvePokemonSpeciesForLevel(
+        growthResult.level,
+        currentPet.starterPokemonSpecies
+      ),
       availableFoodPoints: currentPet.availableFoodPoints - PET_RULES.feedCost,
       happiness: currentPet.happiness + happinessGain,
       hunger: PET_RULES.dailyHungerResetValue,
@@ -320,7 +324,11 @@ function normalizePetState(pet: PetState, nowIso: string): PetState {
     lastLevelUpAt: pet.lastLevelUpAt ?? null,
     goodCareStreakDays: Math.max(0, pet.goodCareStreakDays ?? 0),
     lastGoodCareDay: pet.lastGoodCareDay ?? null,
-    pokemonSpecies: resolvePokemonSpeciesForLevel(level),
+    starterPokemonSpecies: resolveStarterPokemonSpecies(pet.starterPokemonSpecies ?? pet.pokemonSpecies),
+    pokemonSpecies: resolvePokemonSpeciesForLevel(
+      level,
+      resolveStarterPokemonSpecies(pet.starterPokemonSpecies ?? pet.pokemonSpecies)
+    ),
   };
 }
 

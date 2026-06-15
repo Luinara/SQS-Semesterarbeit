@@ -7,12 +7,15 @@ import {
 } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { AuthMode, AuthSubmission } from '../../../shared/models/auth.model';
+import { STARTER_POKEMON_OPTIONS } from '../../../shared/mock/mock-data';
+import { StarterPokemonSpeciesName } from '../../../shared/models/pet.model';
 import { UiButtonComponent } from '../../../shared/ui/button/ui-button.component';
 
 export function createAuthSubmission(
   mode: AuthMode,
   username: string,
-  password: string
+  password: string,
+  starterPokemonSpecies: StarterPokemonSpeciesName = 'bulbasaur'
 ): AuthSubmission {
   const trimmedUsername = username.trim();
 
@@ -21,6 +24,7 @@ export function createAuthSubmission(
       username: trimmedUsername,
       password,
       userName: trimmedUsername,
+      starterPokemonSpecies,
     };
   }
 
@@ -69,6 +73,7 @@ export function getPasswordErrorText(errors: ValidationErrors | null): string {
 export class AuthFormComponent {
   private readonly formBuilder = inject(NonNullableFormBuilder);
   private hasSubmittedAttempt = false;
+  readonly starterPokemonOptions = STARTER_POKEMON_OPTIONS;
 
   readonly mode = input.required<AuthMode>();
   readonly feedbackMessage = input<string | null>(null);
@@ -83,6 +88,7 @@ export class AuthFormComponent {
       Validators.pattern(/^[a-zA-Z0-9._-]+$/),
     ]),
     password: this.formBuilder.control('', [Validators.required]),
+    starterPokemonSpecies: this.formBuilder.control<StarterPokemonSpeciesName>('bulbasaur'),
   });
 
   constructor() {
@@ -108,7 +114,12 @@ export class AuthFormComponent {
 
     const formValue = this.form.getRawValue();
     this.credentialsSubmitted.emit(
-      createAuthSubmission(this.mode(), formValue.username, formValue.password)
+      createAuthSubmission(
+        this.mode(),
+        formValue.username,
+        formValue.password,
+        formValue.starterPokemonSpecies
+      )
     );
   }
 

@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { GameState } from '../../shared/models/app-state.model';
+import { RegisterCredentials } from '../../shared/models/auth.model';
+import { PokemonSpeciesName, StarterPokemonSpeciesName } from '../../shared/models/pet.model';
 import { TaskItem } from '../../shared/models/task.model';
 import { AppUser } from '../../shared/models/user.model';
 import {
   PET_RULES,
   QUALITY_RULES,
   resolvePokemonSpeciesForLevel,
+  resolveStarterPokemonSpecies,
 } from '../../shared/mock/mock-data';
 
 export interface BackendTaskDto {
@@ -24,6 +27,7 @@ export interface BackendGameStateDto {
   waterLevel: number;
   foodLevel: number;
   pokemonImageUrl: string | null;
+  pokemonName?: string | null;
   pokemonLevel: number;
   growth: number;
   happiness: number;
@@ -53,13 +57,17 @@ export class BackendApiService {
     return this.loadDashboard(username);
   }
 
-  async signup(username: string, password: string): Promise<DashboardSnapshot> {
+  async signup(credentials: RegisterCredentials): Promise<DashboardSnapshot> {
     await this.request('/api/auth/signup', {
       method: 'POST',
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({
+        username: credentials.username,
+        password: credentials.password,
+        starterPokemonId: mapStarterPokemonToId(credentials.starterPokemonSpecies),
+      }),
     });
 
-    return this.loadDashboard(username);
+    return this.loadDashboard(credentials.username);
   }
 
   async logout(): Promise<void> {
@@ -129,6 +137,10 @@ export class BackendApiService {
       .filter((task) => task.isCompleted)
       .reduce((total, task) => total + task.points, 0);
     const pokemonLevel = Math.max(1, backendGameState.pokemonLevel || 1);
+    const backendPokemonSpecies = normalizePokemonSpeciesName(backendGameState.pokemonName);
+    const starterPokemonSpecies = resolveStarterPokemonSpecies(backendPokemonSpecies);
+    const pokemonSpecies =
+      backendPokemonSpecies ?? resolvePokemonSpeciesForLevel(pokemonLevel, starterPokemonSpecies);
 
     return {
       user: {
@@ -156,7 +168,8 @@ export class BackendApiService {
           lastLevelUpAt: null,
           goodCareStreakDays: backendGameState.streak ?? 0,
           lastGoodCareDay: null,
-          pokemonSpecies: resolvePokemonSpeciesForLevel(pokemonLevel),
+          starterPokemonSpecies,
+          pokemonSpecies,
         },
         tasks: displayTasks,
         qualityScore: totalEarnedPoints,
@@ -236,6 +249,35 @@ function resolveTaskTone(index: number): TaskItem['tone'] {
 
 function resolveTaskPoints(index: number): number {
   return [10, 20, 20, 15, 10][index % 5];
+}
+
+function mapStarterPokemonToId(starterPokemonSpecies: StarterPokemonSpeciesName): number {
+  const starterPokemonIds: Record<StarterPokemonSpeciesName, number> = {
+    bulbasaur: 1,
+    charmander: 4,
+    squirtle: 7,
+  };
+
+  return starterPokemonIds[starterPokemonSpecies];
+}
+
+function normalizePokemonSpeciesName(name: string | null | undefined): PokemonSpeciesName | undefined {
+  const normalizedName = name?.trim().toLowerCase();
+  const knownSpecies = new Set<PokemonSpeciesName>([
+    'bulbasaur',
+    'ivysaur',
+    'venusaur',
+    'charmander',
+    'charmeleon',
+    'charizard',
+    'squirtle',
+    'wartortle',
+    'blastoise',
+  ]);
+
+  return knownSpecies.has(normalizedName as PokemonSpeciesName)
+    ? (normalizedName as PokemonSpeciesName)
+    : undefined;
 }
 
 async function readErrorMessage(response: Response): Promise<string> {

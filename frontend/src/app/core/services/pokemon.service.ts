@@ -1,5 +1,9 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { PokemonSnapshot, PokemonSpeciesName } from '../../shared/models/pet.model';
+import {
+  PokemonSnapshot,
+  PokemonSpeciesName,
+  StarterPokemonSpeciesName,
+} from '../../shared/models/pet.model';
 import { resolvePokemonSpeciesForLevel } from '../../shared/mock/mock-data';
 import { fallbackPokemonBySpecies, PokeApiPokemonAdapter, PokemonAdapter } from './pokemon.adapter';
 
@@ -16,8 +20,11 @@ export class PokemonService {
     this.snapshot().source === 'api' ? 'Live-Sprite' : 'Lokaler Fallback'
   );
 
-  async loadForLevel(level: number): Promise<void> {
-    await this.loadSpecies(resolvePokemonSpeciesForLevel(level));
+  async loadForLevel(
+    level: number,
+    starterPokemonSpecies: StarterPokemonSpeciesName = 'bulbasaur'
+  ): Promise<void> {
+    await this.loadSpecies(resolvePokemonSpeciesForLevel(level, starterPokemonSpecies));
   }
 
   async loadSpecies(species: PokemonSpeciesName): Promise<void> {

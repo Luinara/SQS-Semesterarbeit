@@ -74,6 +74,15 @@
   background: rgba(228, 239, 255, 0.8);
 }
 
+.top-bar__pill--demo {
+  background: rgba(255, 248, 235, 0.84);
+  border-color: rgba(167, 111, 39, 0.16);
+}
+
+.top-bar__pill--demo span {
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
+}
+
 .top-bar__avatar {
   display: inline-grid;
   place-items: center;

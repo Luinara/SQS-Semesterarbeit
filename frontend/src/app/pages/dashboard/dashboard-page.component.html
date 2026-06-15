@@ -5,6 +5,8 @@
       [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
       [completedTasks]="appState.completedTaskCount()"
       [totalTasks]="appState.totalTaskCount()"
+      [demoUsername]="demoAccount.username"
+      [demoPassword]="demoAccount.password"
       (resetRequested)="resetDemoData()"
       (logoutRequested)="logout()"
       (accountDeleteRequested)="deleteAccount()"

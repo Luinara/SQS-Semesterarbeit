@@ -57,11 +57,15 @@ public class UserService {
         dto.setWaterLevel(user.getHydrationMl());
         dto.setFoodLevel(user.getHunger());
 
+        Integer pId = user.getCurrentPokemonId();
+        if (pId != null) {
+            pokemonRepository.findById(pId).ifPresent(pokemon -> dto.setPokemonName(pokemon.getName()));
+        }
+
         // determine image: if egg -> egg image placeholder, else pokemon image
         if (user.isEgg()) {
             dto.setPokemonImageUrl("/assets/egg.png");
         } else {
-            Integer pId = user.getCurrentPokemonId();
             if (pId != null) {
                 var pOpt = pokemonRepository.findById(pId);
                 dto.setPokemonImageUrl(pOpt.map(p -> p.getImageUrl()).orElse(null));

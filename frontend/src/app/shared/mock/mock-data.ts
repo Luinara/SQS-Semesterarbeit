@@ -1,6 +1,6 @@
 import { GameState, MockAccount, StorageSnapshot } from '../models/app-state.model';
 import { RegisterCredentials } from '../models/auth.model';
-import { PokemonSpeciesName, PetState } from '../models/pet.model';
+import { PokemonSpeciesName, PetState, StarterPokemonSpeciesName } from '../models/pet.model';
 import { TaskItem } from '../models/task.model';
 import { AppUser } from '../models/user.model';
 
@@ -31,7 +31,39 @@ export const DEMO_ACCOUNT = {
   username: 'demo',
   password: 'cozyfocus',
   userName: 'demo',
+  starterPokemonSpecies: 'bulbasaur',
 } as const;
+
+export const STARTER_POKEMON_OPTIONS: ReadonlyArray<{
+  species: StarterPokemonSpeciesName;
+  label: string;
+  description: string;
+}> = [
+  {
+    species: 'bulbasaur',
+    label: 'Bulbasaur',
+    description: 'Pflanzen-Starter mit ruhigem Wachstum.',
+  },
+  {
+    species: 'charmander',
+    label: 'Charmander',
+    description: 'Feuer-Starter für offensive Trainingsläufe.',
+  },
+  {
+    species: 'squirtle',
+    label: 'Squirtle',
+    description: 'Wasser-Starter für stabile Tagesroutinen.',
+  },
+] as const;
+
+const POKEMON_EVOLUTION_CHAINS: Record<
+  StarterPokemonSpeciesName,
+  readonly [PokemonSpeciesName, PokemonSpeciesName, PokemonSpeciesName]
+> = {
+  bulbasaur: ['bulbasaur', 'ivysaur', 'venusaur'],
+  charmander: ['charmander', 'charmeleon', 'charizard'],
+  squirtle: ['squirtle', 'wartortle', 'blastoise'],
+};
 
 export function createInitialSnapshot(): StorageSnapshot {
   const demoAccount = createMockAccount(DEMO_ACCOUNT);
@@ -54,15 +86,17 @@ export function createMockAccount(credentials: RegisterCredentials): MockAccount
   return {
     user,
     password: credentials.password,
-    gameState: createInitialGameState(),
+    gameState: createInitialGameState(credentials.starterPokemonSpecies),
   };
 }
 
-export function createInitialGameState(): GameState {
+export function createInitialGameState(
+  starterPokemonSpecies: StarterPokemonSpeciesName = 'bulbasaur'
+): GameState {
   const now = new Date().toISOString();
 
   return {
-    pet: createInitialPetState(),
+    pet: createInitialPetState(starterPokemonSpecies),
     tasks: createInitialTasks(),
     qualityScore: 0,
     qualityTarget: QUALITY_RULES.targetScore,
@@ -77,13 +111,30 @@ export function calculateNextGrowthGoal(currentGoal: number): number {
   return Math.round(currentGoal * 1.15) + 8;
 }
 
-export function resolvePokemonSpeciesForLevel(level: number): PokemonSpeciesName {
+export function resolvePokemonSpeciesForLevel(
+  level: number,
+  starterPokemonSpecies: StarterPokemonSpeciesName = 'bulbasaur'
+): PokemonSpeciesName {
+  const chain = POKEMON_EVOLUTION_CHAINS[starterPokemonSpecies] ?? POKEMON_EVOLUTION_CHAINS.bulbasaur;
+
   if (level >= 6) {
-    return 'venusaur';
+    return chain[2];
   }
 
   if (level >= 3) {
-    return 'ivysaur';
+    return chain[1];
+  }
+
+  return chain[0];
+}
+
+export function resolveStarterPokemonSpecies(
+  species: PokemonSpeciesName | undefined
+): StarterPokemonSpeciesName {
+  for (const [starter, chain] of Object.entries(POKEMON_EVOLUTION_CHAINS)) {
+    if ((chain as readonly PokemonSpeciesName[]).includes(species as PokemonSpeciesName)) {
+      return starter as StarterPokemonSpeciesName;
+    }
   }
 
   return 'bulbasaur';
@@ -102,7 +153,7 @@ function createUser(input: Pick<AppUser, 'email' | 'userName' | 'joinedAt'>): Ap
   };
 }
 
-function createInitialPetState(): PetState {
+function createInitialPetState(starterPokemonSpecies: StarterPokemonSpeciesName): PetState {
   const now = new Date().toISOString();
 
   return {
@@ -122,7 +173,8 @@ function createInitialPetState(): PetState {
     lastLevelUpAt: null,
     goodCareStreakDays: 0,
     lastGoodCareDay: null,
-    pokemonSpecies: 'bulbasaur',
+    starterPokemonSpecies,
+    pokemonSpecies: resolvePokemonSpeciesForLevel(1, starterPokemonSpecies),
   };
 }
 
