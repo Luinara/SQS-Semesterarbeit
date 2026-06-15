@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="900" height="260" viewBox="0 0 900 260" role="img" aria-labelledby="title desc">
   <title id="title">C4 Level 1 System Context</title>
-  <desc id="desc">System Context Diagramm für den Self-Care Companion.</desc>
+  <desc id="desc">System Context Diagramm für PokeHabit.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#344054" />
@@ -15,7 +15,7 @@
   <text x="145" y="135" text-anchor="middle" class="label">Person</text>
   <text x="145" y="156" text-anchor="middle" class="small">Nutzer der Self-Care App</text>
   <rect x="330" y="88" width="240" height="110" class="box system" />
-  <text x="450" y="125" text-anchor="middle" class="label">Self-Care Companion</text>
+  <text x="450" y="125" text-anchor="middle" class="label">PokeHabit</text>
   <text x="450" y="148" text-anchor="middle" class="small">Aufgaben, Fortschritt und</text>
   <text x="450" y="168" text-anchor="middle" class="small">pet-basierte Gamification</text>
   <rect x="680" y="105" width="160" height="75" class="box external" />

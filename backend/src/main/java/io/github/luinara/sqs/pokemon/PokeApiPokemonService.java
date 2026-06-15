@@ -2,6 +2,7 @@ package io.github.luinara.sqs.pokemon;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class PokeApiPokemonService {
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
+    @Autowired
     public PokeApiPokemonService(
             @Value("${pokeapi.base-url:https://pokeapi.co/api/v2}") String baseUrl,
             @Value("${pokeapi.enabled:true}") boolean enabled
