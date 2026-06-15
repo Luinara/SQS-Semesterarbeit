@@ -5,10 +5,13 @@
 }
 
 .ui-button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 3.15rem;
   padding: 0.85rem 1.35rem;
   border: 1px solid transparent;
@@ -28,9 +31,34 @@
     color var(--transition-base);
 }
 
+.ui-button::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(120deg, transparent 0 28%, rgba(255, 255, 255, 0.32) 44%, transparent 62%),
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.28), transparent 36%);
+  content: '';
+  opacity: 0;
+  transform: translateX(-28%);
+  transition:
+    opacity var(--transition-base),
+    transform var(--transition-slow);
+}
+
 .ui-button:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: var(--shadow-hover);
+}
+
+.ui-button:hover:not(:disabled)::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ui-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.99);
+  box-shadow: 0 8px 18px rgba(28, 42, 70, 0.12);
 }
 
 .ui-button:focus-visible {
@@ -45,9 +73,16 @@
 
 .ui-button--secondary {
   border-color: var(--color-line);
-  background: rgba(255, 255, 255, 0.86);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(247, 249, 252, 0.9)),
+    rgba(255, 255, 255, 0.86);
   color: var(--color-text);
   box-shadow: var(--shadow-card);
+}
+
+.ui-button--secondary:hover:not(:disabled) {
+  border-color: rgba(37, 99, 235, 0.2);
+  color: var(--color-blue);
 }
 
 .ui-button--ghost {
@@ -57,10 +92,20 @@
   box-shadow: none;
 }
 
+.ui-button--ghost:hover:not(:disabled) {
+  border-color: rgba(28, 42, 70, 0.14);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-text);
+}
+
 .ui-button--soft {
   background: linear-gradient(135deg, rgba(228, 239, 255, 0.95) 0%, rgba(221, 247, 233, 0.95) 100%);
   color: var(--color-text);
   box-shadow: 0 12px 24px rgba(37, 99, 235, 0.14);
+}
+
+.ui-button--soft:hover:not(:disabled) {
+  color: var(--color-green);
 }
 
 .ui-button--small {
