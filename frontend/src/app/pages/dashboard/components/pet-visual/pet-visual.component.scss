@@ -4,7 +4,7 @@
   gap: 1.25rem;
   overflow: hidden;
   padding: 1.75rem;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-lg);
   background:
     radial-gradient(
       circle at var(--sky-x, 18%) var(--sky-y, 18%),
@@ -16,8 +16,8 @@
   --sky-top: rgba(255, 248, 243, 0.95);
   --sky-bottom: rgba(246, 235, 225, 0.95);
   --sky-glow: rgba(255, 255, 255, 0.8);
-  --scene-ground: rgba(255, 242, 234, 0.96);
-  --scene-horizon: rgba(249, 233, 223, 0.92);
+  --scene-ground: rgba(241, 246, 252, 0.96);
+  --scene-horizon: rgba(223, 233, 244, 0.92);
   --weather-mark: #ffd36b;
   --weather-mark-shadow: rgba(255, 205, 107, 0.42);
   --cloud-opacity: 0.35;
@@ -36,8 +36,8 @@
   place-items: center;
   min-height: 19rem;
   padding: 1.5rem;
-  border: 1px dashed rgba(128, 97, 87, 0.18);
-  border-radius: calc(var(--radius-xl) - 0.35rem);
+  border: 1px solid rgba(28, 42, 70, 0.12);
+  border-radius: var(--radius-md);
   background:
     radial-gradient(
       circle at 18% 24%,
@@ -74,7 +74,9 @@
 .pet-visual__frame img {
   position: relative;
   z-index: 1;
-  width: min(17rem, 100%);
+  width: min(18rem, 100%);
+  max-height: 18rem;
+  object-fit: contain;
   animation: float-soft var(--pet-motion-speed) ease-in-out infinite;
   filter: drop-shadow(0 22px 26px rgba(127, 92, 80, 0.16));
 }
@@ -85,6 +87,19 @@
   justify-content: space-between;
   gap: 1rem;
   color: var(--color-text);
+}
+
+.pet-visual__identity {
+  display: grid;
+  justify-items: end;
+  gap: 0.15rem;
+  text-align: right;
+}
+
+.pet-visual__identity span {
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .pet-visual__tag {
@@ -99,6 +114,26 @@
   font-weight: 700;
 }
 
+.pet-visual__types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.pet-visual__types span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.8rem;
+  padding: 0 0.65rem;
+  border: 1px solid rgba(28, 42, 70, 0.1);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-text-soft);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .pet-visual__level {
   position: absolute;
   top: 1.2rem;
@@ -109,9 +144,9 @@
   padding: 0 0.9rem;
   border-radius: var(--radius-pill);
   background: rgba(255, 250, 246, 0.82);
-  border: 1px solid rgba(128, 97, 87, 0.12);
+  border: 1px solid rgba(28, 42, 70, 0.12);
   box-shadow: 0 10px 18px rgba(118, 87, 74, 0.12);
-  color: var(--color-brown);
+  color: var(--color-text);
   font-weight: 600;
 }
 
