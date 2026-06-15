@@ -1,32 +1,30 @@
 import { GameState, MockAccount, StorageSnapshot } from '../models/app-state.model';
 import { RegisterCredentials } from '../models/auth.model';
-import { PetState } from '../models/pet.model';
+import { PokemonSpeciesName, PetState } from '../models/pet.model';
 import { TaskItem } from '../models/task.model';
 import { AppUser } from '../models/user.model';
 
 export const STORAGE_KEY = 'sqs.frontend.mvp.state';
 
-// Die Regeln stehen zentral an einer Stelle, damit man die Demo später
-// leicht in ein echtes Balancing oder eine Backend-Konfiguration überführen kann.
 export const PET_RULES = {
   feedCost: 10,
-  growthPerFeeding: 25,
-  happinessPerFeeding: 10,
+  growthPerFeeding: 34,
+  happinessPerFeeding: 12,
   maxHappiness: 100,
   maxHearts: 3,
   initialGrowthGoal: 100,
   heartRecoveryStep: 0.5,
   heartRecoveryStreakDays: 2,
-  dailyHappinessGainLimit: 50,
-  happinessDecayPerMissedDay: 25,
-  levelUpCooldownHours: 48,
+  dailyHappinessGainLimit: 60,
+  happinessDecayPerMissedDay: 18,
+  levelUpCooldownHours: 0,
   maxHunger: 100,
   dailyHungerResetValue: 0,
 } as const;
 
-export const HYDRATION_RULES = {
-  dailyGoalMl: 3000,
-  quickAddMl: [250, 500, 750],
+export const QUALITY_RULES = {
+  targetScore: 80,
+  maxScore: 100,
 } as const;
 
 export const DEMO_ACCOUNT = {
@@ -66,9 +64,9 @@ export function createInitialGameState(): GameState {
   return {
     pet: createInitialPetState(),
     tasks: createInitialTasks(),
-    hydrationMl: 0,
-    hydrationGoalMl: HYDRATION_RULES.dailyGoalMl,
-    hydrationLastResetAt: now,
+    qualityScore: 0,
+    qualityTarget: QUALITY_RULES.targetScore,
+    qualityLastResetAt: now,
     dailyQuestLastResetAt: now,
     totalCompletedTasks: 0,
     totalEarnedPoints: 0,
@@ -77,6 +75,18 @@ export function createInitialGameState(): GameState {
 
 export function calculateNextGrowthGoal(currentGoal: number): number {
   return Math.round(currentGoal * 1.15) + 8;
+}
+
+export function resolvePokemonSpeciesForLevel(level: number): PokemonSpeciesName {
+  if (level >= 6) {
+    return 'venusaur';
+  }
+
+  if (level >= 3) {
+    return 'ivysaur';
+  }
+
+  return 'bulbasaur';
 }
 
 export function normalizeEmail(email: string): string {
@@ -96,7 +106,7 @@ function createInitialPetState(): PetState {
   const now = new Date().toISOString();
 
   return {
-    name: 'Mochi',
+    name: 'Quality Companion',
     level: 1,
     growthProgress: 0,
     growthGoal: PET_RULES.initialGrowthGoal,
@@ -112,57 +122,128 @@ function createInitialPetState(): PetState {
     lastLevelUpAt: null,
     goodCareStreakDays: 0,
     lastGoodCareDay: null,
+    pokemonSpecies: 'bulbasaur',
   };
 }
 
 function createInitialTasks(): TaskItem[] {
   return [
-    {
-      id: createId('task'),
-      title: 'Wasser trinken',
-      description: 'Eine kurze Pause, die Energie für Kopf und Fokus zurückbringt.',
-      icon: 'drop',
-      tone: 'peach',
-      points: 10,
-      isCompleted: false,
-    },
-    {
-      id: createId('task'),
-      title: '30 Minuten lernen',
-      description: 'Ein klarer Lernblock für stetigen Fortschritt ohne Perfektionsdruck.',
-      icon: 'study',
+    createQualityTask({
+      slug: 'public-endpoint',
+      title: 'Oeffentlichen Endpunkt nachweisen',
+      description: 'Ein frei erreichbarer Einstieg oder Health-Endpunkt ist fuer die Demo vorhanden.',
+      icon: 'endpoint',
+      tone: 'blue',
+      category: 'architecture',
+      checklistReference: 'Themenwahl: mindestens ein oeffentlich erreichbarer Endpunkt',
+      points: 8,
+    }),
+    createQualityTask({
+      slug: 'secured-endpoint',
+      title: 'Abgesicherten Endpunkt pruefen',
+      description: 'Login-Kontext oder Guard ist sichtbar und ein geschuetzter Bereich bleibt nicht anonym nutzbar.',
+      icon: 'lock',
       tone: 'rose',
-      points: 20,
-      isCompleted: false,
-    },
-    {
-      id: createId('task'),
-      title: 'Sport',
-      description: 'Bewegung hebt die Stimmung und gibt deinem Pet extra Schwung.',
-      icon: 'pulse',
-      tone: 'sage',
-      points: 20,
-      isCompleted: false,
-    },
-    {
-      id: createId('task'),
-      title: 'Zimmer aufräumen',
-      description: 'Ein ruhiger Raum hilft dabei, den Kopf spürbar freier zu machen.',
-      icon: 'spark',
-      tone: 'taupe',
-      points: 15,
-      isCompleted: false,
-    },
-    {
-      id: createId('task'),
-      title: '10 Seiten lesen',
-      description: 'Ein kleiner Leseschritt für Konzentration und konstante Routine.',
-      icon: 'book',
-      tone: 'peach',
+      category: 'security',
+      checklistReference: 'Themenwahl: mindestens ein abgesicherter Endpunkt',
       points: 10,
-      isCompleted: false,
-    },
+    }),
+    createQualityTask({
+      slug: 'three-layers',
+      title: 'Drei Schichten belegen',
+      description: 'Frontend, Backend und Persistenzschicht sind im Projektmodell und in der Doku nachvollziehbar.',
+      icon: 'layers',
+      tone: 'green',
+      category: 'architecture',
+      checklistReference: 'Themenwahl: Frontend, Backend, Persistenzschicht',
+      points: 10,
+    }),
+    createQualityTask({
+      slug: 'external-service',
+      title: 'Externen Service resilient anbinden',
+      description: 'PokeAPI und Wetterdaten werden gekapselt geladen und fallen bei Fehlern kontrolliert zurueck.',
+      icon: 'api',
+      tone: 'blue',
+      category: 'integration',
+      checklistReference: 'Backend/externer Service: ausfallsichere Architekturpatterns',
+      points: 12,
+    }),
+    createQualityTask({
+      slug: 'test-pyramid',
+      title: 'Testpyramide abdecken',
+      description: 'Unit-, Integration-, E2E-, Security- und Architekturtests sind geplant oder implementiert.',
+      icon: 'test',
+      tone: 'green',
+      category: 'testing',
+      checklistReference: 'Qualitaet: komplette Testpyramide',
+      points: 14,
+    }),
+    createQualityTask({
+      slug: 'coverage',
+      title: '80 Prozent Coverage erreichen',
+      description: 'Die statische Analyse und Coverage-Auswertung zeigen keine kritischen offenen Punkte.',
+      icon: 'coverage',
+      tone: 'amber',
+      category: 'testing',
+      checklistReference: 'Qualitaet: mindestens 80 Prozent Testabdeckung',
+      points: 12,
+    }),
+    createQualityTask({
+      slug: 'pipeline',
+      title: 'GitHub Pipeline lauffaehig halten',
+      description: 'Typecheck, Tests, Linting und Build sind als CI-faehiger Qualitaetsnachweis nutzbar.',
+      icon: 'pipeline',
+      tone: 'blue',
+      category: 'delivery',
+      checklistReference: 'Qualitaet: lauffaehige Github-Pipeline',
+      points: 10,
+    }),
+    createQualityTask({
+      slug: 'arc42',
+      title: 'arc42 und C4 aktualisieren',
+      description: 'Architekturdoku, C4-Ueberblick und wichtige Bausteine sind fuer den Vortrag auffindbar.',
+      icon: 'docs',
+      tone: 'slate',
+      category: 'documentation',
+      checklistReference: 'Qualitaet: arc42 Standard und C4-Modell',
+      points: 8,
+    }),
+    createQualityTask({
+      slug: 'adrs',
+      title: 'ADRs fuer Entscheidungen pflegen',
+      description: 'Technologie-, API- und Integrationsentscheidungen sind in ADRs nachvollziehbar festgehalten.',
+      icon: 'decision',
+      tone: 'slate',
+      category: 'documentation',
+      checklistReference: 'Qualitaet: wichtige Projektentscheidungen in ADRs',
+      points: 8,
+      isRequired: false,
+    }),
+    createQualityTask({
+      slug: 'two-command-start',
+      title: 'Zwei-Befehl-Start demonstrieren',
+      description: 'Nach dem Auschecken startet das Projekt ohne manuelle Eingriffe ueber Skript oder Compose.',
+      icon: 'rocket',
+      tone: 'green',
+      category: 'delivery',
+      checklistReference: 'Qualitaet: maximal 2 Befehle lauffaehig',
+      points: 8,
+    }),
   ];
+}
+
+function createQualityTask(input: Omit<TaskItem, 'id' | 'isCompleted' | 'isRequired'> & {
+  slug: string;
+  isRequired?: boolean;
+}): TaskItem {
+  const { slug, isRequired = true, ...task } = input;
+
+  return {
+    id: `quality-${slug}`,
+    ...task,
+    isRequired,
+    isCompleted: false,
+  };
 }
 
 function createId(prefix: string): string {

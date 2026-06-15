@@ -8,9 +8,8 @@ import {
 } from '../../shared/models/app-state.model';
 import { AuthResult, LoginCredentials, RegisterCredentials } from '../../shared/models/auth.model';
 import { PetCareState } from '../../shared/models/pet.model';
-import { createInitialSnapshot, HYDRATION_RULES, STORAGE_KEY } from '../../shared/mock/mock-data';
+import { createInitialSnapshot, QUALITY_RULES, STORAGE_KEY } from '../../shared/mock/mock-data';
 import {
-  addHydrationInGameStateWithFeedback,
   completeTaskInGameStateWithFeedback,
   createRegisteredAccount,
   derivePetCareState,
@@ -20,6 +19,7 @@ import {
   normalizeGameState,
   resetDailyProgressIfExpired,
   resetGameState,
+  isQualityGateReached,
 } from '../state/app-state.logic';
 import { PET_RULES } from '../../shared/mock/mock-data';
 
@@ -44,11 +44,15 @@ export class AppStateService {
   readonly user = computed(() => this.activeAccount()?.user ?? null);
   readonly pet = computed(() => this.activeAccount()?.gameState.pet ?? null);
   readonly tasks = computed(() => this.activeAccount()?.gameState.tasks ?? []);
-  readonly hydrationMl = computed(() => this.activeAccount()?.gameState.hydrationMl ?? 0);
-  readonly hydrationGoalMl = computed(
-    () => this.activeAccount()?.gameState.hydrationGoalMl ?? 3000
+  readonly qualityScore = computed(() => this.activeAccount()?.gameState.qualityScore ?? 0);
+  readonly qualityTarget = computed(
+    () => this.activeAccount()?.gameState.qualityTarget ?? QUALITY_RULES.targetScore
   );
-  readonly hydrationGoalReached = computed(() => this.hydrationMl() >= this.hydrationGoalMl());
+  readonly qualityGateReached = computed(() => {
+    const activeAccount = this.activeAccount();
+
+    return activeAccount ? isQualityGateReached(activeAccount.gameState) : false;
+  });
   readonly totalTaskCount = computed(() => this.tasks().length);
   readonly completedTaskCount = computed(
     () => this.tasks().filter((task) => task.isCompleted).length
@@ -64,15 +68,19 @@ export class AppStateService {
 
     return derivePetCareState(activeAccount.gameState);
   });
-  readonly dailyQuestProgress = computed(() => {
+  readonly qualityQuestProgress = computed(() => {
     const total = this.totalTaskCount();
     const completed = this.completedTaskCount();
     const pending = Math.max(0, total - completed);
+    const requiredTasks = this.tasks().filter((task) => task.isRequired);
+    const completedRequired = requiredTasks.filter((task) => task.isCompleted).length;
 
     return {
       completed,
       total,
       pending,
+      completedRequired,
+      totalRequired: requiredTasks.length,
       percentage: total <= 0 ? 0 : Math.round((completed / total) * 100),
     };
   });
@@ -162,18 +170,6 @@ export class AppStateService {
     });
   }
 
-  addHydration(amountMl: number): void {
-    this.updateActiveAccount((account) => {
-      const result = addHydrationInGameStateWithFeedback(account.gameState, amountMl);
-      this.showFeedback(result.feedback);
-
-      return {
-        ...account,
-        gameState: result.gameState,
-      };
-    });
-  }
-
   resetCurrentProgress(): void {
     this.updateActiveAccount((account) => ({
       ...account,
@@ -199,15 +195,15 @@ export class AppStateService {
     return {
       ...snapshot,
       accounts: snapshot.accounts.map((account) => ({
-        ...account,
-        gameState: this.resetExpiredDailyProgress({
-          ...account.gameState,
-          hydrationMl: account.gameState.hydrationMl ?? 0,
-          hydrationGoalMl: account.gameState.hydrationGoalMl ?? HYDRATION_RULES.dailyGoalMl,
-          hydrationLastResetAt: account.gameState.hydrationLastResetAt ?? new Date().toISOString(),
+          ...account,
+          gameState: this.resetExpiredDailyProgress({
+            ...account.gameState,
+          qualityScore: account.gameState.qualityScore ?? 0,
+          qualityTarget: account.gameState.qualityTarget ?? QUALITY_RULES.targetScore,
+          qualityLastResetAt: account.gameState.qualityLastResetAt ?? new Date().toISOString(),
           dailyQuestLastResetAt:
             account.gameState.dailyQuestLastResetAt ??
-            account.gameState.hydrationLastResetAt ??
+            account.gameState.qualityLastResetAt ??
             new Date().toISOString(),
         }),
       })),

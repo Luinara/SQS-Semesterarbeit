@@ -1,5 +1,22 @@
-export type TaskIcon = 'drop' | 'study' | 'pulse' | 'spark' | 'book';
-export type TaskTone = 'rose' | 'peach' | 'taupe' | 'sage';
+export type TaskIcon =
+  | 'endpoint'
+  | 'lock'
+  | 'layers'
+  | 'api'
+  | 'test'
+  | 'pipeline'
+  | 'coverage'
+  | 'docs'
+  | 'decision'
+  | 'rocket';
+export type TaskTone = 'blue' | 'green' | 'amber' | 'rose' | 'slate';
+export type TaskCategory =
+  | 'architecture'
+  | 'testing'
+  | 'security'
+  | 'documentation'
+  | 'delivery'
+  | 'integration';
 
 export interface TaskItem {
   id: string;
@@ -7,6 +24,9 @@ export interface TaskItem {
   description: string;
   icon: TaskIcon;
   tone: TaskTone;
+  category: TaskCategory;
+  isRequired: boolean;
+  checklistReference: string;
   points: number;
   isCompleted: boolean;
 }

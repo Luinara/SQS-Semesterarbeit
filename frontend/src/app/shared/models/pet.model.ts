@@ -15,6 +15,18 @@ export interface PetState {
   lastLevelUpAt: string | null;
   goodCareStreakDays: number;
   lastGoodCareDay: string | null;
+  pokemonSpecies: PokemonSpeciesName;
 }
 
 export type PetCareState = 'needs-care' | 'ready-to-feed' | 'growing' | 'thriving' | 'calm';
+export type PokemonSpeciesName = 'bulbasaur' | 'ivysaur' | 'venusaur';
+export type PokemonSource = 'api' | 'fallback';
+
+export interface PokemonSnapshot {
+  id: number;
+  name: PokemonSpeciesName;
+  displayName: string;
+  spriteUrl: string;
+  types: string[];
+  source: PokemonSource;
+}
