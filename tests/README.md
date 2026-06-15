@@ -2,13 +2,14 @@
 
 Dieser Ordner ist die zentrale Sammelstelle für repository-weite Tests.
 Die Anwendung selbst bleibt in `frontend/` und `backend/`, aber die Tests sind bewusst nach Testart getrennt.
+Die abgabeorientierte Zuordnung zur Testpyramide steht in `docs/test-pyramid.md`.
 
 | Directory       | Purpose                                              | Primary tools                    |
 | --------------- | ---------------------------------------------------- | -------------------------------- |
 | `unit/`         | Kleine, isolierte Tests für reine Logik und Services | JUnit 5, Mockito, Vitest         |
 | `integration/`  | Integrationsprüfungen über mehrere Schichten hinweg  | Spring Boot Test, Testcontainers |
 | `e2e/`          | Browserbasierte Nutzerflüsse                         | Playwright                       |
-| `security/`     | Sicherheits- und Zugriffstests                       | Spring Security Test, OWASP ZAP  |
+| `security/`     | Sicherheits- und Zugriffstests                       | MockMvc, Vitest, npm audit       |
 | `architecture/` | Architekturregeln und Konformitätschecks             | ArchUnit                         |
 
 ## Tooling wiring
@@ -50,4 +51,4 @@ Die fachliche Doku steht in `docs/frontend-npm-security.md`.
 | Backend unit        | `*Test.java` | `PokemonServiceTest.java`  |
 | Backend integration | `*IT.java`   | `PokemonControllerIT.java` |
 | Frontend unit       | `*.test.ts`  | `app-state.logic.test.ts`  |
-| Frontend e2e        | `*.spec.ts`  | `placeholder.spec.ts`      |
+| Frontend e2e        | `*.spec.ts`  | `user-journey.spec.ts`     |

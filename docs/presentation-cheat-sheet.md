@@ -47,6 +47,12 @@ prüfen wir mit ArchUnit."
 Darum gibt es den Quality Hub. Er startet über Docker, führt die Checks aus,
 sammelt Reports und zeigt direkt, ob das Gate grün oder rot ist."
 
+Vorher kurz die Testpyramide nennen:
+
+"Die Zuordnung steht in `docs/test-pyramid.md`: unten viele Unit-Tests, darüber
+Controller-, Integrations-, Security- und Architekturtests, und oben wenige
+Playwright-Flows."
+
 Checks nennen, nicht alle erklären:
 
 - Backend-Tests und JaCoCo

@@ -18,6 +18,7 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
    | App | `http://localhost:3000` | Live-Demo |
    | Backend | `http://localhost:8181/api/tasks` | öffentlicher REST-Endpunkt |
    | Quality Hub | `http://localhost:8088` | Tests, Coverage, Security, E2E |
+   | Testpyramide | `docs/test-pyramid.md` | SQS-Testnachweis |
    | Doku | ReadTheDocs-URL oder lokale `docs/index.md` | arc42, ADRs, C4 |
    | C4 | `docs/diagrams/c4-diagram.md` | Architekturüberblick |
 
@@ -42,7 +43,7 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
 | 3:30 - 5:00 | API und Security | `/api/tasks`, geschützter Game-State, Session-Cookie erklären | "Es gibt öffentliche und geschützte Endpunkte, Passwörter werden gehasht, Sessions laufen serverseitig." |
 | 5:00 - 6:30 | Externer Service | ADR-004 oder Code `PokeApiPokemonService` | "Das Backend nutzt PokeAPI für Starter-Pokemon und fällt bei Fehlern lokal zurück." |
 | 6:30 - 8:30 | Architektur | C4-Diagramm + Structurizr-DSL | "Das System ist in Frontend, Backend, Persistenz, externe Dienste und Quality Hub getrennt." |
-| 8:30 - 11:30 | Testkonzept | Quality Hub | "Der Quality Hub bündelt Backend-Tests, Checkstyle, SpotBugs, Typecheck, Unit-Tests, Coverage, Lint, Security und E2E." |
+| 8:30 - 11:30 | Testkonzept | Testpyramide + Quality Hub | "Die Testpyramide ordnet Unit-, Integrations-, Security-, Architektur- und E2E-Tests ein. Der Quality Hub führt die Checks sichtbar aus." |
 | 11:30 - 13:00 | Doku und Entscheidungen | arc42, ADRs, ReadTheDocs | "Die wichtigsten Architekturentscheidungen sind nachvollziehbar dokumentiert." |
 | 13:00 - 14:30 | Risiken und Grenzen | arc42 Risiken | "Wir benennen bewusst Grenzen: Deployment-Hardening, externe APIs, Tageshistorie." |
 | 14:30 - 15:00 | Abschluss | Quality Hub oder App | "Das Projekt ist per Docker startbar und die Qualitätssicherung ist reproduzierbar." |
@@ -86,12 +87,12 @@ Repositories zu; das prüfen wir auch mit ArchUnit."
 
 ### Quality Hub
 
-"Qualitätssicherung sollte bei uns nicht nur als Liste in der Doku stehen,
-sondern als zusammenhängende Lösung im Projekt sichtbar sein. Deshalb gibt es
-den Quality Hub: Er prüft, ob die Checks wirklich ausgeführt wurden, sammelt die
-wichtigen Reports und macht das Ergebnis direkt sichtbar. Pflichtchecks machen
-das Gate rot, wenn Tests, Security, Typecheck, Lint oder Backend-Analyse
-fehlschlagen."
+"Für die Abgabe wollten wir die Testpyramide nicht nur behaupten. In der Doku
+ordnen wir die Tests nach Ebene ein: Unit-Tests, Controller- und
+Integrationstests, Security-nahe Tests, ArchUnit und Playwright. Der Quality Hub
+führt die Checks aus, sammelt Reports und macht das Ergebnis direkt sichtbar.
+Pflichtchecks machen das Gate rot, wenn Tests, Security, Typecheck, Lint oder
+Backend-Analyse fehlschlagen."
 
 ### Doku und ADRs
 
@@ -115,7 +116,7 @@ Quality-Nachweis der relevante Fokus."
 | Wo ist der externe Service? | "`PokeApiPokemonService` im Backend ruft PokeAPI auf. Der Ausfall ist durch Fallback und Tests abgesichert." |
 | Was passiert, wenn PokeAPI down ist? | "Registrierung funktioniert weiter. Das Backend nutzt den lokalen Starter-Katalog." |
 | Was ist euer Security-Nachweis? | "Session-Cookie, Passwort-Hashing, Login-Lockout, Tests für unauthentifizierte Requests und npm Security Check im Quality Hub." |
-| Wie erfüllt ihr die Testpyramide? | "Backend-Unit- und Integrationstests, Frontend-Unit-Tests, ArchUnit, Security-nahe Controller-Tests und Playwright-E2E." |
+| Wie erfüllt ihr die Testpyramide? | "Die Zuordnung steht in `docs/test-pyramid.md`: Backend-Unit- und Integrationstests, Frontend-Unit-Tests, ArchUnit, Security-nahe Controller-Tests und Playwright-E2E." |
 | Wo sieht man Coverage? | "Im Quality Hub über JaCoCo für Backend und Vitest Coverage für Frontend." |
 | Warum eigener Quality Hub statt nur Terminal? | "Für die Abgabe ist es schneller prüfbar: ein Docker-Start, ein Dashboard, Links zu Logs und Reports." |
 | Was würdet ihr als nächstes verbessern? | "Read-only Historie für Tagesfortschritt, Caching für externe API-Daten und produktives Deployment-Hardening." |

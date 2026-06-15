@@ -6,6 +6,7 @@ theme:
   language: de
 nav:
   - Überblick: index.md
+  - Testpyramide: test-pyramid.md
   - Präsentationsablauf: presentation-plan.md
   - Präsentations-Sprechzettel: presentation-cheat-sheet.md
   - API:
