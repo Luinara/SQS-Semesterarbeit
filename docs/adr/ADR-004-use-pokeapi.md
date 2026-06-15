@@ -16,9 +16,11 @@ Key abrufbar sind und die Daten fachlich wirklich zur App gehören.
 
 ## Decision
 Das Backend nutzt PokeAPI (`https://pokeapi.co/api/v2`) beim Anlegen eines
-Users, um die Starter-Entwicklungskette in der Datenbank zu befüllen. Dabei
-werden Name und offizielles Artwork aus der API übernommen. Die Evolution IDs
-bleiben lokal definiert, weil die App nur die drei Starter-Ketten braucht.
+Users, um fehlende Starter-Pokemon in der Datenbank zu befüllen. Bereits
+vorhandene Pokemon werden wiederverwendet, damit Registrierungen nicht
+unnötig externe Requests auslösen und vorhandene Namen/Bilder nicht
+überschrieben werden. Lokale Evolutions-Metadaten dürfen ergänzt werden, weil
+die App nur die drei Starter-Ketten braucht.
 
 Abgerufene Daten:
 

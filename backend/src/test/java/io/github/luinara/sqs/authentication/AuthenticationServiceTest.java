@@ -235,6 +235,54 @@ class AuthenticationServiceTest {
     }
 
     @Test
+    void db_createUser_reusesExistingPokemonWithoutExternalCall() {
+        when(repo.existsByUsernameIgnoreCase("cached")).thenReturn(false);
+        when(pokemonRepository.findById(1)).thenReturn(Optional.of(existingPokemon(1, "bulbasaur", 2, 0)));
+        when(pokemonRepository.findById(2)).thenReturn(Optional.of(existingPokemon(2, "ivysaur", 3, 1)));
+        when(pokemonRepository.findById(3)).thenReturn(Optional.of(existingPokemon(3, "venusaur", null, 2)));
+        when(repo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        AuthenticationService svc = new AuthenticationService(
+                Optional.of(repo),
+                Optional.of(pokemonRepository),
+                Optional.of(pokeApiPokemonService)
+        );
+        boolean created = svc.createUser("cached", "password123", 1);
+
+        assertThat(created).isTrue();
+        verifyNoInteractions(pokeApiPokemonService);
+        verify(pokemonRepository, never()).save(any(PokemonEntity.class));
+
+        ArgumentCaptor<UserEntity> userCaptor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(repo).save(userCaptor.capture());
+        assertThat(userCaptor.getValue().getCurrentPokemonId()).isEqualTo(1);
+    }
+
+    @Test
+    void db_createUser_updatesMissingEvolutionMetadataWithoutExternalCall() {
+        PokemonEntity existing = existingPokemon(4, "charmander", null, 0);
+        when(repo.existsByUsernameIgnoreCase("metadata")).thenReturn(false);
+        when(pokemonRepository.findById(4)).thenReturn(Optional.of(existing));
+        when(pokemonRepository.findById(5)).thenReturn(Optional.of(existingPokemon(5, "charmeleon", 6, 1)));
+        when(pokemonRepository.findById(6)).thenReturn(Optional.of(existingPokemon(6, "charizard", null, 2)));
+        when(repo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        AuthenticationService svc = new AuthenticationService(
+                Optional.of(repo),
+                Optional.of(pokemonRepository),
+                Optional.of(pokeApiPokemonService)
+        );
+        boolean created = svc.createUser("metadata", "password123", 4);
+
+        assertThat(created).isTrue();
+        assertThat(existing.getName()).isEqualTo("charmander");
+        assertThat(existing.getImageUrl()).isEqualTo("https://assets.example.test/4.png");
+        assertThat(existing.getEvolutionId()).isEqualTo(5);
+        verifyNoInteractions(pokeApiPokemonService);
+        verify(pokemonRepository).save(existing);
+    }
+
+    @Test
     void db_login_updatesLastLogin() {
         BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
         String hash = enc.encode("password123");
@@ -313,5 +361,20 @@ class AuthenticationServiceTest {
         Optional<String> r2 = svc.login("user", "");
         assertTrue(r1.isEmpty());
         assertTrue(r2.isEmpty());
+    }
+
+    private static PokemonEntity existingPokemon(
+            int id,
+            String name,
+            Integer evolutionId,
+            int evolutionStage
+    ) {
+        PokemonEntity pokemon = new PokemonEntity();
+        pokemon.setId(id);
+        pokemon.setName(name);
+        pokemon.setImageUrl("https://assets.example.test/" + id + ".png");
+        pokemon.setEvolutionId(evolutionId);
+        pokemon.setEvolutionStage(evolutionStage);
+        return pokemon;
     }
 }

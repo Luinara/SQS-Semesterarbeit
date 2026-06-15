@@ -20,6 +20,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -242,8 +243,17 @@ public class AuthenticationService {
     private void seedStarterChain(int selectedStarterId) {
         for (StarterPokemonCatalog.StarterPokemonSeed seed
                 : StarterPokemonCatalog.chainForStarter(selectedStarterId)) {
+            Optional<PokemonEntity> existingPokemon = pokemonRepository.findById(seed.id());
+            if (existingPokemon.isPresent()) {
+                PokemonEntity pokemon = existingPokemon.get();
+                if (syncLocalEvolutionMetadata(pokemon, seed)) {
+                    pokemonRepository.save(pokemon);
+                }
+                continue;
+            }
+
             PokeApiPokemonService.PokemonDetails details = loadPokemonDetails(seed);
-            PokemonEntity pokemon = pokemonRepository.findById(seed.id()).orElseGet(PokemonEntity::new);
+            PokemonEntity pokemon = new PokemonEntity();
             pokemon.setId(seed.id());
             pokemon.setName(details.name());
             pokemon.setImageUrl(details.imageUrl());
@@ -251,6 +261,25 @@ public class AuthenticationService {
             pokemon.setEvolutionStage(seed.evolutionStage());
             pokemonRepository.save(pokemon);
         }
+    }
+
+    private boolean syncLocalEvolutionMetadata(
+            PokemonEntity pokemon,
+            StarterPokemonCatalog.StarterPokemonSeed seed
+    ) {
+        boolean changed = false;
+
+        if (!Objects.equals(pokemon.getEvolutionId(), seed.evolutionId())) {
+            pokemon.setEvolutionId(seed.evolutionId());
+            changed = true;
+        }
+
+        if (!Objects.equals(pokemon.getEvolutionStage(), seed.evolutionStage())) {
+            pokemon.setEvolutionStage(seed.evolutionStage());
+            changed = true;
+        }
+
+        return changed;
     }
 
     private PokeApiPokemonService.PokemonDetails loadPokemonDetails(
