@@ -26,6 +26,7 @@ export interface BackendTaskCompletionDto {
 export interface BackendGameStateDto {
   waterLevel: number;
   foodLevel: number;
+  currentPokemonId?: number | null;
   pokemonImageUrl: string | null;
   pokemonName?: string | null;
   pokemonLevel: number;
@@ -67,7 +68,7 @@ export class BackendApiService {
       }),
     });
 
-    return this.loadDashboard(credentials.username);
+    return this.loadDashboard(credentials.username, credentials.starterPokemonSpecies);
   }
 
   async logout(): Promise<void> {
@@ -82,13 +83,16 @@ export class BackendApiService {
     });
   }
 
-  async loadDashboard(username: string): Promise<DashboardSnapshot> {
+  async loadDashboard(
+    username: string,
+    starterPokemonSpeciesFallback?: StarterPokemonSpeciesName
+  ): Promise<DashboardSnapshot> {
     const [tasks, gameState] = await Promise.all([
       this.getJson<BackendTaskDto[]>('/api/tasks'),
       this.getJson<BackendGameStateDto>('/api/user/game-state'),
     ]);
 
-    return this.createDashboardSnapshot(username, tasks, gameState);
+    return this.createDashboardSnapshot(username, tasks, gameState, starterPokemonSpeciesFallback);
   }
 
   async completeTask(username: string, taskId: string): Promise<DashboardSnapshot> {
@@ -130,17 +134,24 @@ export class BackendApiService {
   private createDashboardSnapshot(
     username: string,
     tasks: BackendTaskDto[],
-    backendGameState: BackendGameStateDto
+    backendGameState: BackendGameStateDto,
+    starterPokemonSpeciesFallback?: StarterPokemonSpeciesName
   ): DashboardSnapshot {
     const displayTasks = mapBackendTasks(tasks, backendGameState.tasks ?? []);
     const totalEarnedPoints = displayTasks
       .filter((task) => task.isCompleted)
       .reduce((total, task) => total + task.points, 0);
     const pokemonLevel = Math.max(1, backendGameState.pokemonLevel || 1);
+    const pokemonById = resolvePokemonSpeciesById(backendGameState.currentPokemonId);
     const backendPokemonSpecies = normalizePokemonSpeciesName(backendGameState.pokemonName);
-    const starterPokemonSpecies = resolveStarterPokemonSpecies(backendPokemonSpecies);
     const pokemonSpecies =
-      backendPokemonSpecies ?? resolvePokemonSpeciesForLevel(pokemonLevel, starterPokemonSpecies);
+      pokemonById ??
+      backendPokemonSpecies ??
+      resolvePokemonSpeciesForLevel(
+        pokemonLevel,
+        starterPokemonSpeciesFallback ?? 'bulbasaur'
+      );
+    const starterPokemonSpecies = resolveStarterPokemonSpecies(pokemonSpecies);
 
     return {
       user: {
@@ -259,6 +270,22 @@ function mapStarterPokemonToId(starterPokemonSpecies: StarterPokemonSpeciesName)
   };
 
   return starterPokemonIds[starterPokemonSpecies];
+}
+
+function resolvePokemonSpeciesById(pokemonId: number | null | undefined): PokemonSpeciesName | undefined {
+  const pokemonSpeciesById: Record<number, PokemonSpeciesName> = {
+    1: 'bulbasaur',
+    2: 'ivysaur',
+    3: 'venusaur',
+    4: 'charmander',
+    5: 'charmeleon',
+    6: 'charizard',
+    7: 'squirtle',
+    8: 'wartortle',
+    9: 'blastoise',
+  };
+
+  return pokemonId == null ? undefined : pokemonSpeciesById[pokemonId];
 }
 
 function normalizePokemonSpeciesName(
