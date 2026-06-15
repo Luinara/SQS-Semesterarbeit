@@ -29,13 +29,30 @@
       </div>
     }
 
-    <button sqsButton size="sm" variant="secondary" (click)="requestReset()">Neu laden</button>
-    <button sqsButton size="sm" variant="ghost" (click)="requestLogout()">Abmelden</button>
+    <button
+      sqsButton
+      size="sm"
+      variant="secondary"
+      [disabled]="isBusy()"
+      (click)="requestReset()"
+    >
+      {{ isBusy() ? 'Lädt...' : 'Neu laden' }}
+    </button>
+    <button
+      sqsButton
+      size="sm"
+      variant="ghost"
+      [disabled]="isBusy()"
+      (click)="requestLogout()"
+    >
+      Abmelden
+    </button>
     <button
       sqsButton
       size="sm"
       variant="ghost"
       class="top-bar__danger-action"
+      [disabled]="isBusy()"
       (click)="requestAccountDelete()"
     >
       Profil löschen

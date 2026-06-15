@@ -29,7 +29,7 @@ export const QUALITY_RULES = {
 
 export const DEMO_ACCOUNT = {
   username: 'demo',
-  password: 'cozyfocus',
+  password: 'password123',
   userName: 'demo',
   starterPokemonSpecies: 'bulbasaur',
 } as const;

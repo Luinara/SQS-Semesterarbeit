@@ -142,15 +142,21 @@
           <div class="pet-card__actions">
             <button
               sqsButton
-              [disabled]="!canFeed()"
-              [variant]="canFeed() ? 'primary' : 'secondary'"
+              [disabled]="isBusy() || !canFeed()"
+              [variant]="isBusy() || !canFeed() ? 'secondary' : 'primary'"
               (click)="requestFeeding()"
             >
-              Pokémon trainieren
+              {{ isBusy() ? 'Speichert...' : 'Pokémon trainieren' }}
             </button>
 
-            <button sqsButton variant="soft" type="button" (click)="requestTestLevelUp()">
-              Level-Up testen
+            <button
+              sqsButton
+              variant="soft"
+              type="button"
+              [disabled]="isBusy()"
+              (click)="requestTestLevelUp()"
+            >
+              {{ isBusy() ? 'Bitte warten...' : 'Level-Up testen' }}
             </button>
           </div>
         </div>

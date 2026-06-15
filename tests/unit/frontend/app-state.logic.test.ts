@@ -26,7 +26,7 @@ describe("app-state.logic", () => {
 
     const account = findAccountForLogin(snapshot.accounts, {
       username: "  DEMO ",
-      password: "cozyfocus",
+      password: "password123",
     });
 
     expect(account?.user.userName).toBe("demo");

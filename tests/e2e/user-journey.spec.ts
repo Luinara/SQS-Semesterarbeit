@@ -132,7 +132,7 @@ test.describe("PokeHabit", () => {
     await page.goto("/auth", { waitUntil: "domcontentloaded", timeout: 10000 });
 
     await page.getByLabel("Spielername").fill("demo");
-    await page.getByLabel("Passwort").fill("cozyfocus");
+    await page.getByLabel("Passwort").fill("password123");
     await page
       .getByRole("button", { name: "Einloggen und weitermachen" })
       .click();

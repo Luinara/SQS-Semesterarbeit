@@ -32,6 +32,7 @@ export class PetCardComponent {
   readonly pokemonSourceLabel = input('Lokaler Fallback');
   readonly feedCost = input(1);
   readonly isLevelingUp = input(false);
+  readonly isBusy = input(false);
   readonly feedRequested = output<void>();
   readonly testLevelUpRequested = output<void>();
   readonly weatherRefreshRequested = output<void>();
@@ -130,10 +131,18 @@ export class PetCardComponent {
   });
 
   requestFeeding(): void {
+    if (this.isBusy() || !this.canFeed()) {
+      return;
+    }
+
     this.feedRequested.emit();
   }
 
   requestTestLevelUp(): void {
+    if (this.isBusy()) {
+      return;
+    }
+
     this.testLevelUpRequested.emit();
   }
 

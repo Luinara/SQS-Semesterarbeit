@@ -317,7 +317,7 @@ Beispiel:
 ```ts
 const result = this.appState.login({
   email: 'demo@sqs.app',
-  password: 'cozyfocus',
+  password: 'password123',
 });
 
 if (result.success) {
@@ -549,7 +549,7 @@ Guards:
 
 ```text
 E-Mail: demo@sqs.app
-Passwort: cozyfocus
+Passwort: password123
 ```
 
 ## Was wäre später eine echte Backend-API?

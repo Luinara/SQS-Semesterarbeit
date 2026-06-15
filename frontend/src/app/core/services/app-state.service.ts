@@ -21,11 +21,13 @@ export class AppStateService {
   private readonly activeGameState = signal<GameState | null>(null);
   private readonly activeBackendGameState = signal<BackendGameStateDto | null>(null);
   private readonly isSessionRestoring = signal(false);
+  private readonly activeActionCount = signal(0);
   private feedbackClearTimeout: ReturnType<typeof setTimeout> | null = null;
   private levelUpAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
 
   readonly isAuthenticated = computed(() => this.activeUser() !== null);
   readonly isLoading = computed(() => this.isSessionRestoring());
+  readonly isActionPending = computed(() => this.activeActionCount() > 0);
   readonly user = computed(() => this.activeUser());
   readonly pet = computed(() => this.activeGameState()?.pet ?? null);
   readonly tasks = computed(() => this.activeGameState()?.tasks ?? []);
@@ -146,172 +148,199 @@ export class AppStateService {
   }
 
   async logout(): Promise<void> {
-    try {
-      await this.backendApi.logout();
-    } finally {
-      clearStoredUsername();
-      this.clearSession();
-    }
+    await this.runAction(async () => {
+      try {
+        await this.backendApi.logout();
+      } finally {
+        clearStoredUsername();
+        this.clearSession();
+      }
+    });
   }
 
   async deleteAccount(): Promise<AuthResult> {
-    try {
-      await this.backendApi.deleteAccount();
-      clearStoredUsername();
-      this.clearSession();
+    return this.runAction(async () => {
+      try {
+        await this.backendApi.deleteAccount();
+        clearStoredUsername();
+        this.clearSession();
 
-      return {
-        success: true,
-        message: 'Profil gelöscht.',
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: getApiErrorMessage(error, 'Profil konnte nicht gelöscht werden.'),
-      };
-    }
+        return {
+          success: true,
+          message: 'Profil gelöscht.',
+        };
+      } catch (error) {
+        return {
+          success: false,
+          message: getApiErrorMessage(error, 'Profil konnte nicht gelöscht werden.'),
+        };
+      }
+    });
   }
 
   async completeTask(taskId: string): Promise<void> {
     const username = this.activeUser()?.userName;
 
-    if (!username) {
+    if (!username || this.isActionPending()) {
       return;
     }
 
-    try {
-      const before = this.activeGameState();
-      const snapshot = await this.backendApi.completeTask(
-        username,
-        taskId,
-        this.pet()?.starterPokemonSpecies
-      );
-      const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
+    await this.runAction(async () => {
+      try {
+        const before = this.activeGameState();
+        const snapshot = await this.backendApi.completeTask(
+          username,
+          taskId,
+          this.pet()?.starterPokemonSpecies
+        );
+        const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
 
-      if (!didLevelUp) {
+        if (!didLevelUp) {
+          this.showFeedback({
+            id: createFeedbackId('quest'),
+            kind: 'quest',
+            message:
+              snapshot.gameState.totalCompletedTasks > (before?.totalCompletedTasks ?? 0)
+                ? 'Quest erledigt. Dein Spielstand wurde aktualisiert.'
+                : 'Spielstand wurde aktualisiert.',
+          });
+        }
+      } catch (error) {
         this.showFeedback({
-          id: createFeedbackId('quest'),
-          kind: 'quest',
-          message:
-            snapshot.gameState.totalCompletedTasks > (before?.totalCompletedTasks ?? 0)
-              ? 'Quest erledigt. Dein Spielstand wurde aktualisiert.'
-              : 'Spielstand wurde aktualisiert.',
+          id: createFeedbackId('info'),
+          kind: 'info',
+          message: getApiErrorMessage(error, 'Quest konnte nicht abgeschlossen werden.'),
         });
       }
-    } catch (error) {
-      this.showFeedback({
-        id: createFeedbackId('info'),
-        kind: 'info',
-        message: getApiErrorMessage(error, 'Quest konnte nicht abgeschlossen werden.'),
-      });
-    }
+    });
   }
 
   async addWater(amountMl: number): Promise<void> {
     const username = this.activeUser()?.userName;
 
-    if (!username) {
+    if (!username || this.isActionPending()) {
       return;
     }
 
-    try {
-      const snapshot = await this.backendApi.addWater(
-        username,
-        amountMl,
-        this.pet()?.starterPokemonSpecies
-      );
-      const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
+    await this.runAction(async () => {
+      try {
+        const snapshot = await this.backendApi.addWater(
+          username,
+          amountMl,
+          this.pet()?.starterPokemonSpecies
+        );
+        const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
 
-      if (!didLevelUp) {
+        if (!didLevelUp) {
+          this.showFeedback({
+            id: createFeedbackId('hydration'),
+            kind: 'hydration',
+            message: `+${amountMl} ml Wasser getrunken.`,
+          });
+        }
+      } catch (error) {
         this.showFeedback({
-          id: createFeedbackId('hydration'),
-          kind: 'hydration',
-          message: `+${amountMl} ml Wasser getrunken.`,
+          id: createFeedbackId('info'),
+          kind: 'info',
+          message: getApiErrorMessage(error, 'Wasser konnte nicht gespeichert werden.'),
         });
       }
-    } catch (error) {
-      this.showFeedback({
-        id: createFeedbackId('info'),
-        kind: 'info',
-        message: getApiErrorMessage(error, 'Wasser konnte nicht gespeichert werden.'),
-      });
-    }
+    });
   }
 
   async feedPet(): Promise<void> {
     const username = this.activeUser()?.userName;
 
-    if (!username) {
+    if (!username || this.isActionPending()) {
       return;
     }
 
-    try {
-      const snapshot = await this.backendApi.feed(username, this.pet()?.starterPokemonSpecies);
-      const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
+    await this.runAction(async () => {
+      try {
+        const snapshot = await this.backendApi.feed(username, this.pet()?.starterPokemonSpecies);
+        const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
 
-      if (!didLevelUp) {
+        if (!didLevelUp) {
+          this.showFeedback({
+            id: createFeedbackId('feeding'),
+            kind: 'feeding',
+            message: 'Feed-Punkte wurden für dein Pokémon eingesetzt.',
+          });
+        }
+      } catch (error) {
         this.showFeedback({
-          id: createFeedbackId('feeding'),
-          kind: 'feeding',
-          message: 'Feed-Punkte wurden für dein Pokémon eingesetzt.',
+          id: createFeedbackId('info'),
+          kind: 'info',
+          message: getApiErrorMessage(error, 'Pokémon konnte nicht gefüttert werden.'),
         });
       }
-    } catch (error) {
-      this.showFeedback({
-        id: createFeedbackId('info'),
-        kind: 'info',
-        message: getApiErrorMessage(error, 'Pokémon konnte nicht gefüttert werden.'),
-      });
-    }
+    });
   }
 
   async testLevelUp(): Promise<void> {
     const username = this.activeUser()?.userName;
 
-    if (!username) {
+    if (!username || this.isActionPending()) {
       return;
     }
 
-    try {
-      const snapshot = await this.backendApi.testLevelUp(username, this.pet()?.starterPokemonSpecies);
-      const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
+    await this.runAction(async () => {
+      try {
+        const snapshot = await this.backendApi.testLevelUp(
+          username,
+          this.pet()?.starterPokemonSpecies
+        );
+        const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
 
-      if (!didLevelUp) {
+        if (!didLevelUp) {
+          this.showFeedback({
+            id: createFeedbackId('info'),
+            kind: 'info',
+            message: 'Test-Level-Up ausgeführt.',
+          });
+        }
+      } catch (error) {
         this.showFeedback({
           id: createFeedbackId('info'),
           kind: 'info',
-          message: 'Test-Level-Up ausgeführt.',
+          message: getApiErrorMessage(error, 'Test-Level-Up konnte nicht ausgeführt werden.'),
         });
       }
-    } catch (error) {
-      this.showFeedback({
-        id: createFeedbackId('info'),
-        kind: 'info',
-        message: getApiErrorMessage(error, 'Test-Level-Up konnte nicht ausgeführt werden.'),
-      });
-    }
+    });
   }
 
   async resetCurrentProgress(): Promise<void> {
     const username = this.activeUser()?.userName;
 
-    if (!username) {
+    if (!username || this.isActionPending()) {
       return;
     }
 
+    await this.runAction(async () => {
+      try {
+        this.applyDashboardSnapshot(await this.backendApi.loadDashboard(username));
+        this.showFeedback({
+          id: createFeedbackId('info'),
+          kind: 'info',
+          message: 'Spielstand neu geladen.',
+        });
+      } catch (error) {
+        this.showFeedback({
+          id: createFeedbackId('info'),
+          kind: 'info',
+          message: getApiErrorMessage(error, 'Spielstand konnte nicht neu geladen werden.'),
+        });
+      }
+    });
+  }
+
+  private async runAction<T>(action: () => Promise<T>): Promise<T> {
+    this.activeActionCount.update((count) => count + 1);
+
     try {
-      this.applyDashboardSnapshot(await this.backendApi.loadDashboard(username));
-      this.showFeedback({
-        id: createFeedbackId('info'),
-        kind: 'info',
-        message: 'Spielstand neu geladen.',
-      });
-    } catch (error) {
-      this.showFeedback({
-        id: createFeedbackId('info'),
-        kind: 'info',
-        message: getApiErrorMessage(error, 'Spielstand konnte nicht neu geladen werden.'),
-      });
+      return await action();
+    } finally {
+      this.activeActionCount.update((count) => Math.max(0, count - 1));
     }
   }
 

@@ -19,27 +19,44 @@ export class AuthPageComponent {
   readonly mode = signal<AuthMode>('login');
   readonly feedbackMessage = signal<string | null>(null);
   readonly hasError = signal(false);
+  readonly isSubmitting = signal(false);
 
   showMode(mode: AuthMode): void {
+    if (this.isSubmitting()) {
+      return;
+    }
+
     this.mode.set(mode);
     this.feedbackMessage.set(null);
     this.hasError.set(false);
   }
 
   async submitCredentials(submission: AuthSubmission): Promise<void> {
-    const result =
-      'userName' in submission
-        ? await this.appState.register(submission)
-        : await this.appState.login(submission);
-
-    if (!result.success) {
-      this.feedbackMessage.set(result.message);
-      this.hasError.set(true);
+    if (this.isSubmitting()) {
       return;
     }
 
-    this.feedbackMessage.set(result.message);
+    this.isSubmitting.set(true);
+    this.feedbackMessage.set(null);
     this.hasError.set(false);
-    await this.router.navigateByUrl('/dashboard');
+
+    try {
+      const result =
+        'userName' in submission
+          ? await this.appState.register(submission)
+          : await this.appState.login(submission);
+
+      if (!result.success) {
+        this.feedbackMessage.set(result.message);
+        this.hasError.set(true);
+        return;
+      }
+
+      this.feedbackMessage.set(result.message);
+      this.hasError.set(false);
+      await this.router.navigateByUrl('/dashboard');
+    } finally {
+      this.isSubmitting.set(false);
+    }
   }
 }

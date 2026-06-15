@@ -40,10 +40,24 @@
     </span>
 
     <div class="hydration-gauge__actions" aria-label="Wasser trinken">
-      <button sqsButton size="sm" variant="secondary" type="button" (click)="addWater(250)">
+      <button
+        sqsButton
+        size="sm"
+        variant="secondary"
+        type="button"
+        [disabled]="isBusy() || isDone()"
+        (click)="addWater(250)"
+      >
         +250 ml
       </button>
-      <button sqsButton size="sm" variant="secondary" type="button" (click)="addWater(500)">
+      <button
+        sqsButton
+        size="sm"
+        variant="secondary"
+        type="button"
+        [disabled]="isBusy() || isDone()"
+        (click)="addWater(500)"
+      >
         +500 ml
       </button>
     </div>

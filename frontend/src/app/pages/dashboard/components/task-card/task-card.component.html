@@ -98,11 +98,19 @@
       <button
         sqsButton
         size="sm"
-        [disabled]="task().isCompleted || isLocked()"
-        [variant]="task().isCompleted || isLocked() ? 'secondary' : 'primary'"
+        [disabled]="task().isCompleted || isLocked() || isBusy()"
+        [variant]="task().isCompleted || isLocked() || isBusy() ? 'secondary' : 'primary'"
         (click)="markTaskAsCompleted()"
       >
-        {{ task().isCompleted ? 'Erledigt' : isLocked() ? 'Gesperrt' : 'Erledigen' }}
+        {{
+          task().isCompleted
+            ? 'Erledigt'
+            : isLocked()
+              ? 'Gesperrt'
+              : isBusy()
+                ? 'Speichert...'
+                : 'Erledigen'
+        }}
       </button>
     </div>
   </div>
