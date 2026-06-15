@@ -15,6 +15,7 @@
           role="tab"
           [attr.aria-selected]="mode() === 'login'"
           [class.auth-page__mode-switch-button--active]="mode() === 'login'"
+          [disabled]="isSubmitting()"
           (click)="showMode('login')"
         >
           Login
@@ -25,6 +26,7 @@
           role="tab"
           [attr.aria-selected]="mode() === 'register'"
           [class.auth-page__mode-switch-button--active]="mode() === 'register'"
+          [disabled]="isSubmitting()"
           (click)="showMode('register')"
         >
           Registrieren
@@ -47,6 +49,7 @@
           [mode]="'login'"
           [feedbackMessage]="feedbackMessage()"
           [hasError]="hasError()"
+          [isSubmitting]="isSubmitting()"
           (credentialsSubmitted)="submitCredentials($event)"
         />
       } @else {
@@ -54,6 +57,7 @@
           [mode]="'register'"
           [feedbackMessage]="feedbackMessage()"
           [hasError]="hasError()"
+          [isSubmitting]="isSubmitting()"
           (credentialsSubmitted)="submitCredentials($event)"
         />
       }

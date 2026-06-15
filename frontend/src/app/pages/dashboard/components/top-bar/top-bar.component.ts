@@ -16,6 +16,7 @@ export class TopBarComponent {
   readonly totalTasks = input(0);
   readonly demoUsername = input<string | null>(null);
   readonly demoPassword = input<string | null>(null);
+  readonly isBusy = input(false);
 
   readonly resetRequested = output<void>();
   readonly logoutRequested = output<void>();
@@ -25,14 +26,26 @@ export class TopBarComponent {
   readonly hasDemoAccess = computed(() => Boolean(this.demoUsername() && this.demoPassword()));
 
   requestReset(): void {
+    if (this.isBusy()) {
+      return;
+    }
+
     this.resetRequested.emit();
   }
 
   requestLogout(): void {
+    if (this.isBusy()) {
+      return;
+    }
+
     this.logoutRequested.emit();
   }
 
   requestAccountDelete(): void {
+    if (this.isBusy()) {
+      return;
+    }
+
     this.accountDeleteRequested.emit();
   }
 }

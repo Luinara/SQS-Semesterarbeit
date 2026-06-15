@@ -14,10 +14,11 @@ export class TaskCardComponent {
   readonly task = input.required<TaskItem>();
   readonly isLocked = input(false);
   readonly lockedReason = input('');
+  readonly isBusy = input(false);
   readonly completeRequested = output<string>();
 
   markTaskAsCompleted(): void {
-    if (this.isLocked()) {
+    if (this.isBusy() || this.isLocked() || this.task().isCompleted) {
       return;
     }
 

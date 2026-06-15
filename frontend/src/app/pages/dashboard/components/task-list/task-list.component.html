@@ -39,6 +39,7 @@
       <sqs-hydration-gauge
         [task]="hydrationTask"
         [waterLevel]="waterLevel()"
+        [isBusy]="isBusy()"
         (waterAdded)="addWater($event)"
       />
     }
@@ -48,6 +49,7 @@
         [task]="task"
         [isLocked]="isTaskLocked(task)"
         [lockedReason]="getTaskLockedReason(task)"
+        [isBusy]="isBusy()"
         (completeRequested)="finishTask($event)"
       />
     }

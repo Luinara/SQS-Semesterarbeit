@@ -7,6 +7,7 @@
       [totalTasks]="appState.totalTaskCount()"
       [demoUsername]="demoAccount.username"
       [demoPassword]="demoAccount.password"
+      [isBusy]="appState.isActionPending()"
       (resetRequested)="resetDemoData()"
       (logoutRequested)="logout()"
       (accountDeleteRequested)="deleteAccount()"
@@ -19,6 +20,7 @@
           [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
           [waterLevel]="appState.waterLevel()"
           [qualityQuestProgress]="appState.qualityQuestProgress()"
+          [isBusy]="appState.isActionPending()"
           (taskCompleted)="completeTask($event)"
           (waterAdded)="addWater($event)"
         />
@@ -41,6 +43,7 @@
           [pokemonSourceLabel]="pokemon.sourceLabel()"
           [feedCost]="appState.feedCost"
           [isLevelingUp]="appState.isPetLevelingUp()"
+          [isBusy]="appState.isActionPending()"
           (feedRequested)="feedPet()"
           (testLevelUpRequested)="testLevelUpPet()"
           (weatherRefreshRequested)="refreshWeather()"

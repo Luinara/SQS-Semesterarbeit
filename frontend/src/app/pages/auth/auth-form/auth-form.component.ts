@@ -78,6 +78,7 @@ export class AuthFormComponent {
   readonly mode = input.required<AuthMode>();
   readonly feedbackMessage = input<string | null>(null);
   readonly hasError = input(false);
+  readonly isSubmitting = input(false);
   readonly credentialsSubmitted = output<AuthSubmission>();
 
   readonly form = this.formBuilder.group({
@@ -105,6 +106,10 @@ export class AuthFormComponent {
   }
 
   submitForm(): void {
+    if (this.isSubmitting()) {
+      return;
+    }
+
     this.hasSubmittedAttempt = true;
 
     if (this.form.invalid) {
@@ -136,6 +141,10 @@ export class AuthFormComponent {
   }
 
   selectStarterPokemon(starterPokemonSpecies: StarterPokemonSpeciesName): void {
+    if (this.isSubmitting()) {
+      return;
+    }
+
     this.form.controls.starterPokemonSpecies.setValue(starterPokemonSpecies);
     this.form.controls.starterPokemonSpecies.markAsDirty();
   }

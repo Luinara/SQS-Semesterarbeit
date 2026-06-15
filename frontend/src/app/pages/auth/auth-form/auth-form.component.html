@@ -7,6 +7,7 @@
       formControlName="username"
       autocomplete="username"
       placeholder="demo"
+      [disabled]="isSubmitting()"
     />
 
     @if (shouldShowError(form.controls.username)) {
@@ -22,6 +23,7 @@
       formControlName="password"
       [attr.autocomplete]="mode() === 'register' ? 'new-password' : 'current-password'"
       [placeholder]="mode() === 'register' ? 'Mindestens 8 Zeichen' : 'Passwort'"
+      [disabled]="isSubmitting()"
     />
 
     @if (shouldShowError(form.controls.password)) {
@@ -36,7 +38,12 @@
       <div class="auth-form__starter-options">
         @for (starter of starterPokemonOptions; track starter.species) {
           <label (click)="selectStarterPokemon(starter.species)">
-            <input type="radio" formControlName="starterPokemonSpecies" [value]="starter.species" />
+            <input
+              type="radio"
+              formControlName="starterPokemonSpecies"
+              [value]="starter.species"
+              [disabled]="isSubmitting()"
+            />
             <span>
               <strong>{{ starter.label }}</strong>
               <small>{{ starter.description }}</small>
@@ -53,7 +60,11 @@
     </div>
   }
 
-  <button sqsButton type="submit" [fullWidth]="true">
-    {{ mode() === 'register' ? 'Profil anlegen und starten' : 'Einloggen und weitermachen' }}
+  <button sqsButton type="submit" [fullWidth]="true" [disabled]="isSubmitting()">
+    @if (isSubmitting()) {
+      Bitte warten...
+    } @else {
+      {{ mode() === 'register' ? 'Profil anlegen und starten' : 'Einloggen und weitermachen' }}
+    }
   </button>
 </form>

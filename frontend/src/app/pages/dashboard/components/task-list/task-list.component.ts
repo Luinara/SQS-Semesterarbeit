@@ -53,6 +53,7 @@ export class TaskListComponent {
   readonly availableFoodPoints = input(0);
   readonly waterLevel = input(0);
   readonly qualityQuestProgress = input<QualityQuestProgress | null>(null);
+  readonly isBusy = input(false);
   readonly taskCompleted = output<string>();
   readonly waterAdded = output<number>();
 
@@ -65,10 +66,18 @@ export class TaskListComponent {
   );
 
   finishTask(taskId: string): void {
+    if (this.isBusy()) {
+      return;
+    }
+
     this.taskCompleted.emit(taskId);
   }
 
   addWater(amountMl: number): void {
+    if (this.isBusy()) {
+      return;
+    }
+
     this.waterAdded.emit(amountMl);
   }
 

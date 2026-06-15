@@ -11,6 +11,9 @@ import {
   resolveStarterPokemonSpecies,
 } from '../../shared/mock/mock-data';
 
+const BACKEND_UNREACHABLE_MESSAGE =
+  'Backend ist gerade nicht erreichbar. Falls Docker frisch gestartet wurde: kurz warten und nochmal probieren.';
+
 export interface BackendTaskDto {
   id: number;
   title: string;
@@ -224,14 +227,20 @@ export class BackendApiService {
   }
 
   private async request(url: string, init: RequestInit = {}): Promise<Response> {
-    const response = await fetch(url, {
-      ...init,
-      credentials: 'include',
-      headers: {
-        ...(init.body ? { 'Content-Type': 'application/json' } : {}),
-        ...(init.headers ?? {}),
-      },
-    });
+    let response: Response;
+
+    try {
+      response = await fetch(url, {
+        ...init,
+        credentials: 'include',
+        headers: {
+          ...(init.body ? { 'Content-Type': 'application/json' } : {}),
+          ...(init.headers ?? {}),
+        },
+      });
+    } catch {
+      throw new BackendApiError(0, BACKEND_UNREACHABLE_MESSAGE);
+    }
 
     if (!response.ok) {
       throw new BackendApiError(response.status, await readErrorMessage(response));

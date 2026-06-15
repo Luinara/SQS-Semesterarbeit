@@ -5,6 +5,7 @@ import io.github.luinara.sqs.pokemon.PokemonEntity;
 import io.github.luinara.sqs.pokemon.PokemonRepository;
 import io.github.luinara.sqs.pokemon.StarterPokemonCatalog;
 import io.github.luinara.sqs.task.TaskRepository;
+import io.github.luinara.sqs.task.UserTaskRepository;
 import io.github.luinara.sqs.task.entity.TaskEntity;
 import io.github.luinara.sqs.user.UserRepository;
 import org.springframework.boot.ApplicationArguments;
@@ -21,11 +22,12 @@ import java.util.List;
 public class DevDataSeeder implements ApplicationRunner {
 
     private static final String DEMO_USERNAME = "demo";
-    private static final String DEMO_PASSWORD = "cozyfocus";
+    private static final String DEMO_PASSWORD = "password123";
 
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final UserTaskRepository userTaskRepository;
     private final PokemonRepository pokemonRepository;
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -33,11 +35,13 @@ public class DevDataSeeder implements ApplicationRunner {
             AuthenticationService authenticationService,
             UserRepository userRepository,
             TaskRepository taskRepository,
+            UserTaskRepository userTaskRepository,
             PokemonRepository pokemonRepository
     ) {
         this.authenticationService = authenticationService;
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
+        this.userTaskRepository = userTaskRepository;
         this.pokemonRepository = pokemonRepository;
     }
 
@@ -57,11 +61,37 @@ public class DevDataSeeder implements ApplicationRunner {
             if (user.getCurrentPokemonId() == null) {
                 user.setCurrentPokemonId(1);
             }
+            resetDemoProgress(user);
             userRepository.save(user);
             return;
         }
 
         authenticationService.createUser(DEMO_USERNAME, DEMO_PASSWORD);
+        userRepository.findByUsernameIgnoreCase(DEMO_USERNAME)
+                .ifPresent(user -> {
+                    resetDemoProgress(user);
+                    userRepository.save(user);
+                });
+    }
+
+    private void resetDemoProgress(io.github.luinara.sqs.user.UserEntity user) {
+        if (user.getId() != null) {
+            userTaskRepository.deleteByUserId(user.getId());
+        }
+
+        if (user.getCurrentPokemonId() == null) {
+            user.setCurrentPokemonId(1);
+        }
+        user.setEgg(true);
+        user.setHappiness(0);
+        user.setHydrationMl(0);
+        user.setHunger(0);
+        user.setPokemonLevel(1);
+        user.setPokemonXp(0);
+        user.setPendingFeedPoints(0);
+        user.setLastTaskCompletionDate(null);
+        user.setLastLevelUpAt(null);
+        user.setHatchedAt(null);
     }
 
     private void seedPokemon() {
