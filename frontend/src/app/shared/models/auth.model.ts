@@ -1,3 +1,5 @@
+import { StarterPokemonSpeciesName } from './pet.model';
+
 export type AuthMode = 'login' | 'register';
 
 export interface LoginCredentials {
@@ -7,6 +9,7 @@ export interface LoginCredentials {
 
 export interface RegisterCredentials extends LoginCredentials {
   userName: string;
+  starterPokemonSpecies: StarterPokemonSpeciesName;
 }
 
 export type AuthSubmission = LoginCredentials | RegisterCredentials;

@@ -15,11 +15,22 @@ export interface PetState {
   lastLevelUpAt: string | null;
   goodCareStreakDays: number;
   lastGoodCareDay: string | null;
+  starterPokemonSpecies: StarterPokemonSpeciesName;
   pokemonSpecies: PokemonSpeciesName;
 }
 
 export type PetCareState = 'needs-care' | 'ready-to-feed' | 'growing' | 'thriving' | 'calm';
-export type PokemonSpeciesName = 'bulbasaur' | 'ivysaur' | 'venusaur';
+export type StarterPokemonSpeciesName = 'bulbasaur' | 'charmander' | 'squirtle';
+export type PokemonSpeciesName =
+  | 'bulbasaur'
+  | 'ivysaur'
+  | 'venusaur'
+  | 'charmander'
+  | 'charmeleon'
+  | 'charizard'
+  | 'squirtle'
+  | 'wartortle'
+  | 'blastoise';
 export type PokemonSource = 'api' | 'fallback';
 
 export interface PokemonSnapshot {

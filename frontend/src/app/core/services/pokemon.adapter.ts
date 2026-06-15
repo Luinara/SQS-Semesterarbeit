@@ -77,6 +77,60 @@ export const fallbackPokemonBySpecies: Record<PokemonSpeciesName, PokemonSnapsho
     types: ['grass', 'poison'],
     source: 'fallback',
   },
+  charmander: {
+    id: 4,
+    name: 'charmander',
+    displayName: 'Charmander',
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+    types: ['fire'],
+    source: 'fallback',
+  },
+  charmeleon: {
+    id: 5,
+    name: 'charmeleon',
+    displayName: 'Charmeleon',
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png',
+    types: ['fire'],
+    source: 'fallback',
+  },
+  charizard: {
+    id: 6,
+    name: 'charizard',
+    displayName: 'Charizard',
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png',
+    types: ['fire', 'flying'],
+    source: 'fallback',
+  },
+  squirtle: {
+    id: 7,
+    name: 'squirtle',
+    displayName: 'Squirtle',
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png',
+    types: ['water'],
+    source: 'fallback',
+  },
+  wartortle: {
+    id: 8,
+    name: 'wartortle',
+    displayName: 'Wartortle',
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png',
+    types: ['water'],
+    source: 'fallback',
+  },
+  blastoise: {
+    id: 9,
+    name: 'blastoise',
+    displayName: 'Blastoise',
+    spriteUrl:
+      'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png',
+    types: ['water'],
+    source: 'fallback',
+  },
 };
 
 function isString(value: string | undefined): value is string {

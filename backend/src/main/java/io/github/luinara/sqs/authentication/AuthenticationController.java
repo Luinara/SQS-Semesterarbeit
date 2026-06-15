@@ -33,7 +33,11 @@ public class AuthenticationController {
         boolean created;
 
         try {
-            created = authenticationService.createUser(req.getUsername(), req.getPassword());
+            created = authenticationService.createUser(
+                    req.getUsername(),
+                    req.getPassword(),
+                    req.getStarterPokemonId()
+            );
         } catch (InvalidRequestException ex) {
             return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
         }

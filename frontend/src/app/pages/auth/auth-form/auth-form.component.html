@@ -29,6 +29,24 @@
     }
   </div>
 
+  @if (mode() === 'register') {
+    <fieldset class="auth-form__starter">
+      <legend>Starter wählen</legend>
+
+      <div class="auth-form__starter-options">
+        @for (starter of starterPokemonOptions; track starter.species) {
+          <label>
+            <input type="radio" formControlName="starterPokemonSpecies" [value]="starter.species" />
+            <span>
+              <strong>{{ starter.label }}</strong>
+              <small>{{ starter.description }}</small>
+            </span>
+          </label>
+        }
+      </div>
+    </fieldset>
+  }
+
   @if (feedbackMessage()) {
     <div class="auth-form__feedback" [class.auth-form__feedback--error]="hasError()">
       {{ feedbackMessage() }}

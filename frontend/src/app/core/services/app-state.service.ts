@@ -116,7 +116,7 @@ export class AppStateService {
 
   async register(credentials: RegisterCredentials): Promise<AuthResult> {
     try {
-      const snapshot = await this.backendApi.signup(credentials.username, credentials.password);
+      const snapshot = await this.backendApi.signup(credentials);
       this.applyDashboardSnapshot(snapshot);
       storeUsername(snapshot.user.userName);
 

@@ -7,6 +7,7 @@ public class GameStateDto {
     private int waterLevel;
     private int foodLevel;
     private String pokemonImageUrl;
+    private String pokemonName;
     private int pokemonLevel;
     private int growth;
     private int happiness;
@@ -27,6 +28,9 @@ public class GameStateDto {
 
     public String getPokemonImageUrl() { return pokemonImageUrl; }
     public void setPokemonImageUrl(String pokemonImageUrl) { this.pokemonImageUrl = pokemonImageUrl; }
+
+    public String getPokemonName() { return pokemonName; }
+    public void setPokemonName(String pokemonName) { this.pokemonName = pokemonName; }
 
     public int getPokemonLevel() { return pokemonLevel; }
     public void setPokemonLevel(int pokemonLevel) { this.pokemonLevel = pokemonLevel; }
