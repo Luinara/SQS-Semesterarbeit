@@ -85,6 +85,13 @@ test.describe("PokeHabit", () => {
         return;
       }
 
+      if (url.pathname === "/api/user/test-level-up") {
+        gameState.pokemonLevel += 1;
+        gameState.growth = 0;
+        await route.fulfill({ json: createGameState(gameState, completions) });
+        return;
+      }
+
       await route.fulfill({ status: 404, json: { error: "not mocked" } });
     });
 
@@ -156,6 +163,9 @@ test.describe("PokeHabit", () => {
     await expect(
       page.getByText("Feed-Punkte wurden für dein Pokémon eingesetzt."),
     ).toBeVisible();
+
+    await page.getByRole("button", { name: "Level-Up testen" }).click();
+    await expect(page.getByText("Level-Up auf 3.")).toBeVisible();
 
     await page.getByRole("button", { name: "Abmelden" }).click();
     await page.waitForURL("**/auth");

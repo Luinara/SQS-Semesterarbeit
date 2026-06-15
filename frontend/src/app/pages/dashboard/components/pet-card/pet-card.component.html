@@ -133,17 +133,26 @@
         <div class="pet-card__footer">
           <div class="pet-card__hint">
             <strong>Training kostet {{ feedCost() }} Punkt.</strong>
-            <span> Level-Ups sind sofort möglich, sobald der Wachstumsbalken voll ist. </span>
+            <span>
+              Level-Ups sind frühestens alle zwei Tage möglich. Mit dem Testbutton kannst du die
+              Animation sofort prüfen.
+            </span>
           </div>
 
-          <button
-            sqsButton
-            [disabled]="!canFeed()"
-            [variant]="canFeed() ? 'primary' : 'secondary'"
-            (click)="requestFeeding()"
-          >
-            Pokémon trainieren
-          </button>
+          <div class="pet-card__actions">
+            <button
+              sqsButton
+              [disabled]="!canFeed()"
+              [variant]="canFeed() ? 'primary' : 'secondary'"
+              (click)="requestFeeding()"
+            >
+              Pokémon trainieren
+            </button>
+
+            <button sqsButton variant="soft" type="button" (click)="requestTestLevelUp()">
+              Level-Up testen
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -110,6 +110,15 @@ export class BackendApiService {
     return this.createDashboardSnapshot(username, tasks, gameState);
   }
 
+  async testLevelUp(username: string): Promise<DashboardSnapshot> {
+    const gameState = await this.getJson<BackendGameStateDto>('/api/user/test-level-up', {
+      method: 'POST',
+    });
+    const tasks = await this.getJson<BackendTaskDto[]>('/api/tasks');
+
+    return this.createDashboardSnapshot(username, tasks, gameState);
+  }
+
   private createDashboardSnapshot(
     username: string,
     tasks: BackendTaskDto[],

@@ -231,6 +231,13 @@
   font-size: 0.92rem;
 }
 
+.pet-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
 @include respond-down(1024px) {
   .pet-card__body {
     grid-template-columns: 1fr;
@@ -264,6 +271,14 @@
 
   .pet-card__microcopy {
     width: 100%;
+  }
+
+  .pet-card__actions {
+    justify-content: stretch;
+  }
+
+  .pet-card__actions button {
+    flex: 1 1 11rem;
   }
 
   .pet-card__weather-form {

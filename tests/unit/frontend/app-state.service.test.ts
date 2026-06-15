@@ -204,6 +204,29 @@ describe("AppStateService", () => {
     expect(service.isPetLevelingUp()).toBe(false);
   });
 
+  it("triggert Level-Up-Feedback über den Test-Level-Up-Buttonpfad", async () => {
+    vi.useFakeTimers();
+    const backendApi = createBackendApiMock({
+      login: createSnapshot(3, 100),
+      testLevelUp: createSnapshot(4, 0),
+    });
+    const service = new AppStateService(backendApi);
+
+    await service.login({ username: "mira", password: "password123" });
+    await service.testLevelUp();
+
+    expect(backendApi.testLevelUp).toHaveBeenCalledWith("mira");
+    expect(service.pet()?.level).toBe(4);
+    expect(service.lastGameFeedback()).toMatchObject({
+      kind: "level-up",
+      message: "Level-Up auf 4.",
+    });
+    expect(service.isPetLevelingUp()).toBe(true);
+    vi.advanceTimersByTime(1200);
+
+    expect(service.isPetLevelingUp()).toBe(false);
+  });
+
   it("triggert keine Animation, wenn das Level gleich bleibt", async () => {
     vi.useFakeTimers();
     const backendApi = createBackendApiMock({
@@ -230,6 +253,7 @@ interface BackendApiMockOptions {
   completeTask?: DashboardSnapshot;
   addWater?: DashboardSnapshot;
   feed?: DashboardSnapshot;
+  testLevelUp?: DashboardSnapshot;
   deleteAccountError?: Error;
 }
 
@@ -244,6 +268,7 @@ function createBackendApiMock(options: BackendApiMockOptions) {
     completeTask: createAsyncMock(options.completeTask),
     addWater: createAsyncMock(options.addWater),
     feed: createAsyncMock(options.feed),
+    testLevelUp: createAsyncMock(options.testLevelUp),
     logout: vi.fn().mockResolvedValue(undefined),
     deleteAccount: createAsyncMock(undefined, options.deleteAccountError),
   } as unknown as ConstructorParameters<typeof AppStateService>[0];

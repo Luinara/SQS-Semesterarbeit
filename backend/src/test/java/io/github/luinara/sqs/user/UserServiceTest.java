@@ -254,6 +254,78 @@ class UserServiceTest {
     }
 
     @Test
+    void testLevelUp_incrementsLevelAndResetsGrowth() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setPokemonLevel(7);
+        entity.setPokemonXp(80);
+        entity.setEgg(false);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.testLevelUp("tester");
+
+        assertThat(dto).isNotNull();
+        assertThat(entity.getPokemonLevel()).isEqualTo(8);
+        assertThat(entity.getPokemonXp()).isZero();
+        assertThat(entity.getLastLevelUpAt()).isNotNull();
+        assertThat(dto.getPokemonLevel()).isEqualTo(8);
+        assertThat(dto.getGrowth()).isZero();
+        verify(userRepository).save(entity);
+    }
+
+    @Test
+    void testLevelUp_hatchesEggAtLevel10() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setPokemonLevel(9);
+        entity.setPokemonXp(100);
+        entity.setEgg(true);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.testLevelUp("tester");
+
+        assertThat(dto).isNotNull();
+        assertThat(entity.isEgg()).isFalse();
+        assertThat(entity.getHatchedAt()).isNotNull();
+    }
+
+    @Test
+    void testLevelUp_evolvesWhenCrossingEvolutionLevel() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setPokemonLevel(24);
+        entity.setPokemonXp(100);
+        entity.setEgg(false);
+        entity.setCurrentPokemonId(100);
+
+        io.github.luinara.sqs.pokemon.PokemonEntity pokemon = new io.github.luinara.sqs.pokemon.PokemonEntity();
+        pokemon.setId(100);
+        pokemon.setEvolutionId(101);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+        when(pokemonRepository.findById(100)).thenReturn(Optional.of(pokemon));
+        when(pokemonRepository.findById(101)).thenReturn(Optional.empty());
+
+        GameStateDto dto = userService.testLevelUp("tester");
+
+        assertThat(dto).isNotNull();
+        assertThat(entity.getPokemonLevel()).isEqualTo(25);
+        assertThat(entity.getCurrentPokemonId()).isEqualTo(101);
+    }
+
+    @Test
+    void testLevelUp_userNotFound_returnsNull() {
+        when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
+
+        GameStateDto dto = userService.testLevelUp("nouser");
+
+        assertThat(dto).isNull();
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
     void deleteAccount_removesDependentRowsAndUser() {
         UserEntity entity = new UserEntity();
         entity.setId(42L);

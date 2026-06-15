@@ -244,6 +244,33 @@ export class AppStateService {
     }
   }
 
+  async testLevelUp(): Promise<void> {
+    const username = this.activeUser()?.userName;
+
+    if (!username) {
+      return;
+    }
+
+    try {
+      const snapshot = await this.backendApi.testLevelUp(username);
+      const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
+
+      if (!didLevelUp) {
+        this.showFeedback({
+          id: createFeedbackId('info'),
+          kind: 'info',
+          message: 'Test-Level-Up ausgeführt.',
+        });
+      }
+    } catch (error) {
+      this.showFeedback({
+        id: createFeedbackId('info'),
+        kind: 'info',
+        message: getApiErrorMessage(error, 'Test-Level-Up konnte nicht ausgeführt werden.'),
+      });
+    }
+  }
+
   async resetCurrentProgress(): Promise<void> {
     const username = this.activeUser()?.userName;
 

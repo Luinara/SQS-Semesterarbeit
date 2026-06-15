@@ -218,7 +218,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void completeTask_levelUpWithRecentLastLevelUp_stillLevelsImmediately() {
+    void completeTask_levelUpBlockedWithinTwoDays_keepsGrowthAtCap() {
         when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
 
         TaskEntity task = new TaskEntity();
@@ -233,13 +233,13 @@ class TaskServiceTest {
         GameStateResult res = taskService.completeTaskForUser("tester", 7L);
 
         assertThat(res.status).isEqualTo(200);
-        assertThat(user.getPokemonLevel()).isEqualTo(4);
-        assertThat(user.getPokemonXp()).isEqualTo(0);
-        assertThat(user.getLastLevelUpAt()).isEqualTo(java.time.OffsetDateTime.parse("2026-06-15T10:00:00Z"));
+        assertThat(user.getPokemonLevel()).isEqualTo(3);
+        assertThat(user.getPokemonXp()).isEqualTo(100);
+        assertThat(user.getLastLevelUpAt()).isEqualTo(java.time.OffsetDateTime.parse("2026-06-14T10:00:00Z"));
     }
 
     @Test
-    void completeTask_levelUpAtGrowthCap_setsLastLevelUpAt() {
+    void completeTask_levelUpAfterTwoDays_setsLastLevelUpAt() {
         when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
 
         TaskEntity task = new TaskEntity();
@@ -249,7 +249,7 @@ class TaskServiceTest {
         when(userTaskRepository.findByUserIdAndTaskId(1L, 8L)).thenReturn(Optional.empty());
         user.setPokemonLevel(3);
         user.setPokemonXp(100);
-        user.setLastLevelUpAt(null);
+        user.setLastLevelUpAt(java.time.OffsetDateTime.parse("2026-06-13T10:00:00Z"));
 
         GameStateResult res = taskService.completeTaskForUser("tester", 8L);
 
