@@ -1,4 +1,7 @@
-import { BackendApiService } from "../../../frontend/src/app/core/services/backend-api.service";
+import {
+  BackendApiError,
+  BackendApiService,
+} from "../../../frontend/src/app/core/services/backend-api.service";
 
 describe("BackendApiService", () => {
   it("meldet sich mit Backend-Username an und mappt API-Tasks in den Dashboard-State", async () => {
@@ -7,7 +10,11 @@ describe("BackendApiService", () => {
       .mockResolvedValueOnce(jsonResponse({ message: "authenticated" }))
       .mockResolvedValueOnce(
         jsonResponse([
-          { id: 1, title: "Wasser trinken", description: "Aus Backend-Task-Tabelle" },
+          {
+            id: 1,
+            title: "Wasser trinken",
+            description: "Aus Backend-Task-Tabelle",
+          },
           { id: 2, title: "30 Minuten lernen", description: "API-Aufgabe" },
         ]),
       )
@@ -57,7 +64,9 @@ describe("BackendApiService", () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(jsonResponse({ success: true }))
-      .mockResolvedValueOnce(jsonResponse([{ id: 2, title: "30 Minuten lernen" }]))
+      .mockResolvedValueOnce(
+        jsonResponse([{ id: 2, title: "30 Minuten lernen" }]),
+      )
       .mockResolvedValueOnce(
         jsonResponse({
           waterLevel: 0,
@@ -96,6 +105,26 @@ describe("BackendApiService", () => {
     );
     expect(snapshot.gameState.tasks[0].isCompleted).toBe(true);
     expect(snapshot.gameState.pet.availableFoodPoints).toBe(20);
+  });
+
+  it("zeigt bei HTML-Fehlerseiten eine kurze Backend-Meldung statt Markup", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response(
+        "<!DOCTYPE html><html><body>404 fallback page</body></html>",
+        {
+          headers: { "Content-Type": "text/html; charset=utf-8" },
+          status: 404,
+        },
+      ),
+    );
+
+    await expect(
+      new BackendApiService().signup("zoe", "secret123"),
+    ).rejects.toMatchObject<Partial<BackendApiError>>({
+      status: 404,
+      message:
+        "Backend nicht erreichbar. Bitte pruefe, ob das Backend laeuft und der Proxy aktiv ist.",
+    });
   });
 });
 
