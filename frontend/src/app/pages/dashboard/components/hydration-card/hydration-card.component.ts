@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { HYDRATION_RULES } from '../../../../shared/mock/mock-data';
 import { UiButtonComponent } from '../../../../shared/ui/button/ui-button.component';
 
 @Component({
@@ -15,7 +14,7 @@ export class HydrationCardComponent {
   readonly goalMl = input<number>(3000);
   readonly hydrationAdded = output<number>();
 
-  readonly quickAddMl = HYDRATION_RULES.quickAddMl;
+  readonly quickAddMl = [10, 20, 30] as const;
   readonly progressPercent = computed(() => {
     const goalMl = Math.max(1, this.goalMl());
     return Math.min(100, Math.round((this.currentMl() / goalMl) * 100));

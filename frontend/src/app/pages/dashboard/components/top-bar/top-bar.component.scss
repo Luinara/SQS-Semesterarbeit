@@ -20,13 +20,13 @@
   place-items: center;
   width: 3.15rem;
   height: 3.15rem;
-  border-radius: 1.2rem;
-  background: linear-gradient(135deg, rgba(159, 95, 88, 0.98) 0%, rgba(127, 71, 65, 0.98) 100%);
-  color: #fffaf6;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-blue) 0%, #1e7e56 100%);
+  color: #fff;
   font-family: var(--font-display);
   font-size: 1.2rem;
   letter-spacing: 0.08em;
-  box-shadow: 0 14px 24px rgba(164, 113, 102, 0.22);
+  box-shadow: 0 14px 24px rgba(37, 99, 235, 0.22);
 }
 
 .top-bar__eyebrow {
@@ -37,7 +37,6 @@
 }
 
 .top-bar__brand h1 {
-  font-family: var(--font-display);
   font-size: clamp(1.6rem, 1.8vw, 2rem);
 }
 
@@ -57,7 +56,7 @@
   padding: 0.45rem 0.9rem;
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(128, 97, 87, 0.08);
+  border: 1px solid rgba(28, 42, 70, 0.08);
   color: var(--color-text-soft);
 }
 
@@ -72,7 +71,7 @@
 }
 
 .top-bar__pill--soft {
-  background: rgba(248, 236, 229, 0.8);
+  background: rgba(228, 239, 255, 0.8);
 }
 
 .top-bar__avatar {
@@ -81,8 +80,8 @@
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 50%;
-  background: rgba(216, 153, 142, 0.18);
-  color: var(--color-rose);
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--color-blue);
   font-weight: 700;
 }
 
