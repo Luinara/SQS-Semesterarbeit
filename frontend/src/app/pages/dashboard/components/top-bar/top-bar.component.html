@@ -22,9 +22,16 @@
       <span>Trainingspunkte</span>
     </div>
 
-    <button sqsButton size="sm" variant="secondary" (click)="requestReset()">
-      Neu laden
-    </button>
+    <button sqsButton size="sm" variant="secondary" (click)="requestReset()">Neu laden</button>
     <button sqsButton size="sm" variant="ghost" (click)="requestLogout()">Abmelden</button>
+    <button
+      sqsButton
+      size="sm"
+      variant="ghost"
+      class="top-bar__danger-action"
+      (click)="requestAccountDelete()"
+    >
+      Profil loeschen
+    </button>
   </div>
 </header>

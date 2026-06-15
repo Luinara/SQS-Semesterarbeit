@@ -68,6 +68,12 @@ export class BackendApiService {
     });
   }
 
+  async deleteAccount(): Promise<void> {
+    await this.request('/api/user/account', {
+      method: 'DELETE',
+    });
+  }
+
   async loadDashboard(username: string): Promise<DashboardSnapshot> {
     const [tasks, gameState] = await Promise.all([
       this.getJson<BackendTaskDto[]>('/api/tasks'),

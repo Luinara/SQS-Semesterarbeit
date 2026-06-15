@@ -5,7 +5,10 @@ import io.github.luinara.sqs.task.TaskRepository;
 import io.github.luinara.sqs.task.UserTaskRepository;
 import io.github.luinara.sqs.user.dto.GameStateDto;
 import io.github.luinara.sqs.user.dto.TaskCompletionDto;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -21,17 +24,20 @@ public class UserService {
     private final PokemonRepository pokemonRepository;
     private final TaskRepository taskRepository;
     private final UserTaskRepository userTaskRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     public UserService(
             UserRepository userRepository,
             PokemonRepository pokemonRepository,
             TaskRepository taskRepository,
-            UserTaskRepository userTaskRepository
+            UserTaskRepository userTaskRepository,
+            JdbcTemplate jdbcTemplate
     ) {
         this.userRepository = userRepository;
         this.pokemonRepository = pokemonRepository;
         this.taskRepository = taskRepository;
         this.userTaskRepository = userTaskRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public GameStateDto getGameStateForUsername(String username) {
@@ -115,5 +121,35 @@ public class UserService {
         user.setPendingFeedPoints(pending - toApply);
         userRepository.save(user);
         return getGameStateForUsername(username);
+    }
+
+    @Transactional
+    public boolean deleteAccount(String username) {
+        var opt = userRepository.findByUsernameIgnoreCase(username);
+        if (opt.isEmpty()) return false;
+
+        UserEntity user = opt.get();
+        Long userId = user.getId();
+
+        userTaskRepository.deleteByUserId(userId);
+        deleteUserStatsIfPresent(userId);
+        userRepository.delete(user);
+
+        return true;
+    }
+
+    private void deleteUserStatsIfPresent(Long userId) {
+        try {
+            Boolean tableExists = jdbcTemplate.queryForObject(
+                    "SELECT COUNT(*) > 0 FROM information_schema.tables WHERE LOWER(table_name) = 'user_stats'",
+                    Boolean.class
+            );
+
+            if (Boolean.TRUE.equals(tableExists)) {
+                jdbcTemplate.update("DELETE FROM user_stats WHERE user_id = ?", userId);
+            }
+        } catch (DataAccessException ignored) {
+            // The Spring JPA test schema does not always include the Prisma-owned stats table.
+        }
     }
 }

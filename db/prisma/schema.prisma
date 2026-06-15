@@ -62,7 +62,7 @@ model User {
 
 model UserStats {
   userId Int @id @map("user_id")
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   totalLogins          Int @default(0) @map("total_logins")
   totalHappinessGained Int @default(0) @map("total_happiness_gained")
@@ -87,7 +87,7 @@ model UserTask {
   id     Int @id @default(autoincrement())
 
   userId Int @map("user_id")
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   taskId Int  @map("task_id")
   task   Task @relation(fields: [taskId], references: [id])

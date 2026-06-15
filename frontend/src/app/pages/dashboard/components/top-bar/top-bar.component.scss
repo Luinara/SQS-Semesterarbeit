@@ -85,6 +85,11 @@
   font-weight: 700;
 }
 
+.top-bar__danger-action {
+  color: #8f3f3a;
+  border-color: rgba(143, 63, 58, 0.2);
+}
+
 @include respond-down(860px) {
   .top-bar {
     align-items: start;

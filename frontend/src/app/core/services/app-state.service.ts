@@ -104,7 +104,10 @@ export class AppStateService {
     } catch (error) {
       return {
         success: false,
-        message: getApiErrorMessage(error, 'Login fehlgeschlagen. Bitte pruefe Benutzername und Passwort.'),
+        message: getApiErrorMessage(
+          error,
+          'Login fehlgeschlagen. Bitte pruefe Benutzername und Passwort.'
+        ),
       };
     }
   }
@@ -133,6 +136,24 @@ export class AppStateService {
     } finally {
       clearStoredUsername();
       this.clearSession();
+    }
+  }
+
+  async deleteAccount(): Promise<AuthResult> {
+    try {
+      await this.backendApi.deleteAccount();
+      clearStoredUsername();
+      this.clearSession();
+
+      return {
+        success: true,
+        message: 'Profil geloescht.',
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: getApiErrorMessage(error, 'Profil konnte nicht geloescht werden.'),
+      };
     }
   }
 

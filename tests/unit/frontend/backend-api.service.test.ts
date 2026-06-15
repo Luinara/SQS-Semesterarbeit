@@ -126,6 +126,22 @@ describe("BackendApiService", () => {
         "Backend nicht erreichbar. Bitte pruefe, ob das Backend laeuft und der Proxy aktiv ist.",
     });
   });
+
+  it("loescht den Account ueber die User-API", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(new Response(null, { status: 204 }));
+
+    await new BackendApiService().deleteAccount();
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/user/account",
+      expect.objectContaining({
+        credentials: "include",
+        method: "DELETE",
+      }),
+    );
+  });
 });
 
 function jsonResponse(body: unknown, status = 200): Response {
