@@ -54,7 +54,6 @@ class UserControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    // New: check body JSON for unauthenticated water/feed
     @Test
     void water_requiresAuth_returnsJsonErrorBody() throws Exception {
         mockMvc.perform(post("/api/user/water").contentType("application/json").content("{\"ml\":10}"))
@@ -119,7 +118,6 @@ class UserControllerTest {
         assertThat(session.isInvalid()).isTrue();
     }
 
-    // new tests for getGameState unauthorized
     @Test
     void getGameState_withoutSession_returns401_andUnauthenticatedBody() throws Exception {
         mockMvc.perform(get("/api/user/game-state"))

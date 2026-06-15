@@ -6,6 +6,7 @@
   display: grid;
   gap: 1.25rem;
   height: 100%;
+  border-color: rgba(37, 99, 235, 0.12);
 }
 
 .task-list__header {
@@ -78,6 +79,7 @@
 .task-list__items {
   display: grid;
   gap: 0.95rem;
+  counter-reset: quest-card;
 }
 
 @include respond-down(640px) {

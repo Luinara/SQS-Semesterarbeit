@@ -1,17 +1,17 @@
 # PokeHabit Frontend
 
-Diese README beschreibt unser Frontend fuer PokeHabit. Die App ist keine klassische To-do-Liste, sondern eine kleine Game-App: Man erledigt Tagesquests, sammelt Punkte, trinkt Wasser, trainiert sein Pokemon und bekommt eine Wetter-Szene, die aus echten Wetterdaten kommt.
+Diese README beschreibt unser Frontend für PokeHabit. Die App ist keine klassische To-do-Liste, sondern eine kleine Game-App: Man erledigt Tagesquests, sammelt Punkte, trinkt Wasser, trainiert sein Pokémon und bekommt eine Wetter-Szene, die aus echten Wetterdaten kommt.
 
-Wichtig fuer die Abgabe: Im sichtbaren UI soll die App nicht nach Technik-Demo aussehen. Begriffe wie API, Backend oder Abgabe gehoeren nicht auf Buttons und Karten. Technisch ist das Frontend aber sauber an das Spring-Backend angebunden.
+Wichtig für die Abgabe: Im sichtbaren UI soll die App nicht nach Technik-Demo aussehen. Begriffe wie API, Backend oder Abgabe gehören nicht auf Buttons und Karten. Technisch ist das Frontend aber sauber an das Spring-Backend angebunden.
 
 ## Kurz gesagt
 
 - Angular mit Standalone Components
 - SCSS mit globalen Tokens und Component Styles
-- Backend-Anbindung ueber einen gekapselten API-Service
-- zentraler App-State fuer Spieler, Quests, Wasser, Energie und Pokemon
-- Wetter-Szene ueber Open-Meteo
-- Pokemon-Sprite aus dem Spielstand, mit Fallback
+- Backend-Anbindung über einen gekapselten API-Service
+- zentraler App-State für Spieler, Quests, Wasser, Energie und Pokémon
+- Wetter-Szene über Open-Meteo
+- Pokémon-Sprite aus dem Spielstand, mit Fallback
 - Unit-Tests mit Vitest
 - User-Flows mit Playwright
 
@@ -67,7 +67,7 @@ http://localhost:4200
 
 ## Warum der Proxy wichtig ist
 
-Angular laeuft lokal auf `localhost:4200`, das Backend auf `localhost:8181`. Damit die Komponenten keine harte Backend-URL kennen muessen, nutzt Angular den Proxy:
+Angular läuft lokal auf `localhost:4200`, das Backend auf `localhost:8181`. Damit die Komponenten keine harte Backend-URL kennen müssen, nutzt Angular den Proxy:
 
 ```text
 frontend/proxy.conf.json
@@ -86,18 +86,18 @@ Wenn im Terminal steht:
 http proxy error: /api/auth/login ECONNREFUSED
 ```
 
-dann ist das kein Frontend-Fehler. Das Backend laeuft dann nicht auf Port `8181`.
+dann ist das kein Frontend-Fehler. Das Backend läuft dann nicht auf Port `8181`.
 
 ## App-Flow
 
-1. Spieler oeffnet die App.
-2. Splash-Screen fuehrt in das Spiel.
+1. Spieler öffnet die App.
+2. Splash-Screen führt in das Spiel.
 3. Spieler loggt sich ein oder registriert sich.
-4. Quest-Board laedt Tagesquests und Spielstand.
+4. Quest-Board lädt Tagesquests und Spielstand.
 5. Spieler erledigt Quests.
-6. Punkte fuellen Tagesziel und Feed-Punkte.
-7. Spieler kann Wasser speichern.
-8. Spieler kann das Pokemon trainieren.
+6. Punkte füllen Tagesziel und Feed-Punkte.
+7. Spieler kann Wasser über die Wasser-Gauge speichern.
+8. Spieler kann das Pokémon trainieren.
 9. Wetter-Szene passt sich an Stadt und Wetterdaten an.
 
 So kann man die Demo gut zeigen: anmelden, klicken, Feedback sehen, Spielstand aktualisiert sich.
@@ -110,7 +110,7 @@ Der Splash-Screen ist der Einstieg in die App.
 
 Button:
 
-- `Spiel starten`: fuehrt zum Login oder bei vorhandener Session direkt ins Spiel.
+- `Spiel starten`: führt zum Login oder bei vorhandener Session direkt ins Spiel.
 
 ### Login und Registrierung
 
@@ -118,7 +118,7 @@ Der Spieler kommt hier in seinen Spielstand.
 
 Felder:
 
-- `Spielername`: wird als Username fuer das Backend genutzt.
+- `Spielername`: wird als Username für das Backend genutzt.
 - `Passwort`: beim Login nur erforderlich, bei Registrierung mindestens 8 Zeichen.
 
 Buttons:
@@ -126,7 +126,7 @@ Buttons:
 - `Einloggen und weitermachen`: meldet den Spieler an.
 - `Profil anlegen und starten`: erstellt einen neuen Spieler.
 
-Wichtig: Das Frontend speichert keine Passwoerter im Browser.
+Wichtig: Das Frontend speichert keine Passwörter im Browser.
 
 ### Topbar
 
@@ -136,12 +136,13 @@ Sie zeigt:
 
 - Spielername
 - erledigte Quests
-- verfuegbare Trainingspunkte
+- verfügbare Trainingspunkte
 
 Buttons:
 
-- `Neu laden`: laedt den Spielstand frisch.
-- `Abmelden`: beendet die Session und fuehrt zur Login-Seite.
+- `Neu laden`: lädt den Spielstand frisch.
+- `Abmelden`: beendet die Session und führt zur Login-Seite.
+- `Profil löschen`: löscht den Account über das Backend und beendet die Session.
 
 ### Tagesquests
 
@@ -156,7 +157,7 @@ Regeln:
 
 Button:
 
-- `Erledigen`: schliesst eine Quest ab.
+- `Erledigen`: schließt eine Quest ab.
 
 ### Tagesziel
 
@@ -170,19 +171,19 @@ Sie zeigt:
 - Energie
 - Login-Streak
 
-Buttons:
+Wasser-Gauge:
 
 - `+250 ml`: speichert Wasser in der Wasser-Quest.
 - `+500 ml`: speichert Wasser in der Wasser-Quest.
 - Bei `3000 ml` wird die Quest automatisch als erledigt markiert.
 
-### Pokemon Partner
+### Pokémon Partner
 
-Das Pokemon ist das visuelle Zentrum der App.
+Das Pokémon ist das visuelle Zentrum der App.
 
 Die Karte zeigt:
 
-- Pokemon-Sprite
+- Pokémon-Sprite
 - Level
 - Wachstum
 - Motivation
@@ -191,7 +192,7 @@ Die Karte zeigt:
 
 Button:
 
-- `Pokemon trainieren`: nutzt Feed-Punkte fuer Training.
+- `Pokémon trainieren`: nutzt Feed-Punkte für Training.
 
 Training ist nur aktiv, wenn Punkte vorhanden sind.
 
@@ -205,7 +206,7 @@ Open-Meteo liefert:
 - Wettercode
 - Tag oder Nacht
 
-Daraus baut das Frontend eine Szene fuer:
+Daraus baut das Frontend eine Szene für:
 
 - Sonne
 - Wolken
@@ -218,12 +219,12 @@ Daraus baut das Frontend eine Szene fuer:
 
 Buttons:
 
-- `Stadt laden`: sucht eine Stadt und laedt das passende Wetter.
-- `Aktualisieren`: laedt das Wetter fuer die aktuelle Stadt neu.
+- `Stadt laden`: sucht eine Stadt und lädt das passende Wetter.
+- `Aktualisieren`: lädt das Wetter für die aktuelle Stadt neu.
 
 ## API-Anbindung
 
-Komponenten rufen nicht direkt `fetch` auf. Dafuer gibt es eine eigene Schicht:
+Komponenten rufen nicht direkt `fetch` auf. Dafür gibt es eine eigene Schicht:
 
 ```text
 src/app/core/services/backend-api.service.ts
@@ -260,12 +261,12 @@ Er verbindet:
 
 - aktiven Spieler
 - Quests
-- Pokemon-Zustand
+- Pokémon-Zustand
 - Wasser und Energie
 - Feedback-Meldungen
-- Session-Restore fuer Guards
+- Session-Restore für Guards
 
-Kurz gesagt: Komponenten sollen nicht wissen muessen, wie genau das Backend antwortet.
+Kurz gesagt: Komponenten sollen nicht wissen müssen, wie genau das Backend antwortet.
 
 ## Datenfluss
 
@@ -287,7 +288,7 @@ Wasser trinken:
 Tagesziel-Karte -> DashboardPage -> AppStateService.addWater -> BackendApiService.addWater
 ```
 
-Pokemon trainieren:
+Pokémon trainieren:
 
 ```text
 PetCard -> DashboardPage -> AppStateService.feedPet -> BackendApiService.feed
@@ -336,13 +337,13 @@ Wir testen nicht nur einzelne Funktionen, sondern auch echte Klickwege.
 
 ### Unit-Tests
 
-Unit-Tests pruefen:
+Unit-Tests prüfen:
 
 - Punkteberechnung
 - Tagesziel
-- Pokemon-Level und Wachstum
+- Pokémon-Level und Wachstum
 - Wetter-Mapping
-- Pokemon-Fallbacks
+- Pokémon-Fallbacks
 - API-Mapping im Frontend
 
 Befehl:
@@ -369,11 +370,14 @@ Playwright simuliert einen echten Spieler.
 
 Aktuell wichtig:
 
-- Seite oeffnen
-- Login ausfuellen
+- Seite öffnen
+- Login ausfüllen
 - Button klicken
 - Quest-Board sehen
-- Pokemon-Controls pruefen
+- Wasserbutton klicken
+- Quest erledigen
+- Pokémon trainieren
+- Logout ausführen
 
 Befehl:
 
@@ -384,24 +388,20 @@ npm run test:e2e
 Noch auszubauen:
 
 - Registrierung
-- Quest erledigen
-- Wasserbutton klicken
-- Pokemon trainieren
 - Stadt suchen
 - Wetter aktualisieren
-- Logout
 - Fehlerfall bei nicht erreichbarem Backend
 
 ## Clean-Code-Methodik
 
-Unser Ziel ist, dass die App nicht nur laeuft, sondern nachvollziehbar gebaut ist.
+Unser Ziel ist, dass die App nicht nur läuft, sondern nachvollziehbar gebaut ist.
 
 Regeln:
 
-- Komponenten bleiben fuer UI und Events zustaendig.
+- Komponenten bleiben für UI und Events zuständig.
 - HTTP bleibt im API-Service.
 - Spielstand bleibt im State-Service.
-- Wetter und Pokemon sind ueber Adapter gekapselt.
+- Wetter und Pokémon sind über Adapter gekapselt.
 - Sichtbare Texte bleiben Game-Sprache.
 - Alte Mock-/Legacy-Begriffe werden nicht in der UI gezeigt.
 - Mapping-Logik wird nicht wild in Komponenten verteilt.
@@ -411,20 +411,20 @@ Regeln:
 
 Aktueller Stand:
 
-- Session-Cookies werden ueber `credentials: 'include'` genutzt.
-- Das Frontend speichert keine Passwoerter.
-- Nur der aktive Spielername wird fuer Session-Restore lokal gespeichert.
-- Fehlertexte werden fuer Spieler verstaendlich gekapselt.
+- Session-Cookies werden über `credentials: 'include'` genutzt.
+- Das Frontend speichert keine Passwörter.
+- Nur der aktive Spielername wird für Session-Restore lokal gespeichert.
+- Fehlertexte werden für Spieler verständlich gekapselt.
 
-Noch offen fuer die Abgabe:
+Noch offen für die Abgabe:
 
-- CSRF-Schutz fuer cookie-basierte POST-Requests klaeren.
-- Rate-Limiting oder Lockout fuer Login und Signup pruefen.
-- Produktiv-Cookie-Flags pruefen: `HttpOnly`, `Secure`, `SameSite`.
+- CSRF-Schutz für cookie-basierte POST-Requests klären.
+- Rate-Limiting oder Lockout für Login und Signup prüfen.
+- Produktiv-Cookie-Flags prüfen: `HttpOnly`, `Secure`, `SameSite`.
 - Keine Secrets im Frontend.
-- `npm audit` ausfuehren.
-- Security-Tests fuer unauthentifizierte Requests und doppelte Quest-Abschluesse ergaenzen.
-- Content Security Policy fuer Deployment pruefen.
+- `npm audit` ausführen.
+- Security-Tests für unauthentifizierte Requests und doppelte Quest-Abschlüsse ergänzen.
+- Content Security Policy für Deployment prüfen.
 
 ## Checks vor Abgabe
 
@@ -436,7 +436,7 @@ npm test
 npm run lint
 ```
 
-Wenn moeglich:
+Wenn möglich:
 
 ```powershell
 npm run test:e2e
@@ -455,10 +455,10 @@ http proxy error: /api/auth/login ECONNREFUSED
 
 Bedeutung:
 
-- Frontend laeuft.
-- Backend laeuft nicht auf `localhost:8181`.
+- Frontend läuft.
+- Backend läuft nicht auf `localhost:8181`.
 
-Loesung:
+Lösung:
 
 ```powershell
 docker compose up -d db
@@ -486,10 +486,10 @@ docker ps
 demo / password123
 ```
 
-## Was als Naechstes wichtig ist
+## Was als Nächstes wichtig ist
 
 - Mehr User-Flow-Tests schreiben.
-- Doku rechtschreibpruefen.
+- Doku rechtschreibprüfen.
 - Security-Hardening sauber dokumentieren.
-- UI weiter auf moderne Pokemon-/Game-App trimmen.
+- UI weiter auf moderne Pokémon-/Game-App trimmen.
 - Legacy-Wording konsequent aus sichtbaren Stellen entfernen.

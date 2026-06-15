@@ -1,13 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { resolveWeatherScene } from '../state/weather-appearance.logic';
-import {
-  WeatherLocation,
-  WeatherSnapshot,
-} from '../../shared/models/weather.model';
-import {
-  OpenMeteoWeatherAdapter,
-  WeatherAdapter,
-} from './weather.adapter';
+import { WeatherLocation, WeatherSnapshot } from '../../shared/models/weather.model';
+import { OpenMeteoWeatherAdapter, WeatherAdapter } from './weather.adapter';
 
 const DEFAULT_LOCATION: WeatherLocation = {
   latitude: 52.52,
@@ -83,7 +77,6 @@ export class WeatherService {
       this.isLoading.set(false);
     }
   }
-
 }
 
 function readStoredLocation(): WeatherLocation {

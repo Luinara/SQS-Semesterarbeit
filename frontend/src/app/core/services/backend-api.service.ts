@@ -131,7 +131,7 @@ export class BackendApiService {
       backendGameState,
       gameState: {
         pet: {
-          name: 'Pokemon Partner',
+          name: 'Pokémon Partner',
           level: pokemonLevel,
           growthProgress: clamp(backendGameState.growth ?? 0, 0, PET_RULES.initialGrowthGoal),
           growthGoal: PET_RULES.initialGrowthGoal,
@@ -261,11 +261,11 @@ function isHtmlErrorResponse(response: Response, text: string): boolean {
 
 function createConnectionErrorMessage(status: number): string {
   if (status === 404) {
-    return 'Backend nicht erreichbar. Bitte prüfe, ob das Backend läuft und der Proxy aktiv ist.';
+    return 'Server nicht erreichbar. Bitte prüfe, ob die Verbindung aktiv ist.';
   }
 
   if (status >= 500) {
-    return 'Backend-Fehler. Bitte versuche es gleich noch einmal.';
+    return 'Server-Fehler. Bitte versuche es gleich noch einmal.';
   }
 
   return `Verbindung fehlgeschlagen (${status}).`;

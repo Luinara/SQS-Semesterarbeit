@@ -1,11 +1,5 @@
-import {
-  parseWeatherSnapshot,
-  WeatherApiResponse,
-} from '../state/weather-appearance.logic';
-import {
-  WeatherLocation,
-  WeatherSnapshot,
-} from '../../shared/models/weather.model';
+import { parseWeatherSnapshot, WeatherApiResponse } from '../state/weather-appearance.logic';
+import { WeatherLocation, WeatherSnapshot } from '../../shared/models/weather.model';
 
 const OPEN_METEO_URL = 'https://api.open-meteo.com/v1/forecast';
 const OPEN_METEO_GEOCODING_URL = 'https://geocoding-api.open-meteo.com/v1/search';

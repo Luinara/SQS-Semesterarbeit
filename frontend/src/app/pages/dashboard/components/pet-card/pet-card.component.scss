@@ -5,6 +5,10 @@
 
   display: grid;
   gap: 1.4rem;
+  border-color: rgba(30, 126, 86, 0.16);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52);
 }
 
 .pet-card__header {
@@ -57,7 +61,10 @@
 
 .pet-card__feedback--level-up {
   border-color: rgba(37, 99, 235, 0.24);
-  background: rgba(219, 234, 254, 0.74);
+  background:
+    linear-gradient(90deg, rgba(219, 234, 254, 0.86), rgba(221, 247, 233, 0.72)),
+    rgba(255, 255, 255, 0.78);
+  box-shadow: 0 0.9rem 1.8rem rgba(37, 99, 235, 0.12);
 }
 
 .pet-card__feedback--feeding,
@@ -203,8 +210,11 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 1.1rem 1.15rem;
+  border: 1px solid rgba(28, 42, 70, 0.08);
   border-radius: var(--radius-md);
-  background: rgba(247, 249, 252, 0.86);
+  background:
+    linear-gradient(135deg, rgba(247, 249, 252, 0.92), rgba(231, 247, 238, 0.62)),
+    rgba(255, 255, 255, 0.74);
 }
 
 .pet-card__hint {

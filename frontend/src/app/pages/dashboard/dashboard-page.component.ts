@@ -60,7 +60,7 @@ export class DashboardPageComponent {
 
   async deleteAccount(): Promise<void> {
     const confirmed = globalThis.confirm(
-      'Profil wirklich loeschen? Dein Spielstand und alle Quest-Fortschritte werden dauerhaft entfernt.'
+      'Profil wirklich löschen? Dein Spielstand und alle Quest-Fortschritte werden dauerhaft entfernt.'
     );
 
     if (!confirmed) {

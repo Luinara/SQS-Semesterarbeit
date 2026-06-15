@@ -106,7 +106,7 @@ function createInitialPetState(): PetState {
   const now = new Date().toISOString();
 
   return {
-    name: 'Pokemon Partner',
+    name: 'Pokémon Partner',
     level: 1,
     growthProgress: 0,
     growthGoal: PET_RULES.initialGrowthGoal,
@@ -131,7 +131,7 @@ function createInitialTasks(): TaskItem[] {
     createQualityTask({
       slug: 'water',
       title: 'Wasser trinken',
-      description: 'Wasser gibt deinem Pokemon Energie.',
+      description: 'Wasser gibt deinem Pokémon Energie.',
       icon: 'coverage',
       tone: 'blue',
       category: 'delivery',
@@ -151,7 +151,7 @@ function createInitialTasks(): TaskItem[] {
     createQualityTask({
       slug: 'sport',
       title: 'Sport',
-      description: 'Bewegung bringt Bonuspunkte fuer Happiness und Tagesfortschritt.',
+      description: 'Bewegung bringt Bonuspunkte für Happiness und Tagesfortschritt.',
       icon: 'rocket',
       tone: 'amber',
       category: 'delivery',
@@ -160,18 +160,18 @@ function createInitialTasks(): TaskItem[] {
     }),
     createQualityTask({
       slug: 'clean-room',
-      title: 'Zimmer aufraeumen',
+      title: 'Zimmer aufräumen',
       description: 'Ein klarer Raum gibt Fokus und bringt solide Trainingspunkte.',
       icon: 'layers',
       tone: 'slate',
       category: 'delivery',
-      checklistReference: 'Quest: Aufraeumen',
+      checklistReference: 'Quest: Aufräumen',
       points: 15,
     }),
     createQualityTask({
       slug: 'read',
       title: '10 Seiten lesen',
-      description: 'Eine kleine Leseeinheit fuer Routine, Fokus und Pokemon-Wachstum.',
+      description: 'Eine kleine Leseeinheit für Routine, Fokus und Pokémon-Wachstum.',
       icon: 'docs',
       tone: 'green',
       category: 'delivery',
@@ -181,10 +181,12 @@ function createInitialTasks(): TaskItem[] {
   ];
 }
 
-function createQualityTask(input: Omit<TaskItem, 'id' | 'isCompleted' | 'isRequired'> & {
-  slug: string;
-  isRequired?: boolean;
-}): TaskItem {
+function createQualityTask(
+  input: Omit<TaskItem, 'id' | 'isCompleted' | 'isRequired'> & {
+    slug: string;
+    isRequired?: boolean;
+  }
+): TaskItem {
   const { slug, isRequired = true, ...task } = input;
 
   return {

@@ -10,10 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,30 +33,45 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class AuthenticationService {
 
+    private static final int MAX_FAILED_LOGIN_ATTEMPTS = 5;
+    private static final Duration LOGIN_LOCKOUT_DURATION = Duration.ofMinutes(15);
+
     private final Map<String, String> users = new ConcurrentHashMap<>();
     private final Map<String, String> sessions = new ConcurrentHashMap<>();
+    private final Map<String, LoginFailure> loginFailures = new ConcurrentHashMap<>();
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final UserRepository userRepository; // optional
     private final PokemonRepository pokemonRepository; // optional
+    private final Clock clock;
 
     @Autowired
     public AuthenticationService(
             Optional<UserRepository> userRepository,
-            Optional<PokemonRepository> pokemonRepository
+            Optional<PokemonRepository> pokemonRepository,
+            Clock clock
     ) {
         // If a JPA repository is available (e.g., when running with database profile), use it.
         this.userRepository = userRepository.orElse(null);
         this.pokemonRepository = pokemonRepository.orElse(null);
+        this.clock = clock;
+    }
+
+    public AuthenticationService(
+            Optional<UserRepository> userRepository,
+            Optional<PokemonRepository> pokemonRepository
+    ) {
+        this(userRepository, pokemonRepository, Clock.systemUTC());
     }
 
     public AuthenticationService(Optional<UserRepository> userRepository) {
-        this(userRepository, Optional.empty());
+        this(userRepository, Optional.empty(), Clock.systemUTC());
     }
 
     public AuthenticationService() {
         this.userRepository = null;
         this.pokemonRepository = null;
+        this.clock = Clock.systemUTC();
     }
 
     /**
@@ -63,7 +82,7 @@ public class AuthenticationService {
         if (username == null || username.trim().isEmpty() || password == null) {
             throw new InvalidRequestException("username and password must be provided");
         }
-        String key = username.toLowerCase();
+        String key = normalizeUsername(username);
 
         if (userRepository != null) {
             if (userRepository.existsByUsernameIgnoreCase(username)) {
@@ -103,19 +122,31 @@ public class AuthenticationService {
         if (username == null || password == null) {
             return Optional.empty();
         }
-        String key = username.toLowerCase();
+        String key = normalizeUsername(username);
+
+        if (isLoginBlocked(key)) {
+            return Optional.empty();
+        }
 
         String storedHash = null;
         if (userRepository != null) {
             Optional<UserEntity> opt = userRepository.findByUsernameIgnoreCase(username);
-            if (opt.isEmpty()) return Optional.empty();
+            if (opt.isEmpty()) {
+                registerFailedLogin(key);
+                return Optional.empty();
+            }
             storedHash = opt.get().getPasswordHash();
         } else {
             storedHash = users.get(key);
-            if (storedHash == null) return Optional.empty();
+            if (storedHash == null) {
+                registerFailedLogin(key);
+                return Optional.empty();
+            }
         }
 
         if (passwordEncoder.matches(password, storedHash)) {
+            clearFailedLogins(key);
+
             if (userRepository != null) {
                 // DB-mode: update lastLoginAt and streak, then persist
                 Optional<UserEntity> optEntity = userRepository.findByUsernameIgnoreCase(username);
@@ -150,6 +181,8 @@ public class AuthenticationService {
                 return Optional.of(token);
             }
         }
+
+        registerFailedLogin(key);
         return Optional.empty();
     }
 
@@ -184,5 +217,43 @@ public class AuthenticationService {
 
         PokemonEntity selected = pokemon.get(ThreadLocalRandom.current().nextInt(pokemon.size()));
         entity.setCurrentPokemonId(selected.getId());
+    }
+
+    private boolean isLoginBlocked(String key) {
+        LoginFailure failure = loginFailures.get(key);
+
+        if (failure == null || failure.blockedUntil == null) {
+            return false;
+        }
+
+        if (Instant.now(clock).isBefore(failure.blockedUntil)) {
+            return true;
+        }
+
+        loginFailures.remove(key);
+        return false;
+    }
+
+    private void registerFailedLogin(String key) {
+        Instant now = Instant.now(clock);
+        loginFailures.compute(key, (ignored, previous) -> {
+            int attempts = previous == null ? 1 : previous.attempts + 1;
+            Instant blockedUntil = attempts >= MAX_FAILED_LOGIN_ATTEMPTS
+                    ? now.plus(LOGIN_LOCKOUT_DURATION)
+                    : null;
+
+            return new LoginFailure(attempts, blockedUntil);
+        });
+    }
+
+    private void clearFailedLogins(String key) {
+        loginFailures.remove(key);
+    }
+
+    private static String normalizeUsername(String username) {
+        return username.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private record LoginFailure(int attempts, Instant blockedUntil) {
     }
 }

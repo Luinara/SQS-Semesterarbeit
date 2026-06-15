@@ -4,7 +4,7 @@ import {
 } from "../../../frontend/src/app/core/services/backend-api.service";
 
 describe("BackendApiService", () => {
-  it("meldet sich mit Backend-Username an und mappt API-Tasks in den Dashboard-State", async () => {
+  it("meldet sich mit Backend-Spielername an und mappt API-Tasks in den Dashboard-State", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(jsonResponse({ message: "authenticated" }))
@@ -60,7 +60,7 @@ describe("BackendApiService", () => {
     expect(snapshot.gameState.qualityScore).toBe(10);
   });
 
-  it("laedt nach Task-Completion den frischen Game-State aus dem Backend", async () => {
+  it("lädt nach Task-Completion den frischen Game-State aus dem Backend", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(jsonResponse({ success: true }))
@@ -146,7 +146,7 @@ describe("BackendApiService", () => {
     expect(snapshot.gameState.qualityScore).toBe(10);
   });
 
-  it("zeigt bei HTML-Fehlerseiten eine kurze Backend-Meldung statt Markup", async () => {
+  it("zeigt bei HTML-Fehlerseiten eine kurze Server-Meldung statt Markup", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
       new Response(
         "<!DOCTYPE html><html><body>404 fallback page</body></html>",
@@ -162,11 +162,11 @@ describe("BackendApiService", () => {
     ).rejects.toMatchObject<Partial<BackendApiError>>({
       status: 404,
       message:
-        "Backend nicht erreichbar. Bitte prüfe, ob das Backend läuft und der Proxy aktiv ist.",
+        "Server nicht erreichbar. Bitte prüfe, ob die Verbindung aktiv ist.",
     });
   });
 
-  it("loescht den Account ueber die User-API", async () => {
+  it("löscht den Account über die User-API", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(new Response(null, { status: 204 }));

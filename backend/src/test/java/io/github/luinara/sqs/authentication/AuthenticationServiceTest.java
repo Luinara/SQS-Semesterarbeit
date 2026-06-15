@@ -58,6 +58,31 @@ class AuthenticationServiceTest {
     }
 
     @Test
+    void login_blocksUserAfterRepeatedFailures() {
+        authService.createUser("carol", "secret123");
+
+        for (int index = 0; index < 5; index += 1) {
+            assertThat(authService.login("carol", "wrongpass")).isEmpty();
+        }
+
+        assertThat(authService.login("carol", "secret123")).isEmpty();
+    }
+
+    @Test
+    void login_successClearsPreviousFailures() {
+        authService.createUser("carol", "secret123");
+
+        assertThat(authService.login("carol", "wrongpass")).isEmpty();
+        assertThat(authService.login("carol", "secret123")).isPresent();
+
+        for (int index = 0; index < 4; index += 1) {
+            assertThat(authService.login("carol", "wrongpass")).isEmpty();
+        }
+
+        assertThat(authService.login("carol", "secret123")).isPresent();
+    }
+
+    @Test
     void logoutInvalidatesToken() {
         authService.createUser("dan", "pw12345");
         Optional<String> tokenOpt = authService.login("dan", "pw12345");

@@ -103,7 +103,6 @@ class UserServiceTest {
         assertThat(dto.isYesterdayLoggedIn()).isFalse();
     }
 
-    // New tests
     @Test
     void waterUser_increasesHydration_and_returnsDto() {
         UserEntity entity = new UserEntity();
@@ -199,7 +198,6 @@ class UserServiceTest {
         assertThat(dto.getGrowth()).isEqualTo(30);
     }
 
-    // New edge-case tests requested
     @Test
     void getGameState_userNotFound_returnsNull() {
         when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());

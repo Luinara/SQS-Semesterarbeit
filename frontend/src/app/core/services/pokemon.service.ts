@@ -1,11 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { PokemonSnapshot, PokemonSpeciesName } from '../../shared/models/pet.model';
 import { resolvePokemonSpeciesForLevel } from '../../shared/mock/mock-data';
-import {
-  fallbackPokemonBySpecies,
-  PokeApiPokemonAdapter,
-  PokemonAdapter,
-} from './pokemon.adapter';
+import { fallbackPokemonBySpecies, PokeApiPokemonAdapter, PokemonAdapter } from './pokemon.adapter';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +40,7 @@ export class PokemonService {
       const fallbackPokemon = fallbackPokemonBySpecies[species];
       this.cache.set(species, fallbackPokemon);
       this.snapshot.set(fallbackPokemon);
-      this.errorMessage.set('Pokemon-Sprite ist gerade nicht erreichbar. Fallback aktiv.');
+      this.errorMessage.set('Pokémon-Sprite ist gerade nicht erreichbar. Fallback aktiv.');
     } finally {
       this.isLoading.set(false);
     }

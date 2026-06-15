@@ -5,7 +5,7 @@
       <h2>{{ qualityScore() }} / {{ qualityTarget() }}</h2>
       <p>
         @if (gateReached()) {
-          Tagesziel erreicht. Dein Pokemon kann jetzt stark weiterleveln.
+          Tagesziel erreicht. Dein Pokémon kann jetzt stark weiterleveln.
         } @else {
           Noch {{ qualityTarget() - qualityScore() }} Punkte bis zum Tagesziel.
         }
@@ -15,7 +15,11 @@
     <div
       class="quality-gate__ring"
       [style.--quality-progress]="progressPercent() + '%'"
+      role="progressbar"
       aria-label="Tagesziel-Fortschritt"
+      [attr.aria-valuemin]="0"
+      [attr.aria-valuemax]="100"
+      [attr.aria-valuenow]="progressPercent()"
     >
       <strong>{{ progressPercent() }}%</strong>
       <span>Punkte</span>
@@ -54,13 +58,13 @@
   </div>
 
   <div class="quality-gate__missing">
-    <span>Naechste offene Quests</span>
+    <span>Nächste offene Quests</span>
     @if (missingRequiredTasks().length > 0) {
       @for (task of missingRequiredTasks(); track task.id) {
         <strong>{{ task.title }}</strong>
       }
     } @else {
-      <strong>Alle Quests fuer heute erledigt.</strong>
+      <strong>Alle Quests für heute erledigt.</strong>
     }
   </div>
 </section>

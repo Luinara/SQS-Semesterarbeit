@@ -20,7 +20,7 @@ import {
 } from "../../../frontend/src/app/shared/mock/mock-data";
 
 describe("app-state.logic", () => {
-  it("meldet den Demo-Account auch mit gemischter Schreibweise des Usernames an", () => {
+  it("meldet den Demo-Account auch mit gemischter Schreibweise des Spielernamens an", () => {
     const snapshot = createInitialSnapshot();
 
     const account = findAccountForLogin(snapshot.accounts, {
@@ -31,7 +31,7 @@ describe("app-state.logic", () => {
     expect(account?.user.userName).toBe("demo");
   });
 
-  it("erkennt vorhandene Konten unabhaengig von Gross- und Kleinschreibung", () => {
+  it("erkennt vorhandene Konten unabhängig von Groß- und Kleinschreibung", () => {
     const snapshot = createInitialSnapshot();
 
     expect(hasAccountWithEmail(snapshot.accounts, " Demo ")).toBe(true);
@@ -56,7 +56,10 @@ describe("app-state.logic", () => {
     const initialGameState = createInitialGameState();
     const firstTask = initialGameState.tasks[0];
 
-    const updatedGameState = completeTaskInGameState(initialGameState, firstTask.id);
+    const updatedGameState = completeTaskInGameState(
+      initialGameState,
+      firstTask.id,
+    );
 
     expect(updatedGameState.tasks[0].isCompleted).toBe(true);
     expect(updatedGameState.totalCompletedTasks).toBe(1);
@@ -65,11 +68,14 @@ describe("app-state.logic", () => {
     expect(updatedGameState.qualityScore).toBe(firstTask.points);
   });
 
-  it("laesst einen bereits erledigten Task beim zweiten Versuch unveraendert", () => {
+  it("lässt einen bereits erledigten Task beim zweiten Versuch unverändert", () => {
     const initialGameState = createInitialGameState();
     const firstTaskId = initialGameState.tasks[0].id;
 
-    const onceCompleted = completeTaskInGameState(initialGameState, firstTaskId);
+    const onceCompleted = completeTaskInGameState(
+      initialGameState,
+      firstTaskId,
+    );
     const twiceCompleted = completeTaskInGameState(onceCompleted, firstTaskId);
 
     expect(twiceCompleted).toEqual(onceCompleted);
@@ -93,13 +99,16 @@ describe("app-state.logic", () => {
       gameState = completeTaskInGameState(gameState, task.id);
     }
 
-    const result = completeTaskInGameStateWithFeedback(gameState, gameState.tasks[4].id);
+    const result = completeTaskInGameStateWithFeedback(
+      gameState,
+      gameState.tasks[4].id,
+    );
 
     expect(result.gameState.qualityScore).toBe(75);
     expect(result.feedback?.kind).toBe("level-up");
   });
 
-  it("trainiert das Pokemon nur, wenn genug Quest-Punkte vorhanden sind", () => {
+  it("trainiert das Pokémon nur, wenn genug Quest-Punkte vorhanden sind", () => {
     const initialGameState = createInitialGameState();
 
     const result = feedPetInGameStateWithFeedback(initialGameState);
@@ -108,7 +117,7 @@ describe("app-state.logic", () => {
     expect(result.feedback?.kind).toBe("info");
   });
 
-  it("erhoeht Motivation beim Training, aber nur bis zum Tageslimit", () => {
+  it("erhöht Motivation beim Training, aber nur bis zum Tageslimit", () => {
     const initialGameState = createInitialGameState();
     let gameState = {
       ...initialGameState,
@@ -123,10 +132,12 @@ describe("app-state.logic", () => {
     }
 
     expect(gameState.pet.happiness).toBe(PET_RULES.dailyHappinessGainLimit);
-    expect(gameState.pet.dailyHappinessGained).toBe(PET_RULES.dailyHappinessGainLimit);
+    expect(gameState.pet.dailyHappinessGained).toBe(
+      PET_RULES.dailyHappinessGainLimit,
+    );
   });
 
-  it("levelt direkt bei vollem Wachstum und aktualisiert die Pokemon-Stufe", () => {
+  it("levelt direkt bei vollem Wachstum und aktualisiert die Pokémon-Stufe", () => {
     const initialGameState = createInitialGameState();
     const preparedGameState = {
       ...initialGameState,
@@ -145,7 +156,9 @@ describe("app-state.logic", () => {
     expect(updatedGameState.pet.growthProgress).toBe(14);
     expect(updatedGameState.pet.growthGoal).toBe(123);
     expect(updatedGameState.pet.pokemonSpecies).toBe("bulbasaur");
-    expect(updatedGameState.pet.availableFoodPoints).toBe(24 - PET_RULES.feedCost);
+    expect(updatedGameState.pet.availableFoodPoints).toBe(
+      24 - PET_RULES.feedCost,
+    );
   });
 
   it("wechselt ab Level 3 zu Ivysaur und ab Level 6 zu Venusaur", () => {
@@ -171,14 +184,18 @@ describe("app-state.logic", () => {
       },
     };
 
-    expect(feedPetInGameState(levelTwoState).pet.pokemonSpecies).toBe("ivysaur");
-    expect(feedPetInGameState(levelFiveState).pet.pokemonSpecies).toBe("venusaur");
+    expect(feedPetInGameState(levelTwoState).pet.pokemonSpecies).toBe(
+      "ivysaur",
+    );
+    expect(feedPetInGameState(levelFiveState).pet.pokemonSpecies).toBe(
+      "venusaur",
+    );
   });
 
-  it("setzt das Demo-Spiel auf leere Quest-Werte zurueck", () => {
+  it("setzt das Demo-Spiel auf leere Quest-Werte zurück", () => {
     const resetState = resetGameState();
 
-    expect(resetState.pet.name).toBe("Pokemon Partner");
+    expect(resetState.pet.name).toBe("Pokémon Partner");
     expect(resetState.pet.level).toBe(1);
     expect(resetState.pet.availableFoodPoints).toBe(0);
     expect(resetState.pet.growthProgress).toBe(0);
@@ -209,7 +226,7 @@ describe("app-state.logic", () => {
     expect(resetState.pet.dailyHappinessGained).toBe(0);
   });
 
-  it("leitet Pflegezustaende aus Quest- und Pokemon-Werten ab", () => {
+  it("leitet Pflegezustände aus Quest- und Pokémon-Werten ab", () => {
     const initialGameState = createInitialGameState();
 
     expect(
@@ -252,9 +269,14 @@ describe("app-state.logic", () => {
   it("erlaubt offene Quests und sperrt erledigte Quests", () => {
     const initialGameState = createInitialGameState();
     const firstTaskId = initialGameState.tasks[0].id;
-    const completedState = completeTaskInGameState(initialGameState, firstTaskId);
+    const completedState = completeTaskInGameState(
+      initialGameState,
+      firstTaskId,
+    );
 
-    expect(canCompleteTaskInGameState(initialGameState, firstTaskId)).toBe(true);
+    expect(canCompleteTaskInGameState(initialGameState, firstTaskId)).toBe(
+      true,
+    );
     expect(canCompleteTaskInGameState(completedState, firstTaskId)).toBe(false);
   });
 });
