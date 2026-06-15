@@ -55,6 +55,13 @@ class UserControllerTest {
     }
 
     @Test
+    void testLevelUp_requiresAuth() throws Exception {
+        mockMvc.perform(post("/api/user/test-level-up"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"error\":\"unauthenticated\"}"));
+    }
+
+    @Test
     void water_requiresAuth_returnsJsonErrorBody() throws Exception {
         mockMvc.perform(post("/api/user/water").contentType("application/json").content("{\"ml\":10}"))
                 .andExpect(status().isUnauthorized())
@@ -94,6 +101,34 @@ class UserControllerTest {
 
         mockMvc.perform(post("/api/user/feed").session(session))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testLevelUp_success_returnsGameState() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+
+        GameStateDto dto = new GameStateDto();
+        dto.setPokemonLevel(8);
+        when(userService.testLevelUp("tester")).thenReturn(dto);
+
+        mockMvc.perform(post("/api/user/test-level-up").session(session))
+                .andExpect(status().isOk());
+
+        verify(userService).testLevelUp("tester");
+    }
+
+    @Test
+    void testLevelUp_userNotFound_returns404() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+        when(userService.testLevelUp("tester")).thenReturn(null);
+
+        mockMvc.perform(post("/api/user/test-level-up").session(session))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("{\"error\":\"user not found\"}"));
     }
 
     @Test

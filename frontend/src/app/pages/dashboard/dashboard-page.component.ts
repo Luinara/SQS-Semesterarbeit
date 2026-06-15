@@ -37,6 +37,10 @@ export class DashboardPageComponent {
     void this.appState.feedPet();
   }
 
+  testLevelUpPet(): void {
+    void this.appState.testLevelUp();
+  }
+
   addWater(amountMl: number): void {
     void this.appState.addWater(amountMl);
   }

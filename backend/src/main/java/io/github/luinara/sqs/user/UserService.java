@@ -143,6 +143,36 @@ public class UserService {
     }
 
     @Transactional
+    public GameStateDto testLevelUp(String username) {
+        var opt = userRepository.findByUsernameIgnoreCase(username);
+        if (opt.isEmpty()) return null;
+
+        UserEntity user = opt.get();
+        int oldLevel = user.getPokemonLevel();
+        int newLevel = oldLevel + 1;
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+
+        user.setPokemonLevel(newLevel);
+        user.setPokemonXp(0);
+        user.setLastLevelUpAt(now);
+
+        if (user.isEgg() && newLevel >= 10) {
+            user.setEgg(false);
+            user.setHatchedAt(now);
+        }
+
+        if (oldLevel < 25 && newLevel >= 25) {
+            attemptEvolution(user);
+        }
+        if (oldLevel < 50 && newLevel >= 50) {
+            attemptEvolution(user);
+        }
+
+        userRepository.save(user);
+        return getGameStateForUsername(username);
+    }
+
+    @Transactional
     public boolean deleteAccount(String username) {
         var opt = userRepository.findByUsernameIgnoreCase(username);
         if (opt.isEmpty()) return false;
@@ -170,5 +200,14 @@ public class UserService {
         } catch (DataAccessException ignored) {
             // The Spring JPA test schema does not always include the Prisma-owned stats table.
         }
+    }
+
+    private void attemptEvolution(UserEntity user) {
+        Integer currentId = user.getCurrentPokemonId();
+        if (currentId == null) return;
+
+        pokemonRepository.findById(currentId)
+                .map(pokemon -> pokemon.getEvolutionId())
+                .ifPresent(user::setCurrentPokemonId);
     }
 }

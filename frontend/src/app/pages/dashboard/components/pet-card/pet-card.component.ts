@@ -33,6 +33,7 @@ export class PetCardComponent {
   readonly feedCost = input(1);
   readonly isLevelingUp = input(false);
   readonly feedRequested = output<void>();
+  readonly testLevelUpRequested = output<void>();
   readonly weatherRefreshRequested = output<void>();
   readonly weatherCitySubmitted = output<string>();
 
@@ -110,6 +111,10 @@ export class PetCardComponent {
 
   requestFeeding(): void {
     this.feedRequested.emit();
+  }
+
+  requestTestLevelUp(): void {
+    this.testLevelUpRequested.emit();
   }
 
   requestWeatherRefresh(): void {
