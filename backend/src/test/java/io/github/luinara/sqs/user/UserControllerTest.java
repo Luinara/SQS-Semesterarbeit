@@ -16,7 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -92,6 +95,28 @@ class UserControllerTest {
 
         mockMvc.perform(post("/api/user/feed").session(session))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteAccount_requiresAuth_returnsJsonErrorBody() throws Exception {
+        mockMvc.perform(delete("/api/user/account"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"error\":\"unauthenticated\"}"));
+    }
+
+    @Test
+    void deleteAccount_authenticated_deletesUserAndInvalidatesSession() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        when(userService.deleteAccount("tester")).thenReturn(true);
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+
+        mockMvc.perform(delete("/api/user/account").session(session))
+                .andExpect(status().isNoContent());
+
+        verify(userService).deleteAccount("tester");
+        verify(authenticationService).logout("t");
+        assertThat(session.isInvalid()).isTrue();
     }
 
     // new tests for getGameState unauthorized

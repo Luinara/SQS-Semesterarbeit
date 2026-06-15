@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -32,6 +33,9 @@ class UserServiceTest {
 
     @Mock
     private UserTaskRepository userTaskRepository;
+
+    @Mock
+    private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
     private UserService userService;
@@ -204,5 +208,36 @@ class UserServiceTest {
         // when pending <= 0, feedUser should not modify or save the user
         verify(userRepository, never()).save(entity);
         assertThat(dto.getHappiness()).isEqualTo(50);
+    }
+
+    @Test
+    void deleteAccount_removesDependentRowsAndUser() {
+        UserEntity entity = new UserEntity();
+        entity.setId(42L);
+        entity.setUsername("tester");
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+        when(jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) > 0 FROM information_schema.tables WHERE LOWER(table_name) = 'user_stats'",
+                Boolean.class
+        )).thenReturn(true);
+
+        boolean deleted = userService.deleteAccount("tester");
+
+        assertThat(deleted).isTrue();
+        verify(userTaskRepository).deleteByUserId(42L);
+        verify(jdbcTemplate).update("DELETE FROM user_stats WHERE user_id = ?", 42L);
+        verify(userRepository).delete(entity);
+    }
+
+    @Test
+    void deleteAccount_userNotFound_returnsFalse() {
+        when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
+
+        boolean deleted = userService.deleteAccount("nouser");
+
+        assertThat(deleted).isFalse();
+        verify(userTaskRepository, never()).deleteByUserId(any());
+        verify(userRepository, never()).delete(any());
     }
 }

@@ -17,6 +17,7 @@ export class TopBarComponent {
 
   readonly resetRequested = output<void>();
   readonly logoutRequested = output<void>();
+  readonly accountDeleteRequested = output<void>();
 
   readonly userInitial = computed(() => this.userName().trim().charAt(0).toUpperCase() || 'S');
 
@@ -26,5 +27,9 @@ export class TopBarComponent {
 
   requestLogout(): void {
     this.logoutRequested.emit();
+  }
+
+  requestAccountDelete(): void {
+    this.accountDeleteRequested.emit();
   }
 }

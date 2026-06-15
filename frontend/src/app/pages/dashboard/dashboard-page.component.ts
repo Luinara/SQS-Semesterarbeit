@@ -57,4 +57,23 @@ export class DashboardPageComponent {
     await this.appState.logout();
     await this.router.navigateByUrl('/auth');
   }
+
+  async deleteAccount(): Promise<void> {
+    const confirmed = globalThis.confirm(
+      'Profil wirklich loeschen? Dein Spielstand und alle Quest-Fortschritte werden dauerhaft entfernt.'
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const result = await this.appState.deleteAccount();
+
+    if (!result.success) {
+      globalThis.alert(result.message);
+      return;
+    }
+
+    await this.router.navigateByUrl('/auth');
+  }
 }

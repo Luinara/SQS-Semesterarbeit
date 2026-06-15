@@ -241,6 +241,7 @@ Genutzte Endpunkte:
 POST /api/auth/login
 POST /api/auth/signup
 POST /api/auth/logout
+DELETE /api/user/account
 GET  /api/tasks
 POST /api/tasks/{id}/complete
 GET  /api/user/game-state
