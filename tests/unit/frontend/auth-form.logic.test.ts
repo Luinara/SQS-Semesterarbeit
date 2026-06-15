@@ -5,10 +5,12 @@ function createAuthSubmission(
   type: "login" | "register",
   username: string,
   password: string,
+  starterPokemonSpecies: "bulbasaur" | "charmander" | "squirtle" = "bulbasaur",
 ) {
   const cleaned = username.trim();
   const base = { username: cleaned, password };
-  if (type === "register") return { ...base, userName: cleaned };
+  if (type === "register")
+    return { ...base, userName: cleaned, starterPokemonSpecies };
   return base;
 }
 
@@ -41,13 +43,14 @@ describe("auth-form logic", () => {
   });
 
   it("erstellt Registrierungs-Payloads mit userName aus dem Spielernamen", () => {
-    expect(createAuthSubmission("register", "  nova  ", "password123")).toEqual(
-      {
-        username: "nova",
-        password: "password123",
-        userName: "nova",
-      },
-    );
+    expect(
+      createAuthSubmission("register", "  nova  ", "password123", "charmander"),
+    ).toEqual({
+      username: "nova",
+      password: "password123",
+      userName: "nova",
+      starterPokemonSpecies: "charmander",
+    });
   });
 
   it.each([

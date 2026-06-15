@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +23,8 @@ public class TaskService {
 
     private static final int GROWTH_INCREASE_PER_TASK = 10;
     private static final int GROWTH_GOAL = 100;
+    private static final int FIRST_EVOLUTION_LEVEL = 15;
+    private static final int FINAL_EVOLUTION_LEVEL = 35;
     private static final Duration LEVEL_UP_COOLDOWN = Duration.ofDays(2);
 
     private final TaskRepository taskRepository;
@@ -116,10 +119,10 @@ public class TaskService {
             user.setHatchedAt(now);
         }
 
-        if (oldLevel < 25 && newLevel >= 25) {
+        if (oldLevel < FIRST_EVOLUTION_LEVEL && newLevel >= FIRST_EVOLUTION_LEVEL) {
             attemptEvolution(user);
         }
-        if (oldLevel < 50 && newLevel >= 50) {
+        if (oldLevel < FINAL_EVOLUTION_LEVEL && newLevel >= FINAL_EVOLUTION_LEVEL) {
             attemptEvolution(user);
         }
     }
@@ -141,21 +144,12 @@ public class TaskService {
         dto.setFoodLevel(user.getHunger());
 
         Integer pId = user.getCurrentPokemonId();
-        if (pId != null) {
-            pokemonRepository.findById(pId).ifPresent(pokemon -> dto.setPokemonName(pokemon.getName()));
-        }
+        Optional<PokemonEntity> currentPokemon = pId == null
+                ? Optional.empty()
+                : pokemonRepository.findById(pId);
+        currentPokemon.ifPresent(pokemon -> dto.setPokemonName(pokemon.getName()));
 
-        // determine image: if egg -> egg image placeholder, else pokemon image
-        if (user.isEgg()) {
-            dto.setPokemonImageUrl("/assets/egg.png");
-        } else {
-            if (pId != null) {
-                var pOpt = pokemonRepository.findById(pId);
-                dto.setPokemonImageUrl(pOpt.map(PokemonEntity::getImageUrl).orElse(null));
-            } else {
-                dto.setPokemonImageUrl(null);
-            }
-        }
+        dto.setPokemonImageUrl(currentPokemon.map(PokemonEntity::getImageUrl).orElse(null));
 
         dto.setPokemonLevel(user.getPokemonLevel());
         dto.setGrowth(user.getPokemonXp());

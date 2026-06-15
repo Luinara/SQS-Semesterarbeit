@@ -20,6 +20,7 @@ describe("BackendApiService", () => {
           waterLevel: 750,
           foodLevel: 18,
           pokemonImageUrl: "/assets/egg.png",
+          pokemonName: "ivysaur",
           pokemonLevel: 4,
           growth: 35,
           happiness: 66,
@@ -54,7 +55,58 @@ describe("BackendApiService", () => {
     expect(snapshot.gameState.tasks[0].isCompleted).toBe(true);
     expect(snapshot.gameState.pet.availableFoodPoints).toBe(7);
     expect(snapshot.gameState.pet.level).toBe(4);
+    expect(snapshot.gameState.pet.starterPokemonSpecies).toBe("bulbasaur");
+    expect(snapshot.gameState.pet.pokemonSpecies).toBe("ivysaur");
     expect(snapshot.gameState.qualityScore).toBe(10);
+  });
+
+  it("registriert den gewÃ¤hlten Starter und nutzt Backend-PokÃ©monnamen im Snapshot", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse({ message: "created" }))
+      .mockResolvedValueOnce(jsonResponse([]))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          waterLevel: 0,
+          foodLevel: 0,
+          pokemonImageUrl: "/assets/egg.png",
+          pokemonName: "charmeleon",
+          pokemonLevel: 3,
+          growth: 0,
+          happiness: 0,
+          pendingFeedPoints: 0,
+          tasks: [],
+          streak: 1,
+          yesterdayLoggedIn: false,
+          serverNow: "2026-06-15T10:00:00Z",
+        }),
+      );
+
+    const snapshot = await new BackendApiService().signup({
+      username: "zoe",
+      password: "secret123",
+      userName: "zoe",
+      starterPokemonSpecies: "charmander",
+    });
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      "/api/auth/signup",
+      expect.objectContaining({
+        body: JSON.stringify({
+          username: "zoe",
+          password: "secret123",
+          starterPokemonId: 4,
+        }),
+        credentials: "include",
+        method: "POST",
+      }),
+    );
+    expect(snapshot.gameState.pet).toMatchObject({
+      starterPokemonSpecies: "charmander",
+      pokemonSpecies: "charmeleon",
+      level: 3,
+    });
   });
 
   it("lädt nach Task-Completion den frischen Game-State aus dem Backend", async () => {
@@ -191,7 +243,12 @@ describe("BackendApiService", () => {
     );
 
     await expect(
-      new BackendApiService().signup("zoe", "secret123"),
+      new BackendApiService().signup({
+        username: "zoe",
+        password: "secret123",
+        userName: "zoe",
+        starterPokemonSpecies: "bulbasaur",
+      }),
     ).rejects.toMatchObject({
       status: 404,
       message:

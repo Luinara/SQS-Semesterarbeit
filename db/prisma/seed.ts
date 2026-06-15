@@ -23,13 +23,16 @@ async function main() {
 
   await prisma.user.upsert({
     where: { username: "testuser" },
-    update: {},
+    update: {
+      currentPokemonId: 1,
+      eggPokemonId: 1,
+    },
     create: {
       username: "testuser",
       passwordHash,
       isEgg: true,
       happiness: 0,
-
+      currentPokemonId: 1,
       eggPokemonId: randomPokemonId,
 
       stats: {

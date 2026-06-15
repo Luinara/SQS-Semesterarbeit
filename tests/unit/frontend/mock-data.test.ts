@@ -40,7 +40,19 @@ describe("mock-data", () => {
     ]);
     expect(gameState.qualityTarget).toBe(QUALITY_RULES.targetScore);
     expect(gameState.pet.level).toBe(1);
+    expect(gameState.pet.starterPokemonSpecies).toBe("bulbasaur");
     expect(gameState.pet.pokemonSpecies).toBe("bulbasaur");
+  });
+
+  it("erstellt neue SpielzustÃ¤nde mit dem gewÃ¤hlten Starter", () => {
+    expect(createInitialGameState("charmander").pet).toMatchObject({
+      starterPokemonSpecies: "charmander",
+      pokemonSpecies: "charmander",
+    });
+    expect(createInitialGameState("squirtle").pet).toMatchObject({
+      starterPokemonSpecies: "squirtle",
+      pokemonSpecies: "squirtle",
+    });
   });
 
   it("nutzt das Punkte-Balancing aus den Quests", () => {
@@ -56,7 +68,9 @@ describe("mock-data", () => {
 
   it("leitet die Pokémon-Stufe aus dem Level ab", () => {
     expect(resolvePokemonSpeciesForLevel(1)).toBe("bulbasaur");
-    expect(resolvePokemonSpeciesForLevel(3)).toBe("ivysaur");
-    expect(resolvePokemonSpeciesForLevel(6)).toBe("venusaur");
+    expect(resolvePokemonSpeciesForLevel(15)).toBe("ivysaur");
+    expect(resolvePokemonSpeciesForLevel(35)).toBe("venusaur");
+    expect(resolvePokemonSpeciesForLevel(15, "charmander")).toBe("charmeleon");
+    expect(resolvePokemonSpeciesForLevel(35, "squirtle")).toBe("blastoise");
   });
 });

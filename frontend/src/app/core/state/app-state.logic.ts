@@ -301,6 +301,9 @@ function normalizeTasks(tasks: TaskItem[] | undefined): TaskItem[] {
 
 function normalizePetState(pet: PetState, nowIso: string): PetState {
   const level = Math.max(1, pet.level ?? 1);
+  const starterPokemonSpecies = resolveStarterPokemonSpecies(
+    pet.starterPokemonSpecies ?? pet.pokemonSpecies
+  );
 
   return {
     ...pet,
@@ -324,11 +327,8 @@ function normalizePetState(pet: PetState, nowIso: string): PetState {
     lastLevelUpAt: pet.lastLevelUpAt ?? null,
     goodCareStreakDays: Math.max(0, pet.goodCareStreakDays ?? 0),
     lastGoodCareDay: pet.lastGoodCareDay ?? null,
-    starterPokemonSpecies: resolveStarterPokemonSpecies(pet.starterPokemonSpecies ?? pet.pokemonSpecies),
-    pokemonSpecies: resolvePokemonSpeciesForLevel(
-      level,
-      resolveStarterPokemonSpecies(pet.starterPokemonSpecies ?? pet.pokemonSpecies)
-    ),
+    starterPokemonSpecies,
+    pokemonSpecies: resolvePokemonSpeciesForLevel(level, starterPokemonSpecies),
   };
 }
 

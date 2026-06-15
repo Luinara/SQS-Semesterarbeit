@@ -45,13 +45,19 @@ describe("AppStateService", () => {
       username: "nova",
       password: "password123",
       userName: "Nova",
+      starterPokemonSpecies: "charmander",
     });
 
     expect(result).toEqual({
       success: true,
       message: "Profil erstellt: nova.",
     });
-    expect(backendApi.signup).toHaveBeenCalledWith("nova", "password123");
+    expect(backendApi.signup).toHaveBeenCalledWith({
+      username: "nova",
+      password: "password123",
+      userName: "Nova",
+      starterPokemonSpecies: "charmander",
+    });
     expect(service.user()?.userName).toBe("nova");
     expect(globalThis.localStorage.getItem(ACTIVE_USERNAME_STORAGE_KEY)).toBe(
       "nova",
@@ -309,6 +315,7 @@ function createSnapshot(
       lastLevelUpAt: null,
       goodCareStreakDays: 0,
       lastGoodCareDay: null,
+      starterPokemonSpecies: "bulbasaur",
       pokemonSpecies: "bulbasaur",
     },
     tasks: [

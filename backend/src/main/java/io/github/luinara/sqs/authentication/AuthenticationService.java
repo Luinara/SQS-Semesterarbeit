@@ -2,6 +2,7 @@ package io.github.luinara.sqs.authentication;
 
 import io.github.luinara.sqs.pokemon.PokemonEntity;
 import io.github.luinara.sqs.pokemon.PokemonRepository;
+import io.github.luinara.sqs.pokemon.StarterPokemonCatalog;
 import io.github.luinara.sqs.user.UserEntity;
 import io.github.luinara.sqs.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -36,7 +35,6 @@ public class AuthenticationService {
     private static final int MAX_FAILED_LOGIN_ATTEMPTS = 5;
     private static final Duration LOGIN_LOCKOUT_DURATION = Duration.ofMinutes(15);
     private static final int DEFAULT_STARTER_POKEMON_ID = 1;
-    private static final Set<Integer> ALLOWED_STARTER_POKEMON_IDS = Set.of(1, 4, 7);
 
     private final Map<String, String> users = new ConcurrentHashMap<>();
     private final Map<String, String> sessions = new ConcurrentHashMap<>();
@@ -220,21 +218,25 @@ public class AuthenticationService {
 
         int selectedStarterId = starterPokemonId == null ? DEFAULT_STARTER_POKEMON_ID : starterPokemonId;
 
-        if (!ALLOWED_STARTER_POKEMON_IDS.contains(selectedStarterId)) {
+        if (!StarterPokemonCatalog.allowedStarterIds().contains(selectedStarterId)) {
             throw new InvalidRequestException("starterPokemonId must be one of 1, 4 or 7");
         }
 
-        Optional<PokemonEntity> selectedStarter = pokemonRepository.findById(selectedStarterId);
-        if (selectedStarter.isEmpty()) {
-            List<PokemonEntity> pokemon = pokemonRepository.findAll();
-            if (!pokemon.isEmpty()) {
-                throw new InvalidRequestException("selected starter pokemon is not available");
-            }
-            entity.setCurrentPokemonId(null);
-            return;
-        }
+        seedStarterChain(selectedStarterId);
+        entity.setCurrentPokemonId(selectedStarterId);
+    }
 
-        entity.setCurrentPokemonId(selectedStarter.get().getId());
+    private void seedStarterChain(int selectedStarterId) {
+        for (StarterPokemonCatalog.StarterPokemonSeed seed
+                : StarterPokemonCatalog.chainForStarter(selectedStarterId)) {
+            PokemonEntity pokemon = pokemonRepository.findById(seed.id()).orElseGet(PokemonEntity::new);
+            pokemon.setId(seed.id());
+            pokemon.setName(seed.name());
+            pokemon.setImageUrl(seed.imageUrl());
+            pokemon.setEvolutionId(seed.evolutionId());
+            pokemon.setEvolutionStage(seed.evolutionStage());
+            pokemonRepository.save(pokemon);
+        }
     }
 
     private boolean isLoginBlocked(String key) {

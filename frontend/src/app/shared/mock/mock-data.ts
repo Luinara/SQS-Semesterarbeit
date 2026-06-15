@@ -65,6 +65,9 @@ const POKEMON_EVOLUTION_CHAINS: Record<
   squirtle: ['squirtle', 'wartortle', 'blastoise'],
 };
 
+const FIRST_EVOLUTION_LEVEL = 15;
+const FINAL_EVOLUTION_LEVEL = 35;
+
 export function createInitialSnapshot(): StorageSnapshot {
   const demoAccount = createMockAccount(DEMO_ACCOUNT);
 
@@ -115,13 +118,14 @@ export function resolvePokemonSpeciesForLevel(
   level: number,
   starterPokemonSpecies: StarterPokemonSpeciesName = 'bulbasaur'
 ): PokemonSpeciesName {
-  const chain = POKEMON_EVOLUTION_CHAINS[starterPokemonSpecies] ?? POKEMON_EVOLUTION_CHAINS.bulbasaur;
+  const chain =
+    POKEMON_EVOLUTION_CHAINS[starterPokemonSpecies] ?? POKEMON_EVOLUTION_CHAINS.bulbasaur;
 
-  if (level >= 6) {
+  if (level >= FINAL_EVOLUTION_LEVEL) {
     return chain[2];
   }
 
-  if (level >= 3) {
+  if (level >= FIRST_EVOLUTION_LEVEL) {
     return chain[1];
   }
 
