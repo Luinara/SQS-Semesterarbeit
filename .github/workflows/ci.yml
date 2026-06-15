@@ -80,7 +80,7 @@ jobs:
       # Run unit tests (Surefire). We avoid `verify` here because it runs Failsafe
       # integration tests which may start full Spring contexts and can hang in CI.
       - name: Run unit tests (Surefire)
-        run: mvn --batch-mode --no-transfer-progress -DskipITs=true verify org.jacoco:jacoco-maven-plugin:0.8.12:report
+        run: mvn --batch-mode --no-transfer-progress -DskipITs=true test org.jacoco:jacoco-maven-plugin:0.8.12:report
 
       - name: Debug JaCoCo output
         id: debug-jacoco
