@@ -205,7 +205,7 @@ function mapBackendTasks(
     return {
       id: String(task.id),
       title: completion?.title ?? task.title,
-      description: task.description || 'Quest fuer dein Pokemon.',
+      description: task.description || 'Quest für dein Pokémon.',
       icon: resolveTaskIcon(index),
       tone: resolveTaskTone(index),
       category: 'delivery',
@@ -261,7 +261,7 @@ function isHtmlErrorResponse(response: Response, text: string): boolean {
 
 function createConnectionErrorMessage(status: number): string {
   if (status === 404) {
-    return 'Backend nicht erreichbar. Bitte pruefe, ob das Backend laeuft und der Proxy aktiv ist.';
+    return 'Backend nicht erreichbar. Bitte prüfe, ob das Backend läuft und der Proxy aktiv ist.';
   }
 
   if (status >= 500) {
