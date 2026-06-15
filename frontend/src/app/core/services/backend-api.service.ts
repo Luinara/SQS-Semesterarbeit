@@ -121,7 +121,7 @@ export class BackendApiService {
       backendGameState,
       gameState: {
         pet: {
-          name: 'API Pokemon',
+          name: 'Pokemon Partner',
           level: pokemonLevel,
           growthProgress: clamp(backendGameState.growth ?? 0, 0, PET_RULES.initialGrowthGoal),
           growthGoal: PET_RULES.initialGrowthGoal,
@@ -196,12 +196,12 @@ function mapBackendTasks(
     return {
       id: String(task.id),
       title: completion?.title ?? task.title,
-      description: task.description || 'Backend-Task aus der API.',
+      description: task.description || 'Quest fuer dein Pokemon.',
       icon: resolveTaskIcon(index),
       tone: resolveTaskTone(index),
       category: 'delivery',
       isRequired: true,
-      checklistReference: `API task id ${task.id}`,
+      checklistReference: `Quest #${task.id}`,
       points: resolveTaskPoints(index),
       isCompleted: completion?.completed ?? false,
     };

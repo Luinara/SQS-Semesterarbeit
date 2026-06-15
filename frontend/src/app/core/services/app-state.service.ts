@@ -152,14 +152,14 @@ export class AppStateService {
         kind: 'quest',
         message:
           snapshot.gameState.totalCompletedTasks > (before?.totalCompletedTasks ?? 0)
-            ? 'Backend-Task erledigt und API-State aktualisiert.'
-            : 'Backend-State wurde aktualisiert.',
+            ? 'Quest erledigt. Dein Spielstand wurde aktualisiert.'
+            : 'Spielstand wurde aktualisiert.',
       });
     } catch (error) {
       this.showFeedback({
         id: createFeedbackId('info'),
         kind: 'info',
-        message: getApiErrorMessage(error, 'Task konnte nicht abgeschlossen werden.'),
+        message: getApiErrorMessage(error, 'Quest konnte nicht abgeschlossen werden.'),
       });
     }
   }
@@ -177,7 +177,7 @@ export class AppStateService {
       this.showFeedback({
         id: createFeedbackId('hydration'),
         kind: 'hydration',
-        message: `+${amountMl} ml Wasser im Backend gespeichert.`,
+        message: `+${amountMl} ml Wasser getrunken.`,
       });
     } catch (error) {
       this.showFeedback({
@@ -205,7 +205,7 @@ export class AppStateService {
         message:
           snapshot.gameState.pet.level > beforeLevel
             ? `Level-Up auf ${snapshot.gameState.pet.level}.`
-            : 'Feed-Punkte wurden im Backend angewendet.',
+            : 'Feed-Punkte wurden fuer dein Pokemon eingesetzt.',
       });
     } catch (error) {
       this.showFeedback({
@@ -228,13 +228,13 @@ export class AppStateService {
       this.showFeedback({
         id: createFeedbackId('info'),
         kind: 'info',
-        message: 'Backend-State neu geladen.',
+        message: 'Spielstand neu geladen.',
       });
     } catch (error) {
       this.showFeedback({
         id: createFeedbackId('info'),
         kind: 'info',
-        message: getApiErrorMessage(error, 'Backend-State konnte nicht neu geladen werden.'),
+        message: getApiErrorMessage(error, 'Spielstand konnte nicht neu geladen werden.'),
       });
     }
   }

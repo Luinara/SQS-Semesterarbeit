@@ -1,10 +1,10 @@
 <header class="top-bar">
   <div class="top-bar__brand">
-    <span class="top-bar__logo">SQS</span>
+    <span class="top-bar__logo">PH</span>
 
     <div>
-      <p class="top-bar__eyebrow">PKM API Task Companion</p>
-      <h1>Pokemon Task Dashboard</h1>
+      <p class="top-bar__eyebrow">PokeHabit</p>
+      <h1>Pokemon Quest Board</h1>
     </div>
   </div>
 
@@ -13,7 +13,7 @@
       <span class="top-bar__avatar" aria-hidden="true">{{ userInitial() }}</span>
       <div>
         <strong>{{ userName() }}</strong>
-        <span>{{ completedTasks() }}/{{ totalTasks() }} Backend-Tasks erledigt</span>
+        <span>{{ completedTasks() }}/{{ totalTasks() }} Quests erledigt</span>
       </div>
     </div>
 
@@ -23,7 +23,7 @@
     </div>
 
     <button sqsButton size="sm" variant="secondary" (click)="requestReset()">
-      Demo reset
+      Neu laden
     </button>
     <button sqsButton size="sm" variant="ghost" (click)="requestLogout()">Abmelden</button>
   </div>
