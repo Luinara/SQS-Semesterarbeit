@@ -6,7 +6,7 @@
   <rect x="45" y="135" width="170" height="70" class="host"/><text x="130" y="164" text-anchor="middle" class="label">Entwicklerrechner</text><text x="130" y="184" text-anchor="middle" class="small">Docker Host</text>
   <rect x="275" y="85" width="550" height="180" class="group"/><text x="300" y="115" class="label">Docker Compose Umgebung</text>
   <rect x="315" y="155" width="125" height="58" class="box"/><text x="377" y="178" text-anchor="middle" class="label">Frontend</text><text x="377" y="197" text-anchor="middle" class="small">Port 3000</text>
-  <rect x="515" y="155" width="125" height="58" class="box"/><text x="577" y="178" text-anchor="middle" class="label">Backend</text><text x="577" y="197" text-anchor="middle" class="small">Port 8080</text>
+  <rect x="515" y="155" width="125" height="58" class="box"/><text x="577" y="178" text-anchor="middle" class="label">Backend</text><text x="577" y="197" text-anchor="middle" class="small">Port 8181</text>
   <ellipse cx="740" cy="185" rx="62" ry="34" class="db"/><text x="740" y="181" text-anchor="middle" class="label">Postgres</text><text x="740" y="200" text-anchor="middle" class="small">5432</text>
   <rect x="865" y="155" width="100" height="58" class="external"/><text x="915" y="179" text-anchor="middle" class="label">PokeAPI</text><text x="915" y="198" text-anchor="middle" class="small">Internet</text>
   <path d="M215 170 H315" class="arrow"/><text x="265" y="158" text-anchor="middle" class="small">localhost 3000</text>

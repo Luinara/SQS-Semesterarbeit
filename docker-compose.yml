@@ -22,7 +22,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: sqs_password
       SPRING_PROFILES_ACTIVE: dev
     ports:
-      - "8080:8080"
+      - "8181:8181"
     depends_on:
       - db
 

@@ -1,12 +1,12 @@
 {
   "/api": {
-    "target": "http://localhost:8080",
+    "target": "http://localhost:8181",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "warn"
   },
   "/assets": {
-    "target": "http://localhost:8080",
+    "target": "http://localhost:8181",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "warn"
