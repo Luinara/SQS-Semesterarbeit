@@ -1,12 +1,17 @@
 package io.github.luinara.sqs.config;
 
 import io.github.luinara.sqs.authentication.AuthenticationService;
+import io.github.luinara.sqs.pokemon.PokemonEntity;
+import io.github.luinara.sqs.pokemon.PokemonRepository;
+import io.github.luinara.sqs.pokemon.StarterPokemonCatalog;
 import io.github.luinara.sqs.task.TaskRepository;
 import io.github.luinara.sqs.task.entity.TaskEntity;
 import io.github.luinara.sqs.user.UserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,34 +21,59 @@ import java.util.List;
 public class DevDataSeeder implements ApplicationRunner {
 
     private static final String DEMO_USERNAME = "demo";
-    private static final String DEMO_PASSWORD = "password123";
+    private static final String DEMO_PASSWORD = "cozyfocus";
 
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
+    private final PokemonRepository pokemonRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public DevDataSeeder(
             AuthenticationService authenticationService,
             UserRepository userRepository,
-            TaskRepository taskRepository
+            TaskRepository taskRepository,
+            PokemonRepository pokemonRepository
     ) {
         this.authenticationService = authenticationService;
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
+        this.pokemonRepository = pokemonRepository;
     }
 
     @Override
     public void run(ApplicationArguments args) {
+        seedPokemon();
         seedDemoUser();
         seedTasks();
     }
 
     private void seedDemoUser() {
-        if (userRepository.existsByUsernameIgnoreCase(DEMO_USERNAME)) {
+        var demoUser = userRepository.findByUsernameIgnoreCase(DEMO_USERNAME);
+
+        if (demoUser.isPresent()) {
+            var user = demoUser.get();
+            user.setPasswordHash(passwordEncoder.encode(DEMO_PASSWORD));
+            if (user.getCurrentPokemonId() == null) {
+                user.setCurrentPokemonId(1);
+            }
+            userRepository.save(user);
             return;
         }
 
         authenticationService.createUser(DEMO_USERNAME, DEMO_PASSWORD);
+    }
+
+    private void seedPokemon() {
+        for (StarterPokemonCatalog.StarterPokemonSeed pokemon : StarterPokemonCatalog.all()) {
+            PokemonEntity entity = pokemonRepository.findById(pokemon.id()).orElseGet(PokemonEntity::new);
+            entity.setId(pokemon.id());
+            entity.setName(pokemon.name());
+            entity.setImageUrl(pokemon.imageUrl());
+            entity.setEvolutionId(pokemon.evolutionId());
+            entity.setEvolutionStage(pokemon.evolutionStage());
+            pokemonRepository.save(entity);
+        }
     }
 
     private void seedTasks() {

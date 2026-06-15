@@ -1,6 +1,7 @@
 package io.github.luinara.sqs.user;
 
 import io.github.luinara.sqs.pokemon.PokemonRepository;
+import io.github.luinara.sqs.pokemon.PokemonEntity;
 import io.github.luinara.sqs.task.TaskRepository;
 import io.github.luinara.sqs.task.TaskService;
 import io.github.luinara.sqs.task.UserTaskRepository;
@@ -23,6 +24,8 @@ public class UserService {
 
     private static final String WATER_TASK_TITLE = "Wasser trinken";
     private static final int WATER_GOAL_ML = 3000;
+    private static final int FIRST_EVOLUTION_LEVEL = 15;
+    private static final int FINAL_EVOLUTION_LEVEL = 35;
 
     private final UserRepository userRepository;
     private final PokemonRepository pokemonRepository;
@@ -58,21 +61,12 @@ public class UserService {
         dto.setFoodLevel(user.getHunger());
 
         Integer pId = user.getCurrentPokemonId();
-        if (pId != null) {
-            pokemonRepository.findById(pId).ifPresent(pokemon -> dto.setPokemonName(pokemon.getName()));
-        }
+        Optional<PokemonEntity> currentPokemon = pId == null
+                ? Optional.empty()
+                : pokemonRepository.findById(pId);
+        currentPokemon.ifPresent(pokemon -> dto.setPokemonName(pokemon.getName()));
 
-        // determine image: if egg -> egg image placeholder, else pokemon image
-        if (user.isEgg()) {
-            dto.setPokemonImageUrl("/assets/egg.png");
-        } else {
-            if (pId != null) {
-                var pOpt = pokemonRepository.findById(pId);
-                dto.setPokemonImageUrl(pOpt.map(p -> p.getImageUrl()).orElse(null));
-            } else {
-                dto.setPokemonImageUrl(null);
-            }
-        }
+        dto.setPokemonImageUrl(currentPokemon.map(PokemonEntity::getImageUrl).orElse(null));
 
         dto.setPokemonLevel(user.getPokemonLevel());
         dto.setGrowth(user.getPokemonXp());
@@ -165,10 +159,10 @@ public class UserService {
             user.setHatchedAt(now);
         }
 
-        if (oldLevel < 25 && newLevel >= 25) {
+        if (oldLevel < FIRST_EVOLUTION_LEVEL && newLevel >= FIRST_EVOLUTION_LEVEL) {
             attemptEvolution(user);
         }
-        if (oldLevel < 50 && newLevel >= 50) {
+        if (oldLevel < FINAL_EVOLUTION_LEVEL && newLevel >= FINAL_EVOLUTION_LEVEL) {
             attemptEvolution(user);
         }
 

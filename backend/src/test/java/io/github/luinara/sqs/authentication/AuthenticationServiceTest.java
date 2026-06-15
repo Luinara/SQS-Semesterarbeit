@@ -2,6 +2,8 @@ package io.github.luinara.sqs.authentication;
 
 import io.github.luinara.sqs.user.UserEntity;
 import io.github.luinara.sqs.user.UserRepository;
+import io.github.luinara.sqs.pokemon.PokemonEntity;
+import io.github.luinara.sqs.pokemon.PokemonRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +18,7 @@ import java.time.ZoneOffset;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,6 +30,9 @@ class AuthenticationServiceTest {
 
     @Mock
     UserRepository repo;
+
+    @Mock
+    PokemonRepository pokemonRepository;
 
     @BeforeEach
     void setUp() {
@@ -155,6 +161,35 @@ class AuthenticationServiceTest {
 
         assertThat(created).isFalse();
         verify(repo).save(any());
+    }
+
+    @Test
+    void db_createUser_seedsSelectedStarterChainAndAssignsStarter() {
+        when(repo.existsByUsernameIgnoreCase("fire")).thenReturn(false);
+        when(pokemonRepository.findById(any())).thenReturn(Optional.empty());
+        when(repo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        AuthenticationService svc = new AuthenticationService(
+                Optional.of(repo),
+                Optional.of(pokemonRepository)
+        );
+        boolean created = svc.createUser("fire", "password123", 4);
+
+        assertThat(created).isTrue();
+
+        ArgumentCaptor<UserEntity> userCaptor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(repo).save(userCaptor.capture());
+        assertThat(userCaptor.getValue().getCurrentPokemonId()).isEqualTo(4);
+
+        ArgumentCaptor<PokemonEntity> pokemonCaptor = ArgumentCaptor.forClass(PokemonEntity.class);
+        verify(pokemonRepository, times(3)).save(pokemonCaptor.capture());
+        assertThat(pokemonCaptor.getAllValues())
+                .extracting(PokemonEntity::getId, PokemonEntity::getName, PokemonEntity::getEvolutionId)
+                .containsExactly(
+                        tuple(4, "charmander", 5),
+                        tuple(5, "charmeleon", 6),
+                        tuple(6, "charizard", null)
+                );
     }
 
     @Test

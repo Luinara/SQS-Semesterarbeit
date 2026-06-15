@@ -45,12 +45,9 @@ class AuthenticationControllerIntegrationTest {
         userRepository.deleteAll();
         pokemonRepository.deleteAll();
 
-        PokemonEntity pokemon = new PokemonEntity();
-        pokemon.setId(1);
-        pokemon.setName("bulbasaur");
-        pokemon.setImageUrl("https://example.test/bulbasaur.png");
-        pokemon.setEvolutionStage(0);
-        pokemonRepository.save(pokemon);
+        pokemonRepository.save(createPokemon(1, "bulbasaur"));
+        pokemonRepository.save(createPokemon(4, "charmander"));
+        pokemonRepository.save(createPokemon(7, "squirtle"));
     }
 
     @Test
@@ -65,10 +62,27 @@ class AuthenticationControllerIntegrationTest {
         var opt = userRepository.findByUsernameIgnoreCase("newuser");
         assertThat(opt).isPresent();
         UserEntity u = opt.get();
-        assertThat(u.getCurrentPokemonId()).isNotNull();
-        assertThat(u.getCurrentPokemonId()).isBetween(1, 151);
+        assertThat(u.getCurrentPokemonId()).isEqualTo(1);
         assertThat(u.isEgg()).isTrue();
         assertThat(u.getHappiness()).isEqualTo(0);
+    }
+
+    @Test
+    void signupAssignsSelectedStarterPokemon() throws Exception {
+        String body = om.writeValueAsString(Map.of(
+                "username", "fireuser",
+                "password", "password123",
+                "starterPokemonId", 4
+        ));
+
+        mockMvc.perform(post("/api/auth/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isCreated());
+
+        var opt = userRepository.findByUsernameIgnoreCase("fireuser");
+        assertThat(opt).isPresent();
+        assertThat(opt.get().getCurrentPokemonId()).isEqualTo(4);
     }
 
     @Test
@@ -133,5 +147,14 @@ class AuthenticationControllerIntegrationTest {
         // subsequent logout with same session should still succeed (idempotent)
         mockMvc.perform(post("/api/auth/logout").session(session))
                 .andExpect(status().isNoContent());
+    }
+
+    private static PokemonEntity createPokemon(int id, String name) {
+        PokemonEntity pokemon = new PokemonEntity();
+        pokemon.setId(id);
+        pokemon.setName(name);
+        pokemon.setImageUrl("https://example.test/" + name + ".png");
+        pokemon.setEvolutionStage(0);
+        return pokemon;
     }
 }

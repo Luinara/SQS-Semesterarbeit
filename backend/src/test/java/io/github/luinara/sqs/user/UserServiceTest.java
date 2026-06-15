@@ -199,6 +199,28 @@ class UserServiceTest {
     }
 
     @Test
+    void getGameStateForUsername_whenEggStillSet_includesSelectedPokemonImageAndName() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setEgg(true);
+        entity.setCurrentPokemonId(4);
+
+        io.github.luinara.sqs.pokemon.PokemonEntity p = new io.github.luinara.sqs.pokemon.PokemonEntity();
+        p.setId(4);
+        p.setName("charmander");
+        p.setImageUrl("/img/charmander.png");
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+        when(pokemonRepository.findById(4)).thenReturn(Optional.of(p));
+
+        GameStateDto dto = userService.getGameStateForUsername("tester");
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getPokemonName()).isEqualTo("charmander");
+        assertThat(dto.getPokemonImageUrl()).isEqualTo("/img/charmander.png");
+    }
+
+    @Test
     void getGameState_userNotFound_returnsNull() {
         when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
         GameStateDto dto = userService.getGameStateForUsername("nouser");
@@ -295,7 +317,7 @@ class UserServiceTest {
     void testLevelUp_evolvesWhenCrossingEvolutionLevel() {
         UserEntity entity = new UserEntity();
         entity.setUsername("tester");
-        entity.setPokemonLevel(24);
+        entity.setPokemonLevel(14);
         entity.setPokemonXp(100);
         entity.setEgg(false);
         entity.setCurrentPokemonId(100);
@@ -311,7 +333,7 @@ class UserServiceTest {
         GameStateDto dto = userService.testLevelUp("tester");
 
         assertThat(dto).isNotNull();
-        assertThat(entity.getPokemonLevel()).isEqualTo(25);
+        assertThat(entity.getPokemonLevel()).isEqualTo(15);
         assertThat(entity.getCurrentPokemonId()).isEqualTo(101);
     }
 

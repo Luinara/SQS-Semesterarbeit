@@ -94,6 +94,32 @@ class TaskServiceTest {
     }
 
     @Test
+    void completeTask_whenEggStillSet_returnsSelectedPokemonImageAndName() {
+        user.setEgg(true);
+        user.setCurrentPokemonId(7);
+
+        io.github.luinara.sqs.pokemon.PokemonEntity pokemon = new io.github.luinara.sqs.pokemon.PokemonEntity();
+        pokemon.setId(7);
+        pokemon.setName("squirtle");
+        pokemon.setImageUrl("/img/squirtle.png");
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
+        when(pokemonRepository.findById(7)).thenReturn(Optional.of(pokemon));
+
+        TaskEntity task = new TaskEntity();
+        task.setId(9L);
+        when(taskRepository.findById(9L)).thenReturn(Optional.of(task));
+        when(userTaskRepository.findByUserIdAndTaskId(1L, 9L)).thenReturn(Optional.empty());
+
+        GameStateResult res = taskService.completeTaskForUser("tester", 9L);
+
+        assertThat(res.status).isEqualTo(200);
+        assertThat(res.gameState).isNotNull();
+        assertThat(res.gameState.getPokemonName()).isEqualTo("squirtle");
+        assertThat(res.gameState.getPokemonImageUrl()).isEqualTo("/img/squirtle.png");
+    }
+
+    @Test
     void completeTask_alreadyCompleted_returns409() {
         when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
 
@@ -154,7 +180,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void completeTask_evolvesAtLevel25() {
+    void completeTask_evolvesAtLevel15() {
         when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
 
         TaskEntity task = new TaskEntity();
@@ -165,8 +191,8 @@ class TaskServiceTest {
         when(taskRepository.count()).thenReturn(1L);
 
         // set up user current pokemon id and a pokemon with evolution
-        user.setPokemonLevel(24);
-        user.setPokemonXp(95); // +10 => level 25
+        user.setPokemonLevel(14);
+        user.setPokemonXp(95); // +10 => level 15
         user.setCurrentPokemonId(100);
 
         io.github.luinara.sqs.pokemon.PokemonEntity p100 = new io.github.luinara.sqs.pokemon.PokemonEntity();
@@ -188,7 +214,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void completeTask_evolvesAtLevel50() {
+    void completeTask_evolvesAtLevel35() {
         when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
 
         TaskEntity task = new TaskEntity();
@@ -198,7 +224,7 @@ class TaskServiceTest {
         when(userTaskRepository.findByUserIdAndTaskId(1L, 6L)).thenReturn(Optional.empty());
         when(taskRepository.count()).thenReturn(1L);
 
-        user.setPokemonLevel(49);
+        user.setPokemonLevel(34);
         user.setPokemonXp(95);
         user.setCurrentPokemonId(200);
 

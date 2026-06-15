@@ -34,7 +34,7 @@ describe("PokemonService", () => {
     vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("network down"));
 
     const service = new PokemonService();
-    await service.loadForLevel(6);
+    await service.loadForLevel(35);
 
     expect(service.snapshot().displayName).toBe("Venusaur");
     expect(service.snapshot().source).toBe("fallback");

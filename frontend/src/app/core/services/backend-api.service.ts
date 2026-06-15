@@ -261,7 +261,9 @@ function mapStarterPokemonToId(starterPokemonSpecies: StarterPokemonSpeciesName)
   return starterPokemonIds[starterPokemonSpecies];
 }
 
-function normalizePokemonSpeciesName(name: string | null | undefined): PokemonSpeciesName | undefined {
+function normalizePokemonSpeciesName(
+  name: string | null | undefined
+): PokemonSpeciesName | undefined {
   const normalizedName = name?.trim().toLowerCase();
   const knownSpecies = new Set<PokemonSpeciesName>([
     'bulbasaur',

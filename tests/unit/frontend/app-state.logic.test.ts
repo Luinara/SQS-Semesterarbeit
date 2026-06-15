@@ -44,6 +44,7 @@ describe("app-state.logic", () => {
       username: "  TEST ",
       password: "geheim123",
       userName: "  Mira  ",
+      starterPokemonSpecies: "squirtle",
     });
 
     expect(account.user.email).toBe("test");
@@ -51,6 +52,7 @@ describe("app-state.logic", () => {
     expect(account.gameState.tasks).toHaveLength(5);
     expect(account.gameState.qualityScore).toBe(0);
     expect(account.gameState.pet.level).toBe(1);
+    expect(account.gameState.pet.pokemonSpecies).toBe("squirtle");
   });
 
   it("markiert eine Quest als erledigt und schreibt Punkte gut", () => {
@@ -162,35 +164,54 @@ describe("app-state.logic", () => {
     );
   });
 
-  it("wechselt ab Level 3 zu Ivysaur und ab Level 6 zu Venusaur", () => {
+  it("wechselt ab Level 15 zu Ivysaur und ab Level 35 zu Venusaur", () => {
     const initialGameState = createInitialGameState();
-    const levelTwoState = {
+    const levelFourteenState = {
       ...initialGameState,
       pet: {
         ...initialGameState.pet,
-        level: 2,
+        level: 14,
         availableFoodPoints: 40,
         growthProgress: 100,
         growthGoal: 100,
       },
     };
-    const levelFiveState = {
+    const levelThirtyFourState = {
       ...initialGameState,
       pet: {
         ...initialGameState.pet,
-        level: 5,
+        level: 34,
         availableFoodPoints: 40,
         growthProgress: 100,
         growthGoal: 100,
       },
     };
 
-    expect(feedPetInGameState(levelTwoState).pet.pokemonSpecies).toBe(
+    expect(feedPetInGameState(levelFourteenState).pet.pokemonSpecies).toBe(
       "ivysaur",
     );
-    expect(feedPetInGameState(levelFiveState).pet.pokemonSpecies).toBe(
+    expect(feedPetInGameState(levelThirtyFourState).pet.pokemonSpecies).toBe(
       "venusaur",
     );
+  });
+
+  it("entwickelt gewÃ¤hlte Starter entlang ihrer eigenen Reihenfolge", () => {
+    const initialGameState = createInitialGameState("charmander");
+    const levelFourteenState = {
+      ...initialGameState,
+      pet: {
+        ...initialGameState.pet,
+        level: 14,
+        availableFoodPoints: 40,
+        growthProgress: 100,
+        growthGoal: 100,
+      },
+    };
+
+    expect(feedPetInGameState(levelFourteenState).pet).toMatchObject({
+      starterPokemonSpecies: "charmander",
+      pokemonSpecies: "charmeleon",
+    });
   });
 
   it("setzt das Demo-Spiel auf leere Quest-Werte zurück", () => {
