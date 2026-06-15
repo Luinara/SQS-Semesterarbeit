@@ -1,3 +1,7 @@
+# Legacy Project README
+
+Diese Datei lag vorher im Repo-Root. Sie ist als Legacy-Kontext archiviert, weil sie alte Projektangaben enthaelt, unter anderem React/Vite-Wording und veraltete TODOs. Die aktuelle Frontend-Dokumentation liegt in `frontend/README.md`.
+
 # SQS-Semesterarbeit
 
 Semester project for a Software Quality Assurance course, focused on developing a self-care companion web application with an emphasis on high software quality standards.

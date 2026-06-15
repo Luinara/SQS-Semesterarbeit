@@ -26,7 +26,7 @@ describe("mock-data", () => {
     expect(snapshot.accounts[0].user.userName).toBe("demo");
   });
 
-  it("liefert einen neuen Spielzustand mit offenen Backend-Tasks", () => {
+  it("liefert einen neuen Spielzustand mit offenen Quests", () => {
     const gameState = createInitialGameState();
 
     expect(gameState.tasks).toHaveLength(5);
@@ -43,7 +43,7 @@ describe("mock-data", () => {
     expect(gameState.pet.pokemonSpecies).toBe("bulbasaur");
   });
 
-  it("nutzt das Punkte-Balancing aus der Backend-Task-API", () => {
+  it("nutzt das Punkte-Balancing aus den Quests", () => {
     const gameState = createInitialGameState();
     const taskPoints = gameState.tasks.map((task) => task.points);
 

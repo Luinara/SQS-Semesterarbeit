@@ -1,279 +1,361 @@
-# SQS Frontend
+# PokeHabit Frontend
 
-Minimal Viable Product einer pet-basierten Productivity-Web-App auf Basis von Angular, TypeScript, SCSS und Standalone Components.
+Angular-Frontend fuer eine Pokemon-inspirierte Game-App: Spieler erledigen Tagesquests, sammeln Punkte, trinken Wasser, trainieren ihr Pokemon und sehen eine Wetter-Szene, die aus echten Wetterdaten abgeleitet wird.
 
-## Schnellstart Schritt für Schritt
+Die UI soll wie eine moderne Game-App wirken. Abgabe- und Technikbegriffe gehoeren nicht in sichtbare Frontend-Texte.
 
-1. In den Frontend-Ordner wechseln:
+## Schnellstart
 
-```bash
-cd frontend
-```
+Voraussetzungen:
 
-2. Wenn du alles in einem Schritt ausführen willst, nutze das Setup-Skript:
+- Node.js und npm
+- Spring-Backend auf `http://localhost:8080`
+- PostgreSQL fuer das Backend
 
-PowerShell unter Windows:
+Start im Frontend-Ordner:
 
 ```powershell
-PowerShell -ExecutionPolicy Bypass -File .\scripts\setup.ps1
-```
-
-Git Bash / Linux / macOS:
-
-```bash
-bash ./scripts/setup.sh
-```
-
-3. Falls du lieber manuell vorgehst, installiere die Abhängigkeiten:
-
-```bash
+cd frontend
 npm install
-```
-
-4. Entwicklungsserver starten:
-
-```bash
 npm start
 ```
 
-5. Im Browser öffnen:
+Browser:
 
 ```text
 http://localhost:4200
 ```
 
-6. App-Flow durchgehen:
+Der Angular-Dev-Server proxyt `/api` und `/assets` an das Backend:
 
-- Splash-Screen ansehen
-- Weiter zum Login oder automatisch weiterleiten lassen
-- Mit dem Demo-Konto anmelden oder lokal registrieren
-- Tasks erledigen, Punkte sammeln und das Pet füttern
-
-7. Entwicklungsserver beenden:
-
-```bash
-Strg + C
+```text
+frontend/proxy.conf.json
 ```
 
-## Installation
+## Lokale Backend-DB
 
-Komplett automatisiert per Skript:
-
-PowerShell:
+Im Repo-Root:
 
 ```powershell
-PowerShell -ExecutionPolicy Bypass -File .\scripts\setup.ps1
+docker compose up -d db
 ```
 
-Bash:
+Die Projekt-DB nutzt lokal Host-Port `5433`, damit sie nicht mit anderen Postgres-Containern auf `5432` kollidiert.
 
-```bash
-bash ./scripts/setup.sh
+Backend-Dev-Config:
+
+```text
+jdbc:postgresql://localhost:5433/sqs_db
+username: sqs_user
+password: sqs_password
 ```
 
-Oder manuell:
+Backend mit Profil `dev` starten. Der Dev-Seed legt automatisch an:
 
-```bash
-npm install
+```text
+demo / password123
 ```
 
-## Projekt starten
+## App-Flow
 
-```bash
-npm start
+1. Splash-Screen zeigt den Game-Einstieg.
+2. Auth-Screen erlaubt Login oder Registrierung mit Spielername und Passwort.
+3. Quest-Board laedt Quests und Spielstand aus dem Backend.
+4. Spieler erledigen Quests.
+5. Quest-Punkte fuellen Tagesziel und Feed-Punkte.
+6. Wasser-Buttons speichern Wasserfortschritt.
+7. Pokemon-Training nutzt Feed-Punkte und aktualisiert Level, Wachstum und Motivation.
+8. Wetter-Szene passt sich Open-Meteo-Daten und Stadtwahl an.
+
+## Screens und Buttons
+
+### Splash
+
+- `Spiel starten`: fuehrt zur Anmeldung oder bei vorhandener Session direkt ins Spiel.
+- Automatische Weiterleitung nach kurzer Ladezeit.
+
+### Login und Registrierung
+
+- `Spielername`: Backend-Username.
+- `Passwort`: beim Login nur erforderlich, bei Registrierung mindestens 8 Zeichen.
+- `Einloggen und weitermachen`: sendet `POST /api/auth/login`.
+- `Profil anlegen und starten`: sendet `POST /api/auth/signup`.
+
+### Topbar
+
+- Spielername und Quest-Fortschritt.
+- Feed-Punkte als schnelle Spielstandsanzeige.
+- `Neu laden`: laedt den Spielstand erneut aus dem Backend.
+- `Abmelden`: sendet `POST /api/auth/logout` und fuehrt zur Auth-Seite.
+
+### Tagesquests
+
+- Jede Quest kommt aus `GET /api/tasks`.
+- `Erledigen`: sendet `POST /api/tasks/{id}/complete`.
+- Erledigte Quests sind gesperrt und geben keine doppelten Punkte.
+
+### Tagesziel
+
+- Zeigt Quest-Punkte im Verhaeltnis zum Tagesziel.
+- `+250 ml` und `+500 ml`: senden `POST /api/user/water`.
+- Wasserstand, Energie und Login-Streak kommen aus `GET /api/user/game-state`.
+
+### Pokemon Partner
+
+- Sprite kommt bevorzugt aus dem Backend-Game-State.
+- PokeAPI bleibt als Sprite-/Metadaten-Fallback gekapselt.
+- `Pokemon trainieren`: sendet `POST /api/user/feed`.
+- Wachstum, Motivation und Level werden danach aus dem Backend neu gemappt.
+
+### Wetter-Szene
+
+- Open-Meteo liefert Wettercode, Temperatur und Tag/Nacht.
+- `Stadt laden`: sucht Koordinaten per Open-Meteo Geocoding und laedt danach Wetter.
+- `Aktualisieren`: laedt Wetter fuer die aktive Stadt neu.
+- Szene unterscheidet Sonne, Wolken, Regen, Schnee, Hagel, Sturm, Nebel, Tag und Nacht.
+
+## API-Anbindung
+
+Zentrale Schicht:
+
+```text
+src/app/core/services/backend-api.service.ts
 ```
 
-Die Anwendung läuft standardmäßig über Angular CLI im Entwicklungsmodus und ist in der Regel unter `http://localhost:4200` erreichbar.
+Aufgaben:
 
-## Produktions-Build
+- HTTP mit `fetch`
+- `credentials: 'include'` fuer Session-Cookies
+- Backend-DTOs in Frontend-Spielmodelle mappen
+- Fehlertexte kapseln
 
-```bash
-npm run build
+Genutzte Endpunkte:
+
+```text
+POST /api/auth/login
+POST /api/auth/signup
+POST /api/auth/logout
+GET  /api/tasks
+POST /api/tasks/{id}/complete
+GET  /api/user/game-state
+POST /api/user/water
+POST /api/user/feed
 ```
 
-## Type-Check
+State-Fassade:
 
-```bash
-npm run type-check
+```text
+src/app/core/services/app-state.service.ts
 ```
 
-## Tests
+Aufgaben:
 
-Unit-Tests mit Coverage:
+- Aktiver Nutzer
+- Spielstand
+- Quests
+- Pokemon-Zustand
+- Wasser/Energie/Streak
+- User-Feedback nach Klicks
+- Session-Restore fuer Guards
 
-```bash
-npm run test:coverage
+Komponenten rufen nicht direkt `fetch` auf. Sie sprechen ueber Outputs wie `taskCompleted`, `feedRequested`, `waterAdded` mit der State-Fassade.
+
+## Datenfluss
+
+Login:
+
+```text
+AuthForm -> AuthPage -> AppStateService.login -> BackendApiService.login
 ```
 
-E2E-Test mit Playwright:
+Quest erledigen:
 
-```bash
-npm run test:e2e
+```text
+TaskCard -> TaskList -> DashboardPage -> AppStateService.completeTask -> BackendApiService.completeTask
 ```
 
-Code-Qualität prüfen:
+Pokemon trainieren:
 
-```bash
-npm run lint
-npm run format:check
+```text
+PetCard -> DashboardPage -> AppStateService.feedPet -> BackendApiService.feed
 ```
 
-Frontend-npm-Sicherheit prüfen:
+Wasser trinken:
 
-```bash
-npm run security:frontend
+```text
+Tagesziel-Karte -> DashboardPage -> AppStateService.addWater -> BackendApiService.addWater
 ```
 
-Details zum aktuellen npm-Vulnerability-Status stehen in `../docs/frontend-npm-security.md`.
+Wetter:
 
-## Was das Setup-Skript macht
-
-Das Skript führt nacheinander folgende Schritte aus:
-
-1. `npm install`
-2. `npm run type-check`
-3. `npm run build`
-
-Damit wird nicht nur installiert, sondern direkt geprüft, ob das Frontend in deinem lokalen Zustand sauber kompiliert.
-
-Die eigentlichen Testbefehle bleiben bewusst separat, damit man bei Bedarf schneller nur Build oder nur Tests laufen lassen kann.
-
-## Demo-Zugang
-
-- E-Mail: `demo@sqs.app`
-- Passwort: `cozyfocus`
-
-Alternativ kann auf dem Auth-Screen ein lokales Demo-Profil registriert werden.
-
-## Typischer Nutzungsablauf
-
-1. Splash-Screen öffnen
-2. Zum Auth-Screen wechseln
-3. Mit Demo-Account einloggen oder neues lokales Profil anlegen
-4. Aufgaben links abschließen
-5. Futterpunkte sammeln
-6. Rechts das Pet füttern und Level-Fortschritt beobachten
+```text
+PetCard -> WeatherService -> OpenMeteoWeatherAdapter -> weather-appearance.logic
+```
 
 ## Projektstruktur
 
 ```text
 frontend/
 |-- public/
-|   |-- favicon.svg
-|   `-- pet-placeholder.svg
 |-- src/
 |   |-- app/
 |   |   |-- core/
 |   |   |   |-- guards/
-|   |   |   `-- services/
+|   |   |   |-- services/
+|   |   |   `-- state/
 |   |   |-- pages/
 |   |   |   |-- splash/
 |   |   |   |-- auth/
-|   |   |   |   `-- auth-form/
 |   |   |   `-- dashboard/
 |   |   |       `-- components/
 |   |   `-- shared/
-|   |       |-- mock/
 |   |       |-- models/
+|   |       |-- mock/
 |   |       `-- ui/
 |   |-- styles/
-|   |   |-- _mixins.scss
-|   |   `-- _tokens.scss
 |   |-- main.ts
 |   `-- styles.scss
+|-- proxy.conf.json
 |-- angular.json
 |-- package.json
-|-- scripts/
-|   |-- setup.ps1
-|   `-- setup.sh
-|-- testing/
-|   `-- playwright-test.ts
-|-- tsconfig.json
-|-- tsconfig.app.json
+|-- playwright.config.ts
 |-- vitest.config.ts
-`-- playwright.config.ts
+`-- README.md
 ```
 
-## Mock-State-Verwaltung
+## Tests
 
-Die gesamte Demo-Logik liegt in `src/app/core/services/app-state.service.ts`.
-
-- Der Service verwaltet Login/Register, aktive Session, Task-Fortschritt, Punkte und Pet-Wachstum.
-- Persistiert wird die komplette Mock-Anwendung im `localStorage`.
-- Der verwendete Speicher-Key ist in `src/app/shared/mock/mock-data.ts` als `STORAGE_KEY` definiert.
-- Initiale Demo-Daten für Tasks, Pet und Demo-Account kommen ebenfalls aus `src/app/shared/mock/mock-data.ts`.
-- `browser-storage.service.ts` kapselt den direkten Zugriff auf den Browser-Speicher, damit die Fachlogik im State-Service lesbar bleibt.
-
-## Wo später echte Daten angeschlossen werden können
-
-- Login/Register: `src/app/core/services/app-state.service.ts`
-- Initiale Mock-Daten: `src/app/shared/mock/mock-data.ts`
-- Route-Schutz: `src/app/core/guards/`
-
-Die aktuelle Struktur ist bewusst so geschnitten, dass später API-Calls oder ein echtes Backend hinzugefügt werden können, ohne die Komponenten zu einer God-Architektur aufzublähen.
-
-## Pet-Platzhalter austauschen
-
-Die Platzhaltergrafik liegt in:
-
-`public/pet-placeholder.svg`
-
-Sie wird zentral durch die Komponente `src/app/pages/dashboard/components/pet-visual/` eingebunden.
-Dadurch kann später ein Sprite, ein PNG oder eine neue SVG-Datei ersetzt werden, ohne die Dashboard-Logik anpassen zu müssen.
-
-## Wetter-Hintergrund für das Pet
-
-Das Dashboard lädt Wetterdaten über Open-Meteo und nutzt sie für den Pet-Hintergrund.
-
-- Service: `src/app/core/services/weather.service.ts`
-- Mapping von Wettercode, Tag und Nacht: `src/app/core/state/weather-appearance.logic.ts`
-- Anzeige: `src/app/pages/dashboard/components/pet-visual/`
-
-Der aktuelle Stand startet mit Berlin als Demo-Standort. Im Dashboard kann aber eine eigene Stadt eingegeben werden; Open-Meteo Geocoding übersetzt den Stadtnamen in Koordinaten und Wetter Heute lädt danach die aktuelle Szene. Der Hintergrund unterscheidet Tag, Nacht, Sonne, Wolken, Regen, Schnee, Hagel, Sturm und Nebel. Falls Wetter Heute nicht erreichbar ist, bleibt automatisch ein heller Standard-Hintergrund aktiv.
-
-Die zuletzt gewählte Stadt wird im `localStorage` gespeichert und beim nächsten Öffnen wiederverwendet. Danach aktualisiert Wetter Heute die Daten automatisch alle 5 Minuten.
-
-## Wichtige Screens
-
-- Splash-Screen mit automatischer Weiterleitung und manueller CTA
-- Login/Register mit lokaler Frontend-Validierung
-- Dashboard mit Task-Sidebar, Pet-Karte, Fortschrittslogik und Reset-Funktion
-
-## Verwendete Kernideen
-
-- Angular Routing mit Standalone Components
-- lokale Persistenz über `localStorage`
-- keine API-Calls, kein Backend-Zwang, keine externe State-Library
-- klares Design-System über globale SCSS-Tokens und Mixins
-- reine Fachlogik aus dem State-Service in testbare Funktionen ausgelagert
-
-## Wenn etwas nicht startet
-
-1. Sicherstellen, dass der Befehl im Ordner `frontend` ausgeführt wird.
-2. Für einen kompletten Neuaufbau kannst du direkt das Setup-Skript verwenden:
-
-PowerShell:
+Unit-Tests:
 
 ```powershell
-PowerShell -ExecutionPolicy Bypass -File .\scripts\setup.ps1
+npm test
 ```
 
-Bash:
+Typecheck:
 
-```bash
-bash ./scripts/setup.sh
+```powershell
+npm run type-check
 ```
 
-3. Falls du lieber manuell vorgehst, führe erneut aus:
+Lint:
 
-```bash
-npm install
+```powershell
+npm run lint
 ```
 
-4. Danach den Dev-Server erneut starten:
+E2E:
 
-```bash
-npm start
+```powershell
+npm run test:e2e
 ```
 
-5. Falls alte Demo-Daten stören, im Browser den `localStorage` für `localhost:4200` löschen oder im Dashboard die Reset-Funktion verwenden.
+Coverage:
+
+```powershell
+npm run test:coverage
+```
+
+## Testmethodik
+
+### Unit
+
+Unit-Tests pruefen reine Logik und Adapter:
+
+- Quest-Punkte
+- Tagesziel
+- Pokemon-Level und Wachstum
+- Wetter-Mapping
+- PokeAPI-Fallbacks
+- Backend-API-Mapping
+
+### User-Mocking / E2E
+
+Playwright simuliert einen echten Spieler:
+
+- Seite oeffnen
+- Spielername und Passwort eintragen
+- Login klicken
+- Quest-Board sehen
+- Quests und Pokemon-Controls pruefen
+
+Die Backend-Routen werden im E2E-Test gemockt, damit der Test reproduzierbar bleibt und nicht an einer lokalen Datenbank haengt.
+
+Auszubauen:
+
+- Registrierung als Spieler
+- Quest erledigen und Feedback sehen
+- Wasserbutton klicken
+- Pokemon trainieren
+- Stadt suchen und Wetterwechsel pruefen
+- Logout
+- Fehlerfall bei nicht erreichbarem Backend
+
+## Clean-Code-Regeln
+
+- Komponenten enthalten UI und Events, aber keine HTTP-Details.
+- API-Zugriff bleibt in `BackendApiService`.
+- App-State bleibt in `AppStateService`.
+- Wetter- und Pokemon-Integrationen bleiben ueber Adapter gekapselt.
+- Sichtbare Texte bleiben Game-Sprache: Quest, Spielstand, Pokemon, Training, Tagesziel.
+- Legacy-Wording und reine Technikbegriffe werden nicht in der UI angezeigt.
+- CSS nutzt vorhandene Tokens und Mixins statt Einmal-Styles.
+- Keine neuen grossen Abstraktionen ohne echten Nutzen.
+
+## Cyber-Security-Hardening
+
+Aktueller Frontend-Stand:
+
+- Auth laeuft ueber Backend-Session-Cookie mit `credentials: 'include'`.
+- Frontend speichert nur den aktiven Spielernamen fuer Session-Restore.
+- Keine Passwoerter im Browser-Speicher.
+- Fehlertexte werden fuer Nutzer freundlich gekapselt.
+
+Noch zu pruefen:
+
+- CSRF-Schutz fuer Cookie-basierte POST-Requests.
+- Rate-Limiting oder Lockout fuer Login/Signup im Backend.
+- Sichere Cookie-Flags in Prod: `HttpOnly`, `Secure`, `SameSite`.
+- Keine geheimen Werte in Frontend-Env-Dateien.
+- `npm audit` und Dependency-Updates vor Abgabe.
+- Security-Tests fuer Auth-Fehler, unauthentifizierte Requests und doppelte Quest-Abschluesse.
+- Content Security Policy fuer spaetere Auslieferung.
+
+## Troubleshooting
+
+### `http proxy error: /api/auth/login ECONNREFUSED`
+
+Angular laeuft, aber Backend ist nicht auf `localhost:8080` erreichbar.
+
+Loesung:
+
+1. DB starten: `docker compose up -d db`
+2. Backend mit Profil `dev` starten.
+3. Frontend auf `http://localhost:4200` neu laden.
+
+### Port `5432` ist belegt
+
+Dieses Projekt nutzt lokal `5433:5432`. Wenn Docker trotzdem meckert, pruefen:
+
+```powershell
+docker ps
+```
+
+### Login-Daten
+
+Dev-Seed:
+
+```text
+demo / password123
+```
+
+### Build-Probleme
+
+Erst schnelle Checks:
+
+```powershell
+npm run type-check
+npm test
+npm run lint
+```
+
+Falls `ng build` lokal ohne Fehlermeldung abbricht, Node-/Angular-Toolchain pruefen und Build in einer frischen Shell erneut ausfuehren.

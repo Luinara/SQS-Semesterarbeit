@@ -79,7 +79,7 @@ export function feedPetInGameStateWithFeedback(
       gameState: normalizedGameState,
       feedback: createGameFeedback(
         'info',
-        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Task-Punkte bis zum naechsten Training.`
+        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Quest-Punkte bis zum naechsten Training.`
       ),
     };
   }
@@ -142,7 +142,7 @@ export function feedPetInGameStateWithFeedback(
     gameState: updatedGameState,
     feedback: createGameFeedback(
       'feeding',
-      `${currentPet.name} trainiert mit Task-Punkten: +${happinessGain} Motivation.`
+      `${currentPet.name} trainiert mit Quest-Punkten: +${happinessGain} Motivation.`
     ),
   };
 }
@@ -271,8 +271,8 @@ function completeTask(
     feedback: createGameFeedback(
       didReachGate ? 'level-up' : 'quest',
       didReachGate
-        ? `Tagesziel erreicht: ${nextQualityScore} Task-Punkte.`
-        : `Backend-Task erledigt: +${taskToComplete.points} Trainingspunkte.`
+        ? `Tagesziel erreicht: ${nextQualityScore} Quest-Punkte.`
+        : `Quest erledigt: +${taskToComplete.points} Trainingspunkte.`
     ),
   };
 }
@@ -297,7 +297,7 @@ function normalizePetState(pet: PetState, nowIso: string): PetState {
 
   return {
     ...pet,
-    name: pet.name || 'Quality Companion',
+    name: pet.name || 'Pokemon Partner',
     level,
     growthProgress: pet.growthProgress ?? 0,
     growthGoal: pet.growthGoal || PET_RULES.initialGrowthGoal,

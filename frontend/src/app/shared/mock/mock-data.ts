@@ -106,7 +106,7 @@ function createInitialPetState(): PetState {
   const now = new Date().toISOString();
 
   return {
-    name: 'Quality Companion',
+    name: 'Pokemon Partner',
     level: 1,
     growthProgress: 0,
     growthGoal: PET_RULES.initialGrowthGoal,
@@ -131,11 +131,11 @@ function createInitialTasks(): TaskItem[] {
     createQualityTask({
       slug: 'water',
       title: 'Wasser trinken',
-      description: 'Hydration wird als Backend-Task gespeichert und gibt deinem Pokemon Energie.',
+      description: 'Wasser gibt deinem Pokemon Energie.',
       icon: 'coverage',
       tone: 'blue',
       category: 'delivery',
-      checklistReference: 'API task: task-water',
+      checklistReference: 'Quest: Wasser',
       points: 10,
     }),
     createQualityTask({
@@ -145,7 +145,7 @@ function createInitialTasks(): TaskItem[] {
       icon: 'test',
       tone: 'green',
       category: 'delivery',
-      checklistReference: 'API task: task-study',
+      checklistReference: 'Quest: Lernen',
       points: 20,
     }),
     createQualityTask({
@@ -155,7 +155,7 @@ function createInitialTasks(): TaskItem[] {
       icon: 'rocket',
       tone: 'amber',
       category: 'delivery',
-      checklistReference: 'API task: task-sport',
+      checklistReference: 'Quest: Sport',
       points: 20,
     }),
     createQualityTask({
@@ -165,7 +165,7 @@ function createInitialTasks(): TaskItem[] {
       icon: 'layers',
       tone: 'slate',
       category: 'delivery',
-      checklistReference: 'API task: task-clean-room',
+      checklistReference: 'Quest: Aufraeumen',
       points: 15,
     }),
     createQualityTask({
@@ -175,7 +175,7 @@ function createInitialTasks(): TaskItem[] {
       icon: 'docs',
       tone: 'green',
       category: 'delivery',
-      checklistReference: 'API task: task-read',
+      checklistReference: 'Quest: Lesen',
       points: 10,
     }),
   ];
