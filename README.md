@@ -39,3 +39,18 @@ dem Runner, nicht nur eine manuell gepflegte Checkliste:
 
 Der Runner schreibt `report.json`, Logs und HTML-Reports in ein Docker-Volume.
 Der Hub liest diese Daten und aktualisiert die Ansicht automatisch.
+
+## Dokumentation
+
+Die technische Dokumentation liegt unter `docs/` und ist für ReadTheDocs
+vorbereitet. Wichtige Einstiegspunkte:
+
+- `docs/index.md`
+- `docs/arc42/`
+- `docs/adr/`
+- `docs/diagrams/c4-diagram.md`
+- `docs/diagrams/structurizr/workspace.dsl`
+
+ReadTheDocs nutzt `.readthedocs.yaml`, `mkdocs.yml` und
+`docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys kann
+die Doku dort direkt gebaut werden.

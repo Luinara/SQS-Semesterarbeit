@@ -1,0 +1,42 @@
+site_name: PokeHabit SQS Semesterarbeit
+site_description: Dokumentation der SQS-Semesterarbeit PokeHabit
+docs_dir: docs
+theme:
+  name: readthedocs
+  language: de
+nav:
+  - Überblick: index.md
+  - API:
+      - Authentifizierung: API_AUTH.md
+      - Tasks: API_TASKS.md
+      - User Actions: API_USER_ACTIONS.md
+      - Game State: API_USER_GAME_STATE.md
+      - Übergabe User Actions: user-actions-api-handover.md
+  - Architektur:
+      - arc42:
+          - Einführung und Ziele: arc42/01-introduction-and-goals.md
+          - Randbedingungen: arc42/02-constraints.md
+          - Kontextabgrenzung: arc42/03-context-and-scope.md
+          - Lösungsstrategie: arc42/04-solution-strategy.md
+          - Bausteinsicht: arc42/05-building-block-view.md
+          - Laufzeitsicht: arc42/06-runtime-view.md
+          - Verteilungssicht: arc42/07-deployment-view.md
+          - Querschnittliche Konzepte: arc42/08-crosscutting-concepts.md
+          - Architekturentscheidungen: arc42/09-architecture-decisions.md
+          - Qualitätsanforderungen: arc42/10-quality-requirements.md
+          - Risiken und technische Schulden: arc42/11-risks-and-technical-debt.md
+          - Glossar: arc42/12-glossary.md
+          - Frontend-Komponenten: arc42/frontend-component-architecture.md
+      - ADRs:
+          - Übersicht: adr/README.md
+          - ADR-001 Spring Boot: adr/ADR-001-use-spring-boot.md
+          - ADR-002 Angular TypeScript: adr/ADR-002-use-angular-typescript.md
+          - ADR-003 PostgreSQL: adr/ADR-003-use-postgresql.md
+          - ADR-004 PokeAPI: adr/ADR-004-use-pokeapi.md
+          - ADR-005 Feature-Packages: adr/ADR-005-use-feature-specific-folder-structure.md
+          - ADR-006 TypeScript: adr/ADR-006-use-typescript.md
+          - ADR-007 Prisma: adr/ADR-007-use-prisma.md
+          - ADR-008 Hidden Egg Assignment: adr/ADR-008-use-hidden-egg-assignment.md
+      - C4-Diagramme: diagrams/c4-diagram.md
+  - Qualität:
+      - Frontend npm Security: frontend-npm-security.md

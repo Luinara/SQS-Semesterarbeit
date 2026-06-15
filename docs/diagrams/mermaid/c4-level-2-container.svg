@@ -11,7 +11,7 @@
   <text x="107" y="176" text-anchor="middle" class="label">Nutzer</text>
   <text x="107" y="196" text-anchor="middle" class="small">Browser</text>
   <rect x="245" y="85" width="560" height="190" class="group"/>
-  <text x="270" y="115" class="label">Self-Care Companion</text>
+  <text x="270" y="115" class="label">PokeHabit</text>
   <rect x="285" y="160" width="135" height="65" class="box container"/>
   <text x="352" y="186" text-anchor="middle" class="label">Frontend</text>
   <text x="352" y="206" text-anchor="middle" class="small">Angular SPA</text>
