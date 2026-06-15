@@ -2,7 +2,11 @@ import { Injectable } from '@angular/core';
 import { GameState } from '../../shared/models/app-state.model';
 import { TaskItem } from '../../shared/models/task.model';
 import { AppUser } from '../../shared/models/user.model';
-import { PET_RULES, QUALITY_RULES, resolvePokemonSpeciesForLevel } from '../../shared/mock/mock-data';
+import {
+  PET_RULES,
+  QUALITY_RULES,
+  resolvePokemonSpeciesForLevel,
+} from '../../shared/mock/mock-data';
 
 export interface BackendTaskDto {
   id: number;
@@ -172,7 +176,6 @@ export class BackendApiService {
 
     return response;
   }
-
 }
 
 export class BackendApiError extends Error {
@@ -227,12 +230,48 @@ async function readErrorMessage(response: Response): Promise<string> {
     return `Verbindung fehlgeschlagen (${response.status}).`;
   }
 
+  if (isHtmlErrorResponse(response, text)) {
+    return createConnectionErrorMessage(response.status);
+  }
+
   try {
     const parsed = JSON.parse(text) as { error?: string; message?: string };
-    return parsed.error ?? parsed.message ?? text;
+    return parsed.error ?? parsed.message ?? createConnectionErrorMessage(response.status);
   } catch {
-    return text;
+    return truncateErrorMessage(text);
   }
+}
+
+function isHtmlErrorResponse(response: Response, text: string): boolean {
+  const contentType = response.headers.get('Content-Type')?.toLowerCase() ?? '';
+  const trimmedText = text.trimStart().toLowerCase();
+
+  return (
+    contentType.includes('text/html') ||
+    trimmedText.startsWith('<!doctype html') ||
+    trimmedText.startsWith('<html')
+  );
+}
+
+function createConnectionErrorMessage(status: number): string {
+  if (status === 404) {
+    return 'Backend nicht erreichbar. Bitte pruefe, ob das Backend laeuft und der Proxy aktiv ist.';
+  }
+
+  if (status >= 500) {
+    return 'Backend-Fehler. Bitte versuche es gleich noch einmal.';
+  }
+
+  return `Verbindung fehlgeschlagen (${status}).`;
+}
+
+function truncateErrorMessage(message: string): string {
+  const normalizedMessage = message.replace(/\s+/g, ' ').trim();
+  const maxLength = 240;
+
+  return normalizedMessage.length > maxLength
+    ? `${normalizedMessage.slice(0, maxLength - 3)}...`
+    : normalizedMessage;
 }
 
 function clamp(value: number, min: number, max: number): number {
