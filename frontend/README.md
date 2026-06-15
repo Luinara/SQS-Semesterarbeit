@@ -1,18 +1,57 @@
 # PokeHabit Frontend
 
-Angular-Frontend fuer eine Pokemon-inspirierte Game-App: Spieler erledigen Tagesquests, sammeln Punkte, trinken Wasser, trainieren ihr Pokemon und sehen eine Wetter-Szene, die aus echten Wetterdaten abgeleitet wird.
+Diese README beschreibt unser Frontend fuer PokeHabit. Die App ist keine klassische To-do-Liste, sondern eine kleine Game-App: Man erledigt Tagesquests, sammelt Punkte, trinkt Wasser, trainiert sein Pokemon und bekommt eine Wetter-Szene, die aus echten Wetterdaten kommt.
 
-Die UI soll wie eine moderne Game-App wirken. Abgabe- und Technikbegriffe gehoeren nicht in sichtbare Frontend-Texte.
+Wichtig fuer die Abgabe: Im sichtbaren UI soll die App nicht nach Technik-Demo aussehen. Begriffe wie API, Backend oder Abgabe gehoeren nicht auf Buttons und Karten. Technisch ist das Frontend aber sauber an das Spring-Backend angebunden.
 
-## Schnellstart
+## Kurz gesagt
 
-Voraussetzungen:
+- Angular mit Standalone Components
+- SCSS mit globalen Tokens und Component Styles
+- Backend-Anbindung ueber einen gekapselten API-Service
+- zentraler App-State fuer Spieler, Quests, Wasser, Energie und Pokemon
+- Wetter-Szene ueber Open-Meteo
+- Pokemon-Sprite aus dem Spielstand, mit Fallback
+- Unit-Tests mit Vitest
+- User-Flows mit Playwright
 
-- Node.js und npm
-- Spring-Backend auf `http://localhost:8080`
-- PostgreSQL fuer das Backend
+## Lokaler Start
 
-Start im Frontend-Ordner:
+### Datenbank starten
+
+Im Repo-Root:
+
+```powershell
+docker compose up -d db
+```
+
+Unsere Postgres-DB nutzt lokal Host-Port `5433`, damit sie nicht mit anderen Projekten kollidiert, die oft schon `5432` belegen.
+
+```text
+Host: localhost
+Port: 5433
+Database: sqs_db
+User: sqs_user
+Password: sqs_password
+```
+
+### Backend starten
+
+Das Backend muss auf `http://localhost:8080` laufen.
+
+Dev-Profil:
+
+```text
+SPRING_PROFILES_ACTIVE=dev
+```
+
+Der Dev-Seed legt beim Start automatisch einen Demo-User und Basisquests an:
+
+```text
+demo / password123
+```
+
+### Frontend starten
 
 ```powershell
 cd frontend
@@ -26,107 +65,174 @@ Browser:
 http://localhost:4200
 ```
 
-Der Angular-Dev-Server proxyt `/api` und `/assets` an das Backend:
+## Warum der Proxy wichtig ist
+
+Angular laeuft lokal auf `localhost:4200`, das Backend auf `localhost:8080`. Damit die Komponenten keine harte Backend-URL kennen muessen, nutzt Angular den Proxy:
 
 ```text
 frontend/proxy.conf.json
 ```
 
-## Lokale Backend-DB
-
-Im Repo-Root:
-
-```powershell
-docker compose up -d db
-```
-
-Die Projekt-DB nutzt lokal Host-Port `5433`, damit sie nicht mit anderen Postgres-Containern auf `5432` kollidiert.
-
-Backend-Dev-Config:
+Weiterleitungen:
 
 ```text
-jdbc:postgresql://localhost:5433/sqs_db
-username: sqs_user
-password: sqs_password
+/api    -> http://localhost:8080
+/assets -> http://localhost:8080
 ```
 
-Backend mit Profil `dev` starten. Der Dev-Seed legt automatisch an:
+Wenn im Terminal steht:
 
 ```text
-demo / password123
+http proxy error: /api/auth/login ECONNREFUSED
 ```
+
+dann ist das kein Frontend-Fehler. Das Backend laeuft dann nicht auf Port `8080`.
 
 ## App-Flow
 
-1. Splash-Screen zeigt den Game-Einstieg.
-2. Auth-Screen erlaubt Login oder Registrierung mit Spielername und Passwort.
-3. Quest-Board laedt Quests und Spielstand aus dem Backend.
-4. Spieler erledigen Quests.
-5. Quest-Punkte fuellen Tagesziel und Feed-Punkte.
-6. Wasser-Buttons speichern Wasserfortschritt.
-7. Pokemon-Training nutzt Feed-Punkte und aktualisiert Level, Wachstum und Motivation.
-8. Wetter-Szene passt sich Open-Meteo-Daten und Stadtwahl an.
+1. Spieler oeffnet die App.
+2. Splash-Screen fuehrt in das Spiel.
+3. Spieler loggt sich ein oder registriert sich.
+4. Quest-Board laedt Tagesquests und Spielstand.
+5. Spieler erledigt Quests.
+6. Punkte fuellen Tagesziel und Feed-Punkte.
+7. Spieler kann Wasser speichern.
+8. Spieler kann das Pokemon trainieren.
+9. Wetter-Szene passt sich an Stadt und Wetterdaten an.
+
+So kann man die Demo gut zeigen: anmelden, klicken, Feedback sehen, Spielstand aktualisiert sich.
 
 ## Screens und Buttons
 
 ### Splash
 
-- `Spiel starten`: fuehrt zur Anmeldung oder bei vorhandener Session direkt ins Spiel.
-- Automatische Weiterleitung nach kurzer Ladezeit.
+Der Splash-Screen ist der Einstieg in die App.
+
+Button:
+
+- `Spiel starten`: fuehrt zum Login oder bei vorhandener Session direkt ins Spiel.
 
 ### Login und Registrierung
 
-- `Spielername`: Backend-Username.
+Der Spieler kommt hier in seinen Spielstand.
+
+Felder:
+
+- `Spielername`: wird als Username fuer das Backend genutzt.
 - `Passwort`: beim Login nur erforderlich, bei Registrierung mindestens 8 Zeichen.
-- `Einloggen und weitermachen`: sendet `POST /api/auth/login`.
-- `Profil anlegen und starten`: sendet `POST /api/auth/signup`.
+
+Buttons:
+
+- `Einloggen und weitermachen`: meldet den Spieler an.
+- `Profil anlegen und starten`: erstellt einen neuen Spieler.
+
+Wichtig: Das Frontend speichert keine Passwoerter im Browser.
 
 ### Topbar
 
-- Spielername und Quest-Fortschritt.
-- Feed-Punkte als schnelle Spielstandsanzeige.
-- `Neu laden`: laedt den Spielstand erneut aus dem Backend.
-- `Abmelden`: sendet `POST /api/auth/logout` und fuehrt zur Auth-Seite.
+Die Topbar gibt schnell Kontext.
+
+Sie zeigt:
+
+- Spielername
+- erledigte Quests
+- verfuegbare Trainingspunkte
+
+Buttons:
+
+- `Neu laden`: laedt den Spielstand frisch.
+- `Abmelden`: beendet die Session und fuehrt zur Login-Seite.
 
 ### Tagesquests
 
-- Jede Quest kommt aus `GET /api/tasks`.
-- `Erledigen`: sendet `POST /api/tasks/{id}/complete`.
-- Erledigte Quests sind gesperrt und geben keine doppelten Punkte.
+Die Quests sind die Hauptmechanik.
+
+Regeln:
+
+- Quests kommen aus dem Backend.
+- Eine Quest kann nur einmal abgeschlossen werden.
+- Nach Abschluss wird der Spielstand neu geladen.
+- Das Backend bleibt die Quelle der Wahrheit.
+
+Button:
+
+- `Erledigen`: schliesst eine Quest ab.
 
 ### Tagesziel
 
-- Zeigt Quest-Punkte im Verhaeltnis zum Tagesziel.
-- `+250 ml` und `+500 ml`: senden `POST /api/user/water`.
-- Wasserstand, Energie und Login-Streak kommen aus `GET /api/user/game-state`.
+Die Tagesziel-Karte zeigt Fortschritt und Ressourcen.
+
+Sie zeigt:
+
+- Quest-Punkte
+- Fortschritt in Prozent
+- Wasserstand
+- Energie
+- Login-Streak
+
+Buttons:
+
+- `+250 ml`: speichert Wasser.
+- `+500 ml`: speichert Wasser.
 
 ### Pokemon Partner
 
-- Sprite kommt bevorzugt aus dem Backend-Game-State.
-- PokeAPI bleibt als Sprite-/Metadaten-Fallback gekapselt.
-- `Pokemon trainieren`: sendet `POST /api/user/feed`.
-- Wachstum, Motivation und Level werden danach aus dem Backend neu gemappt.
+Das Pokemon ist das visuelle Zentrum der App.
+
+Die Karte zeigt:
+
+- Pokemon-Sprite
+- Level
+- Wachstum
+- Motivation
+- Trainingspunkte
+- Wetter-Szene
+
+Button:
+
+- `Pokemon trainieren`: nutzt Feed-Punkte fuer Training.
+
+Training ist nur aktiv, wenn Punkte vorhanden sind.
 
 ### Wetter-Szene
 
-- Open-Meteo liefert Wettercode, Temperatur und Tag/Nacht.
-- `Stadt laden`: sucht Koordinaten per Open-Meteo Geocoding und laedt danach Wetter.
-- `Aktualisieren`: laedt Wetter fuer die aktive Stadt neu.
-- Szene unterscheidet Sonne, Wolken, Regen, Schnee, Hagel, Sturm, Nebel, Tag und Nacht.
+Die Wetter-Szene macht die App lebendiger und weniger statisch.
+
+Open-Meteo liefert:
+
+- Temperatur
+- Wettercode
+- Tag oder Nacht
+
+Daraus baut das Frontend eine Szene fuer:
+
+- Sonne
+- Wolken
+- Regen
+- Schnee
+- Hagel
+- Sturm
+- Nebel
+- Tag/Nacht-Stimmung
+
+Buttons:
+
+- `Stadt laden`: sucht eine Stadt und laedt das passende Wetter.
+- `Aktualisieren`: laedt das Wetter fuer die aktuelle Stadt neu.
 
 ## API-Anbindung
 
-Zentrale Schicht:
+Komponenten rufen nicht direkt `fetch` auf. Dafuer gibt es eine eigene Schicht:
 
 ```text
 src/app/core/services/backend-api.service.ts
 ```
 
-Aufgaben:
+Diese Schicht macht:
 
-- HTTP mit `fetch`
-- `credentials: 'include'` fuer Session-Cookies
-- Backend-DTOs in Frontend-Spielmodelle mappen
+- Requests ans Backend
+- Session-Cookies mitsenden
+- Backend-DTOs in Frontend-Modelle mappen
 - Fehlertexte kapseln
 
 Genutzte Endpunkte:
@@ -142,23 +248,22 @@ POST /api/user/water
 POST /api/user/feed
 ```
 
-State-Fassade:
+Der App-State liegt hier:
 
 ```text
 src/app/core/services/app-state.service.ts
 ```
 
-Aufgaben:
+Er verbindet:
 
-- Aktiver Nutzer
-- Spielstand
+- aktiven Spieler
 - Quests
 - Pokemon-Zustand
-- Wasser/Energie/Streak
-- User-Feedback nach Klicks
+- Wasser und Energie
+- Feedback-Meldungen
 - Session-Restore fuer Guards
 
-Komponenten rufen nicht direkt `fetch` auf. Sie sprechen ueber Outputs wie `taskCompleted`, `feedRequested`, `waterAdded` mit der State-Fassade.
+Kurz gesagt: Komponenten sollen nicht wissen muessen, wie genau das Backend antwortet.
 
 ## Datenfluss
 
@@ -174,16 +279,16 @@ Quest erledigen:
 TaskCard -> TaskList -> DashboardPage -> AppStateService.completeTask -> BackendApiService.completeTask
 ```
 
-Pokemon trainieren:
-
-```text
-PetCard -> DashboardPage -> AppStateService.feedPet -> BackendApiService.feed
-```
-
 Wasser trinken:
 
 ```text
 Tagesziel-Karte -> DashboardPage -> AppStateService.addWater -> BackendApiService.addWater
+```
+
+Pokemon trainieren:
+
+```text
+PetCard -> DashboardPage -> AppStateService.feedPet -> BackendApiService.feed
 ```
 
 Wetter:
@@ -223,134 +328,105 @@ frontend/
 `-- README.md
 ```
 
-## Tests
+## Teststrategie
 
-Unit-Tests:
+Wir testen nicht nur einzelne Funktionen, sondern auch echte Klickwege.
+
+### Unit-Tests
+
+Unit-Tests pruefen:
+
+- Punkteberechnung
+- Tagesziel
+- Pokemon-Level und Wachstum
+- Wetter-Mapping
+- Pokemon-Fallbacks
+- API-Mapping im Frontend
+
+Befehl:
 
 ```powershell
 npm test
 ```
 
-Typecheck:
+### Typecheck
 
 ```powershell
 npm run type-check
 ```
 
-Lint:
+### Lint
 
 ```powershell
 npm run lint
 ```
 
-E2E:
+### E2E / User-Mocking
+
+Playwright simuliert einen echten Spieler.
+
+Aktuell wichtig:
+
+- Seite oeffnen
+- Login ausfuellen
+- Button klicken
+- Quest-Board sehen
+- Pokemon-Controls pruefen
+
+Befehl:
 
 ```powershell
 npm run test:e2e
 ```
 
-Coverage:
+Noch auszubauen:
 
-```powershell
-npm run test:coverage
-```
-
-## Testmethodik
-
-### Unit
-
-Unit-Tests pruefen reine Logik und Adapter:
-
-- Quest-Punkte
-- Tagesziel
-- Pokemon-Level und Wachstum
-- Wetter-Mapping
-- PokeAPI-Fallbacks
-- Backend-API-Mapping
-
-### User-Mocking / E2E
-
-Playwright simuliert einen echten Spieler:
-
-- Seite oeffnen
-- Spielername und Passwort eintragen
-- Login klicken
-- Quest-Board sehen
-- Quests und Pokemon-Controls pruefen
-
-Die Backend-Routen werden im E2E-Test gemockt, damit der Test reproduzierbar bleibt und nicht an einer lokalen Datenbank haengt.
-
-Auszubauen:
-
-- Registrierung als Spieler
-- Quest erledigen und Feedback sehen
+- Registrierung
+- Quest erledigen
 - Wasserbutton klicken
 - Pokemon trainieren
-- Stadt suchen und Wetterwechsel pruefen
+- Stadt suchen
+- Wetter aktualisieren
 - Logout
 - Fehlerfall bei nicht erreichbarem Backend
 
-## Clean-Code-Regeln
+## Clean-Code-Methodik
 
-- Komponenten enthalten UI und Events, aber keine HTTP-Details.
-- API-Zugriff bleibt in `BackendApiService`.
-- App-State bleibt in `AppStateService`.
-- Wetter- und Pokemon-Integrationen bleiben ueber Adapter gekapselt.
-- Sichtbare Texte bleiben Game-Sprache: Quest, Spielstand, Pokemon, Training, Tagesziel.
-- Legacy-Wording und reine Technikbegriffe werden nicht in der UI angezeigt.
-- CSS nutzt vorhandene Tokens und Mixins statt Einmal-Styles.
-- Keine neuen grossen Abstraktionen ohne echten Nutzen.
+Unser Ziel ist, dass die App nicht nur laeuft, sondern nachvollziehbar gebaut ist.
+
+Regeln:
+
+- Komponenten bleiben fuer UI und Events zustaendig.
+- HTTP bleibt im API-Service.
+- Spielstand bleibt im State-Service.
+- Wetter und Pokemon sind ueber Adapter gekapselt.
+- Sichtbare Texte bleiben Game-Sprache.
+- Alte Mock-/Legacy-Begriffe werden nicht in der UI gezeigt.
+- Mapping-Logik wird nicht wild in Komponenten verteilt.
+- Styles nutzen vorhandene Tokens und Mixins.
 
 ## Cyber-Security-Hardening
 
-Aktueller Frontend-Stand:
+Aktueller Stand:
 
-- Auth laeuft ueber Backend-Session-Cookie mit `credentials: 'include'`.
-- Frontend speichert nur den aktiven Spielernamen fuer Session-Restore.
-- Keine Passwoerter im Browser-Speicher.
-- Fehlertexte werden fuer Nutzer freundlich gekapselt.
+- Session-Cookies werden ueber `credentials: 'include'` genutzt.
+- Das Frontend speichert keine Passwoerter.
+- Nur der aktive Spielername wird fuer Session-Restore lokal gespeichert.
+- Fehlertexte werden fuer Spieler verstaendlich gekapselt.
 
-Noch zu pruefen:
+Noch offen fuer die Abgabe:
 
-- CSRF-Schutz fuer Cookie-basierte POST-Requests.
-- Rate-Limiting oder Lockout fuer Login/Signup im Backend.
-- Sichere Cookie-Flags in Prod: `HttpOnly`, `Secure`, `SameSite`.
-- Keine geheimen Werte in Frontend-Env-Dateien.
-- `npm audit` und Dependency-Updates vor Abgabe.
-- Security-Tests fuer Auth-Fehler, unauthentifizierte Requests und doppelte Quest-Abschluesse.
-- Content Security Policy fuer spaetere Auslieferung.
+- CSRF-Schutz fuer cookie-basierte POST-Requests klaeren.
+- Rate-Limiting oder Lockout fuer Login und Signup pruefen.
+- Produktiv-Cookie-Flags pruefen: `HttpOnly`, `Secure`, `SameSite`.
+- Keine Secrets im Frontend.
+- `npm audit` ausfuehren.
+- Security-Tests fuer unauthentifizierte Requests und doppelte Quest-Abschluesse ergaenzen.
+- Content Security Policy fuer Deployment pruefen.
 
-## Troubleshooting
+## Checks vor Abgabe
 
-### `http proxy error: /api/auth/login ECONNREFUSED`
-
-Angular laeuft, aber Backend ist nicht auf `localhost:8080` erreichbar.
-
-Loesung:
-
-1. DB starten: `docker compose up -d db`
-2. Backend mit Profil `dev` starten.
-3. Frontend auf `http://localhost:4200` neu laden.
-
-### Port `5432` ist belegt
-
-Dieses Projekt nutzt lokal `5433:5432`. Wenn Docker trotzdem meckert, pruefen:
-
-```powershell
-docker ps
-```
-
-### Login-Daten
-
-Dev-Seed:
-
-```text
-demo / password123
-```
-
-### Build-Probleme
-
-Erst schnelle Checks:
+Mindestens:
 
 ```powershell
 npm run type-check
@@ -358,4 +434,60 @@ npm test
 npm run lint
 ```
 
-Falls `ng build` lokal ohne Fehlermeldung abbricht, Node-/Angular-Toolchain pruefen und Build in einer frischen Shell erneut ausfuehren.
+Wenn moeglich:
+
+```powershell
+npm run test:e2e
+npm run build
+```
+
+## Troubleshooting
+
+### Proxy-Fehler beim Login
+
+Fehler:
+
+```text
+http proxy error: /api/auth/login ECONNREFUSED
+```
+
+Bedeutung:
+
+- Frontend laeuft.
+- Backend laeuft nicht auf `localhost:8080`.
+
+Loesung:
+
+```powershell
+docker compose up -d db
+```
+
+Dann Backend mit Profil `dev` starten.
+
+### Port-Konflikt bei Postgres
+
+Dieses Projekt nutzt:
+
+```text
+5433:5432
+```
+
+Wenn Docker trotzdem meckert:
+
+```powershell
+docker ps
+```
+
+### Demo-Login
+
+```text
+demo / password123
+```
+
+## Was als Naechstes wichtig ist
+
+- Mehr User-Flow-Tests schreiben.
+- Doku rechtschreibpruefen.
+- Security-Hardening sauber dokumentieren.
+- UI weiter auf moderne Pokemon-/Game-App trimmen.
+- Legacy-Wording konsequent aus sichtbaren Stellen entfernen.

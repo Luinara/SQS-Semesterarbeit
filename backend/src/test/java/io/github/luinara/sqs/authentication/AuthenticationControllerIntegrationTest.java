@@ -1,6 +1,8 @@
 package io.github.luinara.sqs.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.luinara.sqs.pokemon.PokemonEntity;
+import io.github.luinara.sqs.pokemon.PokemonRepository;
 import io.github.luinara.sqs.user.UserEntity;
 import io.github.luinara.sqs.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,11 +35,22 @@ class AuthenticationControllerIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PokemonRepository pokemonRepository;
+
     private final ObjectMapper om = new ObjectMapper();
 
     @BeforeEach
     void clean() {
         userRepository.deleteAll();
+        pokemonRepository.deleteAll();
+
+        PokemonEntity pokemon = new PokemonEntity();
+        pokemon.setId(1);
+        pokemon.setName("bulbasaur");
+        pokemon.setImageUrl("https://example.test/bulbasaur.png");
+        pokemon.setEvolutionStage(0);
+        pokemonRepository.save(pokemon);
     }
 
     @Test
