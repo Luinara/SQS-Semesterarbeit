@@ -1,4 +1,4 @@
-package io.github.luinara.sqs.task;
+package io.github.luinara.sqs.task.dto;
 
 public class TaskPublicDto {
     private Long id;

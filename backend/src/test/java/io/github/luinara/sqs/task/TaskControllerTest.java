@@ -2,6 +2,7 @@ package io.github.luinara.sqs.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.luinara.sqs.authentication.AuthenticationService;
+import io.github.luinara.sqs.task.dto.TaskPublicDto;
 import io.github.luinara.sqs.user.UserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
