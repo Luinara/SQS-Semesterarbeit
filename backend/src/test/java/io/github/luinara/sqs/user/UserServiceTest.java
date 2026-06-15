@@ -192,6 +192,7 @@ class UserServiceTest {
         GameStateDto dto = userService.getGameStateForUsername("tester");
 
         assertThat(dto).isNotNull();
+        assertThat(dto.getCurrentPokemonId()).isEqualTo(10);
         assertThat(dto.getPokemonImageUrl()).isEqualTo("/img/10.png");
         assertThat(dto.getHappiness()).isEqualTo(20);
         assertThat(dto.getPokemonLevel()).isEqualTo(5);
@@ -216,8 +217,10 @@ class UserServiceTest {
         GameStateDto dto = userService.getGameStateForUsername("tester");
 
         assertThat(dto).isNotNull();
-        assertThat(dto.getPokemonName()).isEqualTo("charmander");
-        assertThat(dto.getPokemonImageUrl()).isEqualTo("/img/charmander.png");
+        assertThat(dto.getCurrentPokemonId()).isEqualTo(4);
+        assertThat(dto.isEgg()).isTrue();
+        assertThat(dto.getPokemonName()).isNull();
+        assertThat(dto.getPokemonImageUrl()).isEqualTo("/assets/egg.png");
     }
 
     @Test
@@ -237,6 +240,7 @@ class UserServiceTest {
 
         GameStateDto dto = userService.getGameStateForUsername("tester");
         assertThat(dto).isNotNull();
+        assertThat(dto.getCurrentPokemonId()).isNull();
         assertThat(dto.getPokemonImageUrl()).isNull();
         // pokemonRepository.findById should not be called when pId is null
         verifyNoInteractions(pokemonRepository);

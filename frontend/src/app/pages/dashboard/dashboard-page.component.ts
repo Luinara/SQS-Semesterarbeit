@@ -32,6 +32,10 @@ export class DashboardPageComponent {
         return;
       }
 
+      if (pet.isEgg) {
+        return;
+      }
+
       void this.pokemon.loadSpecies(pet.pokemonSpecies);
     });
   }

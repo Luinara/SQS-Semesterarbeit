@@ -59,15 +59,20 @@ public class UserService {
         GameStateDto dto = new GameStateDto();
         dto.setWaterLevel(user.getHydrationMl());
         dto.setFoodLevel(user.getHunger());
+        dto.setEgg(user.isEgg());
 
         Integer pId = user.getCurrentPokemonId();
         dto.setCurrentPokemonId(pId);
         Optional<PokemonEntity> currentPokemon = pId == null
                 ? Optional.empty()
                 : pokemonRepository.findById(pId);
-        currentPokemon.ifPresent(pokemon -> dto.setPokemonName(pokemon.getName()));
 
-        dto.setPokemonImageUrl(currentPokemon.map(PokemonEntity::getImageUrl).orElse(null));
+        if (user.isEgg()) {
+            dto.setPokemonImageUrl("/assets/egg.png");
+        } else {
+            currentPokemon.ifPresent(pokemon -> dto.setPokemonName(pokemon.getName()));
+            dto.setPokemonImageUrl(currentPokemon.map(PokemonEntity::getImageUrl).orElse(null));
+        }
 
         dto.setPokemonLevel(user.getPokemonLevel());
         dto.setGrowth(user.getPokemonXp());

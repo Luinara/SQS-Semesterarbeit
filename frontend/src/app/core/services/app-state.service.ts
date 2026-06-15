@@ -181,7 +181,11 @@ export class AppStateService {
 
     try {
       const before = this.activeGameState();
-      const snapshot = await this.backendApi.completeTask(username, taskId);
+      const snapshot = await this.backendApi.completeTask(
+        username,
+        taskId,
+        this.pet()?.starterPokemonSpecies
+      );
       const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
 
       if (!didLevelUp) {
@@ -211,7 +215,11 @@ export class AppStateService {
     }
 
     try {
-      const snapshot = await this.backendApi.addWater(username, amountMl);
+      const snapshot = await this.backendApi.addWater(
+        username,
+        amountMl,
+        this.pet()?.starterPokemonSpecies
+      );
       const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
 
       if (!didLevelUp) {
@@ -238,7 +246,7 @@ export class AppStateService {
     }
 
     try {
-      const snapshot = await this.backendApi.feed(username);
+      const snapshot = await this.backendApi.feed(username, this.pet()?.starterPokemonSpecies);
       const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
 
       if (!didLevelUp) {
@@ -265,7 +273,7 @@ export class AppStateService {
     }
 
     try {
-      const snapshot = await this.backendApi.testLevelUp(username);
+      const snapshot = await this.backendApi.testLevelUp(username, this.pet()?.starterPokemonSpecies);
       const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
 
       if (!didLevelUp) {
@@ -392,7 +400,10 @@ function createFeedbackId(kind: GameFeedback['kind']): string {
   return `${kind}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function isPokemonImageForCurrentId(imageUrl: string, currentPokemonId: number | null | undefined): boolean {
+function isPokemonImageForCurrentId(
+  imageUrl: string,
+  currentPokemonId: number | null | undefined
+): boolean {
   if (currentPokemonId == null) {
     return true;
   }

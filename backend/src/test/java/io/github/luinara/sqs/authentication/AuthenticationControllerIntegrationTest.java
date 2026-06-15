@@ -21,7 +21,9 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -75,14 +77,48 @@ class AuthenticationControllerIntegrationTest {
                 "starterPokemonId", 4
         ));
 
-        mockMvc.perform(post("/api/auth/signup")
+        MvcResult result = mockMvc.perform(post("/api/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andReturn();
 
         var opt = userRepository.findByUsernameIgnoreCase("fireuser");
         assertThat(opt).isPresent();
         assertThat(opt.get().getCurrentPokemonId()).isEqualTo(4);
+
+        MockHttpSession session = (MockHttpSession) result.getRequest().getSession(false);
+        assertThat(session).isNotNull();
+
+        mockMvc.perform(get("/api/user/game-state").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPokemonId").value(4))
+                .andExpect(jsonPath("$.isEgg").value(true))
+                .andExpect(jsonPath("$.pokemonImageUrl").value("/assets/egg.png"));
+    }
+
+    @Test
+    void signupAssignsSelectedWaterStarterInGameState() throws Exception {
+        String body = om.writeValueAsString(Map.of(
+                "username", "wateruser",
+                "password", "password123",
+                "starterPokemonId", 7
+        ));
+
+        MvcResult result = mockMvc.perform(post("/api/auth/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        MockHttpSession session = (MockHttpSession) result.getRequest().getSession(false);
+        assertThat(session).isNotNull();
+
+        mockMvc.perform(get("/api/user/game-state").session(session))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPokemonId").value(7))
+                .andExpect(jsonPath("$.isEgg").value(true))
+                .andExpect(jsonPath("$.pokemonImageUrl").value("/assets/egg.png"));
     }
 
     @Test

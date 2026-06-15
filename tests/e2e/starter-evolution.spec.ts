@@ -106,14 +106,15 @@ for (const starterFlow of starterFlows) {
 
     await page.route("https://pokeapi.co/**", async (route) => {
       const name = resolveSpecies(gameState.pokemonLevel, starterPokemonId);
+      const pokemonId = resolvePokemonId(gameState.pokemonLevel, starterPokemonId);
       await route.fulfill({
         json: {
-          id: starterPokemonId,
+          id: pokemonId,
           name,
           sprites: {
             other: {
               "official-artwork": {
-                front_default: "/pet-placeholder.svg",
+                front_default: resolveImageUrl(pokemonId),
               },
             },
           },
@@ -143,12 +144,31 @@ for (const starterFlow of starterFlows) {
     await page.waitForURL("**/dashboard");
     await expect(
       page.getByRole("heading", {
-        name: new RegExp(`${starterFlow.expected[0]} trainiert`),
+        name: /Pokémon-Ei trainiert/,
       }),
     ).toBeVisible();
     expect(starterPokemonId).toBe(starterFlow.starterPokemonId);
+    await expect(page.locator("sqs-pet-visual img")).toHaveAttribute(
+      "src",
+      /egg\.svg/,
+    );
 
-    for (let index = 0; index < 14; index += 1) {
+    for (let index = 0; index < 9; index += 1) {
+      await page.getByRole("button", { name: "Level-Up testen" }).click();
+    }
+
+    await expect(
+      page.getByRole("heading", {
+        name: new RegExp(`${starterFlow.expected[0]} trainiert`),
+      }),
+    ).toBeVisible();
+    await expect(page.getByText("Level 10")).toBeVisible();
+    await expect(page.locator("sqs-pet-visual img")).toHaveAttribute(
+      "src",
+      new RegExp(`/${starterPokemonId}\\.png`),
+    );
+
+    for (let index = 0; index < 5; index += 1) {
       await page.getByRole("button", { name: "Level-Up testen" }).click();
     }
 
@@ -158,6 +178,10 @@ for (const starterFlow of starterFlows) {
       }),
     ).toBeVisible();
     await expect(page.getByText("Level 15")).toBeVisible();
+    await expect(page.locator("sqs-pet-visual img")).toHaveAttribute(
+      "src",
+      new RegExp(`/${starterPokemonId + 1}\\.png`),
+    );
 
     for (let index = 0; index < 20; index += 1) {
       await page.getByRole("button", { name: "Level-Up testen" }).click();
@@ -169,6 +193,10 @@ for (const starterFlow of starterFlows) {
       }),
     ).toBeVisible();
     await expect(page.getByText("Level 35")).toBeVisible();
+    await expect(page.locator("sqs-pet-visual img")).toHaveAttribute(
+      "src",
+      new RegExp(`/${starterPokemonId + 2}\\.png`),
+    );
   });
 }
 
@@ -177,6 +205,7 @@ function createGameState(
     waterLevel: number;
     foodLevel: number;
     pokemonImageUrl: null;
+    isEgg?: boolean;
     pokemonLevel: number;
     growth: number;
     happiness: number;
@@ -187,9 +216,15 @@ function createGameState(
   },
   starterPokemonId: keyof typeof speciesByStarter,
 ) {
+  const currentPokemonId = resolvePokemonId(gameState.pokemonLevel, starterPokemonId);
+  const isEgg = gameState.pokemonLevel < 10;
+
   return {
     ...gameState,
-    pokemonName: resolveSpecies(gameState.pokemonLevel, starterPokemonId),
+    currentPokemonId,
+    isEgg,
+    pokemonImageUrl: isEgg ? "/assets/egg.png" : resolveImageUrl(currentPokemonId),
+    pokemonName: isEgg ? null : resolveSpecies(gameState.pokemonLevel, starterPokemonId),
     tasks: tasks.map((task) => ({
       id: task.id,
       title: task.title,
@@ -213,4 +248,23 @@ function resolveSpecies(
   }
 
   return chain[0];
+}
+
+function resolvePokemonId(
+  level: number,
+  starterPokemonId: keyof typeof speciesByStarter,
+): number {
+  if (level >= 35) {
+    return starterPokemonId + 2;
+  }
+
+  if (level >= 15) {
+    return starterPokemonId + 1;
+  }
+
+  return starterPokemonId;
+}
+
+function resolveImageUrl(pokemonId: number): string {
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
 }

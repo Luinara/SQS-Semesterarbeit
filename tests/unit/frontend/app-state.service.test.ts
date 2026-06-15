@@ -64,6 +64,34 @@ describe("AppStateService", () => {
     );
   });
 
+  it("ignoriert eine Sprite-URL, die nicht zur aktuellen Pokemon-ID passt", async () => {
+    const snapshot = createSnapshot(1, 0);
+    snapshot.backendGameState.currentPokemonId = 4;
+    snapshot.backendGameState.pokemonImageUrl =
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png";
+
+    const backendApi = createBackendApiMock({ login: snapshot });
+    const service = new AppStateService(backendApi);
+
+    await service.login({ username: "mira", password: "password123" });
+
+    expect(service.pokemonImageUrl()).toBeNull();
+  });
+
+  it("nutzt eine Sprite-URL, wenn sie zur aktuellen Pokemon-ID passt", async () => {
+    const snapshot = createSnapshot(1, 0);
+    snapshot.backendGameState.currentPokemonId = 4;
+    snapshot.backendGameState.pokemonImageUrl =
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png";
+
+    const backendApi = createBackendApiMock({ login: snapshot });
+    const service = new AppStateService(backendApi);
+
+    await service.login({ username: "mira", password: "password123" });
+
+    expect(service.pokemonImageUrl()).toContain("/4.png");
+  });
+
   it("restauriert eine gespeicherte Session über das Backend", async () => {
     globalThis.localStorage.setItem(ACTIVE_USERNAME_STORAGE_KEY, "mira");
     const backendApi = createBackendApiMock({
@@ -157,7 +185,7 @@ describe("AppStateService", () => {
     await service.login({ username: "mira", password: "password123" });
     await service.addWater(500);
 
-    expect(backendApi.addWater).toHaveBeenCalledWith("mira", 500);
+    expect(backendApi.addWater).toHaveBeenCalledWith("mira", 500, "bulbasaur");
     expect(service.waterLevel()).toBe(500);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "hydration",
@@ -184,7 +212,7 @@ describe("AppStateService", () => {
     await service.login({ username: "mira", password: "password123" });
     await service.feedPet();
 
-    expect(backendApi.feed).toHaveBeenCalledWith("mira");
+    expect(backendApi.feed).toHaveBeenCalledWith("mira", "bulbasaur");
     expect(service.pet()?.availableFoodPoints).toBe(9);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "feeding",
@@ -221,7 +249,7 @@ describe("AppStateService", () => {
     await service.login({ username: "mira", password: "password123" });
     await service.testLevelUp();
 
-    expect(backendApi.testLevelUp).toHaveBeenCalledWith("mira");
+    expect(backendApi.testLevelUp).toHaveBeenCalledWith("mira", "bulbasaur");
     expect(service.pet()?.level).toBe(4);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "level-up",
@@ -315,6 +343,7 @@ function createSnapshot(
       lastLevelUpAt: null,
       goodCareStreakDays: 0,
       lastGoodCareDay: null,
+      isEgg: level < 10,
       starterPokemonSpecies: "bulbasaur",
       pokemonSpecies: "bulbasaur",
     },
@@ -346,6 +375,8 @@ function createSnapshot(
     backendGameState: {
       waterLevel: 0,
       foodLevel: 0,
+      currentPokemonId: 1,
+      isEgg: level < 10,
       pokemonImageUrl: "/assets/egg.png",
       pokemonLevel: level,
       growth,
