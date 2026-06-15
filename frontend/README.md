@@ -172,8 +172,9 @@ Sie zeigt:
 
 Buttons:
 
-- `+250 ml`: speichert Wasser.
-- `+500 ml`: speichert Wasser.
+- `+250 ml`: speichert Wasser in der Wasser-Quest.
+- `+500 ml`: speichert Wasser in der Wasser-Quest.
+- Bei `3000 ml` wird die Quest automatisch als erledigt markiert.
 
 ### Pokemon Partner
 

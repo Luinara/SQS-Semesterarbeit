@@ -22,6 +22,7 @@ export class AppStateService {
   private readonly activeBackendGameState = signal<BackendGameStateDto | null>(null);
   private readonly isSessionRestoring = signal(false);
   private feedbackClearTimeout: ReturnType<typeof setTimeout> | null = null;
+  private levelUpAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
 
   readonly isAuthenticated = computed(() => this.activeUser() !== null);
   readonly isLoading = computed(() => this.isSessionRestoring());
@@ -63,6 +64,7 @@ export class AppStateService {
     };
   });
   readonly lastGameFeedback = signal<GameFeedback | null>(null);
+  readonly isPetLevelingUp = signal(false);
 
   constructor(private readonly backendApi: BackendApiService) {}
 
@@ -99,14 +101,14 @@ export class AppStateService {
 
       return {
         success: true,
-        message: `Willkommen zurueck, ${snapshot.user.userName}.`,
+        message: `Willkommen zurück, ${snapshot.user.userName}.`,
       };
     } catch (error) {
       return {
         success: false,
         message: getApiErrorMessage(
           error,
-          'Login fehlgeschlagen. Bitte pruefe Benutzername und Passwort.'
+          'Login fehlgeschlagen. Bitte prüfe Benutzername und Passwort.'
         ),
       };
     }
@@ -147,12 +149,12 @@ export class AppStateService {
 
       return {
         success: true,
-        message: 'Profil geloescht.',
+        message: 'Profil gelöscht.',
       };
     } catch (error) {
       return {
         success: false,
-        message: getApiErrorMessage(error, 'Profil konnte nicht geloescht werden.'),
+        message: getApiErrorMessage(error, 'Profil konnte nicht gelöscht werden.'),
       };
     }
   }
@@ -167,15 +169,18 @@ export class AppStateService {
     try {
       const before = this.activeGameState();
       const snapshot = await this.backendApi.completeTask(username, taskId);
-      this.applyDashboardSnapshot(snapshot);
-      this.showFeedback({
-        id: createFeedbackId('quest'),
-        kind: 'quest',
-        message:
-          snapshot.gameState.totalCompletedTasks > (before?.totalCompletedTasks ?? 0)
-            ? 'Quest erledigt. Dein Spielstand wurde aktualisiert.'
-            : 'Spielstand wurde aktualisiert.',
-      });
+      const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
+
+      if (!didLevelUp) {
+        this.showFeedback({
+          id: createFeedbackId('quest'),
+          kind: 'quest',
+          message:
+            snapshot.gameState.totalCompletedTasks > (before?.totalCompletedTasks ?? 0)
+              ? 'Quest erledigt. Dein Spielstand wurde aktualisiert.'
+              : 'Spielstand wurde aktualisiert.',
+        });
+      }
     } catch (error) {
       this.showFeedback({
         id: createFeedbackId('info'),
@@ -194,12 +199,15 @@ export class AppStateService {
 
     try {
       const snapshot = await this.backendApi.addWater(username, amountMl);
-      this.applyDashboardSnapshot(snapshot);
-      this.showFeedback({
-        id: createFeedbackId('hydration'),
-        kind: 'hydration',
-        message: `+${amountMl} ml Wasser getrunken.`,
-      });
+      const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
+
+      if (!didLevelUp) {
+        this.showFeedback({
+          id: createFeedbackId('hydration'),
+          kind: 'hydration',
+          message: `+${amountMl} ml Wasser getrunken.`,
+        });
+      }
     } catch (error) {
       this.showFeedback({
         id: createFeedbackId('info'),
@@ -217,22 +225,21 @@ export class AppStateService {
     }
 
     try {
-      const beforeLevel = this.pet()?.level ?? 1;
       const snapshot = await this.backendApi.feed(username);
-      this.applyDashboardSnapshot(snapshot);
-      this.showFeedback({
-        id: createFeedbackId(snapshot.gameState.pet.level > beforeLevel ? 'level-up' : 'feeding'),
-        kind: snapshot.gameState.pet.level > beforeLevel ? 'level-up' : 'feeding',
-        message:
-          snapshot.gameState.pet.level > beforeLevel
-            ? `Level-Up auf ${snapshot.gameState.pet.level}.`
-            : 'Feed-Punkte wurden fuer dein Pokemon eingesetzt.',
-      });
+      const didLevelUp = this.applyDashboardSnapshot(snapshot, true);
+
+      if (!didLevelUp) {
+        this.showFeedback({
+          id: createFeedbackId('feeding'),
+          kind: 'feeding',
+          message: 'Feed-Punkte wurden für dein Pokémon eingesetzt.',
+        });
+      }
     } catch (error) {
       this.showFeedback({
         id: createFeedbackId('info'),
         kind: 'info',
-        message: getApiErrorMessage(error, 'Pokemon konnte nicht gefuettert werden.'),
+        message: getApiErrorMessage(error, 'Pokémon konnte nicht gefüttert werden.'),
       });
     }
   }
@@ -260,10 +267,20 @@ export class AppStateService {
     }
   }
 
-  private applyDashboardSnapshot(snapshot: DashboardSnapshot): void {
+  private applyDashboardSnapshot(snapshot: DashboardSnapshot, announceLevelUp = false): boolean {
+    const previousLevel = this.activeGameState()?.pet.level ?? snapshot.gameState.pet.level;
     this.activeUser.set(snapshot.user);
     this.activeGameState.set(snapshot.gameState);
     this.activeBackendGameState.set(snapshot.backendGameState);
+
+    const nextLevel = snapshot.gameState.pet.level;
+
+    if (announceLevelUp && nextLevel > previousLevel) {
+      this.triggerLevelUpFeedback(nextLevel);
+      return true;
+    }
+
+    return false;
   }
 
   private clearSession(): void {
@@ -271,6 +288,30 @@ export class AppStateService {
     this.activeGameState.set(null);
     this.activeBackendGameState.set(null);
     this.lastGameFeedback.set(null);
+    this.isPetLevelingUp.set(false);
+
+    if (this.levelUpAnimationTimeout) {
+      clearTimeout(this.levelUpAnimationTimeout);
+      this.levelUpAnimationTimeout = null;
+    }
+  }
+
+  private triggerLevelUpFeedback(level: number): void {
+    this.isPetLevelingUp.set(true);
+    this.showFeedback({
+      id: createFeedbackId('level-up'),
+      kind: 'level-up',
+      message: `Level-Up auf ${level}.`,
+    });
+
+    if (this.levelUpAnimationTimeout) {
+      clearTimeout(this.levelUpAnimationTimeout);
+    }
+
+    this.levelUpAnimationTimeout = setTimeout(() => {
+      this.isPetLevelingUp.set(false);
+      this.levelUpAnimationTimeout = null;
+    }, 1200);
   }
 
   private showFeedback(feedback: GameFeedback): void {

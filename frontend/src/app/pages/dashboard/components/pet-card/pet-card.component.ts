@@ -31,6 +31,7 @@ export class PetCardComponent {
   readonly pokemonLoading = input(false);
   readonly pokemonSourceLabel = input('Lokaler Fallback');
   readonly feedCost = input(1);
+  readonly isLevelingUp = input(false);
   readonly feedRequested = output<void>();
   readonly weatherRefreshRequested = output<void>();
   readonly weatherCitySubmitted = output<string>();
@@ -41,7 +42,7 @@ export class PetCardComponent {
       case 'needs-care':
         return 'Braucht Quest-Punkte';
       case 'ready-to-feed':
-        return 'Bereit fuer Training';
+        return 'Bereit für Training';
       case 'growing':
         return 'Kurz vor Level-Up';
       case 'thriving':
@@ -53,30 +54,30 @@ export class PetCardComponent {
   readonly careStateHint = computed(() => {
     switch (this.petCareState()) {
       case 'needs-care':
-        return 'Erledige eine Quest oder trainiere dein Pokemon.';
+        return 'Erledige eine Quest oder trainiere dein Pokémon.';
       case 'ready-to-feed':
-        return 'Du hast genug Quest-Punkte fuer die naechste Trainingseinheit.';
+        return 'Du hast genug Quest-Punkte für die nächste Trainingseinheit.';
       case 'growing':
-        return 'Der naechste Level ist schon in Reichweite.';
+        return 'Der nächste Level ist schon in Reichweite.';
       case 'thriving':
         return 'Dein Tagesfortschritt sieht stark aus.';
       default:
-        return 'Ein guter Moment fuer die naechste Quest.';
+        return 'Ein guter Moment für die nächste Quest.';
     }
   });
   readonly pokemonStatus = computed(() => {
     if (this.pokemonImageUrl()) {
-      return 'Pokemon-Sprite bereit';
+      return 'Pokémon-Sprite bereit';
     }
 
     if (this.pokemonLoading()) {
-      return 'Pokemon-Daten werden geladen';
+      return 'Pokémon-Daten werden geladen';
     }
 
     const pokemon = this.pokemon();
     return pokemon
       ? `${pokemon.displayName} aus ${this.pokemonSourceLabel()}`
-      : 'Pokemon-Fallback bereit';
+      : 'Pokémon-Fallback bereit';
   });
   readonly weatherStatus = computed(() => {
     if (this.weatherLoading()) {
@@ -123,9 +124,7 @@ export class PetCardComponent {
 
 export function formatWeatherApiTime(updatedAt: string): string | null {
   const apiTimestampMatch =
-    /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})T(?<hour>\d{2}):(?<minute>\d{2})/.exec(
-      updatedAt
-    );
+    /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})T(?<hour>\d{2}):(?<minute>\d{2})/.exec(updatedAt);
 
   if (apiTimestampMatch?.groups) {
     return `${apiTimestampMatch.groups['hour']}:${apiTimestampMatch.groups['minute']} Uhr`;

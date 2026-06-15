@@ -2,6 +2,7 @@ package io.github.luinara.sqs.user;
 
 import io.github.luinara.sqs.pokemon.PokemonRepository;
 import io.github.luinara.sqs.task.TaskRepository;
+import io.github.luinara.sqs.task.TaskService;
 import io.github.luinara.sqs.task.UserTaskRepository;
 import io.github.luinara.sqs.user.dto.GameStateDto;
 import io.github.luinara.sqs.user.dto.TaskCompletionDto;
@@ -20,24 +21,30 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
+    private static final String WATER_TASK_TITLE = "Wasser trinken";
+    private static final int WATER_GOAL_ML = 3000;
+
     private final UserRepository userRepository;
     private final PokemonRepository pokemonRepository;
     private final TaskRepository taskRepository;
     private final UserTaskRepository userTaskRepository;
     private final JdbcTemplate jdbcTemplate;
+    private final TaskService taskService;
 
     public UserService(
             UserRepository userRepository,
             PokemonRepository pokemonRepository,
             TaskRepository taskRepository,
             UserTaskRepository userTaskRepository,
-            JdbcTemplate jdbcTemplate
+            JdbcTemplate jdbcTemplate,
+            TaskService taskService
     ) {
         this.userRepository = userRepository;
         this.pokemonRepository = pokemonRepository;
         this.taskRepository = taskRepository;
         this.userTaskRepository = userTaskRepository;
         this.jdbcTemplate = jdbcTemplate;
+        this.taskService = taskService;
     }
 
     public GameStateDto getGameStateForUsername(String username) {
@@ -100,13 +107,24 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public GameStateDto waterUser(String username, int ml) {
         var opt = userRepository.findByUsernameIgnoreCase(username);
         if (opt.isEmpty()) return null;
         UserEntity user = opt.get();
         user.setHydrationMl(user.getHydrationMl() + ml);
         userRepository.save(user);
+        completeWaterTaskIfReady(user);
         return getGameStateForUsername(username);
+    }
+
+    private void completeWaterTaskIfReady(UserEntity user) {
+        if (user.getHydrationMl() < WATER_GOAL_ML) {
+            return;
+        }
+
+        taskRepository.findByTitle(WATER_TASK_TITLE)
+                .ifPresent(task -> taskService.completeTaskForUserEntity(user, task));
     }
 
     public GameStateDto feedUser(String username) {

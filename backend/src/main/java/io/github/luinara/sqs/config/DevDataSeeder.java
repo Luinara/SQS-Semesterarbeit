@@ -48,13 +48,15 @@ public class DevDataSeeder implements ApplicationRunner {
 
     private void seedTasks() {
         for (SeedTask task : defaultTasks()) {
-            taskRepository.findByTitle(task.title()).orElseGet(() -> {
-                TaskEntity entity = new TaskEntity();
-                entity.setTitle(task.title());
-                entity.setDescription(task.description());
-                entity.setFeedPoints(task.feedPoints());
-                return taskRepository.save(entity);
+            TaskEntity entity = taskRepository.findByTitle(task.title()).orElseGet(() -> {
+                TaskEntity newTask = new TaskEntity();
+                newTask.setTitle(task.title());
+                return newTask;
             });
+
+            entity.setDescription(task.description());
+            entity.setFeedPoints(task.feedPoints());
+            taskRepository.save(entity);
         }
     }
 

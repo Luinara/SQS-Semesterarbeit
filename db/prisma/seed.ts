@@ -47,14 +47,17 @@ async function main() {
         {
             title: "Complete one study session",
             description: "Finish at least one focused learning session.",
+            feedPoints: 20,
         },
         {
             title: "Drink water",
             description: "Drink enough water during the day.",
+            feedPoints: 10,
         },
         {
             title: "Clean workspace",
             description: "Clean your desk or learning area.",
+            feedPoints: 15,
         },
     ];
 
@@ -65,6 +68,7 @@ async function main() {
             },
             update: {
                 description: task.description,
+                feedPoints: task.feedPoints,
             },
             create: task,
         });

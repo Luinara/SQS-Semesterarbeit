@@ -4,14 +4,14 @@ Dieses Dokument beschreibt die zwei neuen Endpunkte, mit denen der Client das Tr
 
 Hinweis: Authentifizierung wie im Projektstandard (Session / USER_TOKEN) wird erwartet. Alle Zeiten und Werte verwenden UTC‑Konventionen, Responses enthalten `GameStateDto` (siehe `docs/API_USER_GAME_STATE.md`).
 
-Allgemeines
------------
+## Allgemeines
+
 - Basis‑Pfad: `/api/user`
 - Auth: erforderlich (Session/Token, wie in `AuthenticationController`) für beide Endpunkte.
 - Rückgabe: Nach erfolgreicher Aktion wird der aktuelle GameState als `GameStateDto` zurückgegeben (inkl. `waterLevel`, `pendingFeedPoints`, `happiness`, `pokemonLevel`, `pokemonImageUrl`, u.a.).
 
-POST /api/user/water
---------------------
+## POST /api/user/water
+
 - Zweck: Erhöht den Wasserspeicher (wasser level) des eingeloggten Users um die angegebene Menge in Millilitern.
 - Auth: erforderlich.
 - Request:
@@ -23,7 +23,7 @@ POST /api/user/water
 - Verhalten:
   - Der Server erhöht `user.hydrationMl += ml` und persistiert den neuen Wert.
   - Der Server gibt den aktualisierten `GameStateDto` zurück.
-  - Das Frontend kann anhand von `waterLevel` erkennen, ob ein lokales Questziel erreicht ist (z. B. 3000 ml). Das Entsperren / Anzeigen eines Questabschlusses übernimmt das Frontend; der Server liefert als einzige Quelle den aktuellen `waterLevel`.
+- Ab `3000 ml` schließt der Server den Task `Wasser trinken` automatisch ab, sofern dieser Task existiert und für den User noch offen ist.
 
 - Responses:
   - 200 OK — JSON body: aktuellers `GameStateDto`.
@@ -54,8 +54,8 @@ Beispiel Response (auszugsweise)
 }
 ```
 
-POST /api/user/feed
--------------------
+## POST /api/user/feed
+
 - Zweck: Wandelt die angesammelten Futter‑Punkte (die Tasks als `feed_points` vergeben) in `happiness` um.
 - Auth: erforderlich.
 - Request:
@@ -92,27 +92,26 @@ Beispiel Response
 }
 ```
 
-Zusammenspiel mit Tasks
------------------------
+## Zusammenspiel mit Tasks
+
 - Tasks haben jetzt ein Feld `feed_points` (DB‑Spalte `feed_points`).
 - Beim Abschließen einer Task (`POST /api/tasks/{id}/complete`) werden die `feed_points` dieser Task dem Feld `user.pendingFeedPoints` hinzugefügt. Die Task‑Abschluss‑Action selbst erhöht nicht mehr direkt `happiness` — das geschieht durch die separate `POST /api/user/feed` Aktion.
 - Growth (Pokemon XP), Level‑Ups, Hatch und Evolution bleiben beim Task‑Abschluss wie dokumentiert erhalten.
 
-Frontend‑Hinweise
-------------------
-- Für das Trinken gibt es drei Buttons (z. B. 250ml / 500ml / 1000ml). Jeder Button sendet ein `POST /api/user/water` mit dem entsprechenden `ml`‑Wert.
-- Das Frontend entscheidet, wann eine Quest (z. B. "Trink 3000ml") als erfüllbar angezeigt wird: wenn `gameState.waterLevel >= 3000`.
+## Frontend‑Hinweise
+
+- Für das Trinken gibt es Buttons für `250 ml` und `500 ml`. Jeder Button sendet ein `POST /api/user/water` mit dem entsprechenden `ml`‑Wert.
+- Das Backend entscheidet, wann die Quest `Wasser trinken` abgeschlossen wird: sobald `gameState.waterLevel >= 3000`.
 - Für Füttern: das Frontend zeigt die verfügbare `pendingFeedPoints` aus `gameState.pendingFeedPoints`. Nutzer können den Füttern‑Button drücken (POST /api/user/feed), um Punkte in `happiness` umzuwandeln.
 
-Tests & Verhaltenserwartungen
-----------------------------
+## Tests & Verhaltenserwartungen
+
 - Unit‑Tests sollten folgende Fälle abdecken:
   - `POST /api/user/water` erhöht `waterLevel` um das übermittelte `ml`.
   - `POST /api/user/feed` wandelt pendingFeedPoints korrekt in `happiness` um (inkl. Randfälle: genaues Auffüllen auf 100, Restpunkte bleiben erhalten).
   - Interaktion mit Tasks: Abschluss einer Task erhöht `pendingFeedPoints` um `task.feed_points`.
 
-Migration & DB‑Hinweis
-----------------------
+## Migration & DB‑Hinweis
+
 - Neue Spalte in `tasks` (feed_points) ist bereits in der JPA‑Entity `TaskEntity` vorhanden. Falls ihr mit Prisma/SQL migriert, legt eine Migration an, die `feed_points` (integer default 0) zur `tasks`‑Tabelle hinzufügt.
 - Neue Spalte in `users` (pending_feed_points) ist in `UserEntity` vorhanden und muss analog in die DB gemigt werden.
-

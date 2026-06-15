@@ -61,6 +61,9 @@ public class UserEntity {
     @Column(name = "last_task_completion_date")
     private OffsetDateTime lastTaskCompletionDate;
 
+    @Column(name = "last_level_up_at")
+    private OffsetDateTime lastLevelUpAt;
+
     @Column(name = "pending_feed_points")
     private int pendingFeedPoints = 0;
 
@@ -196,6 +199,14 @@ public class UserEntity {
 
     public void setLastTaskCompletionDate(OffsetDateTime lastTaskCompletionDate) {
         this.lastTaskCompletionDate = lastTaskCompletionDate;
+    }
+
+    public OffsetDateTime getLastLevelUpAt() {
+        return lastLevelUpAt;
+    }
+
+    public void setLastLevelUpAt(OffsetDateTime lastLevelUpAt) {
+        this.lastLevelUpAt = lastLevelUpAt;
     }
 
     public int getPendingFeedPoints() {

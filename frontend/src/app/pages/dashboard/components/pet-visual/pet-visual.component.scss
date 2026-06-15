@@ -81,6 +81,20 @@
   filter: drop-shadow(0 22px 26px rgba(127, 92, 80, 0.16));
 }
 
+.pet-visual__frame--level-up {
+  box-shadow:
+    inset 0 0 3.2rem rgba(255, 255, 255, 0.68),
+    0 0 0 0.22rem rgba(37, 99, 235, 0.16);
+}
+
+.pet-visual__frame--level-up img {
+  animation:
+    float-soft var(--pet-motion-speed) ease-in-out infinite,
+    level-up-wiggle 720ms ease-in-out 1;
+  filter: drop-shadow(0 22px 26px rgba(127, 92, 80, 0.16))
+    drop-shadow(0 0 1.2rem rgba(37, 99, 235, 0.38));
+}
+
 .pet-visual__meta {
   display: flex;
   align-items: center;
@@ -565,5 +579,28 @@
   92% {
     box-shadow: inset 0 0 1.5rem rgba(255, 255, 255, 0.24);
     filter: brightness(1.04);
+  }
+}
+
+@keyframes level-up-wiggle {
+  0%,
+  100% {
+    transform: translateX(0) scale(1);
+  }
+
+  18% {
+    transform: translateX(-0.35rem) rotate(-2deg) scale(1.04);
+  }
+
+  36% {
+    transform: translateX(0.35rem) rotate(2deg) scale(1.08);
+  }
+
+  54% {
+    transform: translateX(-0.22rem) rotate(-1deg) scale(1.05);
+  }
+
+  72% {
+    transform: translateX(0.18rem) rotate(1deg) scale(1.03);
   }
 }

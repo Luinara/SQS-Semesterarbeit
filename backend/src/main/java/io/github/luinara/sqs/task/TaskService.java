@@ -10,6 +10,8 @@ import io.github.luinara.sqs.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -18,20 +20,27 @@ import java.util.stream.Collectors;
 @Service
 public class TaskService {
 
+    private static final int GROWTH_INCREASE_PER_TASK = 10;
+    private static final int GROWTH_GOAL = 100;
+    private static final Duration LEVEL_UP_COOLDOWN = Duration.ofDays(2);
+
     private final TaskRepository taskRepository;
     private final UserTaskRepository userTaskRepository;
     private final UserRepository userRepository;
     private final PokemonRepository pokemonRepository;
+    private final Clock clock;
 
     public TaskService(TaskRepository taskRepository,
                        UserTaskRepository userTaskRepository,
                        UserRepository userRepository,
-                       PokemonRepository pokemonRepository)
+                       PokemonRepository pokemonRepository,
+                       Clock clock)
     {
         this.taskRepository = taskRepository;
         this.userTaskRepository = userTaskRepository;
         this.userRepository = userRepository;
         this.pokemonRepository = pokemonRepository;
+        this.clock = clock;
     }
 
     public List<TaskPublicDto> findAllTasks() {
@@ -47,15 +56,22 @@ public class TaskService {
 
     @Transactional
     public GameStateResult completeTaskForUser(String username, Long taskId) {
-        // find user
         UserEntity user = userRepository.findByUsernameIgnoreCase(username).orElse(null);
         if (user == null) return new GameStateResult(404, "user not found", null);
 
-        // find task
         TaskEntity task = taskRepository.findById(taskId).orElse(null);
         if (task == null) return new GameStateResult(404, "task not found", null);
 
-        // find or create user_task
+        TaskCompletionStatus completionStatus = completeTaskForUserEntity(user, task);
+        if (completionStatus == TaskCompletionStatus.ALREADY_COMPLETED) {
+            return new GameStateResult(409, "already completed", null);
+        }
+
+        return new GameStateResult(200, "ok", buildGameStateDto(user));
+    }
+
+    public TaskCompletionStatus completeTaskForUserEntity(UserEntity user, TaskEntity task) {
+        Long taskId = task.getId();
         UserTaskEntity ute = userTaskRepository.findByUserIdAndTaskId(user.getId(), taskId)
                 .orElseGet(() -> {
                     UserTaskEntity n = new UserTaskEntity();
@@ -66,48 +82,60 @@ public class TaskService {
                 });
 
         if (ute.isCompleted()) {
-            return new GameStateResult(409, "already completed", null);
+            return TaskCompletionStatus.ALREADY_COMPLETED;
         }
 
-        // mark completed
         ute.setCompleted(true);
         userTaskRepository.save(ute);
 
-        // apply effects: growth and feed points
         int feedPoints = task.getFeedPoints() == null ? 0 : task.getFeedPoints();
-        int newPendingFeed = user.getPendingFeedPoints() + feedPoints;
+        user.setPendingFeedPoints(user.getPendingFeedPoints() + feedPoints);
+        applyGrowthAndLevelRules(user);
+        userRepository.save(user);
 
-        // Growth and level logic
-        int growthIncrease = 10; // configurable later
-        int newXp = user.getPokemonXp() + growthIncrease;
-        int levelUps = newXp / 100;
-        int newLevel = user.getPokemonLevel() + levelUps;
-        newXp = newXp % 100;
+        return TaskCompletionStatus.COMPLETED;
+    }
 
+    private void applyGrowthAndLevelRules(UserEntity user) {
         int oldLevel = user.getPokemonLevel();
+        int newXp = Math.min(GROWTH_GOAL, user.getPokemonXp() + GROWTH_INCREASE_PER_TASK);
 
-        user.setPendingFeedPoints(newPendingFeed);
-        user.setPokemonXp(newXp);
-        user.setPokemonLevel(newLevel);
-
-        // Hatch logic: if was egg and now >= 10 -> hatch
-        if (user.isEgg() && newLevel >= 10) {
-            user.setEgg(false);
-            user.setHatchedAt(OffsetDateTime.now(ZoneOffset.UTC));
+        if (newXp < GROWTH_GOAL || !canLevelUp(user)) {
+            user.setPokemonXp(newXp);
+            return;
         }
 
-        // Evolution logic: attempt to evolve when crossing thresholds 25 and 50
-        // We will attempt evolutions for each threshold crossed
+        OffsetDateTime now = OffsetDateTime.now(clock);
+        int newLevel = oldLevel + 1;
+        user.setPokemonXp(0);
+        user.setPokemonLevel(newLevel);
+        user.setLastLevelUpAt(now);
+
+        if (user.isEgg() && newLevel >= 10) {
+            user.setEgg(false);
+            user.setHatchedAt(now);
+        }
+
         if (oldLevel < 25 && newLevel >= 25) {
             attemptEvolution(user);
         }
         if (oldLevel < 50 && newLevel >= 50) {
             attemptEvolution(user);
         }
+    }
 
-        userRepository.save(user);
+    private boolean canLevelUp(UserEntity user) {
+        OffsetDateTime lastLevelUpAt = user.getLastLevelUpAt();
 
-        // Build GameStateDto-like result (minimal)
+        if (lastLevelUpAt == null) {
+            return true;
+        }
+
+        OffsetDateTime nextAllowedLevelUp = lastLevelUpAt.plus(LEVEL_UP_COOLDOWN);
+        return !OffsetDateTime.now(clock).isBefore(nextAllowedLevelUp);
+    }
+
+    private io.github.luinara.sqs.user.dto.GameStateDto buildGameStateDto(UserEntity user) {
         var dto = new io.github.luinara.sqs.user.dto.GameStateDto();
         dto.setWaterLevel(user.getHydrationMl());
         dto.setFoodLevel(user.getHunger());
@@ -132,9 +160,9 @@ public class TaskService {
         dto.setTasks(List.of());
         dto.setStreak(user.getStreak());
         dto.setYesterdayLoggedIn(false);
-        dto.setServerNow(OffsetDateTime.now(ZoneOffset.UTC).toString());
+        dto.setServerNow(OffsetDateTime.now(clock).withOffsetSameInstant(ZoneOffset.UTC).toString());
 
-        return new GameStateResult(200, "ok", dto);
+        return dto;
     }
 
     private void attemptEvolution(UserEntity user) {
@@ -149,6 +177,11 @@ public class TaskService {
             // optionally update pokemon entity evolution_stage if needed
         }
     }
+}
+
+enum TaskCompletionStatus {
+    COMPLETED,
+    ALREADY_COMPLETED
 }
 
 class GameStateResult {

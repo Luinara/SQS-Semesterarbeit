@@ -3,7 +3,7 @@
     <div>
       <span class="eyebrow">Heute im Fokus</span>
       <h2>Tagesquests</h2>
-      <p>Erledige deine Quests, sammle Punkte und bring dein Pokemon dem naechsten Level naeher.</p>
+      <p>Erledige deine Quests, sammle Punkte und bring dein Pokémon dem nächsten Level näher.</p>
     </div>
 
     <div class="task-list__summary">
@@ -35,7 +35,15 @@
   </div>
 
   <div class="task-list__items">
-    @for (task of tasks(); track task.id) {
+    @if (waterTask(); as hydrationTask) {
+      <sqs-hydration-gauge
+        [task]="hydrationTask"
+        [waterLevel]="waterLevel()"
+        (waterAdded)="addWater($event)"
+      />
+    }
+
+    @for (task of visibleTasks(); track task.id) {
       <sqs-task-card
         [task]="task"
         [isLocked]="isTaskLocked(task)"

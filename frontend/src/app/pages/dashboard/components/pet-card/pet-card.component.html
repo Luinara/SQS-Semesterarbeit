@@ -2,11 +2,11 @@
   <section class="pet-card">
     <div class="pet-card__header">
       <div>
-        <span class="eyebrow">Pokemon Partner</span>
+        <span class="eyebrow">Pokémon Partner</span>
         <h2>{{ pokemon()?.displayName ?? currentPet.name }} trainiert mit deinen Quests</h2>
         <p>
           Erledigte Quests geben Trainingspunkte. Training steigert Motivation, Wachstum und die
-          Evolution deines Pokemon.
+          Evolution deines Pokémon.
         </p>
       </div>
 
@@ -37,6 +37,7 @@
         [spriteUrl]="pokemonImageUrl() ?? pokemon()?.spriteUrl ?? 'pet-placeholder.svg'"
         [pokemonTypes]="pokemon()?.types ?? []"
         [pokemonSource]="pokemon()?.source ?? 'fallback'"
+        [isLevelingUp]="isLevelingUp()"
       />
 
       <div class="pet-card__details">
@@ -108,7 +109,7 @@
         />
 
         <div class="pet-card__stats">
-          <sqs-stat-badge label="Pokemon" [value]="pokemonStatus()" icon="pokemon" tone="green" />
+          <sqs-stat-badge label="Pokémon" [value]="pokemonStatus()" icon="pokemon" tone="green" />
           <sqs-stat-badge
             label="Trainingspunkte"
             [value]="currentPet.availableFoodPoints"
@@ -133,8 +134,8 @@
           <div class="pet-card__hint">
             <strong>Training kostet {{ feedCost() }} Punkt.</strong>
             <span>
-              Level-Ups passieren direkt beim vollen Wachstumsbalken. Die Pokemon-Stufe folgt dem
-              Level.
+              Level-Ups sind frühestens alle zwei Tage möglich. Der Wachstumsbalken wartet, bis dein
+              Pokémon wieder bereit ist.
             </span>
           </div>
 
@@ -144,7 +145,7 @@
             [variant]="canFeed() ? 'primary' : 'secondary'"
             (click)="requestFeeding()"
           >
-            Pokemon trainieren
+            Pokémon trainieren
           </button>
         </div>
       </div>
