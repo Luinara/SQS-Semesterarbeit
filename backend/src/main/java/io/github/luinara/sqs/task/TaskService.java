@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -22,7 +21,6 @@ public class TaskService {
 
     private static final int GROWTH_INCREASE_PER_TASK = 10;
     private static final int GROWTH_GOAL = 100;
-    private static final Duration LEVEL_UP_COOLDOWN = Duration.ofDays(2);
 
     private final TaskRepository taskRepository;
     private final UserTaskRepository userTaskRepository;
@@ -100,7 +98,7 @@ public class TaskService {
         int oldLevel = user.getPokemonLevel();
         int newXp = Math.min(GROWTH_GOAL, user.getPokemonXp() + GROWTH_INCREASE_PER_TASK);
 
-        if (newXp < GROWTH_GOAL || !canLevelUp(user)) {
+        if (newXp < GROWTH_GOAL) {
             user.setPokemonXp(newXp);
             return;
         }
@@ -122,17 +120,6 @@ public class TaskService {
         if (oldLevel < 50 && newLevel >= 50) {
             attemptEvolution(user);
         }
-    }
-
-    private boolean canLevelUp(UserEntity user) {
-        OffsetDateTime lastLevelUpAt = user.getLastLevelUpAt();
-
-        if (lastLevelUpAt == null) {
-            return true;
-        }
-
-        OffsetDateTime nextAllowedLevelUp = lastLevelUpAt.plus(LEVEL_UP_COOLDOWN);
-        return !OffsetDateTime.now(clock).isBefore(nextAllowedLevelUp);
     }
 
     private io.github.luinara.sqs.user.dto.GameStateDto buildGameStateDto(UserEntity user) {
