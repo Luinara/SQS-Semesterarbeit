@@ -63,6 +63,7 @@ class UserServiceTest {
         entity.setPokemonLevel(5);
         entity.setPokemonXp(42);
         entity.setHappiness(7);
+        entity.setPendingFeedPoints(12);
         entity.setStreak(3);
         entity.setLastLoginAt(nowUtc.minusDays(1)); // yesterday
 
@@ -76,6 +77,7 @@ class UserServiceTest {
         assertThat(dto.getPokemonLevel()).isEqualTo(5);
         assertThat(dto.getGrowth()).isEqualTo(42);
         assertThat(dto.getHappiness()).isEqualTo(7);
+        assertThat(dto.getPendingFeedPoints()).isEqualTo(12);
         assertThat(dto.getStreak()).isEqualTo(3);
         assertThat(dto.isYesterdayLoggedIn()).isTrue();
         assertThat(dto.getServerNow()).isNotNull();

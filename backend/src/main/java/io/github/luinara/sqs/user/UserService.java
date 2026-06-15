@@ -73,6 +73,7 @@ public class UserService {
         dto.setPokemonLevel(user.getPokemonLevel());
         dto.setGrowth(user.getPokemonXp());
         dto.setHappiness(user.getHappiness());
+        dto.setPendingFeedPoints(user.getPendingFeedPoints());
         dto.setTasks(buildTaskCompletions(user));
         dto.setStreak(user.getStreak());
         // yesterdayLoggedIn helper: compute from lastLoginAt
