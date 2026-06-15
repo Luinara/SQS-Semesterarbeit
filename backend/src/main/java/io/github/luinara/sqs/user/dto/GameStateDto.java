@@ -6,6 +6,7 @@ import java.util.List;
 public class GameStateDto {
     private int waterLevel;
     private int foodLevel;
+    private Integer currentPokemonId;
     private String pokemonImageUrl;
     private String pokemonName;
     private int pokemonLevel;
@@ -35,6 +36,14 @@ public class GameStateDto {
 
     public void setFoodLevel(int foodLevel) {
         this.foodLevel = foodLevel;
+    }
+
+    public Integer getCurrentPokemonId() {
+        return currentPokemonId;
+    }
+
+    public void setCurrentPokemonId(Integer currentPokemonId) {
+        this.currentPokemonId = currentPokemonId;
     }
 
     public String getPokemonImageUrl() {

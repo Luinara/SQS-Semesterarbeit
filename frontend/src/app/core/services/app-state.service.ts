@@ -34,7 +34,20 @@ export class AppStateService {
   readonly foodLevel = computed(() => this.backendGameState()?.foodLevel ?? 0);
   readonly streak = computed(() => this.backendGameState()?.streak ?? 0);
   readonly serverNow = computed(() => this.backendGameState()?.serverNow ?? null);
-  readonly pokemonImageUrl = computed(() => this.backendGameState()?.pokemonImageUrl ?? null);
+  readonly pokemonImageUrl = computed(() => {
+    const backendGameState = this.backendGameState();
+
+    if (!backendGameState?.pokemonImageUrl) {
+      return null;
+    }
+
+    return isPokemonImageForCurrentId(
+      backendGameState.pokemonImageUrl,
+      backendGameState.currentPokemonId
+    )
+      ? backendGameState.pokemonImageUrl
+      : null;
+  });
   readonly qualityScore = computed(() => this.activeGameState()?.qualityScore ?? 0);
   readonly qualityTarget = computed(() => this.activeGameState()?.qualityTarget ?? 0);
   readonly qualityGateReached = computed(() => this.qualityScore() >= this.qualityTarget());
@@ -377,4 +390,12 @@ function getApiErrorMessage(error: unknown, fallback: string): string {
 
 function createFeedbackId(kind: GameFeedback['kind']): string {
   return `${kind}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function isPokemonImageForCurrentId(imageUrl: string, currentPokemonId: number | null | undefined): boolean {
+  if (currentPokemonId == null) {
+    return true;
+  }
+
+  return new RegExp(`(^|/)${currentPokemonId}\\.png(?:[?#].*)?$`).test(imageUrl);
 }

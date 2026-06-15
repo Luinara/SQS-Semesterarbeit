@@ -61,6 +61,7 @@ public class UserService {
         dto.setFoodLevel(user.getHunger());
 
         Integer pId = user.getCurrentPokemonId();
+        dto.setCurrentPokemonId(pId);
         Optional<PokemonEntity> currentPokemon = pId == null
                 ? Optional.empty()
                 : pokemonRepository.findById(pId);

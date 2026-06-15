@@ -27,7 +27,12 @@ export class DashboardPageComponent {
   constructor() {
     effect(() => {
       const pet = this.appState.pet();
-      void this.pokemon.loadForLevel(pet?.level ?? 1, pet?.starterPokemonSpecies ?? 'bulbasaur');
+
+      if (!pet) {
+        return;
+      }
+
+      void this.pokemon.loadSpecies(pet.pokemonSpecies);
     });
   }
 

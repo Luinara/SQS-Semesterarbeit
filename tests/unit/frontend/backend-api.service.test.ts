@@ -109,6 +109,59 @@ describe("BackendApiService", () => {
     });
   });
 
+  it.each([
+    ["charmander", 4, "charmander"],
+    ["squirtle", 7, "squirtle"],
+  ] as const)(
+    "behaelt %s nach Registrierung, wenn das Backend noch keinen Pokemonnamen liefert",
+    async (starterPokemonSpecies, starterPokemonId, expectedPokemonSpecies) => {
+      const fetchMock = vi
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValueOnce(jsonResponse({ message: "created" }))
+        .mockResolvedValueOnce(jsonResponse([]))
+        .mockResolvedValueOnce(
+          jsonResponse({
+            waterLevel: 0,
+            foodLevel: 0,
+            pokemonImageUrl: "/assets/egg.png",
+            pokemonName: null,
+            pokemonLevel: 1,
+            growth: 0,
+            happiness: 0,
+            pendingFeedPoints: 0,
+            tasks: [],
+            streak: 1,
+            yesterdayLoggedIn: false,
+            serverNow: "2026-06-15T10:00:00Z",
+          }),
+        );
+
+      const snapshot = await new BackendApiService().signup({
+        username: "zoe",
+        password: "secret123",
+        userName: "zoe",
+        starterPokemonSpecies,
+      });
+
+      expect(fetchMock).toHaveBeenNthCalledWith(
+        1,
+        "/api/auth/signup",
+        expect.objectContaining({
+          body: JSON.stringify({
+            username: "zoe",
+            password: "secret123",
+            starterPokemonId,
+          }),
+        }),
+      );
+      expect(snapshot.gameState.pet).toMatchObject({
+        starterPokemonSpecies,
+        pokemonSpecies: expectedPokemonSpecies,
+        level: 1,
+      });
+    },
+  );
+
   it("lädt nach Task-Completion den frischen Game-State aus dem Backend", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")

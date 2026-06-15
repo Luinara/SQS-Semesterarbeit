@@ -35,7 +35,7 @@
 
       <div class="auth-form__starter-options">
         @for (starter of starterPokemonOptions; track starter.species) {
-          <label>
+          <label (click)="selectStarterPokemon(starter.species)">
             <input type="radio" formControlName="starterPokemonSpecies" [value]="starter.species" />
             <span>
               <strong>{{ starter.label }}</strong>

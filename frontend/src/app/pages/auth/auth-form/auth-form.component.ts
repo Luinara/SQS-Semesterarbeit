@@ -134,4 +134,9 @@ export class AuthFormComponent {
   passwordErrorText(): string {
     return getPasswordErrorText(this.form.controls.password.errors);
   }
+
+  selectStarterPokemon(starterPokemonSpecies: StarterPokemonSpeciesName): void {
+    this.form.controls.starterPokemonSpecies.setValue(starterPokemonSpecies);
+    this.form.controls.starterPokemonSpecies.markAsDirty();
+  }
 }
