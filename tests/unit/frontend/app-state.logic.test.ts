@@ -20,39 +20,39 @@ import {
 } from "../../../frontend/src/app/shared/mock/mock-data";
 
 describe("app-state.logic", () => {
-  it("meldet den Demo-Account auch mit gemischter Schreibweise der E-Mail an", () => {
+  it("meldet den Demo-Account auch mit gemischter Schreibweise des Usernames an", () => {
     const snapshot = createInitialSnapshot();
 
     const account = findAccountForLogin(snapshot.accounts, {
-      email: "  DEMO@SQS.APP ",
+      username: "  DEMO ",
       password: "cozyfocus",
     });
 
-    expect(account?.user.userName).toBe("Lina");
+    expect(account?.user.userName).toBe("demo");
   });
 
   it("erkennt vorhandene Konten unabhaengig von Gross- und Kleinschreibung", () => {
     const snapshot = createInitialSnapshot();
 
-    expect(hasAccountWithEmail(snapshot.accounts, " Demo@Sqs.App ")).toBe(true);
+    expect(hasAccountWithEmail(snapshot.accounts, " Demo ")).toBe(true);
     expect(hasAccountWithEmail(snapshot.accounts, "neu@sqs.app")).toBe(false);
   });
 
-  it("erstellt neue Konten mit bereinigten Eingaben und frischem Quality-State", () => {
+  it("erstellt neue Konten mit bereinigten Eingaben und frischem Task-State", () => {
     const account = createRegisteredAccount({
-      email: "  TEST@SQS.APP ",
+      username: "  TEST ",
       password: "geheim123",
       userName: "  Mira  ",
     });
 
-    expect(account.user.email).toBe("test@sqs.app");
+    expect(account.user.email).toBe("test");
     expect(account.user.userName).toBe("Mira");
-    expect(account.gameState.tasks).toHaveLength(10);
+    expect(account.gameState.tasks).toHaveLength(5);
     expect(account.gameState.qualityScore).toBe(0);
     expect(account.gameState.pet.level).toBe(1);
   });
 
-  it("markiert einen Quality-Nachweis als erledigt und schreibt Punkte gut", () => {
+  it("markiert einen Backend-Task als erledigt und schreibt Punkte gut", () => {
     const initialGameState = createInitialGameState();
     const firstTask = initialGameState.tasks[0];
 
@@ -65,7 +65,7 @@ describe("app-state.logic", () => {
     expect(updatedGameState.qualityScore).toBe(firstTask.points);
   });
 
-  it("laesst einen bereits erledigten Nachweis beim zweiten Versuch unveraendert", () => {
+  it("laesst einen bereits erledigten Task beim zweiten Versuch unveraendert", () => {
     const initialGameState = createInitialGameState();
     const firstTaskId = initialGameState.tasks[0].id;
 
@@ -75,27 +75,27 @@ describe("app-state.logic", () => {
     expect(twiceCompleted).toEqual(onceCompleted);
   });
 
-  it("berechnet und erkennt das 80-Prozent-Quality-Gate", () => {
+  it("berechnet und erkennt das Tagesziel aus Backend-Tasks", () => {
     let gameState = createInitialGameState();
 
-    for (const task of gameState.tasks.slice(0, 8)) {
+    for (const task of gameState.tasks) {
       gameState = completeTaskInGameState(gameState, task.id);
     }
 
-    expect(calculateQualityScore(gameState.tasks)).toBe(84);
+    expect(calculateQualityScore(gameState.tasks)).toBe(75);
     expect(isQualityGateReached(gameState)).toBe(true);
   });
 
-  it("liefert beim Erreichen des Quality-Gates Level-Up-Feedback", () => {
+  it("liefert beim Erreichen des Tagesziels Level-Up-Feedback", () => {
     let gameState = createInitialGameState();
 
-    for (const task of gameState.tasks.slice(0, 7)) {
+    for (const task of gameState.tasks.slice(0, 4)) {
       gameState = completeTaskInGameState(gameState, task.id);
     }
 
-    const result = completeTaskInGameStateWithFeedback(gameState, gameState.tasks[7].id);
+    const result = completeTaskInGameStateWithFeedback(gameState, gameState.tasks[4].id);
 
-    expect(result.gameState.qualityScore).toBe(84);
+    expect(result.gameState.qualityScore).toBe(75);
     expect(result.feedback?.kind).toBe("level-up");
   });
 
@@ -185,7 +185,7 @@ describe("app-state.logic", () => {
     expect(resetState.pet.pokemonSpecies).toBe("bulbasaur");
     expect(resetState.totalCompletedTasks).toBe(0);
     expect(resetState.qualityScore).toBe(0);
-    expect(resetState.qualityTarget).toBe(80);
+    expect(resetState.qualityTarget).toBe(75);
     expect(resetState.tasks.every((task) => !task.isCompleted)).toBe(true);
   });
 
@@ -232,7 +232,7 @@ describe("app-state.logic", () => {
 
     let qualityGateState = initialGameState;
 
-    for (const task of qualityGateState.tasks.slice(0, 8)) {
+    for (const task of qualityGateState.tasks) {
       qualityGateState = completeTaskInGameState(qualityGateState, task.id);
     }
 
@@ -249,7 +249,7 @@ describe("app-state.logic", () => {
     ).toBe("thriving");
   });
 
-  it("erlaubt offene Quality-Nachweise und sperrt erledigte Nachweise", () => {
+  it("erlaubt offene Backend-Tasks und sperrt erledigte Tasks", () => {
     const initialGameState = createInitialGameState();
     const firstTaskId = initialGameState.tasks[0].id;
     const completedState = completeTaskInGameState(initialGameState, firstTaskId);

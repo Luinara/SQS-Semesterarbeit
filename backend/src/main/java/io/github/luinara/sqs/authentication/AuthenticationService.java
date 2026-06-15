@@ -1,5 +1,7 @@
 package io.github.luinara.sqs.authentication;
 
+import io.github.luinara.sqs.pokemon.PokemonEntity;
+import io.github.luinara.sqs.pokemon.PokemonRepository;
 import io.github.luinara.sqs.user.UserEntity;
 import io.github.luinara.sqs.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,16 +34,25 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final UserRepository userRepository; // optional
+    private final PokemonRepository pokemonRepository; // optional
 
     @Autowired
-    public AuthenticationService(Optional<UserRepository> userRepository) {
+    public AuthenticationService(
+            Optional<UserRepository> userRepository,
+            Optional<PokemonRepository> pokemonRepository
+    ) {
         // If a JPA repository is available (e.g., when running with database profile), use it.
         this.userRepository = userRepository.orElse(null);
+        this.pokemonRepository = pokemonRepository.orElse(null);
     }
 
+    public AuthenticationService(Optional<UserRepository> userRepository) {
+        this(userRepository, Optional.empty());
+    }
 
     public AuthenticationService() {
         this.userRepository = null;
+        this.pokemonRepository = null;
     }
 
     /**
@@ -62,9 +74,7 @@ public class AuthenticationService {
             UserEntity entity = new UserEntity(username, hash);
             entity.setCreatedAt(OffsetDateTime.now());
 
-            // assign random pokemon id (1..151) and default domain values
-            int pkmnId = ThreadLocalRandom.current().nextInt(1, 152);
-            entity.setCurrentPokemonId(pkmnId);
+            assignRandomPokemonIfAvailable(entity);
             entity.setEgg(true);
             entity.setHappiness(0);
 
@@ -158,5 +168,21 @@ public class AuthenticationService {
         if (token == null) return Optional.empty();
         String username = sessions.get(token);
         return Optional.ofNullable(username);
+    }
+
+    private void assignRandomPokemonIfAvailable(UserEntity entity) {
+        if (pokemonRepository == null) {
+            entity.setCurrentPokemonId(null);
+            return;
+        }
+
+        List<PokemonEntity> pokemon = pokemonRepository.findAll();
+        if (pokemon.isEmpty()) {
+            entity.setCurrentPokemonId(null);
+            return;
+        }
+
+        PokemonEntity selected = pokemon.get(ThreadLocalRandom.current().nextInt(pokemon.size()));
+        entity.setCurrentPokemonId(selected.getId());
     }
 }

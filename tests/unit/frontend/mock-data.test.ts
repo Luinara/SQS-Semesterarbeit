@@ -23,25 +23,31 @@ describe("mock-data", () => {
 
     expect(snapshot.accounts).toHaveLength(1);
     expect(snapshot.activeUserId).toBeNull();
-    expect(snapshot.accounts[0].user.userName).toBe("Lina");
+    expect(snapshot.accounts[0].user.userName).toBe("demo");
   });
 
-  it("liefert einen neuen Quality-Spielzustand mit offenen Checklistenpunkten", () => {
+  it("liefert einen neuen Spielzustand mit offenen Backend-Tasks", () => {
     const gameState = createInitialGameState();
 
-    expect(gameState.tasks).toHaveLength(10);
+    expect(gameState.tasks).toHaveLength(5);
     expect(gameState.tasks.every((task) => !task.isCompleted)).toBe(true);
-    expect(gameState.tasks.every((task) => task.checklistReference.length > 0)).toBe(true);
+    expect(gameState.tasks.map((task) => task.id)).toEqual([
+      "task-water",
+      "task-study",
+      "task-sport",
+      "task-clean-room",
+      "task-read",
+    ]);
     expect(gameState.qualityTarget).toBe(QUALITY_RULES.targetScore);
     expect(gameState.pet.level).toBe(1);
     expect(gameState.pet.pokemonSpecies).toBe("bulbasaur");
   });
 
-  it("nutzt ein ganzzahliges, klares Quality-Balancing", () => {
+  it("nutzt das Punkte-Balancing aus der Backend-Task-API", () => {
     const gameState = createInitialGameState();
     const taskPoints = gameState.tasks.map((task) => task.points);
 
-    expect(taskPoints).toEqual([8, 10, 10, 12, 14, 12, 10, 8, 8, 8]);
+    expect(taskPoints).toEqual([10, 20, 20, 15, 10]);
     expect(taskPoints.every(Number.isInteger)).toBe(true);
     expect(Number.isInteger(PET_RULES.feedCost)).toBe(true);
     expect(Number.isInteger(PET_RULES.growthPerFeeding)).toBe(true);

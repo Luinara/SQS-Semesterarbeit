@@ -1,25 +1,37 @@
 package io.github.luinara.sqs.user;
 
 import io.github.luinara.sqs.pokemon.PokemonRepository;
+import io.github.luinara.sqs.task.TaskRepository;
+import io.github.luinara.sqs.task.UserTaskRepository;
 import io.github.luinara.sqs.user.dto.GameStateDto;
 import io.github.luinara.sqs.user.dto.TaskCompletionDto;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PokemonRepository pokemonRepository;
+    private final TaskRepository taskRepository;
+    private final UserTaskRepository userTaskRepository;
 
-    public UserService(UserRepository userRepository, PokemonRepository pokemonRepository) {
+    public UserService(
+            UserRepository userRepository,
+            PokemonRepository pokemonRepository,
+            TaskRepository taskRepository,
+            UserTaskRepository userTaskRepository
+    ) {
         this.userRepository = userRepository;
         this.pokemonRepository = pokemonRepository;
+        this.taskRepository = taskRepository;
+        this.userTaskRepository = userTaskRepository;
     }
 
     public GameStateDto getGameStateForUsername(String username) {
@@ -48,9 +60,7 @@ public class UserService {
         dto.setPokemonLevel(user.getPokemonLevel());
         dto.setGrowth(user.getPokemonXp());
         dto.setHappiness(user.getHappiness());
-        // tasks not implemented in this iteration -> return empty list
-        List<TaskCompletionDto> tasks = new ArrayList<>();
-        dto.setTasks(tasks);
+        dto.setTasks(buildTaskCompletions(user));
         dto.setStreak(user.getStreak());
         // yesterdayLoggedIn helper: compute from lastLoginAt
         OffsetDateTime last = user.getLastLoginAt();
@@ -65,6 +75,23 @@ public class UserService {
         dto.setYesterdayLoggedIn(yesterdayLoggedIn);
         dto.setServerNow(now.toString());
         return dto;
+    }
+
+    private List<TaskCompletionDto> buildTaskCompletions(UserEntity user) {
+        Map<Long, Boolean> completedByTaskId = userTaskRepository.findByUserId(user.getId()).stream()
+                .collect(Collectors.toMap(
+                        userTask -> userTask.getTaskId(),
+                        userTask -> userTask.isCompleted(),
+                        (first, second) -> first || second
+                ));
+
+        return taskRepository.findAll().stream()
+                .map(task -> new TaskCompletionDto(
+                        task.getId(),
+                        task.getTitle(),
+                        completedByTaskId.getOrDefault(task.getId(), false)
+                ))
+                .collect(Collectors.toList());
     }
 
     public GameStateDto waterUser(String username, int ml) {

@@ -4,7 +4,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
 import { AuthMode, AuthSubmission } from '../../../shared/models/auth.model';
 import { UiButtonComponent } from '../../../shared/ui/button/ui-button.component';
 
@@ -32,8 +32,21 @@ export class AuthFormComponent {
       Validators.maxLength(32),
       Validators.pattern(/^[a-zA-Z0-9._-]+$/),
     ]),
-    password: this.formBuilder.control('', [Validators.required, Validators.minLength(8)]),
+    password: this.formBuilder.control('', [Validators.required]),
   });
+
+  constructor() {
+    effect(() => {
+      const passwordControl = this.form.controls.password;
+      const validators =
+        this.mode() === 'register'
+          ? [Validators.required, Validators.minLength(8)]
+          : [Validators.required];
+
+      passwordControl.setValidators(validators);
+      passwordControl.updateValueAndValidity({ emitEvent: false });
+    });
+  }
 
   submitForm(): void {
     this.hasSubmittedAttempt = true;
@@ -87,6 +100,10 @@ export class AuthFormComponent {
       return 'Bitte gib ein Passwort ein.';
     }
 
-    return 'Das Passwort sollte mindestens 8 Zeichen haben.';
+    if (this.form.controls.password.hasError('minlength')) {
+      return 'Das Passwort sollte mindestens 8 Zeichen haben.';
+    }
+
+    return 'Bitte pruefe das Passwort.';
   }
 }

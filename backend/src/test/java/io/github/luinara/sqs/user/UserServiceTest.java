@@ -1,6 +1,8 @@
 package io.github.luinara.sqs.user;
 
 import io.github.luinara.sqs.user.dto.GameStateDto;
+import io.github.luinara.sqs.task.TaskRepository;
+import io.github.luinara.sqs.task.UserTaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +27,12 @@ class UserServiceTest {
     @Mock
     private io.github.luinara.sqs.pokemon.PokemonRepository pokemonRepository;
 
+    @Mock
+    private TaskRepository taskRepository;
+
+    @Mock
+    private UserTaskRepository userTaskRepository;
+
     @InjectMocks
     private UserService userService;
 
@@ -32,6 +41,8 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         nowUtc = OffsetDateTime.now(ZoneOffset.UTC);
+        lenient().when(taskRepository.findAll()).thenReturn(List.of());
+        lenient().when(userTaskRepository.findByUserId(any())).thenReturn(List.of());
     }
 
     @Test

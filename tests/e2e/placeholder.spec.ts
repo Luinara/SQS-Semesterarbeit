@@ -2,13 +2,77 @@ import { expect, test } from "../../frontend/testing/playwright-test";
 
 test.describe("SQS Quality Companion", () => {
   test("fuehrt vom Login bis ins Quality-Dashboard", async ({ page }) => {
+    await page.route("**/api/**", async (route) => {
+      const url = new URL(route.request().url());
+
+      if (url.pathname === "/api/auth/login") {
+        await route.fulfill({ json: { message: "authenticated" } });
+        return;
+      }
+
+      if (url.pathname === "/api/tasks") {
+        await route.fulfill({
+          json: [
+            {
+              id: 1,
+              title: "Wasser trinken",
+              description: "Backend-Task aus der API",
+            },
+            {
+              id: 2,
+              title: "30 Minuten lernen",
+              description: "Backend-Task aus der API",
+            },
+          ],
+        });
+        return;
+      }
+
+      if (url.pathname === "/api/user/game-state") {
+        await route.fulfill({
+          json: {
+            waterLevel: 500,
+            foodLevel: 0,
+            pokemonImageUrl: "/pet-placeholder.svg",
+            pokemonLevel: 2,
+            growth: 40,
+            happiness: 55,
+            pendingFeedPoints: 10,
+            tasks: [
+              { id: 1, title: "Wasser trinken", completed: true },
+              { id: 2, title: "30 Minuten lernen", completed: false },
+            ],
+            streak: 2,
+            yesterdayLoggedIn: true,
+            serverNow: "2026-06-15T10:00:00Z",
+          },
+        });
+        return;
+      }
+
+      await route.fulfill({ status: 404, json: { error: "not mocked" } });
+    });
+
+    await page.route("https://api.open-meteo.com/**", async (route) => {
+      await route.fulfill({
+        json: {
+          current: {
+            temperature_2m: 22,
+            weather_code: 2,
+            is_day: 1,
+            time: "2026-06-15T10:00",
+          },
+        },
+      });
+    });
+
     await page.addInitScript(() => {
       globalThis.localStorage.clear();
     });
 
     await page.goto("/auth", { waitUntil: "domcontentloaded", timeout: 10000 });
 
-    await page.getByLabel("E-Mail").fill("demo@sqs.app");
+    await page.getByLabel("Backend-Username").fill("demo");
     await page.getByLabel("Passwort").fill("cozyfocus");
     await page
       .getByRole("button", { name: "Einloggen und weitermachen" })
@@ -16,10 +80,12 @@ test.describe("SQS Quality Companion", () => {
 
     await page.waitForURL("**/dashboard");
     await expect(
-      page.getByRole("heading", { name: "Quality Companion Dashboard" }),
+      page.getByRole("heading", { name: "Pokemon Task Dashboard" }),
     ).toBeVisible();
-    await expect(page.getByText("SQS Checkliste")).toBeVisible();
-    await expect(page.getByText("SQS Quality Gate")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Backend Tasks" })).toBeVisible();
+    await expect(page.getByText("API Task Progress").first()).toBeVisible();
+    await expect(page.getByText("Wasser trinken").first()).toBeVisible();
+    await expect(page.getByText("500 ml", { exact: true })).toBeVisible();
     await expect(
       page.getByRole("button", { name: "Pokemon trainieren" }),
     ).toBeVisible();
