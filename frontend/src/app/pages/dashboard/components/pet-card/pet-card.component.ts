@@ -37,6 +37,22 @@ export class PetCardComponent {
   readonly weatherRefreshRequested = output<void>();
   readonly weatherCitySubmitted = output<string>();
 
+  readonly displayName = computed(() =>
+    this.pet()?.isEgg
+      ? 'Pokémon-Ei'
+      : (this.pokemon()?.displayName ?? this.pet()?.name ?? 'Pokémon Partner')
+  );
+  readonly displaySpriteUrl = computed(() =>
+    this.pet()?.isEgg
+      ? 'egg.svg'
+      : (this.pokemonImageUrl() ?? this.pokemon()?.spriteUrl ?? 'pet-placeholder.svg')
+  );
+  readonly displayPokemonTypes = computed(() =>
+    this.pet()?.isEgg ? [] : (this.pokemon()?.types ?? [])
+  );
+  readonly displayPokemonSource = computed(() =>
+    this.pet()?.isEgg ? 'fallback' : (this.pokemon()?.source ?? 'fallback')
+  );
   readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) >= this.feedCost());
   readonly careStateLabel = computed(() => {
     switch (this.petCareState()) {
@@ -67,6 +83,10 @@ export class PetCardComponent {
     }
   });
   readonly pokemonStatus = computed(() => {
+    if (this.pet()?.isEgg) {
+      return 'Ei wartet auf Level 10';
+    }
+
     if (this.pokemonImageUrl()) {
       return 'Pokémon-Sprite bereit';
     }

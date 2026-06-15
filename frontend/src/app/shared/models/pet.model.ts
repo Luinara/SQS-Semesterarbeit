@@ -15,6 +15,7 @@ export interface PetState {
   lastLevelUpAt: string | null;
   goodCareStreakDays: number;
   lastGoodCareDay: string | null;
+  isEgg: boolean;
   starterPokemonSpecies: StarterPokemonSpeciesName;
   pokemonSpecies: PokemonSpeciesName;
 }

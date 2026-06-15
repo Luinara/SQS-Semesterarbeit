@@ -117,6 +117,7 @@ export function feedPetInGameStateWithFeedback(
       lastFedAt: now.toISOString(),
       lastHappinessDecayAt: currentPet.lastHappinessDecayAt,
       lastLevelUpAt: growthResult.didLevelUp ? now.toISOString() : currentPet.lastLevelUpAt,
+      isEgg: currentPet.isEgg && growthResult.level < 10,
     },
   };
 
@@ -327,6 +328,7 @@ function normalizePetState(pet: PetState, nowIso: string): PetState {
     lastLevelUpAt: pet.lastLevelUpAt ?? null,
     goodCareStreakDays: Math.max(0, pet.goodCareStreakDays ?? 0),
     lastGoodCareDay: pet.lastGoodCareDay ?? null,
+    isEgg: pet.isEgg ?? level < 10,
     starterPokemonSpecies,
     pokemonSpecies: resolvePokemonSpeciesForLevel(level, starterPokemonSpecies),
   };

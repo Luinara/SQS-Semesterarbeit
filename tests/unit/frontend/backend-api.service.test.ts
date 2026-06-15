@@ -19,6 +19,7 @@ describe("BackendApiService", () => {
         jsonResponse({
           waterLevel: 750,
           foodLevel: 18,
+          currentPokemonId: 2,
           pokemonImageUrl: "/assets/egg.png",
           pokemonName: "ivysaur",
           pokemonLevel: 4,
@@ -69,6 +70,7 @@ describe("BackendApiService", () => {
         jsonResponse({
           waterLevel: 0,
           foodLevel: 0,
+          currentPokemonId: 5,
           pokemonImageUrl: "/assets/egg.png",
           pokemonName: "charmeleon",
           pokemonLevel: 3,
@@ -113,7 +115,7 @@ describe("BackendApiService", () => {
     ["charmander", 4, "charmander"],
     ["squirtle", 7, "squirtle"],
   ] as const)(
-    "behaelt %s nach Registrierung, wenn das Backend noch keinen Pokemonnamen liefert",
+    "behaelt %s nach Registrierung anhand currentPokemonId, wenn kein Pokemonnamen vorliegt",
     async (starterPokemonSpecies, starterPokemonId, expectedPokemonSpecies) => {
       const fetchMock = vi
         .spyOn(globalThis, "fetch")
@@ -123,6 +125,7 @@ describe("BackendApiService", () => {
           jsonResponse({
             waterLevel: 0,
             foodLevel: 0,
+            currentPokemonId: starterPokemonId,
             pokemonImageUrl: "/assets/egg.png",
             pokemonName: null,
             pokemonLevel: 1,
@@ -282,6 +285,36 @@ describe("BackendApiService", () => {
     );
     expect(snapshot.gameState.pet.level).toBe(8);
     expect(snapshot.gameState.pet.growthProgress).toBe(0);
+  });
+
+  it("nutzt beim Test-Level-Up den bisherigen Starter als Fallback, wenn Backend keine Pokemon-ID liefert", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        jsonResponse({
+          waterLevel: 0,
+          foodLevel: 0,
+          pokemonImageUrl: "/assets/egg.png",
+          pokemonName: null,
+          pokemonLevel: 2,
+          growth: 0,
+          happiness: 0,
+          pendingFeedPoints: 0,
+          tasks: [],
+          streak: 1,
+          yesterdayLoggedIn: false,
+          serverNow: "2026-06-15T10:00:00Z",
+        }),
+      )
+      .mockResolvedValueOnce(jsonResponse([]));
+
+    const snapshot = await new BackendApiService().testLevelUp("zoe", "charmander");
+
+    expect(snapshot.gameState.pet).toMatchObject({
+      starterPokemonSpecies: "charmander",
+      pokemonSpecies: "charmander",
+      level: 2,
+    });
+    expect(snapshot.backendGameState.currentPokemonId).toBe(4);
   });
 
   it("zeigt bei HTML-Fehlerseiten eine kurze Server-Meldung statt Markup", async () => {

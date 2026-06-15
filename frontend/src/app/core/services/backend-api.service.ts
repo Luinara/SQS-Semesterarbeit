@@ -27,6 +27,7 @@ export interface BackendGameStateDto {
   waterLevel: number;
   foodLevel: number;
   currentPokemonId?: number | null;
+  isEgg?: boolean;
   pokemonImageUrl: string | null;
   pokemonName?: string | null;
   pokemonLevel: number;
@@ -95,40 +96,54 @@ export class BackendApiService {
     return this.createDashboardSnapshot(username, tasks, gameState, starterPokemonSpeciesFallback);
   }
 
-  async completeTask(username: string, taskId: string): Promise<DashboardSnapshot> {
+  async completeTask(
+    username: string,
+    taskId: string,
+    starterPokemonSpeciesFallback?: StarterPokemonSpeciesName
+  ): Promise<DashboardSnapshot> {
     await this.request(`/api/tasks/${Number(taskId)}/complete`, {
       method: 'POST',
     });
 
-    return this.loadDashboard(username);
+    return this.loadDashboard(username, starterPokemonSpeciesFallback);
   }
 
-  async addWater(username: string, ml: number): Promise<DashboardSnapshot> {
+  async addWater(
+    username: string,
+    ml: number,
+    starterPokemonSpeciesFallback?: StarterPokemonSpeciesName
+  ): Promise<DashboardSnapshot> {
     const gameState = await this.getJson<BackendGameStateDto>('/api/user/water', {
       method: 'POST',
       body: JSON.stringify({ ml }),
     });
     const tasks = await this.getJson<BackendTaskDto[]>('/api/tasks');
 
-    return this.createDashboardSnapshot(username, tasks, gameState);
+    return this.createDashboardSnapshot(username, tasks, gameState, starterPokemonSpeciesFallback);
   }
 
-  async feed(username: string): Promise<DashboardSnapshot> {
+  async feed(
+    username: string,
+    starterPokemonSpeciesFallback?: StarterPokemonSpeciesName
+  ): Promise<DashboardSnapshot> {
     const gameState = await this.getJson<BackendGameStateDto>('/api/user/feed', {
       method: 'POST',
     });
     const tasks = await this.getJson<BackendTaskDto[]>('/api/tasks');
 
-    return this.createDashboardSnapshot(username, tasks, gameState);
+    return this.createDashboardSnapshot(username, tasks, gameState, starterPokemonSpeciesFallback);
   }
 
-  async testLevelUp(username: string): Promise<DashboardSnapshot> {
+  async testLevelUp(
+    username: string,
+    starterPokemonSpeciesFallback?: StarterPokemonSpeciesName
+  ): Promise<DashboardSnapshot> {
     const gameState = await this.getJson<BackendGameStateDto>('/api/user/test-level-up', {
       method: 'POST',
     });
     const tasks = await this.getJson<BackendTaskDto[]>('/api/tasks');
 
-    return this.createDashboardSnapshot(username, tasks, gameState);
+    return this.createDashboardSnapshot(username, tasks, gameState, starterPokemonSpeciesFallback);
   }
 
   private createDashboardSnapshot(
@@ -152,6 +167,14 @@ export class BackendApiService {
         starterPokemonSpeciesFallback ?? 'bulbasaur'
       );
     const starterPokemonSpecies = resolveStarterPokemonSpecies(pokemonSpecies);
+    const currentPokemonId =
+      backendGameState.currentPokemonId ?? resolvePokemonIdBySpecies(pokemonSpecies);
+    const isEgg = backendGameState.isEgg ?? pokemonLevel < 10;
+    const normalizedBackendGameState: BackendGameStateDto = {
+      ...backendGameState,
+      currentPokemonId,
+      isEgg,
+    };
 
     return {
       user: {
@@ -160,7 +183,7 @@ export class BackendApiService {
         userName: username,
         joinedAt: backendGameState.serverNow || new Date().toISOString(),
       },
-      backendGameState,
+      backendGameState: normalizedBackendGameState,
       gameState: {
         pet: {
           name: 'Pokémon Partner',
@@ -179,6 +202,7 @@ export class BackendApiService {
           lastLevelUpAt: null,
           goodCareStreakDays: backendGameState.streak ?? 0,
           lastGoodCareDay: null,
+          isEgg,
           starterPokemonSpecies,
           pokemonSpecies,
         },
@@ -272,7 +296,9 @@ function mapStarterPokemonToId(starterPokemonSpecies: StarterPokemonSpeciesName)
   return starterPokemonIds[starterPokemonSpecies];
 }
 
-function resolvePokemonSpeciesById(pokemonId: number | null | undefined): PokemonSpeciesName | undefined {
+function resolvePokemonSpeciesById(
+  pokemonId: number | null | undefined
+): PokemonSpeciesName | undefined {
   const pokemonSpeciesById: Record<number, PokemonSpeciesName> = {
     1: 'bulbasaur',
     2: 'ivysaur',
@@ -286,6 +312,22 @@ function resolvePokemonSpeciesById(pokemonId: number | null | undefined): Pokemo
   };
 
   return pokemonId == null ? undefined : pokemonSpeciesById[pokemonId];
+}
+
+function resolvePokemonIdBySpecies(pokemonSpecies: PokemonSpeciesName): number {
+  const pokemonIdBySpecies: Record<PokemonSpeciesName, number> = {
+    bulbasaur: 1,
+    ivysaur: 2,
+    venusaur: 3,
+    charmander: 4,
+    charmeleon: 5,
+    charizard: 6,
+    squirtle: 7,
+    wartortle: 8,
+    blastoise: 9,
+  };
+
+  return pokemonIdBySpecies[pokemonSpecies];
 }
 
 function normalizePokemonSpeciesName(

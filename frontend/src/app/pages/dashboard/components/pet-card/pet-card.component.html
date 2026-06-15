@@ -3,7 +3,7 @@
     <div class="pet-card__header">
       <div>
         <span class="eyebrow">Pokémon Partner</span>
-        <h2>{{ pokemon()?.displayName ?? currentPet.name }} trainiert mit deinen Quests</h2>
+        <h2>{{ displayName() }} trainiert mit deinen Quests</h2>
         <p>
           Erledigte Quests geben Trainingspunkte. Training steigert Motivation, Wachstum und die
           Evolution deines Pokémon.
@@ -30,13 +30,13 @@
 
     <div class="pet-card__body">
       <sqs-pet-visual
-        [petName]="pokemon()?.displayName ?? currentPet.name"
+        [petName]="displayName()"
         [level]="currentPet.level"
         [weatherScene]="weatherScene()"
         [careState]="petCareState()"
-        [spriteUrl]="pokemonImageUrl() ?? pokemon()?.spriteUrl ?? 'pet-placeholder.svg'"
-        [pokemonTypes]="pokemon()?.types ?? []"
-        [pokemonSource]="pokemon()?.source ?? 'fallback'"
+        [spriteUrl]="displaySpriteUrl()"
+        [pokemonTypes]="displayPokemonTypes()"
+        [pokemonSource]="displayPokemonSource()"
         [isLevelingUp]="isLevelingUp()"
       />
 

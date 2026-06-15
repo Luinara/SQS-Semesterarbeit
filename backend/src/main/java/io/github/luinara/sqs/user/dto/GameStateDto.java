@@ -1,5 +1,8 @@
 package io.github.luinara.sqs.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +10,8 @@ public class GameStateDto {
     private int waterLevel;
     private int foodLevel;
     private Integer currentPokemonId;
+    @JsonProperty("isEgg")
+    private boolean isEgg;
     private String pokemonImageUrl;
     private String pokemonName;
     private int pokemonLevel;
@@ -44,6 +49,15 @@ public class GameStateDto {
 
     public void setCurrentPokemonId(Integer currentPokemonId) {
         this.currentPokemonId = currentPokemonId;
+    }
+
+    @JsonIgnore
+    public boolean isEgg() {
+        return isEgg;
+    }
+
+    public void setEgg(boolean egg) {
+        isEgg = egg;
     }
 
     public String getPokemonImageUrl() {

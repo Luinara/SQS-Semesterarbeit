@@ -115,8 +115,10 @@ class TaskServiceTest {
 
         assertThat(res.status).isEqualTo(200);
         assertThat(res.gameState).isNotNull();
-        assertThat(res.gameState.getPokemonName()).isEqualTo("squirtle");
-        assertThat(res.gameState.getPokemonImageUrl()).isEqualTo("/img/squirtle.png");
+        assertThat(res.gameState.getCurrentPokemonId()).isEqualTo(7);
+        assertThat(res.gameState.isEgg()).isTrue();
+        assertThat(res.gameState.getPokemonName()).isNull();
+        assertThat(res.gameState.getPokemonImageUrl()).isEqualTo("/assets/egg.png");
     }
 
     @Test

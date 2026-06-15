@@ -177,6 +177,7 @@ function createInitialPetState(starterPokemonSpecies: StarterPokemonSpeciesName)
     lastLevelUpAt: null,
     goodCareStreakDays: 0,
     lastGoodCareDay: null,
+    isEgg: true,
     starterPokemonSpecies,
     pokemonSpecies: resolvePokemonSpeciesForLevel(1, starterPokemonSpecies),
   };

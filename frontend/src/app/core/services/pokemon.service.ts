@@ -38,6 +38,7 @@ export class PokemonService {
 
     this.isLoading.set(true);
     this.errorMessage.set(null);
+    this.snapshot.set(fallbackPokemonBySpecies[species]);
 
     try {
       const pokemon = await this.pokemonAdapter.loadPokemon(species);
