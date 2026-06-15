@@ -50,6 +50,8 @@ vorbereitet. Wichtige Einstiegspunkte:
 - `docs/adr/`
 - `docs/diagrams/c4-diagram.md`
 - `docs/diagrams/structurizr/workspace.dsl`
+- `docs/presentation-plan.md`
+- `docs/presentation-cheat-sheet.md`
 
 ReadTheDocs nutzt `.readthedocs.yaml`, `mkdocs.yml` und
 `docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys kann
