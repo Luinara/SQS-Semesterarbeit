@@ -35,6 +35,7 @@ Standard-URLs:
 | Architekturentscheidungen | `adr/` |
 | C4-Modell | `diagrams/c4-diagram.md` und `diagrams/structurizr/workspace.dsl` |
 | Qualitätssicherung | Quality Hub, JaCoCo, Vitest Coverage, Checkstyle, SpotBugs, ESLint, npm Audit, Playwright |
+| Testpyramide | `test-pyramid.md` |
 | Präsentation | `presentation-plan.md`, `presentation-cheat-sheet.md` |
 
 ## Abgabe-relevante Punkte

@@ -46,6 +46,7 @@ Die technische Dokumentation liegt unter `docs/` und ist für ReadTheDocs
 vorbereitet. Wichtige Einstiegspunkte:
 
 - `docs/index.md`
+- `docs/test-pyramid.md`
 - `docs/arc42/`
 - `docs/adr/`
 - `docs/diagrams/c4-diagram.md`
