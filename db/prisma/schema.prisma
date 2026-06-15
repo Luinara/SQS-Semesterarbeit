@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Pokemon {
+  id          Int     @id
+  name        String
+  imageUrl    String  @map("image_url")
+  evolutionId Int?    @map("evolution_id")
+  evolutionStage Int @default(0) @map("evolution_stage")
+
+  evolution     Pokemon?  @relation("PokemonEvolution", fields: [evolutionId], references: [id])
+  preEvolutions Pokemon[] @relation("PokemonEvolution")
+
+  currentUsers User[] @relation("CurrentPokemon")
+  eggUsers     User[] @relation("EggPokemon")
+
+  @@map("pokemon")
+}
+
+model User {
+  id        Int    @id @default(autoincrement())
+  username  String @unique
+  passwordHash String @map("password_hash")
+  lastLoginAt DateTime? @map("last_login_at")
+
+  currentPokemonId Int?     @map("current_pokemon_id")
+  currentPokemon   Pokemon? @relation("CurrentPokemon", fields: [currentPokemonId], references: [id])
+
+  eggPokemonId     Int?     @map("egg_pokemon_id")
+  eggPokemon       Pokemon? @relation("EggPokemon", fields: [eggPokemonId], references: [id])
+
+  isEgg     Boolean  @default(true) @map("is_egg")
+  happiness Int      @default(0)
+
+  streak Int @default(0)
+  lastTaskCompletionDate DateTime? @map("last_task_completion_date")
+
+  pokemonLevel Int @default(1) @map("pokemon_level")
+  pokemonXp Int @default(0) @map("pokemon_xp")
+  lastLevelUpAt DateTime? @map("last_level_up_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  hatchedAt DateTime? @map("hatched_at")
+
+  hydrationMl Int @default(0) @map("hydration_ml")
+  hunger Int @default(0)
+
+  pendingFeedPoints Int @default(0) @map("pending_feed_points")
+
+  stats UserStats?
+
+  userTasks UserTask[]
+
+  @@map("users")
+}
+
+model UserStats {
+  userId Int @id @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  totalLogins          Int @default(0) @map("total_logins")
+  totalHappinessGained Int @default(0) @map("total_happiness_gained")
+  lastLogin            DateTime? @map("last_login")
+
+  @@map("user_stats")
+}
+
+model Task {
+  id          Int    @id @default(autoincrement())
+  title       String @unique
+  description String
+
+  feedPoints  Int    @default(0) @map("feed_points")
+
+  userTasks UserTask[]
+
+  @@map("tasks")
+}
+
+model UserTask {
+  id     Int @id @default(autoincrement())
+
+  userId Int @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  taskId Int  @map("task_id")
+  task   Task @relation(fields: [taskId], references: [id])
+
+  completed Boolean @default(false)
+
+  @@unique([userId, taskId])
+  @@map("user_tasks")
+}
