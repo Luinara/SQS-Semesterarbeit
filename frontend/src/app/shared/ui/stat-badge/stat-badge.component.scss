@@ -4,22 +4,26 @@
   gap: 0.9rem;
   min-width: 0;
   padding: 1rem 1.05rem;
-  border: 1px solid rgba(140, 108, 96, 0.08);
-  border-radius: var(--radius-lg);
-  background: rgba(255, 250, 246, 0.9);
+  border: 1px solid rgba(28, 42, 70, 0.08);
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(244, 248, 255, 0.96) 0%, rgba(229, 239, 255, 0.9) 100%);
   box-shadow: var(--shadow-card);
 }
 
-.stat-badge--peach {
-  background: linear-gradient(180deg, rgba(251, 242, 234, 0.95) 0%, rgba(248, 231, 216, 0.9) 100%);
+.stat-badge--green {
+  background: linear-gradient(180deg, rgba(246, 252, 248, 0.95) 0%, rgba(226, 246, 234, 0.92) 100%);
 }
 
-.stat-badge--taupe {
-  background: linear-gradient(180deg, rgba(248, 244, 240, 0.95) 0%, rgba(236, 226, 220, 0.9) 100%);
+.stat-badge--amber {
+  background: linear-gradient(180deg, rgba(255, 250, 236, 0.95) 0%, rgba(252, 235, 184, 0.9) 100%);
 }
 
-.stat-badge--sage {
-  background: linear-gradient(180deg, rgba(246, 250, 246, 0.95) 0%, rgba(232, 241, 232, 0.92) 100%);
+.stat-badge--rose {
+  background: linear-gradient(180deg, rgba(255, 246, 248, 0.95) 0%, rgba(250, 225, 231, 0.9) 100%);
+}
+
+.stat-badge--slate {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.95) 0%, rgba(231, 236, 244, 0.9) 100%);
 }
 
 .stat-badge__icon {
@@ -31,7 +35,7 @@
   flex-shrink: 0;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.65);
-  color: var(--color-rose);
+  color: var(--color-blue);
 }
 
 .stat-badge__icon svg {

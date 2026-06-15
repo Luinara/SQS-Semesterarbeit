@@ -7,14 +7,21 @@
   <span class="pet-visual__cloud pet-visual__cloud--two" aria-hidden="true"></span>
 
   <div class="pet-visual__frame">
-    <!-- Der Platzhalter lebt bewusst als eigene Datei in /public,
-         damit später ein Sprite oder eine Illustration ohne Code-Umbau ersetzt werden kann. -->
-    <img [src]="'pet-placeholder.svg'" [alt]="'Platzhaltergrafik für ' + petName()" />
+    <img [src]="spriteUrl()" [alt]="'Pokemon Sprite fuer ' + petName()" />
   </div>
 
   <div class="pet-visual__meta">
     <span class="pet-visual__tag">{{ weatherScene().badge }}</span>
-    <strong>{{ petName() }}</strong>
+    <div class="pet-visual__identity">
+      <strong>{{ petName() }}</strong>
+      <span>{{ pokemonSource() === 'api' ? 'PokeAPI live' : 'Fallback aktiv' }}</span>
+    </div>
+  </div>
+
+  <div class="pet-visual__types">
+    @for (type of pokemonTypes(); track type) {
+      <span>{{ type }}</span>
+    }
   </div>
 
   <span class="pet-visual__care-dot" aria-hidden="true"></span>

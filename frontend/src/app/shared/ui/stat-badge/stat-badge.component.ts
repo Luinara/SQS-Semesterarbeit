@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-type StatTone = 'rose' | 'peach' | 'taupe' | 'sage';
-type StatIcon = 'points' | 'hearts' | 'berries' | 'tasks';
+type StatTone = 'blue' | 'green' | 'amber' | 'rose' | 'slate';
+type StatIcon = 'points' | 'hearts' | 'berries' | 'tasks' | 'pokemon';
 
 @Component({
   selector: 'sqs-stat-badge',
@@ -14,5 +14,5 @@ export class StatBadgeComponent {
   readonly label = input.required<string>();
   readonly value = input.required<string | number>();
   readonly icon = input<StatIcon>('points');
-  readonly tone = input<StatTone>('rose');
+  readonly tone = input<StatTone>('blue');
 }

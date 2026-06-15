@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { DEFAULT_WEATHER_SCENE } from '../../../../core/state/weather-appearance.logic';
 import { PET_RULES } from '../../../../shared/mock/mock-data';
 import { GameFeedback } from '../../../../shared/models/app-state.model';
-import { PetCareState, PetState } from '../../../../shared/models/pet.model';
+import { PetCareState, PokemonSnapshot, PetState } from '../../../../shared/models/pet.model';
 import { WeatherScene, WeatherSnapshot } from '../../../../shared/models/weather.model';
 import { UiButtonComponent } from '../../../../shared/ui/button/ui-button.component';
 import { ProgressBarComponent } from '../../../../shared/ui/progress-bar/progress-bar.component';
@@ -27,6 +27,9 @@ export class PetCardComponent {
   readonly weatherError = input<string | null>(null);
   readonly petCareState = input<PetCareState>('calm');
   readonly gameFeedback = input<GameFeedback | null>(null);
+  readonly pokemon = input<PokemonSnapshot | null>(null);
+  readonly pokemonLoading = input(false);
+  readonly pokemonSourceLabel = input('Lokaler Fallback');
   readonly feedRequested = output<void>();
   readonly weatherRefreshRequested = output<void>();
   readonly weatherCitySubmitted = output<string>();
@@ -36,30 +39,40 @@ export class PetCardComponent {
   readonly careStateLabel = computed(() => {
     switch (this.petCareState()) {
       case 'needs-care':
-        return 'Braucht Pflege';
+        return 'Braucht Quality-Nachweise';
       case 'ready-to-feed':
-        return 'Bereit zum Füttern';
+        return 'Bereit fuer Training';
       case 'growing':
-        return 'Kurz vor Wachstum';
+        return 'Kurz vor Level-Up';
       case 'thriving':
-        return 'Glücklich';
+        return 'Abgabebereit';
       default:
-        return 'Ruhig';
+        return 'Stabil';
     }
   });
   readonly careStateHint = computed(() => {
     switch (this.petCareState()) {
       case 'needs-care':
-        return 'Erledige eine Quest oder füttere dein Pet, damit die Stimmung steigt.';
+        return 'Schliesse einen Quality-Nachweis ab oder trainiere dein Pokemon.';
       case 'ready-to-feed':
-        return 'Du hast genug Punkte für die nächste Fütterung.';
+        return 'Du hast genug Quality-Punkte fuer die naechste Trainingseinheit.';
       case 'growing':
-        return 'Der nächste Level ist schon in Reichweite.';
+        return 'Der naechste Level ist schon in Reichweite.';
       case 'thriving':
-        return 'Dein Pet ist bestens versorgt.';
+        return 'Das Quality Gate ist stark genug fuer die Demo.';
       default:
-        return 'Ein guter Moment für die nächste kleine Quest.';
+        return 'Ein guter Moment fuer den naechsten SQS-Nachweis.';
     }
+  });
+  readonly pokemonStatus = computed(() => {
+    if (this.pokemonLoading()) {
+      return 'Pokemon-Daten werden geladen';
+    }
+
+    const pokemon = this.pokemon();
+    return pokemon
+      ? `${pokemon.displayName} aus ${this.pokemonSourceLabel()}`
+      : 'Pokemon-Fallback bereit';
   });
   readonly weatherStatus = computed(() => {
     if (this.weatherLoading()) {
