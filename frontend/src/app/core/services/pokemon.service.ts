@@ -17,7 +17,7 @@ export class PokemonService {
   readonly isLoading = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly sourceLabel = computed(() =>
-    this.snapshot().source === 'api' ? 'PokeAPI live' : 'Lokaler Fallback'
+    this.snapshot().source === 'api' ? 'Live-Sprite' : 'Lokaler Fallback'
   );
 
   async loadForLevel(level: number): Promise<void> {
@@ -44,7 +44,7 @@ export class PokemonService {
       const fallbackPokemon = fallbackPokemonBySpecies[species];
       this.cache.set(species, fallbackPokemon);
       this.snapshot.set(fallbackPokemon);
-      this.errorMessage.set('PokeAPI ist gerade nicht erreichbar. Fallback aktiv.');
+      this.errorMessage.set('Pokemon-Sprite ist gerade nicht erreichbar. Fallback aktiv.');
     } finally {
       this.isLoading.set(false);
     }

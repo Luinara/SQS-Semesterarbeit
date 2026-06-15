@@ -52,7 +52,7 @@ describe("app-state.logic", () => {
     expect(account.gameState.pet.level).toBe(1);
   });
 
-  it("markiert einen Backend-Task als erledigt und schreibt Punkte gut", () => {
+  it("markiert eine Quest als erledigt und schreibt Punkte gut", () => {
     const initialGameState = createInitialGameState();
     const firstTask = initialGameState.tasks[0];
 
@@ -75,7 +75,7 @@ describe("app-state.logic", () => {
     expect(twiceCompleted).toEqual(onceCompleted);
   });
 
-  it("berechnet und erkennt das Tagesziel aus Backend-Tasks", () => {
+  it("berechnet und erkennt das Tagesziel aus Quests", () => {
     let gameState = createInitialGameState();
 
     for (const task of gameState.tasks) {
@@ -99,7 +99,7 @@ describe("app-state.logic", () => {
     expect(result.feedback?.kind).toBe("level-up");
   });
 
-  it("trainiert das Pokemon nur, wenn genug Quality-Punkte vorhanden sind", () => {
+  it("trainiert das Pokemon nur, wenn genug Quest-Punkte vorhanden sind", () => {
     const initialGameState = createInitialGameState();
 
     const result = feedPetInGameStateWithFeedback(initialGameState);
@@ -175,10 +175,10 @@ describe("app-state.logic", () => {
     expect(feedPetInGameState(levelFiveState).pet.pokemonSpecies).toBe("venusaur");
   });
 
-  it("setzt das Demo-Spiel auf leere Quality-Werte zurueck", () => {
+  it("setzt das Demo-Spiel auf leere Quest-Werte zurueck", () => {
     const resetState = resetGameState();
 
-    expect(resetState.pet.name).toBe("Quality Companion");
+    expect(resetState.pet.name).toBe("Pokemon Partner");
     expect(resetState.pet.level).toBe(1);
     expect(resetState.pet.availableFoodPoints).toBe(0);
     expect(resetState.pet.growthProgress).toBe(0);
@@ -209,7 +209,7 @@ describe("app-state.logic", () => {
     expect(resetState.pet.dailyHappinessGained).toBe(0);
   });
 
-  it("leitet Pflegezustaende aus Quality- und Pokemon-Werten ab", () => {
+  it("leitet Pflegezustaende aus Quest- und Pokemon-Werten ab", () => {
     const initialGameState = createInitialGameState();
 
     expect(
@@ -249,7 +249,7 @@ describe("app-state.logic", () => {
     ).toBe("thriving");
   });
 
-  it("erlaubt offene Backend-Tasks und sperrt erledigte Tasks", () => {
+  it("erlaubt offene Quests und sperrt erledigte Quests", () => {
     const initialGameState = createInitialGameState();
     const firstTaskId = initialGameState.tasks[0].id;
     const completedState = completeTaskInGameState(initialGameState, firstTaskId);

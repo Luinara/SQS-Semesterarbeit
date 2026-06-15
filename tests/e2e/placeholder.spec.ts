@@ -1,7 +1,7 @@
 import { expect, test } from "../../frontend/testing/playwright-test";
 
-test.describe("SQS Quality Companion", () => {
-  test("fuehrt vom Login bis ins Quality-Dashboard", async ({ page }) => {
+test.describe("PokeHabit", () => {
+  test("fuehrt vom Login bis ins Quest-Board", async ({ page }) => {
     await page.route("**/api/**", async (route) => {
       const url = new URL(route.request().url());
 
@@ -16,12 +16,12 @@ test.describe("SQS Quality Companion", () => {
             {
               id: 1,
               title: "Wasser trinken",
-              description: "Backend-Task aus der API",
+              description: "Quest aus dem Spielstand",
             },
             {
               id: 2,
               title: "30 Minuten lernen",
-              description: "Backend-Task aus der API",
+              description: "Quest aus dem Spielstand",
             },
           ],
         });
@@ -72,7 +72,7 @@ test.describe("SQS Quality Companion", () => {
 
     await page.goto("/auth", { waitUntil: "domcontentloaded", timeout: 10000 });
 
-    await page.getByLabel("Backend-Username").fill("demo");
+    await page.getByLabel("Spielername").fill("demo");
     await page.getByLabel("Passwort").fill("cozyfocus");
     await page
       .getByRole("button", { name: "Einloggen und weitermachen" })
@@ -80,10 +80,10 @@ test.describe("SQS Quality Companion", () => {
 
     await page.waitForURL("**/dashboard");
     await expect(
-      page.getByRole("heading", { name: "Pokemon Task Dashboard" }),
+      page.getByRole("heading", { name: "Pokemon Quest Board" }),
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Backend Tasks" })).toBeVisible();
-    await expect(page.getByText("API Task Progress").first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Tagesquests" })).toBeVisible();
+    await expect(page.getByText("Tagesziel").first()).toBeVisible();
     await expect(page.getByText("Wasser trinken").first()).toBeVisible();
     await expect(page.getByText("500 ml", { exact: true })).toBeVisible();
     await expect(

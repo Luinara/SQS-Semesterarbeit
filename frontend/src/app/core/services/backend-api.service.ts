@@ -224,7 +224,7 @@ async function readErrorMessage(response: Response): Promise<string> {
   const text = await response.text();
 
   if (!text.trim()) {
-    return `Backend request failed with status ${response.status}`;
+    return `Verbindung fehlgeschlagen (${response.status}).`;
   }
 
   try {
