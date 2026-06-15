@@ -10,6 +10,7 @@ import {
   findAccountForLogin,
   hasAccountWithEmail,
   isQualityGateReached,
+  normalizeGameState,
   resetDailyProgressIfExpired,
   resetGameState,
 } from "../../../frontend/src/app/core/state/app-state.logic";
@@ -206,6 +207,24 @@ describe("app-state.logic", () => {
     expect(resetState.tasks.every((task) => !task.isCompleted)).toBe(true);
   });
 
+  it("normalisiert unvollständige gespeicherte Tasks auf die Standardquests", () => {
+    const initialGameState = createInitialGameState();
+    const normalized = normalizeGameState({
+      ...initialGameState,
+      tasks: [
+        {
+          id: "legacy-task",
+          title: "Alter Task",
+          isCompleted: true,
+        },
+      ] as unknown as typeof initialGameState.tasks,
+    });
+
+    expect(normalized.tasks).toHaveLength(initialGameState.tasks.length);
+    expect(normalized.tasks[0].checklistReference).toBe("Quest: Wasser");
+    expect(normalized.tasks.every((task) => !task.isCompleted)).toBe(true);
+  });
+
   it("senkt Motivation nach 24 Stunden ohne Training", () => {
     const initialGameState = createInitialGameState();
 
@@ -224,6 +243,52 @@ describe("app-state.logic", () => {
 
     expect(resetState.pet.happiness).toBe(62);
     expect(resetState.pet.dailyHappinessGained).toBe(0);
+  });
+
+  it("räumt ungültige Trainingszeitpunkte beim Tagesreset auf", () => {
+    const initialGameState = createInitialGameState();
+
+    const resetState = resetDailyProgressIfExpired(
+      {
+        ...initialGameState,
+        pet: {
+          ...initialGameState.pet,
+          lastFedAt: "kein-datum",
+          happinessGainLastResetAt: "auch-kein-datum",
+          dailyHappinessGained: 12,
+        },
+      },
+      new Date("2026-06-15T08:00:00.000Z"),
+    );
+
+    expect(resetState.pet.lastFedAt).toBeNull();
+    expect(resetState.pet.dailyHappinessGained).toBe(0);
+    expect(resetState.pet.happinessGainLastResetAt).toBe(
+      "2026-06-15T08:00:00.000Z",
+    );
+  });
+
+  it("berechnet Motivationsverfall ab dem letzten Decay-Anker", () => {
+    const initialGameState = createInitialGameState();
+
+    const resetState = resetDailyProgressIfExpired(
+      {
+        ...initialGameState,
+        pet: {
+          ...initialGameState.pet,
+          happiness: 80,
+          lastFedAt: "2026-06-10T08:00:00.000Z",
+          lastHappinessDecayAt: "2026-06-12T08:00:00.000Z",
+          happinessGainLastResetAt: "2026-06-15T08:00:00.000Z",
+        },
+      },
+      new Date("2026-06-14T08:00:00.000Z"),
+    );
+
+    expect(resetState.pet.happiness).toBe(44);
+    expect(resetState.pet.lastHappinessDecayAt).toBe(
+      "2026-06-14T08:00:00.000Z",
+    );
   });
 
   it("leitet Pflegezustände aus Quest- und Pokémon-Werten ab", () => {
