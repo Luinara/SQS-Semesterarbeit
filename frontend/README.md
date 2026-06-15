@@ -37,7 +37,7 @@ Password: sqs_password
 
 ### Backend starten
 
-Das Backend muss auf `http://localhost:8080` laufen.
+Das Backend muss auf `http://localhost:8181` laufen.
 
 Dev-Profil:
 
@@ -67,7 +67,7 @@ http://localhost:4200
 
 ## Warum der Proxy wichtig ist
 
-Angular laeuft lokal auf `localhost:4200`, das Backend auf `localhost:8080`. Damit die Komponenten keine harte Backend-URL kennen muessen, nutzt Angular den Proxy:
+Angular laeuft lokal auf `localhost:4200`, das Backend auf `localhost:8181`. Damit die Komponenten keine harte Backend-URL kennen muessen, nutzt Angular den Proxy:
 
 ```text
 frontend/proxy.conf.json
@@ -76,8 +76,8 @@ frontend/proxy.conf.json
 Weiterleitungen:
 
 ```text
-/api    -> http://localhost:8080
-/assets -> http://localhost:8080
+/api    -> http://localhost:8181
+/assets -> http://localhost:8181
 ```
 
 Wenn im Terminal steht:
@@ -86,7 +86,7 @@ Wenn im Terminal steht:
 http proxy error: /api/auth/login ECONNREFUSED
 ```
 
-dann ist das kein Frontend-Fehler. Das Backend laeuft dann nicht auf Port `8080`.
+dann ist das kein Frontend-Fehler. Das Backend laeuft dann nicht auf Port `8181`.
 
 ## App-Flow
 
@@ -454,7 +454,7 @@ http proxy error: /api/auth/login ECONNREFUSED
 Bedeutung:
 
 - Frontend laeuft.
-- Backend laeuft nicht auf `localhost:8080`.
+- Backend laeuft nicht auf `localhost:8181`.
 
 Loesung:
 

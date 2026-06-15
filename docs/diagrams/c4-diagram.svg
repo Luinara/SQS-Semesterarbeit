@@ -144,7 +144,7 @@
   <text x="857" y="823" text-anchor="middle" class="tiny">Port 3000</text>
   <rect x="970" y="785" width="125" height="48" class="deploy" />
   <text x="1032" y="805" text-anchor="middle" class="label">Backend</text>
-  <text x="1032" y="823" text-anchor="middle" class="tiny">Port 8080</text>
+  <text x="1032" y="823" text-anchor="middle" class="tiny">Port 8181</text>
   <ellipse cx="1215" cy="809" rx="64" ry="31" class="database" />
   <text x="1215" y="806" text-anchor="middle" class="label">Postgres</text>
   <text x="1215" y="824" text-anchor="middle" class="tiny">5432</text>
