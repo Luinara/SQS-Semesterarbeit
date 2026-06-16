@@ -106,7 +106,10 @@ for (const starterFlow of starterFlows) {
 
     await page.route("https://pokeapi.co/**", async (route) => {
       const name = resolveSpecies(gameState.pokemonLevel, starterPokemonId);
-      const pokemonId = resolvePokemonId(gameState.pokemonLevel, starterPokemonId);
+      const pokemonId = resolvePokemonId(
+        gameState.pokemonLevel,
+        starterPokemonId,
+      );
       await route.fulfill({
         json: {
           id: pokemonId,
@@ -216,15 +219,22 @@ function createGameState(
   },
   starterPokemonId: keyof typeof speciesByStarter,
 ) {
-  const currentPokemonId = resolvePokemonId(gameState.pokemonLevel, starterPokemonId);
+  const currentPokemonId = resolvePokemonId(
+    gameState.pokemonLevel,
+    starterPokemonId,
+  );
   const isEgg = gameState.pokemonLevel < 10;
 
   return {
     ...gameState,
     currentPokemonId,
     isEgg,
-    pokemonImageUrl: isEgg ? "/assets/egg.png" : resolveImageUrl(currentPokemonId),
-    pokemonName: isEgg ? null : resolveSpecies(gameState.pokemonLevel, starterPokemonId),
+    pokemonImageUrl: isEgg
+      ? "/assets/egg.png"
+      : resolveImageUrl(currentPokemonId),
+    pokemonName: isEgg
+      ? null
+      : resolveSpecies(gameState.pokemonLevel, starterPokemonId),
     tasks: tasks.map((task) => ({
       id: task.id,
       title: task.title,

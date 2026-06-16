@@ -16,10 +16,9 @@ mkdirSync(artifactRoot, { recursive: true });
 const checks = [
   {
     id: 'backend-tests',
-    title: 'Backend Tests + JaCoCo',
+    title: 'Backend Unit- und Integrationstests + JaCoCo',
     category: 'Backend',
-    command:
-      'mvn --batch-mode --no-transfer-progress test org.jacoco:jacoco-maven-plugin:0.8.12:report',
+    command: 'mvn --batch-mode --no-transfer-progress verify',
     cwd: 'backend',
     required: true,
     artifacts: [

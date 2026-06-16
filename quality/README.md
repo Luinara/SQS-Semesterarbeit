@@ -30,7 +30,7 @@ und Coverage-Artefakten.
 
 Pflichtchecks:
 
-- `mvn test` inklusive JaCoCo-Report
+- `mvn verify` inklusive Unit-Tests, Integrationstests und JaCoCo-Report
 - `mvn checkstyle:check`
 - `mvn compile spotbugs:check`
 - `npm run type-check`

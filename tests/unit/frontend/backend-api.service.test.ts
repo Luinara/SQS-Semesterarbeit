@@ -307,7 +307,10 @@ describe("BackendApiService", () => {
       )
       .mockResolvedValueOnce(jsonResponse([]));
 
-    const snapshot = await new BackendApiService().testLevelUp("zoe", "charmander");
+    const snapshot = await new BackendApiService().testLevelUp(
+      "zoe",
+      "charmander",
+    );
 
     expect(snapshot.gameState.pet).toMatchObject({
       starterPokemonSpecies: "charmander",

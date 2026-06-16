@@ -7,7 +7,11 @@ ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo "==> Installing backend dependencies (Maven)..."
 cd "$ROOT_DIR/backend"
-mvn --no-transfer-progress dependency:resolve
+if [[ -f ./mvnw ]]; then
+  sh ./mvnw --no-transfer-progress dependency:resolve
+else
+  mvn --no-transfer-progress dependency:resolve
+fi
 
 echo "==> Installing frontend dependencies (npm)..."
 cd "$ROOT_DIR/frontend"
