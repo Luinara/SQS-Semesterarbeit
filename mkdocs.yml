@@ -5,8 +5,8 @@ theme:
   name: readthedocs
   language: de
 nav:
-  - "01 Überblick": index.md
-  - "02 Architektur":
+  - '01 Überblick': index.md
+  - '02 Architektur':
       - arc42:
           - Übersicht: 02-architecture/arc42/README.md
           - Einführung und Ziele: 02-architecture/arc42/01-introduction-and-goals.md
@@ -43,20 +43,21 @@ nav:
           - ADR-006 TypeScript: ger-adr/ADR-006-use-typescript.md
           - ADR-007 Prisma: ger-adr/ADR-007-use-prisma.md
           - ADR-008 Ei-Pokémon: ger-adr/ADR-008-use-hidden-egg-assignment.md
-  - "03 API":
+  - '03 API':
       - Authentifizierung: 03-api/auth.md
       - Tasks: 03-api/tasks.md
       - User Actions: 03-api/user-actions.md
       - Game State: 03-api/user-game-state.md
       - Übergabe User Actions: 03-api/user-actions-handover.md
-  - "04 Qualität":
+  - '04 Qualität':
       - Testpyramide: 04-quality/test-pyramid.md
       - Frontend npm Security: 04-quality/frontend-npm-security.md
+      - Security Hotspots: 04-quality/security-hotspots.md
       - Crypto Random IDs: 04-quality/crypto-random-ids.md
       - Wetterdaten Code-Notizen: 04-quality/wetter-daten.md
       - Wetterdaten manueller Check: 04-quality/weather-open-meteo-manual-check.md
-  - "05 Präsentation":
+  - '05 Präsentation':
       - Präsentationsablauf: 05-presentation/presentation-plan.md
       - Präsentations-Sprechzettel: 05-presentation/presentation-cheat-sheet.md
-  - "06 Betrieb":
+  - '06 Betrieb':
       - ReadTheDocs veröffentlichen: 06-operations/readthedocs-publish.md
