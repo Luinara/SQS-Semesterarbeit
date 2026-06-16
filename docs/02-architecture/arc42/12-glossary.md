@@ -8,7 +8,7 @@
 | Quality Hub | Docker-Dashboard fuer Quality-Report, Logs und HTML-Reports. |
 | Quality Runner | Einmaliger Docker-Container, der Backend-, Frontend-, Security-, Coverage- und E2E-Checks ausfuehrt. |
 | Trainingspunkte | Punkte aus Quests, die fuer Pokemon-Training genutzt werden. Technisches Feld: `pendingFeedPoints`. |
-| Motivation | Pflegewert des Pokemon-Partners. Technisches Feld: `happiness`. Sinkt bei Inaktivitaet oder ueber den manuellen Testbutton, beeinflusst aktuell vor allem Anzeige und Pflegezustand und blockiert keine Quests. |
+| Motivation | Pflegewert des Pokemon-Partners. Technisches Feld: `happiness`. Sinkt bei Inaktivitaet oder ueber den manuellen Testbutton. Bei 0 Motivation wird weiterer Verlust auf Wachstum/XP angerechnet; Quests werden dadurch nicht blockiert. |
 | Wachstum | Fortschritt Richtung naechstes Pokemon-Level. Technisches Feld: `growth`. |
 | Wasserstand | Getrunkene Wassermenge, gemessen in Millilitern. |
 | Starter-Pokemon | Pokemon-Partner aus der Registrierung. |

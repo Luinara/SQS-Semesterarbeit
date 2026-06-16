@@ -104,10 +104,13 @@ Beispiel Response
 - Verhalten:
   - Der Server senkt `happiness` um `20` Punkte.
   - Der Wert wird bei `0` begrenzt und kann nicht negativ werden.
+  - Wenn die Motivation schon bei `0` ist oder der Verlust groesser als die aktuelle Motivation ist, wird der verbleibende Verlust von `growth` abgezogen.
+  - Auch `growth` wird bei `0` begrenzt und kann nicht negativ werden.
   - Der Server persistiert die Aenderung und gibt den aktualisierten `GameStateDto` zurueck.
 
 - Fachliche Wirkung im aktuellen Stand:
-  - Sinkende Motivation ist vor allem ein sichtbarer Pflege- und Feedback-Zustand.
+  - Sinkende Motivation ist zuerst ein sichtbarer Pflege- und Feedback-Zustand.
+  - Bei `0%` Motivation kostet weiterer Motivationsverlust etwas Wachstum/XP.
   - Unter ca. `25%` kann das Frontend den Pflegezustand als kritisch anzeigen.
   - Quests, Wassertracking und Level-Up werden dadurch aktuell nicht hart blockiert.
   - Motivation kann ueber Trainingspunkte und `POST /api/user/feed` wieder erhoeht werden.
@@ -127,7 +130,8 @@ Beispiel Response
 
 ```json
 {
-  "happiness": 40,
+  "happiness": 0,
+  "growth": 30,
   "pokemonLevel": 5,
   "pendingFeedPoints": 15,
   "serverNow": "2026-06-13T07:16:00Z"
