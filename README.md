@@ -184,3 +184,8 @@ ReadTheDocs nutzt `.readthedocs.yaml`, `mkdocs.yml` und
 `docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys kann
 die Doku dort direkt gebaut werden. Die Schritte stehen in
 `docs/06-operations/readthedocs-publish.md`.
+
+Zusätzlich liegt unter `wiki/` eine schlankere Wiki-Fassung mit `Home.md`,
+`_Sidebar.md` und Abgabe-/Review-Einstiegen. `docs/` bleibt die ausführliche
+MkDocs-/ReadTheDocs-Doku; `wiki/` ist für schnelle Navigation und kann bei
+Bedarf in ein GitHub-Wiki übernommen werden.
