@@ -13,7 +13,12 @@
   border: 1px solid rgba(255, 255, 255, 0.58);
   border-radius: var(--radius-pill);
   background:
-    linear-gradient(135deg, rgba(255, 94, 116, 0.92) 0%, rgba(218, 62, 174, 0.9) 54%, rgba(70, 156, 218, 0.9) 100%),
+    linear-gradient(
+      135deg,
+      rgba(255, 94, 116, 0.92) 0%,
+      rgba(218, 62, 174, 0.9) 54%,
+      rgba(70, 156, 218, 0.9) 100%
+    ),
     var(--color-blue);
   color: #fff;
   font-size: 0.96rem;
@@ -87,7 +92,12 @@
 :host(.ui-button--secondary) {
   border-color: rgba(255, 255, 255, 0.7);
   background:
-    linear-gradient(135deg, rgba(120, 204, 201, 0.9) 0%, rgba(151, 209, 184, 0.88) 48%, rgba(238, 199, 91, 0.88) 100%),
+    linear-gradient(
+      135deg,
+      rgba(120, 204, 201, 0.9) 0%,
+      rgba(151, 209, 184, 0.88) 48%,
+      rgba(238, 199, 91, 0.88) 100%
+    ),
     rgba(255, 255, 255, 0.86);
   color: #fff;
   box-shadow:
@@ -118,7 +128,12 @@
 
 :host(.ui-button--soft) {
   background:
-    linear-gradient(135deg, rgba(97, 198, 189, 0.9) 0%, rgba(128, 155, 219, 0.88) 48%, rgba(212, 78, 169, 0.88) 100%),
+    linear-gradient(
+      135deg,
+      rgba(97, 198, 189, 0.9) 0%,
+      rgba(128, 155, 219, 0.88) 48%,
+      rgba(212, 78, 169, 0.88) 100%
+    ),
     rgba(221, 247, 233, 0.95);
   color: #fff;
   box-shadow:
@@ -131,9 +146,9 @@
 }
 
 :host(.ui-button--small) {
-  min-height: 2.55rem;
-  padding: 0.62rem 1.08rem;
-  font-size: 0.88rem;
+  min-height: 2.75rem;
+  padding: 0.62rem 1rem;
+  font-size: 0.84rem;
 }
 
 :host(.ui-button--full-width) {
