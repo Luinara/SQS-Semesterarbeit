@@ -9,6 +9,9 @@ FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+RUN groupadd --system app && useradd --system --gid app --home-dir /app app \
+    && chown -R app:app /app
+USER app
 
 EXPOSE 8181
 ENTRYPOINT ["java", "-jar", "app.jar"]

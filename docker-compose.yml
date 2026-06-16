@@ -21,6 +21,7 @@ services:
       SPRING_DATASOURCE_USERNAME: sqs_user
       SPRING_DATASOURCE_PASSWORD: sqs_password
       SPRING_PROFILES_ACTIVE: dev
+      SERVER_SERVLET_SESSION_COOKIE_SECURE: "false"
     ports:
       - "${BACKEND_PORT:-8181}:8181"
     depends_on:
@@ -62,7 +63,7 @@ services:
       dockerfile: quality/Dockerfile.hub
     restart: unless-stopped
     ports:
-      - "${QUALITY_HUB_PORT:-8088}:80"
+      - "${QUALITY_HUB_PORT:-8088}:8080"
     volumes:
       - quality_output:/usr/share/nginx/html/reports:ro
 

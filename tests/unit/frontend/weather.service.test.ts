@@ -211,6 +211,7 @@ describe("WeatherService", () => {
       );
 
     const service = new WeatherService();
+    service.initialize();
     await service.searchCity("Zürich");
     await service.refresh();
 
@@ -232,6 +233,7 @@ describe("WeatherService", () => {
     );
 
     const service = new WeatherService();
+    service.initialize();
     await service.refresh();
 
     expect(service.location().label).toBe("Zürich, Kanton Zürich, Schweiz");
@@ -251,6 +253,7 @@ describe("WeatherService", () => {
     );
 
     const service = new WeatherService();
+    service.initialize();
     await service.refresh();
 
     expect(service.location().label).toBe(
@@ -280,6 +283,7 @@ describe("WeatherService", () => {
       );
 
     const service = new WeatherService();
+    service.initialize();
     await service.searchCity("jakuts");
 
     expect(service.location().label).toBe("Jakutsk, Sacha, Russland");
@@ -313,6 +317,7 @@ describe("WeatherService", () => {
       );
 
     const service = new WeatherService();
+    service.initialize();
     await service.searchCity("Hawaii");
 
     expect(service.location().label).toBe(
@@ -357,6 +362,7 @@ describe("WeatherService", () => {
 
   it("aktualisiert Wetter Heute automatisch alle zehn Minuten", () => {
     const service = new WeatherService();
+    service.initialize();
 
     vi.advanceTimersByTime(10 * 60 * 1000);
 
@@ -383,6 +389,7 @@ describe("WeatherService", () => {
     );
 
     const service = new WeatherService();
+    service.initialize();
     await service.refresh();
 
     expect(service.snapshot()?.updatedAt).toBe("2026-06-16T07:42:30.000Z");
