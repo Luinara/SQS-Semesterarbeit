@@ -197,9 +197,9 @@ vorbereitet. Wichtige Einstiegspunkte:
 - `docs/05-presentation/presentation-cheat-sheet.md`
 
 ReadTheDocs nutzt `.readthedocs.yaml`, `mkdocs.yml` und
-`docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys kann
-die Doku dort direkt gebaut werden. Die Schritte stehen in
-`docs/06-operations/readthedocs-publish.md`.
+`docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys ist
+die Doku dort direkt gebaut: https://luinarasqs-semesterarbeit.readthedocs.io/de/unlimitedgaming_soph/. 
+Die Schritte stehen in `docs/06-operations/readthedocs-publish.md`.
 
 Zusätzlich liegt unter `wiki/` eine schlankere Wiki-Fassung mit `Home.md`,
 `_Sidebar.md` und Abgabe-/Review-Einstiegen. `docs/` bleibt die ausführliche
