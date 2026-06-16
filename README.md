@@ -5,17 +5,102 @@ Stack besteht aus Angular-Frontend, Spring-Boot-Backend und PostgreSQL.
 
 ## One-Click-Start
 
-App und Datenbank:
+### Voraussetzungen
+
+- Docker Desktop oder Docker Engine mit Docker Compose
+- Freie lokale Ports `3000`, `8181`, `5433` und optional `8088`
+- Im Repo-Root ausführen, also im Ordner mit dieser `README.md`
+
+### App starten
+
+Der normale Demo-Start startet PostgreSQL, Backend und Frontend:
 
 ```bash
 docker compose up --build
 ```
 
-Mit Software-Qualitätssicherungs-Dashboard:
+Danach sind erreichbar:
+
+- App: `http://localhost:3000`
+- Backend: `http://localhost:8181`
+
+Beim ersten Start werden die Docker-Images gebaut. Das kann ein paar Minuten
+dauern. Spätere Starts sind deutlich schneller.
+
+### App mit Quality Hub starten
+
+Für die Abgabe oder Präsentation kann zusätzlich das
+Software-Qualitätssicherungs-Dashboard gestartet werden:
 
 ```bash
 docker compose --profile quality up --build
 ```
+
+Danach sind erreichbar:
+
+- App: `http://localhost:3000`
+- Backend: `http://localhost:8181`
+- Quality Hub: `http://localhost:8088`
+
+Der Quality Hub zeigt die Ergebnisse aus Backend-Tests, Frontend-Tests,
+Coverage, Linting, Security-Checks und optionalem E2E-Flow.
+
+### Demo-Login
+
+Im Backend-Profil `dev` legt der Start automatisch einen Demo-Nutzer an:
+
+- Benutzername: `demo`
+- Passwort: `password123`
+
+Alternativ kann in der App ein eigenes Profil registriert werden.
+
+### Stoppen
+
+Im laufenden Terminal:
+
+```bash
+Ctrl+C
+```
+
+Danach Container sauber stoppen:
+
+```bash
+docker compose down
+```
+
+Wenn auch die lokale Datenbank zurückgesetzt werden soll:
+
+```bash
+docker compose down -v
+```
+
+### Ports ändern
+
+Die Ports sind Defaults und können bei lokalen Konflikten überschrieben werden:
+
+```bash
+FRONTEND_PORT=3001 BACKEND_PORT=8182 QUALITY_HUB_PORT=8089 docker compose --profile quality up --build
+```
+
+Unter PowerShell:
+
+```powershell
+$env:FRONTEND_PORT = "3001"
+$env:BACKEND_PORT = "8182"
+$env:QUALITY_HUB_PORT = "8089"
+docker compose --profile quality up --build
+```
+
+### Häufige Probleme
+
+- Wenn Port `3000`, `8181`, `5433` oder `8088` belegt ist, entweder den anderen
+  Prozess beenden oder die Ports wie oben ändern.
+- Wenn Docker noch nicht läuft, Docker Desktop starten und den Befehl erneut
+  ausführen.
+- Wenn nach Codeänderungen alte Artefakte sichtbar sind, mit
+  `docker compose up --build` neu bauen.
+
+## Lokale Checks
 
 Backend lokal prüfen:
 
@@ -30,15 +115,6 @@ Unter Windows geht alternativ:
 cd backend
 .\mvnw.cmd verify
 ```
-
-Danach sind erreichbar:
-
-- App: `http://localhost:3000`
-- Backend: `http://localhost:8181`
-- Quality Hub: `http://localhost:8088`
-
-Die Ports sind Defaults und können bei lokalen Konflikten überschrieben werden, zum Beispiel:
-`FRONTEND_PORT=3001 docker compose --profile quality up --build`.
 
 ## Quality Hub
 

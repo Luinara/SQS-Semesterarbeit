@@ -29,10 +29,13 @@ außerdem Schutz gegen wiederholte Fehlversuche."
 
 ## Externer Service
 
-"Die Checkliste verlangt, dass das Backend mit einem externen Service spricht.
-Das passiert bei uns über PokeAPI. Beim Registrieren werden Starter-Pokemon im
-Backend angelegt. Wenn PokeAPI nicht antwortet, nimmt das Backend lokale
-Fallback-Daten, damit die Registrierung trotzdem funktioniert."
+"Als externen Service nutzen wir Open-Meteo für die Wetter-Szene im Dashboard.
+Der `WeatherService` ruft über den `OpenMeteoWeatherAdapter` zuerst die
+Geocoding-API für die eingegebene Stadt auf und lädt danach aktuelle
+Wetterdaten. Daraus entstehen Wettercode, Temperatur und Tag/Nacht-Status für
+die visuelle Szene. Wenn Open-Meteo nicht erreichbar ist, bleibt die App
+nutzbar und zeigt eine verständliche Fehlermeldung beziehungsweise den lokalen
+Standardzustand."
 
 ## Architektur
 
@@ -101,8 +104,8 @@ funktionierender App und reproduzierbaren Quality Checks."
 ## Sätze, die gut funktionieren
 
 - "Das ist nicht nur Doku, das läuft im Quality Hub wirklich durch."
-- "Der externe Service ist im Backend angebunden, nicht nur im Frontend."
+- "Der externe Service ist Open-Meteo: Geocoding plus Forecast-Daten für die Wetter-Szene."
 - "React wäre flexibler gewesen, Angular war für Struktur, Tests und Teamkonventionen passender."
-- "Wenn PokeAPI ausfällt, bleibt die Registrierung nutzbar."
+- "Wenn die Wetter-API ausfällt, bleibt die App nutzbar und zeigt einen lokalen Standardzustand."
 - "Die App ist per Docker startbar; der Quality Hub läuft im gleichen Profil."
 - "Wir haben bekannte Grenzen dokumentiert, statt sie in der Präsentation zu verstecken."
