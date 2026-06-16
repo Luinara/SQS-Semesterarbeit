@@ -193,48 +193,61 @@
   gap: 0.65rem;
 }
 
-.pet-card__footer {
-  display: grid;
-  gap: 0.8rem;
-  padding: 0.85rem;
-  border: 1px solid rgba(28, 42, 70, 0.08);
-  border-radius: var(--radius-md);
-  background:
-    linear-gradient(135deg, rgba(247, 249, 252, 0.92), rgba(231, 247, 238, 0.62)),
-    rgba(255, 255, 255, 0.74);
-}
-
 .pet-card__hint {
   display: grid;
-  gap: 0.2rem;
+  gap: 0.35rem;
+  max-width: 34rem;
 }
 
 .pet-card__hint strong {
   color: var(--color-text);
+  font-size: 1.14rem;
+  line-height: 1.35;
 }
 
 .pet-card__hint span {
   color: var(--color-text-soft);
-  font-size: 0.82rem;
-  line-height: 1.4;
+  font-size: 0.94rem;
+  line-height: 1.5;
 }
 
 .pet-card__control-row {
   display: grid;
-  grid-template-columns: minmax(12rem, 0.8fr) minmax(0, 1.2fr);
-  gap: 0.65rem;
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(20rem, 0.95fr) minmax(24rem, 1.05fr);
+  gap: 1rem;
+  align-items: stretch;
 }
 
 .pet-card__training-action,
 .pet-card__demo-actions {
   display: grid;
-  align-content: start;
-  gap: 0.55rem;
+  gap: 1rem;
   min-width: 0;
-  padding: 0.75rem;
-  border: 1px solid rgba(28, 42, 70, 0.08);
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.72);
+  min-height: 9.8rem;
+  padding: 1.35rem 1.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: 2.2rem;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(246, 250, 253, 0.78)),
+    rgba(255, 255, 255, 0.82);
+  box-shadow:
+    0 15px 30px rgba(28, 42, 70, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.58);
+}
+
+.pet-card__training-action {
+  align-content: space-between;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(241, 250, 250, 0.84) 58%),
+    rgba(255, 255, 255, 0.82);
+}
+
+.pet-card__demo-actions {
+  align-content: center;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 248, 252, 0.82) 62%),
+    rgba(255, 255, 255, 0.82);
 }
 
 .pet-card__control-label {
@@ -248,23 +261,31 @@
 .pet-card__demo-buttons {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.55rem;
+  gap: 0.95rem;
 }
 
 .pet-card__primary-action {
-  width: 100%;
+  justify-self: center;
+  width: min(100%, 16rem);
+  min-height: 4rem;
+  padding-inline: 1.75rem;
+  font-size: 1rem;
 }
 
 .pet-card__utility-action {
   width: 100%;
-  min-height: 2.75rem;
-  padding-inline: 0.8rem;
-  font-size: 0.82rem;
+  min-height: 4rem;
+  padding-inline: 1.2rem;
+  font-size: 1rem;
 }
 
 @include respond-down(1120px) {
   .pet-card__body {
     grid-template-columns: 1fr;
+  }
+
+  .pet-card__control-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
   .pet-card__weather-form {
@@ -273,6 +294,10 @@
 }
 
 @include respond-down(860px) {
+  .pet-card__control-row {
+    grid-template-columns: 1fr;
+  }
+
   .pet-card__weather-form {
     grid-template-columns: 1fr 1fr;
   }
@@ -302,9 +327,20 @@
   }
 
   .pet-card__stats,
-  .pet-card__control-row,
   .pet-card__demo-buttons {
     grid-template-columns: 1fr;
+  }
+
+  .pet-card__training-action,
+  .pet-card__demo-actions {
+    min-height: 0;
+    padding: 1.1rem;
+    border-radius: 1.45rem;
+  }
+
+  .pet-card__primary-action,
+  .pet-card__utility-action {
+    min-height: 3.35rem;
   }
 
   .pet-card__weather-form {
