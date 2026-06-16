@@ -22,6 +22,27 @@ const zurichGeocodingResponse = {
   ],
 };
 
+const jakutskGeocodingResponse = {
+  results: [
+    {
+      name: "Jakutsk",
+      admin1: "Sacha",
+      country: "Russland",
+      latitude: 62.03114,
+      longitude: 129.72289,
+    },
+  ],
+};
+
+const jakutskWeatherResponse = {
+  current: {
+    temperature_2m: 20.1,
+    weather_code: 1,
+    is_day: 1,
+    time: "2026-06-16T12:00",
+  },
+};
+
 describe("WeatherService", () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -76,6 +97,39 @@ describe("WeatherService", () => {
     expect(service.location().label).toBe("Zürich, Kanton Zürich, Schweiz");
     expect(fetch).toHaveBeenLastCalledWith(
       expect.stringContaining("latitude=47.36667"),
+    );
+  });
+
+  it("nutzt den Open-Meteo-Treffer fuer ungenaue Stadteingaben", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(berlinWeatherResponse), { status: 200 }),
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(jakutskGeocodingResponse), { status: 200 }),
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(jakutskWeatherResponse), { status: 200 }),
+      );
+
+    const service = new WeatherService();
+    await service.searchCity("jakuts");
+
+    expect(service.location().label).toBe("Jakutsk, Sacha, Russland");
+    expect(service.snapshot()).toMatchObject({
+      locationLabel: "Jakutsk, Sacha, Russland",
+      temperatureC: 20,
+      weatherCode: 1,
+    });
+    expect(fetch).toHaveBeenNthCalledWith(
+      2,
+      expect.stringContaining("name=jakuts"),
+    );
+    expect(fetch).toHaveBeenLastCalledWith(
+      expect.stringContaining("latitude=62.03114"),
+    );
+    expect(fetch).toHaveBeenLastCalledWith(
+      expect.stringContaining("longitude=129.72289"),
     );
   });
 
