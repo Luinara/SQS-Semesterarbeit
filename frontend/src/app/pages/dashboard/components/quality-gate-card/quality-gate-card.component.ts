@@ -29,7 +29,6 @@ export class QualityGateCardComponent {
   readonly qualityScore = input(0);
   readonly qualityTarget = input(80);
   readonly waterLevel = input(0);
-  readonly foodLevel = input(0);
   readonly streak = input(0);
 
   readonly progressPercent = computed(() =>

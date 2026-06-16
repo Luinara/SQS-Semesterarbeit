@@ -43,12 +43,18 @@
       <span>Wasserstand</span>
     </div>
     <div class="quality-gate__metric">
-      <strong>{{ foodLevel() }}%</strong>
-      <span>Energie</span>
-    </div>
-    <div class="quality-gate__metric">
       <strong>{{ streak() }}</strong>
       <span>Anmelde-Serie</span>
+    </div>
+    <div class="quality-gate__missing">
+      <span>Nächste offene Quests</span>
+      @if (missingRequiredTasks().length > 0) {
+        @for (task of missingRequiredTasks(); track task.id) {
+          <strong>{{ task.title }}</strong>
+        }
+      } @else {
+        <strong>Alle Quests für heute erledigt.</strong>
+      }
     </div>
   </div>
 
@@ -57,17 +63,6 @@
       <span [class.quality-gate__stage--done]="task.isCompleted">
         {{ task.title }}
       </span>
-    }
-  </div>
-
-  <div class="quality-gate__missing">
-    <span>Nächste offene Quests</span>
-    @if (missingRequiredTasks().length > 0) {
-      @for (task of missingRequiredTasks(); track task.id) {
-        <strong>{{ task.title }}</strong>
-      }
-    } @else {
-      <strong>Alle Quests für heute erledigt.</strong>
     }
   </div>
 </section>

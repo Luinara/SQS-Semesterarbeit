@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { AppStateService } from '../../core/services/app-state.service';
 import { PokemonService } from '../../core/services/pokemon.service';
 import { WeatherService } from '../../core/services/weather.service';
-import { DEMO_ACCOUNT } from '../../shared/mock/mock-data';
 import { PetCardComponent } from './components/pet-card/pet-card.component';
 import { QualityGateCardComponent } from './components/quality-gate-card/quality-gate-card.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
@@ -22,7 +21,6 @@ export class DashboardPageComponent {
   readonly appState = inject(AppStateService);
   readonly weather = inject(WeatherService);
   readonly pokemon = inject(PokemonService);
-  readonly demoAccount = DEMO_ACCOUNT;
 
   constructor() {
     this.weather.initialize();

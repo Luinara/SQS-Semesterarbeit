@@ -91,16 +91,14 @@ export class PetCardComponent {
       return 'Ei bis Lvl. 10';
     }
 
-    if (this.pokemonImageUrl()) {
-      return 'Sprite bereit';
-    }
-
     if (this.pokemonLoading()) {
       return 'Daten laden';
     }
 
     const pokemon = this.pokemon();
-    return pokemon ? pokemon.displayName : 'Bereit';
+    const species = this.pet()?.pokemonSpecies;
+
+    return pokemon?.displayName ?? (species ? formatPokemonName(species) : 'Pokémon');
   });
   readonly weatherStatus = computed(() => {
     if (this.weatherLoading()) {
@@ -176,4 +174,8 @@ export function formatWeatherUpdatedAtTime(updatedAt: string): string | null {
     hour: '2-digit',
     minute: '2-digit',
   }).format(updatedAtDate)} Uhr`;
+}
+
+function formatPokemonName(name: string): string {
+  return `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
 }
