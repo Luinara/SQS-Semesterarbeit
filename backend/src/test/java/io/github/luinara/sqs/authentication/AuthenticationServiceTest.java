@@ -6,6 +6,7 @@ import io.github.luinara.sqs.pokemon.PokemonEntity;
 import io.github.luinara.sqs.pokemon.PokemonRepository;
 import io.github.luinara.sqs.pokemon.PokeApiPokemonService;
 import io.github.luinara.sqs.pokemon.StarterPokemonCatalog;
+import io.github.luinara.sqs.task.UserTaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +41,9 @@ class AuthenticationServiceTest {
 
     @Mock
     PokeApiPokemonService pokeApiPokemonService;
+
+    @Mock
+    UserTaskRepository userTaskRepository;
 
     @BeforeEach
     void setUp() {
@@ -326,6 +330,38 @@ class AuthenticationServiceTest {
     }
 
     @Test
+    void db_login_resetsDailyGoals_whenCalendarDayChanged() {
+        BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+        String hash = enc.encode("password123");
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-06-16T10:00:00Z"), ZoneOffset.UTC);
+
+        UserEntity entity = new UserEntity("daily", hash);
+        entity.setId(42L);
+        entity.setHydrationMl(2500);
+        entity.setStreak(2);
+        entity.setLastLoginAt(OffsetDateTime.parse("2026-06-15T09:00:00Z"));
+        when(repo.findByUsernameIgnoreCase("daily")).thenReturn(Optional.of(entity));
+
+        AuthenticationService svc = new AuthenticationService(
+                Optional.of(repo),
+                Optional.empty(),
+                Optional.empty(),
+                fixedClock,
+                Optional.of(userTaskRepository)
+        );
+        Optional<String> res = svc.login("daily", "password123");
+
+        assertThat(res).isPresent();
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(repo).save(captor.capture());
+        UserEntity saved = captor.getValue();
+        assertThat(saved.getHydrationMl()).isZero();
+        assertThat(saved.getStreak()).isEqualTo(3);
+        verify(userTaskRepository).resetCompletionsByUserId(42L);
+    }
+
+    @Test
     void db_login_resetsStreak_whenLastLoginOlderThanYesterday() {
         BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
         String hash = enc.encode("password123");
@@ -353,10 +389,12 @@ class AuthenticationServiceTest {
         Clock fixedClock = Clock.fixed(Instant.parse("2026-06-16T10:00:00Z"), ZoneOffset.UTC);
 
         UserEntity entity = new UserEntity("lazy", hash);
+        entity.setId(21L);
         entity.setStreak(4);
         entity.setPokemonLevel(8);
         entity.setPokemonXp(60);
         entity.setHappiness(45);
+        entity.setHydrationMl(1800);
         entity.setLastLevelUpAt(OffsetDateTime.parse("2026-06-13T10:00:00Z"));
         entity.setLastLoginAt(OffsetDateTime.parse("2026-06-14T09:00:00Z"));
         when(repo.findByUsernameIgnoreCase("lazy")).thenReturn(Optional.of(entity));
@@ -365,7 +403,8 @@ class AuthenticationServiceTest {
                 Optional.of(repo),
                 Optional.empty(),
                 Optional.empty(),
-                fixedClock
+                fixedClock,
+                Optional.of(userTaskRepository)
         );
         Optional<String> res = svc.login("lazy", "password123");
 
@@ -378,8 +417,10 @@ class AuthenticationServiceTest {
         assertThat(saved.getPokemonLevel()).isEqualTo(7);
         assertThat(saved.getPokemonXp()).isZero();
         assertThat(saved.getHappiness()).isEqualTo(25);
+        assertThat(saved.getHydrationMl()).isZero();
         assertThat(saved.getLastLevelUpAt()).isNull();
         assertThat(saved.getLastLoginAt()).isEqualTo(OffsetDateTime.parse("2026-06-16T10:00:00Z"));
+        verify(userTaskRepository).resetCompletionsByUserId(21L);
     }
 
     @Test

@@ -122,14 +122,19 @@ eine kleine Strafe:
 Beispiel: letzter Login am 14.06., nächster Login am 16.06. → der 15.06. wurde
 verpasst. Das Pokémon verliert ein Level und 20 Motivation.
 
-## Reset-Verhalten für Tasks (Frontend-Verantwortung in dieser Iteration)
+## Tagesreset fuer Wasser und Tasks
 
-- Für diesen Stand gibt das Backend die gespeicherten `completed`-Flags zurück, also z. B. `user_tasks.completed`.
-- Weil `streak` während der Authentifizierung aktualisiert wird, kann der Client `yesterdayLoggedIn` nutzen, um zu entscheiden, ob die Anzeige erledigte Tasks übernimmt oder für die Tagesansicht zurücksetzt.
-- Wenn `yesterdayLoggedIn == false`, behandelt das Frontend `tasks[].completed` für die Tagesanzeige als `false`.
-- Wenn `yesterdayLoggedIn == true`, zeigt das Frontend `tasks[].completed` wie vom Backend geliefert.
-- `serverNow` hilft dem Client, nicht von der lokalen Uhr des Browsers abhängig zu sein.
-- Eine robuste serverseitige Tageshistorie mit append-only Completions und Eindeutigkeit pro Tag ist als bekannte fachliche Erweiterung dokumentiert. Für den aktuellen Abgabestand verlässt sich das Frontend bei Taskabschluss und Wasser-Autoabschluss auf die Serverantwort.
+Es gibt keinen dauerhaft laufenden Hintergrundtimer. Der Tageswechsel wird beim
+naechsten erfolgreichen Login serverseitig angewendet:
+
+- letzter Login war heute: Wasserstand und Task-Abschluesse bleiben erhalten.
+- letzter Login war vor heute: `hydration_ml` wird auf `0` gesetzt.
+- letzter Login war vor heute: alle `user_tasks.completed`-Flags des Users werden auf `false` gesetzt.
+- letzter Login war gestern: `streak = streak + 1`, aber keine Inaktivitaetsstrafe.
+- letzter Login war aelter als gestern: `streak = 1` und die Inaktivitaetsstrafe wird fuer komplett verpasste Kalendertage angewendet.
+
+`serverNow` hilft dem Client, nicht von der lokalen Uhr des Browsers abhaengig
+zu sein. Die Tagesgrenze wird im Backend anhand von UTC-Kalendertagen bewertet.
 
 ## Implementation notes
 
@@ -161,5 +166,5 @@ Diese Doku liegt in `docs/03-api/user-game-state.md`.
 
 ## Bekannte Erweiterungen
 
-1. Serverseitigen Daily-Reset beziehungsweise append-only Task-Completions modellieren.
+1. Optional append-only Task-Completions pro Datum modellieren, wenn eine Historie pro Tag benoetigt wird.
 2. Optional weitere echte Backend-E2E-Flows ergänzen, wenn Testdaten-Isolation für parallele Runs eingeführt wird.

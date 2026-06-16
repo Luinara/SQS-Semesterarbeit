@@ -4,6 +4,7 @@ import io.github.luinara.sqs.pokemon.PokemonEntity;
 import io.github.luinara.sqs.pokemon.PokemonRepository;
 import io.github.luinara.sqs.pokemon.PokeApiPokemonService;
 import io.github.luinara.sqs.pokemon.StarterPokemonCatalog;
+import io.github.luinara.sqs.task.UserTaskRepository;
 import io.github.luinara.sqs.user.UserEntity;
 import io.github.luinara.sqs.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,7 @@ public class AuthenticationService {
     private final UserRepository userRepository; // optional
     private final PokemonRepository pokemonRepository; // optional
     private final PokeApiPokemonService pokeApiPokemonService; // optional
+    private final UserTaskRepository userTaskRepository; // optional
     private final Clock clock;
 
     @Autowired
@@ -56,12 +58,14 @@ public class AuthenticationService {
             Optional<UserRepository> userRepository,
             Optional<PokemonRepository> pokemonRepository,
             Optional<PokeApiPokemonService> pokeApiPokemonService,
+            Optional<UserTaskRepository> userTaskRepository,
             Clock clock
     ) {
         // If a JPA repository is available (e.g., when running with database profile), use it.
         this.userRepository = userRepository.orElse(null);
         this.pokemonRepository = pokemonRepository.orElse(null);
         this.pokeApiPokemonService = pokeApiPokemonService.orElse(null);
+        this.userTaskRepository = userTaskRepository.orElse(null);
         this.clock = clock;
     }
 
@@ -70,7 +74,26 @@ public class AuthenticationService {
             Optional<PokemonRepository> pokemonRepository,
             Optional<PokeApiPokemonService> pokeApiPokemonService
     ) {
-        this(userRepository, pokemonRepository, pokeApiPokemonService, Clock.systemUTC());
+        this(userRepository, pokemonRepository, pokeApiPokemonService, Optional.empty(), Clock.systemUTC());
+    }
+
+    public AuthenticationService(
+            Optional<UserRepository> userRepository,
+            Optional<PokemonRepository> pokemonRepository,
+            Optional<PokeApiPokemonService> pokeApiPokemonService,
+            Clock clock
+    ) {
+        this(userRepository, pokemonRepository, pokeApiPokemonService, Optional.empty(), clock);
+    }
+
+    public AuthenticationService(
+            Optional<UserRepository> userRepository,
+            Optional<PokemonRepository> pokemonRepository,
+            Optional<PokeApiPokemonService> pokeApiPokemonService,
+            Clock clock,
+            Optional<UserTaskRepository> userTaskRepository
+    ) {
+        this(userRepository, pokemonRepository, pokeApiPokemonService, userTaskRepository, clock);
     }
 
     public AuthenticationService(
@@ -88,6 +111,7 @@ public class AuthenticationService {
         this.userRepository = null;
         this.pokemonRepository = null;
         this.pokeApiPokemonService = null;
+        this.userTaskRepository = null;
         this.clock = Clock.systemUTC();
     }
 
@@ -210,6 +234,8 @@ public class AuthenticationService {
             return;
         }
 
+        resetDailyGoals(entity);
+
         if (lastDate.isEqual(today.minusDays(1))) {
             entity.setStreak(entity.getStreak() + 1);
             entity.setLastLoginAt(nowUtc);
@@ -220,6 +246,14 @@ public class AuthenticationService {
         entity.setStreak(1);
         applyInactivityPenalty(entity, missedDays);
         entity.setLastLoginAt(nowUtc);
+    }
+
+    private void resetDailyGoals(UserEntity entity) {
+        entity.setHydrationMl(0);
+
+        if (userTaskRepository != null && entity.getId() != null) {
+            userTaskRepository.resetCompletionsByUserId(entity.getId());
+        }
     }
 
     private void applyInactivityPenalty(UserEntity entity, long missedDays) {
