@@ -16,7 +16,7 @@ export class HydrationGaugeComponent {
   readonly task = input.required<TaskItem>();
   readonly waterLevel = input(0);
   readonly goalMl = input(HYDRATION_GOAL_ML);
-  readonly isBusy = input(false);
+  readonly busyAmountMl = input<number | null>(null);
   readonly waterAdded = output<number>();
 
   readonly cappedWaterLevel = computed(() => Math.min(this.waterLevel(), this.goalMl()));
@@ -27,11 +27,15 @@ export class HydrationGaugeComponent {
   readonly isDone = computed(() => this.task().isCompleted || this.waterLevel() >= this.goalMl());
 
   addWater(amountMl: number): void {
-    if (this.isBusy() || this.isDone()) {
+    if (this.busyAmountMl() !== null || this.isDone()) {
       return;
     }
 
     this.waterAdded.emit(amountMl);
+  }
+
+  isAmountBusy(amountMl: number): boolean {
+    return this.busyAmountMl() === amountMl;
   }
 }
 
