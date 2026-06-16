@@ -17,7 +17,7 @@ export class PokemonService {
   readonly isLoading = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly sourceLabel = computed(() =>
-    this.snapshot().source === 'api' ? 'Live-Sprite' : 'Lokaler Fallback'
+    this.snapshot().source === 'api' ? 'API-Sprite' : 'Lokaler Fallback'
   );
 
   async loadForLevel(

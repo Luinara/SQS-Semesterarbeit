@@ -193,7 +193,7 @@ describe("AppStateService", () => {
     });
   });
 
-  it("trainiert das Pokémon über Feed-Punkte und zeigt Feedback", async () => {
+  it("trainiert das Pokémon über Trainingspunkte und zeigt Feedback", async () => {
     const initialSnapshot = createSnapshot(1, 0);
     initialSnapshot.gameState.pet.availableFoodPoints = 10;
     initialSnapshot.backendGameState.pendingFeedPoints = 10;
@@ -216,7 +216,7 @@ describe("AppStateService", () => {
     expect(service.pet()?.availableFoodPoints).toBe(9);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "feeding",
-      message: "Feed-Punkte wurden für dein Pokémon eingesetzt.",
+      message: "Trainingspunkte wurden für dein Pokémon eingesetzt.",
     });
   });
 

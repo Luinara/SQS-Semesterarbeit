@@ -6,6 +6,13 @@
   </div>
 
   <main class="app-shell__content">
+    @if (appState.isLoading()) {
+      <div class="app-shell__restore" role="status" aria-live="polite">
+        <span class="app-shell__restore-dot" aria-hidden="true"></span>
+        <span>Spielstand wird geladen...</span>
+      </div>
+    }
+
     <router-outlet />
   </main>
 </div>

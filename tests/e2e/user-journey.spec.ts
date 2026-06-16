@@ -161,7 +161,7 @@ test.describe("PokeHabit", () => {
 
     await page.getByRole("button", { name: "Pokémon trainieren" }).click();
     await expect(
-      page.getByText("Feed-Punkte wurden für dein Pokémon eingesetzt."),
+      page.getByText("Trainingspunkte wurden für dein Pokémon eingesetzt."),
     ).toBeVisible();
 
     await page.getByRole("button", { name: "Level-Up testen" }).click();
