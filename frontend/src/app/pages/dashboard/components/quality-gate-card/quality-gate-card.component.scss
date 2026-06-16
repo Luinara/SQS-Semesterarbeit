@@ -94,6 +94,8 @@
 .quality-gate__missing {
   display: grid;
   gap: 0.25rem;
+  align-content: center;
+  min-height: 5.35rem;
   padding: 0.85rem;
   border: 1px solid rgba(28, 42, 70, 0.08);
   border-radius: var(--radius-sm);
@@ -139,6 +141,7 @@
 .quality-gate__missing strong {
   color: var(--color-text);
   font-size: 0.9rem;
+  line-height: 1.25;
 }
 
 @media (max-width: 640px) {

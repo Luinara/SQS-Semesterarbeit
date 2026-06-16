@@ -22,13 +22,6 @@
       <span>Trainingspunkte</span>
     </div>
 
-    @if (hasDemoAccess()) {
-      <div class="top-bar__pill top-bar__pill--demo" aria-label="Demo-Zugang">
-        <strong>Demo-Zugang</strong>
-        <span>{{ demoUsername() }} / {{ demoPassword() }}</span>
-      </div>
-    }
-
     <button sqsButton size="sm" variant="ghost" [disabled]="isBusy()" (click)="requestLogout()">
       Abmelden
     </button>

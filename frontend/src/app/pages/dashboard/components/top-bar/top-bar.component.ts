@@ -14,15 +14,12 @@ export class TopBarComponent {
   readonly availableFoodPoints = input(0);
   readonly completedTasks = input(0);
   readonly totalTasks = input(0);
-  readonly demoUsername = input<string | null>(null);
-  readonly demoPassword = input<string | null>(null);
   readonly isBusy = input(false);
 
   readonly logoutRequested = output<void>();
   readonly accountDeleteRequested = output<void>();
 
   readonly userInitial = computed(() => this.userName().trim().charAt(0).toUpperCase() || 'S');
-  readonly hasDemoAccess = computed(() => Boolean(this.demoUsername() && this.demoPassword()));
 
   requestLogout(): void {
     if (this.isBusy()) {

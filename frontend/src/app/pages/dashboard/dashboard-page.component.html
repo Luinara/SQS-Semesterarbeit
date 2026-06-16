@@ -5,8 +5,6 @@
       [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
       [completedTasks]="appState.completedTaskCount()"
       [totalTasks]="appState.totalTaskCount()"
-      [demoUsername]="demoAccount.username"
-      [demoPassword]="demoAccount.password"
       [isBusy]="appState.isActionPending()"
       (logoutRequested)="logout()"
       (accountDeleteRequested)="deleteAccount()"
@@ -54,7 +52,6 @@
           [qualityScore]="appState.qualityScore()"
           [qualityTarget]="appState.qualityTarget()"
           [waterLevel]="appState.waterLevel()"
-          [foodLevel]="appState.foodLevel()"
           [streak]="appState.streak()"
         />
       </section>
