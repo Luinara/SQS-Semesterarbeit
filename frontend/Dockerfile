@@ -3,7 +3,7 @@ FROM node:24-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
-COPY angular.json tsconfig*.json ./
+COPY angular.json index.html tsconfig*.json ./
 COPY public ./public
 COPY src ./src
 RUN npm run build
