@@ -1,4 +1,4 @@
-# Daily-Reset-Testfaelle
+# Daily-Reset-Testfälle
 
 ## Ziel
 
