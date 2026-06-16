@@ -35,12 +35,12 @@ demo / password123
 
 | Thema | Wiki-Seite | Ausführliche Doku |
 | --- | --- | --- |
-| Architektur | [Architektur](Architektur.md) | `docs/02-architecture/` |
-| API | [API](API.md) | `docs/03-api/` |
-| Frontend | [Frontend](Frontend.md) | `frontend/README.md` |
-| Teststrategie | [Teststrategie](Teststrategie.md) | `docs/04-quality/test-pyramid.md` |
-| Quality Hub | [Quality Hub](Quality-Hub.md) | `docs/04-quality/` |
-| Abgabe | [Abgabe-Checkliste](Abgabe-Checkliste.md) | `docs/05-presentation/`, `docs/06-operations/` |
+| Architektur | [Architektur](Architektur) | `docs/02-architecture/` |
+| API | [API](API) | `docs/03-api/` |
+| Frontend | [Frontend](Frontend) | `frontend/README.md` |
+| Teststrategie | [Teststrategie](Teststrategie) | `docs/04-quality/test-pyramid.md` |
+| Quality Hub | [Quality Hub](Quality-Hub) | `docs/04-quality/` |
+| Abgabe | [Abgabe-Checkliste](Abgabe-Checkliste) | `docs/05-presentation/`, `docs/06-operations/` |
 
 ## Abgabe-relevante Nachweise
 
