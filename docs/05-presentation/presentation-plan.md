@@ -85,6 +85,23 @@ Spring-Boot-Backend, PostgreSQL und externe Dienste. Die Backend-Komponenten
 sind nach Feature-Packages getrennt. Controller greifen nicht direkt auf
 Repositories zu; das prüfen wir auch mit ArchUnit."
 
+### Architekturentscheidung Angular statt React
+
+"React wäre für die App grundsätzlich auch möglich gewesen. Dagegen sprach für
+uns, dass React sehr viel Architekturentscheidung offenlässt: Routing,
+Formularstruktur, State-Management, Guards und Projektkonventionen müssten
+stärker selbst zusammengestellt werden. Das ist flexibel, erhöht bei einer
+Semesterarbeit aber auch das Risiko, dass die App aus vielen einzelnen
+Bibliotheken und Team-Konventionen besteht.
+
+Angular passte für unser Ziel besser, weil Routing, Services, Guards,
+Dependency Injection, TypeScript und Teststruktur direkt im Framework liegen.
+Dadurch konnten wir die App feature-orientiert aufbauen, HTTP-Zugriffe in
+Services kapseln und Zuständigkeiten klarer trennen. Der Nachteil ist, dass
+Angular schwergewichtiger ist und Updates eher Breaking Changes mitbringen
+können. Für unseren SQS-Fokus war diese Strenge aber eher ein Vorteil, weil sie
+Wartbarkeit, Testbarkeit und einheitliche Struktur unterstützt."
+
 ### Quality Hub
 
 "Für die Abgabe wollten wir die Testpyramide nicht nur behaupten. In der Doku
@@ -112,7 +129,8 @@ Quality-Nachweis der relevante Fokus."
 
 | Frage | Antwort |
 | --- | --- |
-| Warum Angular statt React? | "Angular passt hier gut, weil Routing, Services, Guards und TypeScript-Struktur direkt im Framework liegen. Das hilft bei Testbarkeit und klarer Trennung." |
+| Warum Angular statt React? | "React wäre möglich gewesen und ist flexibler. Für diese Arbeit wollten wir aber weniger eigene Architekturentscheidungen treffen müssen. Angular bringt Routing, Services, Guards, Dependency Injection und TypeScript-Konventionen direkt mit. Das hilft bei Testbarkeit, klarer Trennung und einem einheitlichen Projektaufbau." |
+| Was ist das Gegenargument gegen Angular? | "Angular ist schwergewichtiger als React und Updates können mehr Anpassungen erzwingen. Wir haben das bewusst akzeptiert, weil die feste Struktur für SQS, Teamarbeit und Dokumentation mehr Nutzen gebracht hat als maximale UI-Flexibilität." |
 | Wo ist der externe Service? | "`PokeApiPokemonService` im Backend ruft PokeAPI auf. Der Ausfall ist durch Fallback und Tests abgesichert." |
 | Was passiert, wenn PokeAPI down ist? | "Registrierung funktioniert weiter. Das Backend nutzt den lokalen Starter-Katalog." |
 | Was ist euer Security-Nachweis? | "Session-Cookie, Passwort-Hashing, Login-Lockout, Tests für unauthentifizierte Requests und npm Security Check im Quality Hub." |
