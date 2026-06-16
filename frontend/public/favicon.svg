@@ -1,5 +1,38 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="64" height="64" rx="22" fill="#C9877E" />
-  <path d="M21 22h13c5.523 0 10 4.477 10 10s-4.477 10-10 10H31" stroke="#FFF8F4" stroke-width="6" stroke-linecap="round" />
-  <path d="M21 42h16c3.866 0 7 3.134 7 7" stroke="#FFF8F4" stroke-width="6" stroke-linecap="round" />
+<svg width="64" height="64" viewBox="14 2 292 416" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="egg-shell" x1="74" y1="36" x2="262" y2="394" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff7d7" />
+      <stop offset="0.48" stop-color="#fff4c9" />
+      <stop offset="1" stop-color="#f3d28f" />
+    </linearGradient>
+    <linearGradient id="pink" x1="220" y1="58" x2="280" y2="178" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5aa8" />
+      <stop offset="1" stop-color="#e950bc" />
+    </linearGradient>
+    <linearGradient id="mint" x1="10" y1="198" x2="120" y2="282" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#71ecc5" />
+      <stop offset="1" stop-color="#55d7a0" />
+    </linearGradient>
+    <linearGradient id="yellow" x1="170" y1="182" x2="272" y2="286" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe42b" />
+      <stop offset="1" stop-color="#ffc819" />
+    </linearGradient>
+    <clipPath id="egg-clip">
+      <path d="M160 418C80 418 14 350 14 236C14 119 86 2 160 2C234 2 306 119 306 236C306 350 240 418 160 418Z" />
+    </clipPath>
+  </defs>
+  <path d="M160 418C80 418 14 350 14 236C14 119 86 2 160 2C234 2 306 119 306 236C306 350 240 418 160 418Z" fill="url(#egg-shell)" />
+  <g clip-path="url(#egg-clip)">
+    <path d="M0 214C32 224 44 184 72 180C103 176 130 196 124 226C119 254 89 252 86 290C82 335 31 307 15 292C0 278-15 280-28 289L0 214Z" fill="url(#mint)" />
+    <path d="M188 104C218 90 212 54 242 45C262 39 291 79 304 117C315 149 300 161 278 164C252 168 249 196 224 198C188 201 153 186 156 150C158 128 169 113 188 104Z" fill="url(#pink)" />
+    <path d="M168 212C191 188 226 204 240 235C252 261 285 256 284 296C283 336 236 349 204 320C181 299 181 272 160 256C139 239 150 230 168 212Z" fill="url(#yellow)" />
+    <path d="M200 372C220 336 267 323 306 322L306 420H160C162 402 183 399 200 372Z" fill="#3da2e9" />
+    <path d="M28 314C51 332 58 347 88 347C126 348 142 390 102 404C66 416 24 367 18 340C15 325 17 314 28 314Z" fill="#a066ef" />
+    <path d="M50 119C70 78 91 52 119 57C142 62 116 105 100 129C86 151 66 162 45 151C29 143 37 130 50 119Z" fill="#ffd51b" />
+    <circle cx="150" cy="154" r="23" fill="#6ce0b0" />
+    <circle cx="153" cy="312" r="17" fill="#ef5aaa" />
+    <circle cx="201" cy="330" r="19" fill="#68dfad" />
+    <circle cx="283" cy="304" r="16" fill="#3da2e9" />
+    <circle cx="198" cy="56" r="14" fill="#ef5aaa" />
+  </g>
 </svg>
