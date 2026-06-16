@@ -1,12 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnDestroy,
-  OnInit,
   computed,
   input,
   output,
-  signal,
 } from '@angular/core';
 import { DEFAULT_WEATHER_SCENE } from '../../../../core/state/weather-appearance.logic';
 import { GameFeedback } from '../../../../shared/models/app-state.model';
@@ -17,8 +14,6 @@ import { ProgressBarComponent } from '../../../../shared/ui/progress-bar/progres
 import { StatBadgeComponent } from '../../../../shared/ui/stat-badge/stat-badge.component';
 import { PetVisualComponent } from '../pet-visual/pet-visual.component';
 
-const CARE_HINT_VISIBLE_MS = 20_000;
-
 @Component({
   selector: 'sqs-pet-card',
   standalone: true,
@@ -27,9 +22,7 @@ const CARE_HINT_VISIBLE_MS = 20_000;
   styleUrl: './pet-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PetCardComponent implements OnInit, OnDestroy {
-  private careHintTimeout: ReturnType<typeof globalThis.setTimeout> | null = null;
-
+export class PetCardComponent {
   readonly pet = input<PetState | null>(null);
   readonly completedTasks = input(0);
   readonly totalTasks = input(0);
@@ -50,7 +43,6 @@ export class PetCardComponent implements OnInit, OnDestroy {
   readonly testMotivationDecayRequested = output<void>();
   readonly weatherRefreshRequested = output<void>();
   readonly weatherCitySubmitted = output<string>();
-  readonly isCareHintVisible = signal(true);
 
   readonly displayName = computed(() =>
     this.pet()?.isEgg
@@ -72,34 +64,6 @@ export class PetCardComponent implements OnInit, OnDestroy {
   readonly feedCostLabel = computed(
     () => `${this.feedCost()} ${this.feedCost() === 1 ? 'Punkt' : 'Punkte'}`
   );
-  readonly careStateLabel = computed(() => {
-    switch (this.petCareState()) {
-      case 'needs-care':
-        return 'Braucht Quest-Punkte';
-      case 'ready-to-feed':
-        return 'Bereit für Training';
-      case 'growing':
-        return 'Kurz vor Level-Up';
-      case 'thriving':
-        return 'Sehr fit';
-      default:
-        return 'Stabil';
-    }
-  });
-  readonly careStateHint = computed(() => {
-    switch (this.petCareState()) {
-      case 'needs-care':
-        return 'Erledige eine Quest oder trainiere dein Pokémon.';
-      case 'ready-to-feed':
-        return 'Du hast genug Quest-Punkte für die nächste Trainingseinheit.';
-      case 'growing':
-        return 'Der nächste Level ist schon in Reichweite.';
-      case 'thriving':
-        return 'Dein Tagesfortschritt sieht stark aus.';
-      default:
-        return 'Ein guter Moment für die nächste Quest.';
-    }
-  });
   readonly pokemonStatus = computed(() => {
     if (this.pet()?.isEgg) {
       return 'Ei bis Lvl. 10';
@@ -142,19 +106,6 @@ export class PetCardComponent implements OnInit, OnDestroy {
 
     return `Letzte Aktualisierung: ${updatedAtTimeLabel}`;
   });
-
-  ngOnInit(): void {
-    this.careHintTimeout = globalThis.setTimeout(() => {
-      this.isCareHintVisible.set(false);
-      this.careHintTimeout = null;
-    }, CARE_HINT_VISIBLE_MS);
-  }
-
-  ngOnDestroy(): void {
-    if (this.careHintTimeout !== null) {
-      globalThis.clearTimeout(this.careHintTimeout);
-    }
-  }
 
   requestFeeding(): void {
     if (this.isBusy() || !this.canFeed()) {

@@ -28,20 +28,6 @@
       </div>
     }
 
-    @if (isCareHintVisible()) {
-      <div
-        class="pet-card__care-toast"
-        [class.pet-card__care-toast--needs-care]="petCareState() === 'needs-care'"
-        [class.pet-card__care-toast--ready-to-feed]="petCareState() === 'ready-to-feed'"
-        [class.pet-card__care-toast--growing]="petCareState() === 'growing'"
-        [class.pet-card__care-toast--thriving]="petCareState() === 'thriving'"
-        role="status"
-      >
-        <span>{{ careStateLabel() }}</span>
-        <strong>{{ careStateHint() }}</strong>
-      </div>
-    }
-
     <div class="pet-card__body">
       <div class="pet-card__showcase">
         <sqs-pet-visual
