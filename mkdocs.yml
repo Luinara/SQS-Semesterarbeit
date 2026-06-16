@@ -52,6 +52,7 @@ nav:
   - "04 Qualität":
       - Testpyramide: 04-quality/test-pyramid.md
       - Frontend npm Security: 04-quality/frontend-npm-security.md
+      - Crypto Random IDs: 04-quality/crypto-random-ids.md
       - Wetterdaten Code-Notizen: 04-quality/wetter-daten.md
       - Wetterdaten manueller Check: 04-quality/weather-open-meteo-manual-check.md
   - "05 Präsentation":
