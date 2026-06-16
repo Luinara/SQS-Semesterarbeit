@@ -115,12 +115,11 @@ Wenn mindestens ein kompletter Kalendertag ausgelassen wurde, greift zusätzlich
 eine kleine Strafe:
 
 - pro verpasstem Tag: `pokemonLevel - 1`, aber nie unter Level `1`
-- pro verpasstem Tag: `happiness - 20`, aber nie unter `0`
+- pro verpasstem Tag: `happiness - 10`, aber nie unter `0`
 - wenn ein Level verloren geht, wird `growth` auf `0` gesetzt
-- wenn kein Level mehr abgezogen werden kann oder die Motivation bereits bei `0` ist, wird verbleibender Motivationsverlust von `growth` abgezogen, aber nie unter `0`
 
 Beispiel: letzter Login am 14.06., nächster Login am 16.06. → der 15.06. wurde
-verpasst. Das Pokémon verliert ein Level und 20 Motivation.
+verpasst. Das Pokémon verliert ein Level und 10 Motivation.
 
 ## Tagesreset für Wasser und Tasks
 

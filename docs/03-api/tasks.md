@@ -65,13 +65,13 @@ Wesentliche Semantik (kurz)
   - Cooldown: Ein Level-Up ist nur möglich, wenn `last_level_up_at` leer ist oder mindestens zwei Tage zurückliegt. Ist der Cooldown aktiv, bleibt `growth` bei `100`.
   - Level‑abhängige Effekte:
     - Beim Erreichen von Level >= 10: Wenn `isEgg == true`, wird das Pokémon ausgebrütet (isEgg=false und `hatchedAt` gesetzt).
-    - Bei Erreichen von Level >= 25 und >= 50: Wenn `evolutionId` vorhanden ist, wird das Pokémon einmal bzw. zweimal weiterentwickelt (sofern Evolutionskette vorhanden).
+    - Bei Erreichen von Level >= 15 und >= 35: Wenn `evolutionId` vorhanden ist, wird das Pokémon einmal bzw. zweimal weiterentwickelt (sofern Evolutionskette vorhanden).
 - Implementation‑Hinweis: In dieser Iteration wird für Persistenz das vorhandene Modell `user_tasks` (boolean `completed`) verwendet; langfristig wird ein `task_completions`‑Log empfohlen, das Tages‑Eindeutigkeit robust handhabt.
 
-Tagesgrenzen / Reset (Frontend / Übergangsregel)
+Tagesgrenzen / Reset
 
-- Übergangsregel: Der tägliche Reset der Anzeige wird in der aktuellen Iteration vom Frontend gehandhabt (siehe `docs/03-api/user-game-state.md`).
-- Hinweis für Backend‑Integratoren: Weil aktuell kein `TaskCompletion`‑Log vorhanden ist, kann der Server nur den `user_tasks.completed`‑Wert setzen; eine echte "1x pro UTC‑Tag"‑Semantik wird erst mit einem späteren DB‑Änderungs‑Feature robust.
+- Der Reset von Wasserstand und `user_tasks.completed` wird serverseitig beim nächsten erfolgreichen Login angewendet, sobald das konfigurierte Reset-Intervall erreicht ist (siehe `docs/03-api/user-game-state.md`).
+- Hinweis für Backend‑Integratoren: Weil aktuell kein `TaskCompletion`‑Log vorhanden ist, setzt der Server den bestehenden `user_tasks.completed`‑Wert zurück. Eine append-only Historie pro Tag bleibt eine spätere Erweiterung.
 
 Idempotency und Fehlerverhalten
 
