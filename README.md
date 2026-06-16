@@ -116,7 +116,7 @@ cd backend
 .\mvnw.cmd verify
 ```
 
-Wetterdaten manuell mit echten Open-Meteo-Curl-Aufrufen pruefen:
+Wetterdaten manuell mit echten Open-Meteo-Curl-Aufrufen prüfen:
 
 ```powershell
 cd C:\Workspace\Uni-26\SQS\SQS-Semesterarbeit
@@ -126,7 +126,7 @@ cd C:\Workspace\Uni-26\SQS\SQS-Semesterarbeit
 powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1
 ```
 
-Einzelne Orte pruefen:
+Einzelne Orte prüfen:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1 -City "Hawaii", "Tokyo"
@@ -134,7 +134,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1 -City 
 
 Das Script zeigt den Forecast-`curl.exe`-Befehl und die Temperatur aus
 `current.temperature_2m`. Beim Wetterabruf nutzt es `elevation=nan`, damit kein
-einzelner Berg- oder Hoehenpunkt die Temperatur verfaelscht.
+einzelner Berg- oder Höhenpunkt die Temperatur verfälscht.
 
 Mit `-RawJson` ist im Forecast-JSON ein Feld wie
 `"temperature_2m": 24.7` zu erwarten. Dieser Wert ist die Temperatur der App.
@@ -145,7 +145,7 @@ Eigenen Forecast-Curl mit Koordinaten bauen:
 curl.exe -s "https://api.open-meteo.com/v1/forecast?latitude=DEINE_LATITUDE&longitude=DEINE_LONGITUDE&current=temperature_2m,weather_code,is_day&elevation=nan&timezone=auto"
 ```
 
-Oder ueber das Script mit eigenen Koordinaten:
+Oder über das Script mit eigenen Koordinaten:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1 -Latitude 21.29637 -Longitude -157.70175 -Label "Mein Ort" -RawJson

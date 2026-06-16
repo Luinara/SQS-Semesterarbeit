@@ -14,7 +14,7 @@ User erledigen kleine Tagesaufgaben wie:
 - Zimmer aufraeumen
 - 10 Seiten lesen
 
-Dafuer bekommen sie Punkte. Diese Punkte koennen genutzt werden, um ein virtuelles Pet zu fuettern. Das Pet bekommt dadurch Fortschritt, Happiness und Level-Ups.
+Dafür bekommen sie Punkte. Diese Punkte können genutzt werden, um ein virtuelles Pet zu füttern. Das Pet bekommt dadurch Fortschritt, Happiness und Level-Ups.
 
 Aktuell passiert diese Logik noch lokal im Angular-Frontend:
 
@@ -26,19 +26,19 @@ Ziel: Diese Aktionen sollen per REST-API ans Spring-Boot-Backend geschickt und i
 
 ## Ziel Der Datenbank-/API-Anbindung
 
-Wenn ein User in der App eine Aktion ausfuehrt, soll das Frontend nicht mehr nur lokalen State aendern.
+Wenn ein User in der App eine Aktion ausführt, soll das Frontend nicht mehr nur lokalen State ändern.
 
 Stattdessen:
 
 1. Frontend sendet einen Request an das Backend.
-2. Backend prueft die Aktion.
+2. Backend prüft die Aktion.
 3. Backend speichert die Aktion in der Datenbank.
 4. Backend aktualisiert Punkte, Task-Fortschritt, Hydration oder Pet-State.
-5. Backend gibt den neuen Zustand an das Frontend zurueck.
+5. Backend gibt den neuen Zustand an das Frontend zurück.
 
 ## User-Aktionen
 
-### 1. Task Abschliessen
+### 1. Task Abschließen
 
 Beispiele:
 
@@ -68,12 +68,12 @@ POST /api/users/user-123/tasks/task-clean-room/complete
 
 Backend soll:
 
-- pruefen, ob User existiert
-- pruefen, ob Task existiert
-- pruefen, ob der Task heute schon abgeschlossen wurde
+- prüfen, ob User existiert
+- prüfen, ob Task existiert
+- prüfen, ob der Task heute schon abgeschlossen wurde
 - Completion in der Datenbank speichern
 - Punkte zum User/Pet-Fortschritt addieren
-- aktualisierten Dashboard-State zurueckgeben
+- aktualisierten Dashboard-State zurückgeben
 
 Wichtig:
 
@@ -120,9 +120,9 @@ Request-Body:
 Backend soll:
 
 - Hydration-Eintrag speichern
-- Tagesmenge fuer den User berechnen
-- pruefen, ob das Tagesziel erreicht wurde
-- aktualisierten Hydration-State zurueckgeben
+- Tagesmenge für den User berechnen
+- prüfen, ob das Tagesziel erreicht wurde
+- aktualisierten Hydration-State zurückgeben
 
 Beispiel-Response:
 
@@ -150,13 +150,13 @@ POST /api/users/{userId}/pet/feed
 
 Backend soll:
 
-- pruefen, ob der User genug Futterpunkte hat
+- prüfen, ob der User genug Futterpunkte hat
 - Futterpunkte abziehen
 - Pet-Wachstum erhoehen
 - Happiness erhoehen
 - ggf. Level-Up ausloesen
 - Pet-Event speichern
-- aktualisierten Pet-State zurueckgeben
+- aktualisierten Pet-State zurückgeben
 
 Beispiel-Response:
 
@@ -188,12 +188,12 @@ Gewuenschter API-Endpunkt:
 GET /api/users/{userId}/dashboard
 ```
 
-Backend soll zurueckgeben:
+Backend soll zurückgeben:
 
 - User
 - Pet
-- Tasks inklusive `isCompleted` fuer heute
-- Hydration-Fortschritt fuer heute
+- Tasks inklusive `isCompleted` für heute
+- Hydration-Fortschritt für heute
 - Punkte
 - Tagesfortschritt
 
@@ -222,7 +222,7 @@ Beispiel-Response:
     {
       "id": "task-water",
       "title": "Wasser trinken",
-      "description": "Eine kurze Pause, die Energie fuer Kopf und Fokus zurueckbringt.",
+      "description": "Eine kurze Pause, die Energie für Kopf und Fokus zurückbringt.",
       "icon": "drop",
       "tone": "peach",
       "points": 10,
@@ -252,11 +252,11 @@ POST /api/users/{userId}/progress/reset
 
 Backend soll:
 
-- Tagesfortschritt zuruecksetzen
-- Task-Completions fuer heute entfernen oder als zurueckgesetzt markieren
-- Hydration fuer heute zuruecksetzen
+- Tagesfortschritt zurücksetzen
+- Task-Completions für heute entfernen oder als zurückgesetzt markieren
+- Hydration für heute zurücksetzen
 - Pet auf Startwerte setzen oder gemaess fachlicher Entscheidung nur Tageswerte resetten
-- neuen Dashboard-State zurueckgeben
+- neuen Dashboard-State zurückgeben
 
 ## Benoetigte Tabellen
 
@@ -351,7 +351,7 @@ Wichtige Felder:
 
 ### pet_events
 
-Optional, aber sinnvoll fuer Nachvollziehbarkeit.
+Optional, aber sinnvoll für Nachvollziehbarkeit.
 
 Speichert Aktionen rund um das Pet.
 
@@ -366,7 +366,7 @@ Wichtige Felder:
 - `happiness_delta`
 - `created_at`
 
-Beispiele fuer `event_type`:
+Beispiele für `event_type`:
 
 - `TASK_COMPLETED`
 - `PET_FED`
@@ -392,9 +392,9 @@ Auth kann am Anfang notfalls noch Demo/User-ID-basiert bleiben, wenn Login noch 
 - Pet-Fuetterungen aktualisieren `pets` und optional `pet_events`.
 - `GET /dashboard` liefert den Zustand, den das Angular-Dashboard anzeigen kann.
 - Doppelte Task-Abschluesse am selben Tag erzeugen keine doppelten Punkte.
-- Demo-Daten aus `mock-data.ts` koennen als Seed-Daten in die Datenbank uebernommen werden.
+- Demo-Daten aus `mock-data.ts` können als Seed-Daten in die Datenbank übernommen werden.
 
-## Hinweis Fuer Die Frontend-Anbindung
+## Hinweis Für Die Frontend-Anbindung
 
 Das Frontend soll spaeter den lokalen `AppStateService` umbauen:
 
@@ -410,4 +410,4 @@ Zu:
 Komponente -> AppStateService -> HTTP API -> Backend -> PostgreSQL
 ```
 
-Die Komponenten sollen moeglichst gleich bleiben. Nur der Service soll statt lokaler Mock-Logik HTTP-Requests verwenden.
+Die Komponenten sollen möglichst gleich bleiben. Nur der Service soll statt lokaler Mock-Logik HTTP-Requests verwenden.

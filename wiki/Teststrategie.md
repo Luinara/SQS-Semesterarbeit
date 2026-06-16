@@ -26,7 +26,7 @@ Integrations- und Controller-Tests, wenige browserbasierte E2E-Flows.
 
 ## Wetter-Nachweis
 
-Die Wetter-Szene wird automatisiert getestet. Fuer den manuellen Nachweis gibt
+Die Wetter-Szene wird automatisiert getestet. Für den manuellen Nachweis gibt
 es:
 
 ```powershell
