@@ -38,7 +38,7 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
 
 | Zeit | Inhalt | Was zeigen | Kernaussage |
 | --- | --- | --- | --- |
-| 0:00 - 1:00 | Einstieg | App-Startseite oder Dashboard | "PokeHabit verbindet kleine Self-Care-Aufgaben mit einem Pokemon-Partner." |
+| 0:00 - 1:00 | Einstieg | App-Startseite oder Dashboard | "PokeHabit verbindet kleine Self-Care-Aufgaben mit einem Pokémon-Partner." |
 | 1:00 - 3:30 | Live-Demo Nutzerfluss | Registrierung/Login, Dashboard, Quest, Wasser, Training, Logout | "Die App ist nicht nur ein Mockup; Frontend und Backend sprechen über echte REST-Endpunkte." |
 | 3:30 - 5:00 | API und Security | `/api/tasks`, geschützter Game-State, Session-Cookie erklären | "Es gibt öffentliche und geschützte Endpunkte, Passwörter werden gehasht, Sessions laufen serverseitig." |
 | 5:00 - 6:30 | Externer Service | Wetter-Szene im Dashboard oder Code `WeatherService` / `OpenMeteoWeatherAdapter` | "Die App nutzt Open-Meteo für echte Wetterdaten und passt die Dashboard-Szene daran an." |
@@ -53,7 +53,7 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
 ### Einstieg
 
 "Wir zeigen PokeHabit, eine kleine Self-Care-Web-App. Nutzer erledigen tägliche
-Aufgaben, trinken Wasser und trainieren dadurch einen Pokemon-Partner. Für die
+Aufgaben, trinken Wasser und trainieren dadurch einen Pokémon-Partner. Für die
 Semesterarbeit war uns wichtig, nicht nur eine Oberfläche zu bauen, sondern den
 Qualitätsnachweis lokal sichtbar zu machen."
 
@@ -62,7 +62,7 @@ Qualitätsnachweis lokal sichtbar zu machen."
 "Ich logge mich mit dem Demo-User ein. Das Dashboard lädt den Nutzerzustand aus
 dem Backend. Wenn ich eine Quest abschließe oder Wasser trinke, geht das über
 die API zurück ins Backend und wird persistiert. Das Training verändert XP,
-Level und später auch die Entwicklung des Pokemon."
+Level und später auch die Entwicklung des Pokémon."
 
 ### API und Security
 

@@ -5,10 +5,10 @@ Integrations- und Controller-Tests, wenige browserbasierte E2E-Flows.
 
 ## Ebenen
 
-| Ebene | Beispiele | Ausfuehrung |
+| Ebene | Beispiele | Ausführung |
 | --- | --- | --- |
 | Unit-Tests | Services, Fachlogik, Mock-Daten, Mapping | `mvn test`, `npm test` |
-| Controller-/Security-Tests | Statuscodes, Auth-Pflicht, Fehlerkoerper | `mvn test` |
+| Controller-/Security-Tests | Statuscodes, Auth-Pflicht, Fehlerkörper | `mvn test` |
 | Integrationstests | Spring-Kontext und Persistenzpfade | `mvn verify` |
 | Architekturtests | Schichtengrenzen mit ArchUnit | `mvn test` |
 | Security | npm-Lockfile-Guardrails, `npm audit` | `npm run security:frontend` |

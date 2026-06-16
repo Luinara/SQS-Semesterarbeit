@@ -11,7 +11,7 @@ User erledigen kleine Tagesaufgaben wie:
 - Wasser trinken
 - 30 Minuten lernen
 - Sport
-- Zimmer aufraeumen
+- Zimmer aufräumen
 - 10 Seiten lesen
 
 Dafür bekommen sie Punkte. Diese Punkte können genutzt werden, um ein virtuelles Pet zu füttern. Das Pet bekommt dadurch Fortschritt, Happiness und Level-Ups.
@@ -43,7 +43,7 @@ Stattdessen:
 Beispiele:
 
 - "Wasser trinken"
-- "Zimmer aufraeumen"
+- "Zimmer aufräumen"
 - "30 Minuten lernen"
 - "Sport"
 - "10 Seiten lesen"
@@ -54,7 +54,7 @@ Frontend-Aktion aktuell:
 AppStateService.completeTask(taskId)
 ```
 
-Gewuenschter API-Endpunkt:
+Gewünschter API-Endpunkt:
 
 ```http
 POST /api/users/{userId}/tasks/{taskId}/complete
@@ -103,7 +103,7 @@ Frontend-Aktion aktuell:
 AppStateService.addHydration(amountMl)
 ```
 
-Gewuenschter API-Endpunkt:
+Gewünschter API-Endpunkt:
 
 ```http
 POST /api/users/{userId}/hydration
@@ -134,7 +134,7 @@ Beispiel-Response:
 }
 ```
 
-### 3. Pet Fuettern
+### 3. Pet Füttern
 
 Frontend-Aktion aktuell:
 
@@ -142,7 +142,7 @@ Frontend-Aktion aktuell:
 AppStateService.feedPet()
 ```
 
-Gewuenschter API-Endpunkt:
+Gewünschter API-Endpunkt:
 
 ```http
 POST /api/users/{userId}/pet/feed
@@ -152,9 +152,9 @@ Backend soll:
 
 - prüfen, ob der User genug Futterpunkte hat
 - Futterpunkte abziehen
-- Pet-Wachstum erhoehen
-- Happiness erhoehen
-- ggf. Level-Up ausloesen
+- Pet-Wachstum erhöhen
+- Happiness erhöhen
+- ggf. Level-Up auslösen
 - Pet-Event speichern
 - aktualisierten Pet-State zurückgeben
 
@@ -163,7 +163,7 @@ Beispiel-Response:
 ```json
 {
   "success": true,
-  "message": "Pet wurde gefuettert.",
+  "message": "Pet wurde gefüttert.",
   "pet": {
     "name": "Mochi",
     "level": 1,
@@ -182,7 +182,7 @@ Beispiel-Response:
 
 Das Frontend braucht nach Login oder Refresh einen kompletten Zustand.
 
-Gewuenschter API-Endpunkt:
+Gewünschter API-Endpunkt:
 
 ```http
 GET /api/users/{userId}/dashboard
@@ -244,7 +244,7 @@ Frontend-Aktion aktuell:
 AppStateService.resetCurrentProgress()
 ```
 
-Gewuenschter API-Endpunkt:
+Gewünschter API-Endpunkt:
 
 ```http
 POST /api/users/{userId}/progress/reset
@@ -255,10 +255,10 @@ Backend soll:
 - Tagesfortschritt zurücksetzen
 - Task-Completions für heute entfernen oder als zurückgesetzt markieren
 - Hydration für heute zurücksetzen
-- Pet auf Startwerte setzen oder gemaess fachlicher Entscheidung nur Tageswerte resetten
+- Pet auf Startwerte setzen oder gemäß fachlicher Entscheidung nur Tageswerte resetten
 - neuen Dashboard-State zurückgeben
 
-## Benoetigte Tabellen
+## Benötigte Tabellen
 
 ### users
 
@@ -275,7 +275,7 @@ Wichtige Felder:
 
 ### tasks
 
-Speichert verfuegbare Standard-Tasks.
+Speichert verfügbare Standard-Tasks.
 
 Wichtige Felder:
 
@@ -312,7 +312,7 @@ Damit derselbe Task pro Tag nicht doppelt Punkte gibt.
 
 ### hydration_entries
 
-Speichert Wasser-/Hydration-Eintraege.
+Speichert Wasser-/Hydration-Einträge.
 
 Wichtige Felder:
 
@@ -387,16 +387,16 @@ Auth kann am Anfang notfalls noch Demo/User-ID-basiert bleiben, wenn Login noch 
 ## Akzeptanzkriterien
 
 - User-Aktionen werden nicht mehr nur lokal im Frontend gespeichert.
-- Task-Abschluesse landen in `user_task_completions`.
+- Task-Abschlüsse landen in `user_task_completions`.
 - Hydration landet in `hydration_entries`.
-- Pet-Fuetterungen aktualisieren `pets` und optional `pet_events`.
+- Pet-Fütterungen aktualisieren `pets` und optional `pet_events`.
 - `GET /dashboard` liefert den Zustand, den das Angular-Dashboard anzeigen kann.
-- Doppelte Task-Abschluesse am selben Tag erzeugen keine doppelten Punkte.
+- Doppelte Task-Abschlüsse am selben Tag erzeugen keine doppelten Punkte.
 - Demo-Daten aus `mock-data.ts` können als Seed-Daten in die Datenbank übernommen werden.
 
 ## Hinweis Für Die Frontend-Anbindung
 
-Das Frontend soll spaeter den lokalen `AppStateService` umbauen:
+Das Frontend soll später den lokalen `AppStateService` umbauen:
 
 Von:
 

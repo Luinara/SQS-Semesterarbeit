@@ -43,7 +43,7 @@ weil Browsertests langsamer sind und mehr bewegliche Teile haben.
 ## Manueller Wetter-API-Nachweis
 
 Der externe Wetter-Service ist automatisiert über `weather.service.test.ts`
-und `weather-appearance.logic.test.ts` abgesichert. Zusaetzlich gibt es einen
+und `weather-appearance.logic.test.ts` abgesichert. Zusätzlich gibt es einen
 manuellen Curl-/JSON-Nachweis für die Open-Meteo-Anbindung:
 
 - Doku: [weather-open-meteo-manual-check.md](weather-open-meteo-manual-check.md)

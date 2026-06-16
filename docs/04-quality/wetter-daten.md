@@ -1,6 +1,6 @@
 # Wetterdaten: Code-Notizen
 
-Diese Notiz erklaert, wie die Wetterdaten in unserer App funktionieren. Wichtig:
+Diese Notiz erklärt, wie die Wetterdaten in unserer App funktionieren. Wichtig:
 Die Nutzer geben in der App nur einen Stadtnamen ein, z.B. `Madrid`. Latitude
 und Longitude müssen Nutzer nicht kennen.
 
@@ -10,13 +10,13 @@ und Longitude müssen Nutzer nicht kennen.
 2. `WeatherService.searchCity("Madrid")` nimmt den Text entgegen.
 3. `OpenMeteoWeatherAdapter.resolveCity("Madrid")` fragt die Open-Meteo
    Geocoding API ab.
-4. Die App waehlt aus den Geocoding-Treffern den besten normalen Ort aus.
-5. Der gewaehlte Ort liefert `latitude`, `longitude` und ein lesbares Label,
+4. Die App wählt aus den Geocoding-Treffern den besten normalen Ort aus.
+5. Der gewählte Ort liefert `latitude`, `longitude` und ein lesbares Label,
    z.B. `Madrid, Madrid, Spanien`.
 6. `OpenMeteoWeatherAdapter.loadWeather(location)` ruft die Forecast API auf.
 7. Die Temperatur kommt aus `current.temperature_2m`.
 8. Wettercode und Tag/Nacht werden in eine UI-Wetterszene übersetzt.
-9. Die App speichert den gewaehlten Ort im Browser-`localStorage`.
+9. Die App speichert den gewählten Ort im Browser-`localStorage`.
 10. Alle 10 Minuten aktualisiert die App das Wetter für den gespeicherten Ort.
 
 ## Beteilige Dateien
@@ -27,7 +27,7 @@ und Longitude müssen Nutzer nicht kennen.
 | `frontend/src/app/core/services/weather.adapter.ts` | Open-Meteo API-Aufrufe: Geocoding und Forecast |
 | `frontend/src/app/core/state/weather-appearance.logic.ts` | Wandelt API-Daten in App-Snapshot und UI-Szene um |
 | `frontend/src/app/shared/models/weather.model.ts` | Typen für Location, Snapshot und Scene |
-| `scripts/weather-curl-check.ps1` | Manuelles Prueftool mit echtem Forecast-Curl |
+| `scripts/weather-curl-check.ps1` | Manuelles Prüftool mit echtem Forecast-Curl |
 | `tests/unit/frontend/weather.service.test.ts` | Tests für Stadtauflösung, Refresh, Hawaii-Fix und Forecast-Call |
 | `tests/unit/frontend/weather-appearance.logic.test.ts` | Tests für Wettercode-Mapping und UI-Szene |
 
@@ -96,13 +96,13 @@ Open-Meteo kann mehrere Treffer für denselben Suchtext liefern. Beispiel:
 Darum bewertet die App die Treffer:
 
 - bewohnte Orte (`PPL`, `PPLA`, `PPLC`, `PPLX` usw.) werden bevorzugt
-- Hauptstaedte (`PPLC`) bekommen extra Gewicht
+- Hauptstädte (`PPLC`) bekommen extra Gewicht
 - regionale Hauptorte (`PPLA*`) bekommen extra Gewicht
 - passende Namen bekommen Gewicht
 - passende Admin-Regionen bekommen Gewicht
 - niedrigere Höhe ist besser als ein Berg-/Insel-Höhenpunkt
-- groessere Population bekommt Gewicht
-- fruehere API-Treffer bleiben bei Gleichstand leicht vorne
+- größere Population bekommt Gewicht
+- frühere API-Treffer bleiben bei Gleichstand leicht vorne
 
 Dadurch wird z.B.:
 
@@ -193,7 +193,7 @@ Der Key ist:
 sqs-weather-location
 ```
 
-Beim naechsten App-Start liest die App diese gespeicherte Location wieder aus.
+Beim nächsten App-Start liest die App diese gespeicherte Location wieder aus.
 Wenn nichts gespeichert ist, startet die App mit Berlin:
 
 ```json
@@ -270,7 +270,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1 -City 
 
 Erwartung:
 
-- Das Script waehlt eine Location, z.B. `Madrid, Madrid, Spanien`.
+- Das Script wählt eine Location, z.B. `Madrid, Madrid, Spanien`.
 - Es zeigt den echten Forecast-Curl.
 - Mit `-RawJson` zeigt es das Forecast-JSON.
 - Im Forecast-JSON muss `current.temperature_2m` stehen.
@@ -313,4 +313,4 @@ npm.cmd test -- --run ..\tests\unit\frontend\weather.service.test.ts ..\tests\un
 ```
 
 Die Tests nutzen gemockte API-Antworten. Das ist Absicht: Sie sollen stabil
-bleiben und nicht von Echtzeitwetter oder Internetverbindung abhaengen.
+bleiben und nicht von Echtzeitwetter oder Internetverbindung abhängen.

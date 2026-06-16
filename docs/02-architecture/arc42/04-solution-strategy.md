@@ -10,9 +10,9 @@ Docker-Start den Quality Hub.
 | Bereich | Strategie |
 | --- | --- |
 | Frontend | Angular mit Standalone Components. Seiten und Dashboard-Komponenten sind getrennt, HTTP läuft über Services, Fachlogik ist testbar ausgelagert. |
-| Backend | Spring Boot mit Feature-Packages für Auth, User, Tasks, Pokemon und Konfiguration. Controller greifen nicht direkt auf Repositories zu. |
+| Backend | Spring Boot mit Feature-Packages für Auth, User, Tasks, Pokémon und Konfiguration. Controller greifen nicht direkt auf Repositories zu. |
 | Persistenz | PostgreSQL für den Docker-Betrieb, H2 für Backend-Tests. Prisma-Migrationen dokumentieren das DB-Schema zusätzlich. |
-| Externe Daten | Wetter läuft über Frontend-Services; Starter-Pokemon werden im Backend über PokeAPI mit lokalem Fallback geladen. |
+| Externe Daten | Wetter läuft über Frontend-Services; Starter-Pokémon werden im Backend über PokeAPI mit lokalem Fallback geladen. |
 | Qualitätssicherung | Der Quality Hub führt die wichtigsten Checks gebündelt aus und zeigt Logs/Reports an. |
 | Deployment | Docker Compose startet App, DB und optional den Quality Hub. |
 

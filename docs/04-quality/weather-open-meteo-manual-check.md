@@ -99,7 +99,7 @@ temperature_2m = 24.7
 Das Tool nutzt Geocoding intern nur, um die Koordinaten wie die App zu finden.
 Die Ausgabe konzentriert sich auf den Forecast:
 
-- ausgewaehlter Ort
+- ausgewählter Ort
 - Koordinaten
 - Forecast-`curl.exe`-Befehl
 - bei `-RawJson`: Forecast-JSON mit `current.temperature_2m`
@@ -179,4 +179,4 @@ Relevante Tests:
   die UI-Szene.
 
 Die Tests mocken Open-Meteo bewusst. Dadurch bleiben sie reproduzierbar und
-haengen nicht an Netzwerk, API-Ausfaellen oder wechselndem Echtzeitwetter.
+hängen nicht an Netzwerk, API-Ausfaellen oder wechselndem Echtzeitwetter.

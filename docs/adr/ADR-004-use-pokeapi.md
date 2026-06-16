@@ -4,27 +4,27 @@
 Accepted
 
 ## Context
-Die App braucht Pokemon-Daten für den Starter-Partner. Die PDF-Checkliste
+Die App braucht Pokémon-Daten für den Starter-Partner. Die PDF-Checkliste
 verlangt außerdem, dass das Backend selbst mit mindestens einem externen
-Service spricht. PokeAPI passt dazu gut, weil die Starter-Pokemon dort ohne API
+Service spricht. PokeAPI passt dazu gut, weil die Starter-Pokémon dort ohne API
 Key abrufbar sind und die Daten fachlich wirklich zur App gehören.
 
 ## Alternatives
 - Nur lokale Starter-Daten pflegen.
-- Pokemon-Daten ausschließlich im Frontend laden.
-- Einen kommerziellen Pokemon-Service anbinden.
+- Pokémon-Daten ausschließlich im Frontend laden.
+- Einen kommerziellen Pokémon-Service anbinden.
 
 ## Decision
 Das Backend nutzt PokeAPI (`https://pokeapi.co/api/v2`) beim Anlegen eines
-Users, um fehlende Starter-Pokemon in der Datenbank zu befüllen. Bereits
-vorhandene Pokemon werden wiederverwendet, damit Registrierungen nicht
+Users, um fehlende Starter-Pokémon in der Datenbank zu befüllen. Bereits
+vorhandene Pokémon werden wiederverwendet, damit Registrierungen nicht
 unnötig externe Requests auslösen und vorhandene Namen/Bilder nicht
 überschrieben werden. Lokale Evolutions-Metadaten dürfen ergänzt werden, weil
 die App nur die drei Starter-Ketten braucht.
 
 Abgerufene Daten:
 
-- Pokemon ID
+- Pokémon-ID
 - Name
 - Official artwork
 
@@ -42,4 +42,4 @@ deaktiviert; der Service selbst wird mit einem lokalen HTTP-Stub getestet.
 
 ## Downsides
 - Es gibt eine zusätzliche externe Abhängigkeit.
-- Die Pokemon-Daten sind nur so aktuell und verfügbar wie PokeAPI.
+- Die Pokémon-Daten sind nur so aktuell und verfügbar wie PokeAPI.
