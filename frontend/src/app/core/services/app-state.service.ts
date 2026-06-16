@@ -264,7 +264,7 @@ export class AppStateService {
           this.showFeedback({
             id: createFeedbackId('feeding'),
             kind: 'feeding',
-            message: 'Feed-Punkte wurden für dein Pokémon eingesetzt.',
+            message: 'Trainingspunkte wurden für dein Pokémon eingesetzt.',
           });
         }
       } catch (error) {

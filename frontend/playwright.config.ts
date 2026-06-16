@@ -3,6 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 const localBaseURL = 'http://127.0.0.1:4200';
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? localBaseURL;
 const shouldCreateDemoEvidence = process.env.PLAYWRIGHT_EVIDENCE === '1';
+const shouldRunMobileCheck = process.env.PLAYWRIGHT_MOBILE_CHECK === '1';
 
 export default defineConfig({
   testDir: '../tests/e2e',
@@ -31,5 +32,13 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
+    ...(shouldRunMobileCheck
+      ? [
+          {
+            name: 'mobile-chrome',
+            use: { ...devices['Pixel 5'] },
+          },
+        ]
+      : []),
   ],
 });
