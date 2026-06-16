@@ -1,10 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  input,
-  output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { DEFAULT_WEATHER_SCENE } from '../../../../core/state/weather-appearance.logic';
 import { GameFeedback } from '../../../../shared/models/app-state.model';
 import { PetCareState, PokemonSnapshot, PetState } from '../../../../shared/models/pet.model';
@@ -23,6 +17,8 @@ import { PetVisualComponent } from '../pet-visual/pet-visual.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PetCardComponent {
+  private static readonly MAX_AVAILABLE_POINTS = 250;
+
   readonly pet = input<PetState | null>(null);
   readonly completedTasks = input(0);
   readonly totalTasks = input(0);
@@ -35,7 +31,7 @@ export class PetCardComponent {
   readonly pokemon = input<PokemonSnapshot | null>(null);
   readonly pokemonImageUrl = input<string | null>(null);
   readonly pokemonLoading = input(false);
-  readonly feedCost = input(1);
+  readonly feedCost = input(10);
   readonly isLevelingUp = input(false);
   readonly isBusy = input(false);
   readonly feedRequested = output<void>();
@@ -61,8 +57,13 @@ export class PetCardComponent {
     this.pet()?.isEgg ? 'fallback' : (this.pokemon()?.source ?? 'fallback')
   );
   readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) >= this.feedCost());
-  readonly feedCostLabel = computed(
-    () => `${this.feedCost()} ${this.feedCost() === 1 ? 'Punkt' : 'Punkte'}`
+  readonly availablePointsLabel = computed(
+    () =>
+      `${clamp(
+        this.pet()?.availableFoodPoints ?? 0,
+        0,
+        PetCardComponent.MAX_AVAILABLE_POINTS
+      )} / ${PetCardComponent.MAX_AVAILABLE_POINTS}`
   );
   readonly pokemonStatus = computed(() => {
     if (this.pet()?.isEgg) {
@@ -156,4 +157,8 @@ export function formatWeatherUpdatedAtTime(updatedAt: string): string | null {
 
 function formatPokemonName(name: string): string {
   return `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
 }

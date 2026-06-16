@@ -1,6 +1,6 @@
 workspace "PokeHabit" "C4-Modell der SQS-Semesterarbeit" {
     model {
-        user = person "Nutzer" "Registriert sich, meldet sich an und nutzt Quests, Wassertracking und Training."
+        user = person "Nutzer" "Registriert sich, meldet sich an und nutzt Quests, Wassertracking und Wetter."
 
         pokeHabit = softwareSystem "PokeHabit" "Self-Care-Webanwendung mit Pokemon-Gamification." {
             frontend = container "Frontend" "Browser-App für Login, Dashboard, Quests, Wasser und Wetter." "Angular, TypeScript, SCSS"

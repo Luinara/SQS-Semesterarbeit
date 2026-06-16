@@ -94,6 +94,34 @@ class TaskServiceTest {
     }
 
     @Test
+    void completeTask_capsPendingFeedPointsAt250() {
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
+
+        user.setPendingFeedPoints(248);
+        TaskEntity task = new TaskEntity();
+        task.setId(22L);
+        task.setTitle("Big points");
+        task.setFeedPoints(10);
+        when(taskRepository.findById(22L)).thenReturn(Optional.of(task));
+        when(userTaskRepository.findByUserIdAndTaskId(1L, 22L)).thenReturn(Optional.empty());
+
+        GameStateResult res = taskService.completeTaskForUser("tester", 22L);
+
+        assertThat(res.status).isEqualTo(200);
+        assertThat(user.getPendingFeedPoints()).isEqualTo(250);
+        assertThat(res.gameState.getPendingFeedPoints()).isEqualTo(250);
+    }
+
+    @Test
+    void userEntity_neverStoresPendingFeedPointsOutsideRange() {
+        user.setPendingFeedPoints(-5);
+        assertThat(user.getPendingFeedPoints()).isZero();
+
+        user.setPendingFeedPoints(999);
+        assertThat(user.getPendingFeedPoints()).isEqualTo(250);
+    }
+
+    @Test
     void completeTask_whenEggStillSet_returnsSelectedPokemonImageAndName() {
         user.setEgg(true);
         user.setCurrentPokemonId(7);

@@ -2,7 +2,6 @@
   <section class="dashboard-page page-shell">
     <sqs-top-bar
       [userName]="currentUser.userName"
-      [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
       [completedTasks]="appState.completedTaskCount()"
       [totalTasks]="appState.totalTaskCount()"
       [isBusy]="appState.isActionPending()"
@@ -14,7 +13,6 @@
       <aside class="dashboard-page__sidebar">
         <sqs-task-list
           [tasks]="appState.tasks()"
-          [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
           [waterLevel]="appState.waterLevel()"
           [qualityQuestProgress]="appState.qualityQuestProgress()"
           [isBusy]="appState.isActionPending()"
@@ -45,7 +43,6 @@
           [pokemon]="pokemon.snapshot()"
           [pokemonImageUrl]="appState.pokemonImageUrl()"
           [pokemonLoading]="pokemon.isLoading()"
-          [feedCost]="appState.feedCost"
           [isLevelingUp]="appState.isPetLevelingUp()"
           [isBusy]="appState.isActionPending()"
           (feedRequested)="feedPet()"

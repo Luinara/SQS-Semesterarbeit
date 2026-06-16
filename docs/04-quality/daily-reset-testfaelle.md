@@ -41,6 +41,15 @@ cd frontend
 npm run test:e2e -- daily-reset.spec.ts
 ```
 
+Manueller Kurztest ohne 24 Stunden Wartezeit:
+
+- Automatisiert: den obigen Playwright-Test starten. Er mockt den abgelaufenen
+  Reset und prueft den sichtbaren Browserzustand.
+- Echte App lokal: Backend nur temporaer mit
+  `pokehabit.daily-reset-interval=PT1M` starten, im Dashboard eine Quest/Wasser
+  erledigen, mindestens eine Minute warten und den Auto-Refresh abwarten.
+- Wichtig: Die eingecheckte Dev-Konfiguration bleibt auf `PT24H`.
+
 ## Testfall DR-01: Buttons vor Ablauf bleiben erledigt
 
 **Vorbedingung**
@@ -69,9 +78,10 @@ npm run test:e2e -- daily-reset.spec.ts
 
 **Vorbedingung**
 
-- User hat am Vortag oder vor dem Demo-Reset-Intervall Tasks abgeschlossen.
-- Backend ist fuer Demo/Dev z. B. mit `pokehabit.daily-reset-interval=PT1M`
-  konfiguriert.
+- User hat am Vortag oder vor dem temporaer gesetzten Kurztest-Intervall Tasks
+  abgeschlossen.
+- Backend ist fuer den manuellen Kurztest temporaer z. B. mit
+  `pokehabit.daily-reset-interval=PT1M` konfiguriert.
 - Seit dem letzten Reset-Anker ist mindestens das konfigurierte Intervall
   vergangen.
 
@@ -114,7 +124,7 @@ npm run test:e2e -- daily-reset.spec.ts
 
 **Vorbedingung**
 
-- Demo-Reset-Intervall ist z. B. `PT1M`.
+- Kurztest-Reset-Intervall ist temporaer z. B. `PT1M`.
 - Letzter Login war vor mindestens einer Minute, aber am selben UTC-Tag.
 - Aktuelle Streak ist `2`.
 

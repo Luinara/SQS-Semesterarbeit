@@ -8,6 +8,7 @@ export const STORAGE_KEY = 'sqs.frontend.mvp.state';
 
 export const PET_RULES = {
   feedCost: 10,
+  maxAvailableFoodPoints: 250,
   growthPerFeeding: 34,
   happinessPerFeeding: 12,
   maxHappiness: 100,
@@ -47,7 +48,7 @@ export const STARTER_POKEMON_OPTIONS: ReadonlyArray<{
   {
     species: 'charmander',
     label: 'Charmander',
-    description: 'Feuer-Starter für offensive Trainingsläufe.',
+    description: 'Feuer-Starter für aktive Tagesroutinen.',
   },
   {
     species: 'squirtle',
@@ -218,7 +219,7 @@ function createInitialTasks(): TaskItem[] {
     createQualityTask({
       slug: 'clean-room',
       title: 'Zimmer aufräumen',
-      description: 'Ein klarer Raum gibt Fokus und bringt solide Trainingspunkte.',
+      description: 'Ein klarer Raum gibt Fokus und bringt solide Quest-Punkte.',
       icon: 'layers',
       tone: 'slate',
       category: 'delivery',

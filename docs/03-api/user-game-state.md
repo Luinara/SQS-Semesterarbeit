@@ -12,7 +12,7 @@ Alle Game-State-Endpunkte hängen unter:
 
 ## Zweck
 
-Liefert den spielbezogenen Zustand des aktuell authentifizierten Users, damit das Frontend Questliste, Wasserstand, Energie, Pokémon-Daten, Motivation, Trainingspunkte und Anmelde-Serie rendern kann.
+Liefert den spielbezogenen Zustand des aktuell authentifizierten Users, damit das Frontend Questliste, Wasserstand, Energie, Pokémon-Daten, Motivation, Quest-Punkte und Anmelde-Serie rendern kann.
 
 ## Authentifizierung
 
@@ -38,7 +38,7 @@ Fields (JSON schema)
 - `pokemonLevel` (integer) — aktuelles Pokémon-Level aus `pokemon_level`.
 - `growth` (integer) — Fortschritt Richtung nächstes Level. Der Wert steigt beim Abschließen von Tasks bis maximal `100`. Wenn der 2-Tage-Cooldown erfüllt ist, erhöht das Backend `pokemonLevel` und setzt `growth` auf `0`.
 - `happiness` (integer) — aktueller Motivationswert.
-- `pendingFeedPoints` (integer) — verfügbare Trainingspunkte aus abgeschlossenen Tasks. Diese Punkte kann das Frontend über `POST /api/user/feed` in Motivation umwandeln.
+- `pendingFeedPoints` (integer) — technisch gespeicherte Quest-Punkte aus abgeschlossenen Tasks.
 - `tasks` (array of Task objects) — Aufgaben, die im Frontend sichtbar sind. Jeder Eintrag enthält:
   - `id` (number)
   - `title` (string)
@@ -129,9 +129,10 @@ Spielstandsaktionen. Das Frontend aktualisiert den Dashboard-Spielstand in einer
 laufenden Session regelmäßig, damit der Reset nach Ablauf des Intervalls
 sichtbar wird:
 
-- Standard: `pokehabit.daily-reset-interval=PT24H`.
-- Dev-/Demo-Profil: `pokehabit.daily-reset-interval=PT1M`, damit der Reset im
-  Akzeptanztest nach einer Minute sichtbar geprüft werden kann.
+- Standard und Dev-Profil: `pokehabit.daily-reset-interval=PT24H`.
+- Für einen manuellen Kurztest kann das Intervall temporär mit
+  `pokehabit.daily-reset-interval=PT1M` gestartet werden. Das bleibt nicht als
+  dauerhafte Dev-Konfiguration eingecheckt.
 - Wenn das Intervall erreicht ist: `hydration_ml` wird auf `0` gesetzt.
 - Wenn das Intervall erreicht ist: alle `user_tasks.completed`-Flags des Users
   werden auf `false` gesetzt.
