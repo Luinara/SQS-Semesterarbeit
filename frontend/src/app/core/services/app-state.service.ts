@@ -472,22 +472,14 @@ function createFeedbackId(kind: GameFeedback['kind']): string {
 function createMotivationDecayFeedback(
   previousHappiness: number,
   nextHappiness: number,
-  previousGrowth: number,
-  nextGrowth: number
+  _previousGrowth: number,
+  _nextGrowth: number
 ): string {
-  if (nextHappiness < previousHappiness && nextGrowth < previousGrowth) {
-    return `Motivationstest ausgefÃ¼hrt: ${previousHappiness}% -> ${nextHappiness}%, Wachstum ${previousGrowth} -> ${nextGrowth}.`;
-  }
-
   if (nextHappiness < previousHappiness) {
-    return `Motivationstest ausgefÃ¼hrt: ${previousHappiness}% -> ${nextHappiness}%.`;
+    return `Motivationstest ausgefuehrt: ${previousHappiness}% -> ${nextHappiness}%.`;
   }
 
-  if (nextGrowth < previousGrowth) {
-    return `Motivation ist bereits bei 0%. Wachstum ${previousGrowth} -> ${nextGrowth}.`;
-  }
-
-  return 'Motivationstest ausgefÃ¼hrt. Motivation und Wachstum sind bereits bei 0.';
+  return 'Motivation ist bereits bei 0%.';
 }
 
 function isPokemonImageForCurrentId(

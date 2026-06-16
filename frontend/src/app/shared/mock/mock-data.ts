@@ -16,7 +16,7 @@ export const PET_RULES = {
   heartRecoveryStep: 0.5,
   heartRecoveryStreakDays: 2,
   dailyHappinessGainLimit: 60,
-  happinessDecayPerMissedDay: 18,
+  happinessDecayPerMissedDay: 10,
   levelUpCooldownHours: 0,
   maxHunger: 100,
   dailyHungerResetValue: 0,
