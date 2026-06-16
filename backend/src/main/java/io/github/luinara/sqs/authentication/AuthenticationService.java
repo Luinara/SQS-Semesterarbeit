@@ -18,6 +18,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -37,6 +38,8 @@ public class AuthenticationService {
     private static final int MAX_FAILED_LOGIN_ATTEMPTS = 5;
     private static final Duration LOGIN_LOCKOUT_DURATION = Duration.ofMinutes(15);
     private static final int DEFAULT_STARTER_POKEMON_ID = 1;
+    private static final int MIN_POKEMON_LEVEL = 1;
+    private static final int HAPPINESS_DECAY_PER_MISSED_DAY = 20;
 
     private final Map<String, String> users = new ConcurrentHashMap<>();
     private final Map<String, String> sessions = new ConcurrentHashMap<>();
@@ -172,26 +175,9 @@ public class AuthenticationService {
                 // DB-mode: update lastLoginAt and streak, then persist
                 Optional<UserEntity> optEntity = userRepository.findByUsernameIgnoreCase(username);
                 optEntity.ifPresent(entity -> {
-                    OffsetDateTime nowUtc = OffsetDateTime.now(ZoneOffset.UTC);
-                    OffsetDateTime last = entity.getLastLoginAt();
-                    entity.setLastLoginAt(nowUtc);
-
-                    // compute streak using UTC day boundaries
-                    LocalDate today = nowUtc.toLocalDate();
-                    if (last == null) {
-                        entity.setStreak(1);
-                    } else {
-                        LocalDate lastDate = last.withOffsetSameInstant(ZoneOffset.UTC).toLocalDate();
-                        if (lastDate.isEqual(today)) {
-                            // already logged in today, no change
-                        } else if (lastDate.isEqual(today.minusDays(1))) {
-                            entity.setStreak(entity.getStreak() + 1);
-                        } else {
-                            entity.setStreak(1);
-                        }
-                    }
-
-                    entity.setLastLoginAt(nowUtc);
+                    OffsetDateTime nowUtc = OffsetDateTime.now(clock)
+                            .withOffsetSameInstant(ZoneOffset.UTC);
+                    updateLoginProgress(entity, nowUtc);
                     userRepository.save(entity);
                 });
                 return Optional.of(key); // return canonical username (lowercased key)
@@ -205,6 +191,53 @@ public class AuthenticationService {
 
         registerFailedLogin(key);
         return Optional.empty();
+    }
+
+    private void updateLoginProgress(UserEntity entity, OffsetDateTime nowUtc) {
+        OffsetDateTime last = entity.getLastLoginAt();
+        LocalDate today = nowUtc.toLocalDate();
+
+        if (last == null) {
+            entity.setStreak(1);
+            entity.setLastLoginAt(nowUtc);
+            return;
+        }
+
+        LocalDate lastDate = last.withOffsetSameInstant(ZoneOffset.UTC).toLocalDate();
+
+        if (lastDate.isEqual(today)) {
+            entity.setLastLoginAt(nowUtc);
+            return;
+        }
+
+        if (lastDate.isEqual(today.minusDays(1))) {
+            entity.setStreak(entity.getStreak() + 1);
+            entity.setLastLoginAt(nowUtc);
+            return;
+        }
+
+        long missedDays = Math.max(0, ChronoUnit.DAYS.between(lastDate, today) - 1);
+        entity.setStreak(1);
+        applyInactivityPenalty(entity, missedDays);
+        entity.setLastLoginAt(nowUtc);
+    }
+
+    private void applyInactivityPenalty(UserEntity entity, long missedDays) {
+        if (missedDays <= 0) {
+            return;
+        }
+
+        int maxLevelLoss = Math.max(0, entity.getPokemonLevel() - MIN_POKEMON_LEVEL);
+        int levelLoss = (int) Math.min(missedDays, maxLevelLoss);
+
+        if (levelLoss > 0) {
+            entity.setPokemonLevel(entity.getPokemonLevel() - levelLoss);
+            entity.setPokemonXp(0);
+            entity.setLastLevelUpAt(null);
+        }
+
+        long happinessLoss = missedDays * HAPPINESS_DECAY_PER_MISSED_DAY;
+        entity.setHappiness((int) Math.max(0, entity.getHappiness() - happinessLoss));
     }
 
     /**
