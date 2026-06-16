@@ -1,0 +1,8 @@
+* [Home](Home.md)
+* [Architektur](Architektur.md)
+* [API](API.md)
+* [Frontend](Frontend.md)
+* [Teststrategie](Teststrategie.md)
+* [Quality Hub](Quality-Hub.md)
+* [Abgabe-Checkliste](Abgabe-Checkliste.md)
+* [ReadTheDocs](ReadTheDocs.md)
