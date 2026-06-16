@@ -1,7 +1,6 @@
 import { spawn } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 
 const repoRoot = process.env.QUALITY_REPO_DIR ?? '/work/repo';
 const outputRoot = process.env.QUALITY_OUTPUT_DIR ?? '/quality-output';
@@ -218,10 +217,7 @@ function runShellCommand(check) {
   return new Promise((resolve) => {
     const logPath = join(logRoot, `${check.id}.log`);
     const fullCwd = join(repoRoot, check.cwd);
-    const env = {
-      ...process.env,
-      ...(check.env ?? {}),
-    };
+    const env = check.env ? { ...process.env, ...check.env } : process.env;
 
     writeFileSync(
       logPath,
