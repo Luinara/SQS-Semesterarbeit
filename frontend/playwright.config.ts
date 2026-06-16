@@ -4,15 +4,12 @@ const localBaseURL = 'http://127.0.0.1:4200';
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? localBaseURL;
 const shouldCreateDemoEvidence = process.env.PLAYWRIGHT_EVIDENCE === '1';
 const shouldRunMobileCheck = process.env.PLAYWRIGHT_MOBILE_CHECK === '1';
+const reporter = resolveReporter();
 
 export default defineConfig({
   testDir: '../tests/e2e',
   fullyParallel: true,
-  reporter: shouldCreateDemoEvidence
-    ? [['html', { open: 'never' }], ['line']]
-    : process.env.CI
-      ? 'line'
-      : 'html',
+  reporter,
   use: {
     baseURL,
     headless: true,
@@ -42,3 +39,11 @@ export default defineConfig({
       : []),
   ],
 });
+
+function resolveReporter() {
+  if (shouldCreateDemoEvidence) {
+    return [['html', { open: 'never' }], ['line']];
+  }
+
+  return process.env.CI ? 'line' : 'html';
+}

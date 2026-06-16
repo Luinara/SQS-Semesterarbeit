@@ -31,4 +31,4 @@ Invoke-NpmStep -Label 'Prüfe TypeScript-Typen...' -Arguments @('run', 'type-che
 Invoke-NpmStep -Label 'Erzeuge einen Produktions-Build zur Verifikation...' -Arguments @('run', 'build')
 
 Write-Output '==> Frontend-Setup abgeschlossen.'
-Write-Host '==> Starte die App anschließend mit: npm start'
+Write-Output '==> Starte die App anschließend mit: npm start'

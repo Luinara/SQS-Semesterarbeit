@@ -3,7 +3,8 @@ const http = require('node:http');
 const path = require('node:path');
 
 const port = Number(process.env.PORT ?? 4200);
-const root = path.resolve(__dirname, '../dist/sqs/browser');
+const root = fs.realpathSync(path.resolve(__dirname, '../dist/sqs/browser'));
+const fallbackFile = path.join(root, 'index.html');
 
 const contentTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -15,15 +16,33 @@ const contentTypes = {
 };
 
 function resolveFile(requestUrl) {
-  const urlPath = decodeURIComponent((requestUrl ?? '/').split('?')[0]);
-  const requestedPath = urlPath === '/' ? 'index.html' : urlPath;
-  const filePath = path.resolve(root, `.${requestedPath}`);
+  let urlPath = '/';
 
-  if (!filePath.startsWith(root) || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-    return path.join(root, 'index.html');
+  try {
+    urlPath = decodeURIComponent(new URL(requestUrl ?? '/', 'http://localhost').pathname);
+  } catch {
+    return fallbackFile;
   }
 
-  return filePath;
+  const requestedPath = urlPath === '/' ? '/index.html' : urlPath;
+  const filePath = path.resolve(root, `.${requestedPath}`);
+  let canonicalPath;
+
+  try {
+    canonicalPath = fs.realpathSync(filePath);
+  } catch {
+    return fallbackFile;
+  }
+
+  const relativePath = path.relative(root, canonicalPath);
+  const isInsideRoot =
+    relativePath === '' || (!relativePath.startsWith('..') && !path.isAbsolute(relativePath));
+
+  if (!isInsideRoot || fs.statSync(canonicalPath).isDirectory()) {
+    return fallbackFile;
+  }
+
+  return canonicalPath;
 }
 
 const server = http.createServer((request, response) => {

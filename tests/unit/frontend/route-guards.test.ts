@@ -1,7 +1,6 @@
 import "@angular/compiler";
 import {
   createEnvironmentInjector,
-  EnvironmentInjector,
   runInInjectionContext,
 } from "@angular/core";
 import { Router, UrlTree } from "@angular/router";
@@ -96,7 +95,7 @@ function runGuard(
       { provide: AppStateService, useValue: context.appState },
       { provide: Router, useValue: context.router },
     ],
-    undefined as unknown as EnvironmentInjector,
+    undefined,
   );
 
   return runInInjectionContext(injector, () => guard({} as never, {} as never));

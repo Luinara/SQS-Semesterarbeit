@@ -27,9 +27,7 @@
     aria-label="Tagesziel-Fortschritt"
     [value]="progressPercent()"
     max="100"
-  >
-    {{ progressPercent() }}%
-  </progress>
+  ></progress>
 
   <div class="quality-gate__meter" aria-hidden="true">
     <span [style.width.%]="progressPercent()"></span>

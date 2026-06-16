@@ -24,9 +24,7 @@
     aria-label="Wasser-Fortschritt"
     [value]="cappedWaterLevel()"
     [max]="goalMl()"
-  >
-    {{ cappedWaterLevel() }} / {{ goalMl() }} ml
-  </progress>
+  ></progress>
 
   <div class="hydration-gauge__progress" aria-hidden="true">
     <span [style.width.%]="progressPercent()"></span>

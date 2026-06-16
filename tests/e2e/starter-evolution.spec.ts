@@ -162,13 +162,13 @@ for (const starterFlow of starterFlows) {
 
     await expect(
       page.getByRole("heading", {
-        name: new RegExp(`${starterFlow.expected[0]} trainiert`),
+        name: new RegExp(String.raw`${starterFlow.expected[0]} trainiert`),
       }),
     ).toBeVisible();
     await expect(page.getByText("Level 10")).toBeVisible();
     await expect(page.locator("sqs-pet-visual img")).toHaveAttribute(
       "src",
-      new RegExp(`/${starterPokemonId}\\.png`),
+      new RegExp(String.raw`/${starterPokemonId}\.png`),
     );
 
     for (let index = 0; index < 5; index += 1) {
@@ -177,13 +177,13 @@ for (const starterFlow of starterFlows) {
 
     await expect(
       page.getByRole("heading", {
-        name: new RegExp(`${starterFlow.expected[1]} trainiert`),
+        name: new RegExp(String.raw`${starterFlow.expected[1]} trainiert`),
       }),
     ).toBeVisible();
     await expect(page.getByText("Level 15")).toBeVisible();
     await expect(page.locator("sqs-pet-visual img")).toHaveAttribute(
       "src",
-      new RegExp(`/${starterPokemonId + 1}\\.png`),
+      new RegExp(String.raw`/${starterPokemonId + 1}\.png`),
     );
 
     for (let index = 0; index < 20; index += 1) {
@@ -192,13 +192,13 @@ for (const starterFlow of starterFlows) {
 
     await expect(
       page.getByRole("heading", {
-        name: new RegExp(`${starterFlow.expected[2]} trainiert`),
+        name: new RegExp(String.raw`${starterFlow.expected[2]} trainiert`),
       }),
     ).toBeVisible();
     await expect(page.getByText("Level 35")).toBeVisible();
     await expect(page.locator("sqs-pet-visual img")).toHaveAttribute(
       "src",
-      new RegExp(`/${starterPokemonId + 2}\\.png`),
+      new RegExp(String.raw`/${starterPokemonId + 2}\.png`),
     );
   });
 }
