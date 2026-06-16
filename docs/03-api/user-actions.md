@@ -2,7 +2,7 @@
 
 Dieses Dokument beschreibt die Endpunkte, mit denen der Client Wasser trinken, Pokémon füttern/trainieren und den eigenen Account löschen kann.
 
-Hinweis: Authentifizierung wie im Projektstandard (Session / USER_TOKEN) wird erwartet. Alle Zeiten und Werte verwenden UTC‑Konventionen, Responses enthalten `GameStateDto` (siehe `docs/API_USER_GAME_STATE.md`).
+Hinweis: Authentifizierung wie im Projektstandard (Session / USER_TOKEN) wird erwartet. Alle Zeiten und Werte verwenden UTC‑Konventionen, Responses enthalten `GameStateDto` (siehe `docs/03-api/user-game-state.md`).
 
 ## Allgemeines
 

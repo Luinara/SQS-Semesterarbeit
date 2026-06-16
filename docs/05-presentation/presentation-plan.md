@@ -18,9 +18,9 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
    | App | `http://localhost:3000` | Live-Demo |
    | Backend | `http://localhost:8181/api/tasks` | öffentlicher REST-Endpunkt |
    | Quality Hub | `http://localhost:8088` | Tests, Coverage, Security, E2E |
-   | Testpyramide | `docs/test-pyramid.md` | SQS-Testnachweis |
+   | Testpyramide | `docs/04-quality/test-pyramid.md` | SQS-Testnachweis |
    | Doku | ReadTheDocs-URL oder lokale `docs/index.md` | arc42, ADRs, C4 |
-   | C4 | `docs/diagrams/c4-diagram.md` | Architekturüberblick |
+   | C4 | `docs/02-architecture/diagrams/c4-diagram.md` | Architekturüberblick |
 
 3. Demo-Login bereithalten:
 
@@ -116,7 +116,7 @@ Quality-Nachweis der relevante Fokus."
 | Wo ist der externe Service? | "`PokeApiPokemonService` im Backend ruft PokeAPI auf. Der Ausfall ist durch Fallback und Tests abgesichert." |
 | Was passiert, wenn PokeAPI down ist? | "Registrierung funktioniert weiter. Das Backend nutzt den lokalen Starter-Katalog." |
 | Was ist euer Security-Nachweis? | "Session-Cookie, Passwort-Hashing, Login-Lockout, Tests für unauthentifizierte Requests und npm Security Check im Quality Hub." |
-| Wie erfüllt ihr die Testpyramide? | "Die Zuordnung steht in `docs/test-pyramid.md`: Backend-Unit- und Integrationstests, Frontend-Unit-Tests, ArchUnit, Security-nahe Controller-Tests und Playwright-E2E." |
+| Wie erfüllt ihr die Testpyramide? | "Die Zuordnung steht in `docs/04-quality/test-pyramid.md`: Backend-Unit- und Integrationstests, Frontend-Unit-Tests, ArchUnit, Security-nahe Controller-Tests und Playwright-E2E." |
 | Wo sieht man Coverage? | "Im Quality Hub über JaCoCo für Backend und Vitest Coverage für Frontend." |
 | Warum eigener Quality Hub statt nur Terminal? | "Für die Abgabe ist es schneller prüfbar: ein Docker-Start, ein Dashboard, Links zu Logs und Reports." |
 | Was würdet ihr als nächstes verbessern? | "Read-only Historie für Tagesfortschritt, Caching für externe API-Daten und produktives Deployment-Hardening." |

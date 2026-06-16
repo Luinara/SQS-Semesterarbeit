@@ -92,8 +92,8 @@ Mermaid-Quelle: [c4-deployment.mmd](./mermaid/c4-deployment.mmd)
 
 | Entscheidung | Quelle |
 | --- | --- |
-| Backend mit Spring Boot | [ADR-001](../adr/ADR-001-use-spring-boot.md) |
-| Frontend mit Angular/TypeScript | [ADR-002](../adr/ADR-002-use-angular-typescript.md) |
-| Persistenz mit PostgreSQL | [ADR-003](../adr/ADR-003-use-postgresql.md) |
-| PokeAPI als externer Backend-Service | [ADR-004](../adr/ADR-004-use-pokeapi.md) |
-| Feature-Packages im Backend | [ADR-005](../adr/ADR-005-use-feature-specific-folder-structure.md) |
+| Backend mit Spring Boot | [ADR-001](../../adr/ADR-001-use-spring-boot.md) |
+| Frontend mit Angular/TypeScript | [ADR-002](../../adr/ADR-002-use-angular-typescript.md) |
+| Persistenz mit PostgreSQL | [ADR-003](../../adr/ADR-003-use-postgresql.md) |
+| PokeAPI als externer Backend-Service | [ADR-004](../../adr/ADR-004-use-pokeapi.md) |
+| Feature-Packages im Backend | [ADR-005](../../adr/ADR-005-use-feature-specific-folder-structure.md) |

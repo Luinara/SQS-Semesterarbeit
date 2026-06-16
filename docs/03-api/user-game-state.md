@@ -152,7 +152,7 @@ verpasst. Das Pokémon verliert ein Level und 20 Motivation.
 
 ## File location
 
-This documentation is stored at `docs/API_USER_GAME_STATE.md`.
+Diese Doku liegt in `docs/03-api/user-game-state.md`.
 
 ## Notes about `growth`
 

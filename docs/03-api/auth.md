@@ -84,9 +84,9 @@ Responses:
 
 ## Other Controllers
 
-- Task endpoints are documented in `docs/API_TASKS.md`.
-- User game-state and account endpoints are documented in `docs/API_USER_GAME_STATE.md`.
-- User action endpoints are documented in `docs/API_USER_ACTIONS.md`.
+- Task endpoints are documented in `docs/03-api/tasks.md`.
+- User game-state and account endpoints are documented in `docs/03-api/user-game-state.md`.
+- User action endpoints are documented in `docs/03-api/user-actions.md`.
 
 
 

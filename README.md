@@ -60,15 +60,16 @@ Die technische Dokumentation liegt unter `docs/` und ist für ReadTheDocs
 vorbereitet. Wichtige Einstiegspunkte:
 
 - `docs/index.md`
-- `docs/test-pyramid.md`
-- `docs/arc42/`
+- `docs/04-quality/test-pyramid.md`
+- `docs/02-architecture/arc42/`
 - `docs/adr/`
-- `docs/diagrams/c4-diagram.md`
-- `docs/diagrams/structurizr/workspace.dsl`
-- `docs/presentation-plan.md`
-- `docs/presentation-cheat-sheet.md`
+- `docs/ger-adr/`
+- `docs/02-architecture/diagrams/c4-diagram.md`
+- `docs/02-architecture/diagrams/structurizr/workspace.dsl`
+- `docs/05-presentation/presentation-plan.md`
+- `docs/05-presentation/presentation-cheat-sheet.md`
 
 ReadTheDocs nutzt `.readthedocs.yaml`, `mkdocs.yml` und
 `docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys kann
 die Doku dort direkt gebaut werden. Die Schritte stehen in
-`docs/readthedocs-publish.md`.
+`docs/06-operations/readthedocs-publish.md`.

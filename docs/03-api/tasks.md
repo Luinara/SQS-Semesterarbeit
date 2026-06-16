@@ -50,7 +50,7 @@ Beispiel:
   - Path: `/api/tasks/{taskId}/complete` (taskId als path param)
   - Body: optionales Meta‑Objekt (nicht erforderlich in dieser Iteration)
 - Response:
-  - 200 OK — die Task wurde neu für den User als abgeschlossen markiert und Effekte wurden angewendet. Body enthält ein `gameState`‑Objekt (entspricht `GameStateDto`, siehe `docs/API_USER_GAME_STATE.md`) mit aktualisierten Werten: `pendingFeedPoints`, `growth`, `pokemonLevel`, `pokemonImageUrl`, `serverNow`, `streak`, `tasks` (optional).
+  - 200 OK — die Task wurde neu für den User als abgeschlossen markiert und Effekte wurden angewendet. Body enthält ein `gameState`‑Objekt (entspricht `GameStateDto`, siehe `docs/03-api/user-game-state.md`) mit aktualisierten Werten: `pendingFeedPoints`, `growth`, `pokemonLevel`, `pokemonImageUrl`, `serverNow`, `streak`, `tasks` (optional).
   - 404 Not Found — Task mit `taskId` existiert nicht.
   - 401 Unauthorized — kein gültiger Login vorhanden.
   - 409 Conflict — die Task ist bereits als abgeschlossen für diesen Benutzer gespeichert (für diese Iteration: `user_tasks.completed == true`).
@@ -70,7 +70,7 @@ Wesentliche Semantik (kurz)
 
 Tagesgrenzen / Reset (Frontend / Übergangsregel)
 
-- Übergangsregel: Der tägliche Reset der Anzeige wird in der aktuellen Iteration vom Frontend gehandhabt (siehe `docs/API_USER_GAME_STATE.md`).
+- Übergangsregel: Der tägliche Reset der Anzeige wird in der aktuellen Iteration vom Frontend gehandhabt (siehe `docs/03-api/user-game-state.md`).
 - Hinweis für Backend‑Integratoren: Weil aktuell kein `TaskCompletion`‑Log vorhanden ist, kann der Server nur den `user_tasks.completed`‑Wert setzen; eine echte "1x pro UTC‑Tag"‑Semantik wird erst mit einem späteren DB‑Änderungs‑Feature robust.
 
 Idempotency und Fehlerverhalten
@@ -128,4 +128,4 @@ Frontend‑Hinweis
 
 Dateiablage
 
-- Diese Doku liegt in `docs/API_TASKS.md`.
+- Diese Doku liegt in `docs/03-api/tasks.md`.

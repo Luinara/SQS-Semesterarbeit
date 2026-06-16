@@ -36,5 +36,5 @@ die gepflegten lokalen Starter-Daten.
 
 ## Dokumentation
 
-Architektur steht in arc42 und ADRs. API-Verträge liegen unter `docs/API_*.md`.
+Architektur steht in arc42 und ADRs. API-Verträge liegen unter `docs/03-api/`.
 Der Docker-Start ist in der Root-README und in `quality/README.md` beschrieben.
