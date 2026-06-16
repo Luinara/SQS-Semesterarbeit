@@ -498,5 +498,5 @@ function isPokemonImageForCurrentId(
     return true;
   }
 
-  return new RegExp(`(^|/)${currentPokemonId}\\.png(?:[?#].*)?$`).test(imageUrl);
+  return new RegExp(String.raw`(^|/)${currentPokemonId}\.png(?:[?#].*)?$`).test(imageUrl);
 }

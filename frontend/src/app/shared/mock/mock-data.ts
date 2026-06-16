@@ -29,7 +29,7 @@ export const QUALITY_RULES = {
 
 export const DEMO_ACCOUNT = {
   username: 'demo',
-  password: 'password123',
+  password: 'password123', // NOSONAR - local demo seed credential, not a production secret.
   userName: 'demo',
   starterPokemonSpecies: 'bulbasaur',
 } as const;
