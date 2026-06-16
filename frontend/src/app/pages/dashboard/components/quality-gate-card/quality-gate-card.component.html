@@ -1,15 +1,8 @@
 <section class="quality-gate">
   <div class="quality-gate__hero">
-    <div>
+    <div class="quality-gate__score">
       <span class="eyebrow">Tagesziel</span>
       <h2>{{ qualityScore() }} / {{ qualityTarget() }}</h2>
-      <p>
-        @if (gateReached()) {
-          Tagesziel erreicht. Dein Pokémon kann jetzt stark weiterleveln.
-        } @else {
-          Noch {{ qualityTarget() - qualityScore() }} Punkte bis zum Tagesziel.
-        }
-      </p>
     </div>
 
     <div
@@ -20,17 +13,6 @@
       <strong>{{ progressPercent() }}%</strong>
       <span>Punkte</span>
     </div>
-  </div>
-
-  <progress
-    class="quality-gate__native-progress"
-    aria-label="Tagesziel-Fortschritt"
-    [value]="progressPercent()"
-    max="100"
-  ></progress>
-
-  <div class="quality-gate__meter" aria-hidden="true">
-    <span [style.width.%]="progressPercent()"></span>
   </div>
 
   <div class="quality-gate__grid">
@@ -56,6 +38,25 @@
         <strong>Alle Quests für heute erledigt.</strong>
       }
     </div>
+  </div>
+
+  <p class="quality-gate__message">
+    @if (gateReached()) {
+      Tagesziel erreicht. Dein Pokémon kann jetzt stark weiterleveln.
+    } @else {
+      Noch {{ qualityTarget() - qualityScore() }} Punkte bis zum Tagesziel.
+    }
+  </p>
+
+  <progress
+    class="quality-gate__native-progress"
+    aria-label="Tagesziel-Fortschritt"
+    [value]="progressPercent()"
+    max="100"
+  ></progress>
+
+  <div class="quality-gate__meter" aria-hidden="true">
+    <span [style.width.%]="progressPercent()"></span>
   </div>
 
   <div class="quality-gate__pyramid">
