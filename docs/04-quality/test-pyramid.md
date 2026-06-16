@@ -40,6 +40,18 @@ weil Browsertests langsamer sind und mehr bewegliche Teile haben.
 | Gibt es einen echten Browserflow? | Playwright prüft Login, Dashboard, Wasser, Quest, Training, Logout und Starter-Entwicklung. |
 | Werden Frontend-Abhängigkeiten geprüft? | `npm run security:frontend` kombiniert Lockfile-Test und `npm audit`. |
 
+## Manueller Wetter-API-Nachweis
+
+Der externe Wetter-Service ist automatisiert ueber `weather.service.test.ts`
+und `weather-appearance.logic.test.ts` abgesichert. Zusaetzlich gibt es einen
+manuellen Curl-/JSON-Nachweis fuer die Open-Meteo-Anbindung:
+
+- Doku: [weather-open-meteo-manual-check.md](weather-open-meteo-manual-check.md)
+- Tool: `scripts/weather-curl-check.ps1`
+- Temperaturfeld im JSON: `current.temperature_2m`
+- Wettercode fuer die Szene: `current.weather_code`
+- Tag/Nacht-Feld: `current.is_day`
+
 ## Quality Hub
 
 Der Quality Hub führt die Pyramide nicht nur einzeln im Terminal aus, sondern

@@ -32,6 +32,36 @@ Die Frontend-Unit-Tests prüfen aktuell vor allem:
 Der wichtigste Gedanke dabei ist:
 Fachregeln sollen ohne Angular-UI testbar sein, damit die Tests schnell, robust und für die CI leicht wartbar bleiben.
 
+## Wetter-API-Testnachweis
+
+Die Temperatur kommt aus der Open-Meteo Forecast API, nicht aus dem
+Geocoding-JSON. Der relevante JSON-Pfad ist `current.temperature_2m`.
+
+Manueller Nachweis:
+
+```powershell
+cd C:\Workspace\Uni-26\SQS\SQS-Semesterarbeit
+```
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1 -City "Hawaii" -RawJson
+```
+
+Erwartet wird ein Forecast-JSON mit `current.temperature_2m`, z.B.:
+
+```json
+{
+  "current": {
+    "temperature_2m": 24.7,
+    "weather_code": 1,
+    "is_day": 1
+  }
+}
+```
+
+Die zugehoerige Doku steht in
+`docs/04-quality/weather-open-meteo-manual-check.md`.
+
 ## Frontend security checks
 
 Der Frontend-npm-Sicherheitscheck ist bewusst auf `frontend/package.json` und `frontend/package-lock.json` begrenzt.

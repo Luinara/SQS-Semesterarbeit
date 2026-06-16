@@ -119,6 +119,10 @@ cd backend
 Wetterdaten manuell mit echten Open-Meteo-Curl-Aufrufen pruefen:
 
 ```powershell
+cd C:\Workspace\Uni-26\SQS\SQS-Semesterarbeit
+```
+
+```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1
 ```
 
@@ -128,9 +132,12 @@ Einzelne Orte pruefen:
 powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1 -City "Hawaii", "Tokyo"
 ```
 
-Das Script zeigt die Geocoding- und Wetter-URLs als `curl.exe`-Befehle an und
-nutzt beim Wetterabruf `elevation=nan`, damit kein einzelner Berg- oder
-Hoehenpunkt die Temperatur verfaelscht.
+Das Script zeigt den Forecast-`curl.exe`-Befehl und die Temperatur aus
+`current.temperature_2m`. Beim Wetterabruf nutzt es `elevation=nan`, damit kein
+einzelner Berg- oder Hoehenpunkt die Temperatur verfaelscht.
+
+Mit `-RawJson` ist im Forecast-JSON ein Feld wie
+`"temperature_2m": 24.7` zu erwarten. Dieser Wert ist die Temperatur der App.
 
 ## Quality Hub
 
