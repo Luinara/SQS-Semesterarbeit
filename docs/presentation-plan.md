@@ -18,9 +18,9 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
    | App | `http://localhost:3000` | Live-Demo |
    | Backend | `http://localhost:8181/api/tasks` | öffentlicher REST-Endpunkt |
    | Quality Hub | `http://localhost:8088` | Tests, Coverage, Security, E2E |
-   | Testpyramide | `docs/04-quality/test-pyramid.md` | SQS-Testnachweis |
+   | Testpyramide | `docs/test-pyramid.md` | SQS-Testnachweis |
    | Doku | ReadTheDocs-URL oder lokale `docs/index.md` | arc42, ADRs, C4 |
-   | C4 | `docs/02-architecture/diagrams/c4-diagram.md` | Architekturüberblick |
+   | C4 | `docs/diagrams/c4-diagram.md` | Architekturüberblick |
 
 3. Demo-Login bereithalten:
 
@@ -89,23 +89,6 @@ Spring-Boot-Backend, PostgreSQL und externe Dienste. Die Backend-Komponenten
 sind nach Feature-Packages getrennt. Controller greifen nicht direkt auf
 Repositories zu; das prüfen wir auch mit ArchUnit."
 
-### Architekturentscheidung Angular statt React
-
-"React wäre für die App grundsätzlich auch möglich gewesen. Dagegen sprach für
-uns, dass React sehr viel Architekturentscheidung offenlässt: Routing,
-Formularstruktur, State-Management, Guards und Projektkonventionen müssten
-stärker selbst zusammengestellt werden. Das ist flexibel, erhöht bei einer
-Semesterarbeit aber auch das Risiko, dass die App aus vielen einzelnen
-Bibliotheken und Team-Konventionen besteht.
-
-Angular passte für unser Ziel besser, weil Routing, Services, Guards,
-Dependency Injection, TypeScript und Teststruktur direkt im Framework liegen.
-Dadurch konnten wir die App feature-orientiert aufbauen, HTTP-Zugriffe in
-Services kapseln und Zuständigkeiten klarer trennen. Der Nachteil ist, dass
-Angular schwergewichtiger ist und Updates eher Breaking Changes mitbringen
-können. Für unseren SQS-Fokus war diese Strenge aber eher ein Vorteil, weil sie
-Wartbarkeit, Testbarkeit und einheitliche Struktur unterstützt."
-
 ### Quality Hub
 
 "Für die Abgabe wollten wir die Testpyramide nicht nur behaupten. In der Doku
@@ -133,12 +116,11 @@ Quality-Nachweis der relevante Fokus."
 
 | Frage | Antwort |
 | --- | --- |
-| Warum Angular statt React? | "React wäre möglich gewesen und ist flexibler. Dagegen sprach für uns, dass React Routing, State-Struktur, Guards, Formularansatz und Projektkonventionen stärker offenlässt. Für eine SQS-Semesterarbeit hätte das mehr Bibliotheksauswahl und mehr Team-Konventionen bedeutet. Angular bringt diese Struktur direkter mit, was für Testbarkeit, Teamarbeit und klare Trennung besser gepasst hat." |
-| Was ist das Gegenargument gegen Angular? | "Angular ist schwergewichtiger als React und Updates können mehr Anpassungen erzwingen. Wir haben das bewusst akzeptiert, weil die feste Struktur für SQS, Teamarbeit und Dokumentation mehr Nutzen gebracht hat als maximale UI-Flexibilität." |
+| Warum Angular statt React? | "React wäre möglich gewesen und ist flexibler. Dagegen sprach für uns, dass React Routing, State-Struktur, Guards, Formularansatz und Projektkonventionen stärker offenlässt. Angular bringt diese Struktur direkter mit, was für Testbarkeit, Teamarbeit und klare Trennung in dieser Semesterarbeit besser gepasst hat." |
 | Wo ist der externe Service? | "`WeatherService` im Frontend nutzt den `OpenMeteoWeatherAdapter`. Der Adapter ruft Open-Meteo Geocoding für die Stadt und danach die Forecast-API für Temperatur, Wettercode und Tag/Nacht ab." |
 | Was passiert, wenn die Wetter-API down ist? | "Die App bleibt nutzbar. Im Dashboard wird eine Fehlermeldung angezeigt, und die Wetter-Szene fällt auf den lokalen Standardzustand zurück." |
 | Was ist euer Security-Nachweis? | "Session-Cookie, Passwort-Hashing, Login-Lockout, Tests für unauthentifizierte Requests und npm Security Check im Quality Hub." |
-| Wie erfüllt ihr die Testpyramide? | "Die Zuordnung steht in `docs/04-quality/test-pyramid.md`: Backend-Unit- und Integrationstests, Frontend-Unit-Tests, ArchUnit, Security-nahe Controller-Tests und Playwright-E2E." |
+| Wie erfüllt ihr die Testpyramide? | "Die Zuordnung steht in `docs/test-pyramid.md`: Backend-Unit- und Integrationstests, Frontend-Unit-Tests, ArchUnit, Security-nahe Controller-Tests und Playwright-E2E." |
 | Wo sieht man Coverage? | "Im Quality Hub über JaCoCo für Backend und Vitest Coverage für Frontend." |
 | Warum eigener Quality Hub statt nur Terminal? | "Für die Abgabe ist es schneller prüfbar: ein Docker-Start, ein Dashboard, Links zu Logs und Reports." |
 | Was würdet ihr als nächstes verbessern? | "Als Nächstes würden wir vor allem das Produktgefühl ausbauen: ein schöneres, stärker animiertes UI, mehr Pokémon-Auswahl statt nur fester Starter und eine Sammelbox, in der man Pokémon horten kann, eventuell auch mit seltenen Shinies. Danach wären eigene Tasks spannend: Nutzer könnten Aufgaben selbst anlegen und dafür vorgefertigte Punkte-Templates wählen, damit die Gamification fair bleibt. Technisch kämen dann noch produktives Deployment-Hardening und besseres Caching dazu." |
