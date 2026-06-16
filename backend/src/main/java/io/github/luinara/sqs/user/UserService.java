@@ -183,7 +183,7 @@ public class UserService {
         if (opt.isEmpty()) return null;
 
         UserEntity user = opt.get();
-        user.setHappiness(Math.max(0, user.getHappiness() - HAPPINESS_DECAY_PER_MISSED_DAY));
+        applyMotivationDecay(user, HAPPINESS_DECAY_PER_MISSED_DAY);
         userRepository.save(user);
 
         return getGameStateForUsername(username);
@@ -226,5 +226,16 @@ public class UserService {
         pokemonRepository.findById(currentId)
                 .map(pokemon -> pokemon.getEvolutionId())
                 .ifPresent(user::setCurrentPokemonId);
+    }
+
+    private void applyMotivationDecay(UserEntity user, int motivationLoss) {
+        int currentHappiness = user.getHappiness();
+        int remainingLoss = Math.max(0, motivationLoss - currentHappiness);
+
+        user.setHappiness(Math.max(0, currentHappiness - motivationLoss));
+
+        if (remainingLoss > 0) {
+            user.setPokemonXp(Math.max(0, user.getPokemonXp() - remainingLoss));
+        }
     }
 }

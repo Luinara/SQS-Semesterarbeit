@@ -236,8 +236,19 @@ public class AuthenticationService {
             entity.setLastLevelUpAt(null);
         }
 
-        long happinessLoss = missedDays * HAPPINESS_DECAY_PER_MISSED_DAY;
-        entity.setHappiness((int) Math.max(0, entity.getHappiness() - happinessLoss));
+        int happinessLoss = (int) Math.min(Integer.MAX_VALUE, missedDays * HAPPINESS_DECAY_PER_MISSED_DAY);
+        applyMotivationDecay(entity, happinessLoss);
+    }
+
+    private void applyMotivationDecay(UserEntity entity, int motivationLoss) {
+        int currentHappiness = entity.getHappiness();
+        int remainingLoss = Math.max(0, motivationLoss - currentHappiness);
+
+        entity.setHappiness(Math.max(0, currentHappiness - motivationLoss));
+
+        if (remainingLoss > 0) {
+            entity.setPokemonXp(Math.max(0, entity.getPokemonXp() - remainingLoss));
+        }
     }
 
     /**
