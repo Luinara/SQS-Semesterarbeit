@@ -81,8 +81,8 @@ function getCareStatusCopy(careState: PetCareState): CareStatusCopy {
       };
     case 'ready-to-feed':
       return {
-        label: 'Fütterung bereit',
-        description: 'Du hast genug Punkte gesammelt und kannst dein Pokémon trainieren.',
+        label: 'Quest-Fortschritt bereit',
+        description: 'Du hast Punkte gesammelt und bringst dein Pokémon voran.',
       };
     case 'growing':
       return {

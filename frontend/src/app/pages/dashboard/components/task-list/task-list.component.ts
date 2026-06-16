@@ -50,7 +50,6 @@ export function calculateQuestProgressPercentage(
 })
 export class TaskListComponent {
   readonly tasks = input.required<TaskItem[]>();
-  readonly availableFoodPoints = input(0);
   readonly waterLevel = input(0);
   readonly qualityQuestProgress = input<QualityQuestProgress | null>(null);
   readonly isBusy = input(false);

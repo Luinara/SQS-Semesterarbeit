@@ -80,7 +80,7 @@ export function feedPetInGameStateWithFeedback(
       gameState: normalizedGameState,
       feedback: createGameFeedback(
         'info',
-        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Quest-Punkte bis zum nächsten Training.`
+        `Noch ${PET_RULES.feedCost - currentPet.availableFoodPoints} Quest-Punkte bis zur nächsten Pflege.`
       ),
     };
   }
@@ -107,7 +107,9 @@ export function feedPetInGameStateWithFeedback(
         growthResult.level,
         currentPet.starterPokemonSpecies
       ),
-      availableFoodPoints: currentPet.availableFoodPoints - PET_RULES.feedCost,
+      availableFoodPoints: clampAvailableFoodPoints(
+        currentPet.availableFoodPoints - PET_RULES.feedCost
+      ),
       happiness: currentPet.happiness + happinessGain,
       hunger: PET_RULES.dailyHungerResetValue,
       hearts: currentPet.hearts,
@@ -138,7 +140,7 @@ export function feedPetInGameStateWithFeedback(
       gameState: updatedGameState,
       feedback: createGameFeedback(
         'feeding',
-        'Training verbucht. Das tägliche Motivation-Limit ist für heute erreicht.'
+        'Pflege verbucht. Das tägliche Motivation-Limit ist für heute erreicht.'
       ),
     };
   }
@@ -147,7 +149,7 @@ export function feedPetInGameStateWithFeedback(
     gameState: updatedGameState,
     feedback: createGameFeedback(
       'feeding',
-      `${currentPet.name} trainiert mit Quest-Punkten: +${happinessGain} Motivation.`
+      `${currentPet.name} sammelt Quest-Fortschritt: +${happinessGain} Motivation.`
     ),
   };
 }
@@ -270,7 +272,9 @@ function completeTask(
     totalEarnedPoints: gameState.totalEarnedPoints + taskToComplete.points,
     pet: {
       ...gameState.pet,
-      availableFoodPoints: gameState.pet.availableFoodPoints + taskToComplete.points,
+      availableFoodPoints: clampAvailableFoodPoints(
+        gameState.pet.availableFoodPoints + taskToComplete.points
+      ),
     },
   };
 
@@ -280,7 +284,7 @@ function completeTask(
       didReachGate ? 'level-up' : 'quest',
       didReachGate
         ? `Tagesziel erreicht: ${nextQualityScore} Quest-Punkte.`
-        : `Quest erledigt: +${taskToComplete.points} Trainingspunkte.`
+        : `Quest erledigt: +${taskToComplete.points} Quest-Punkte.`
     ),
   };
 }
@@ -312,7 +316,7 @@ function normalizePetState(pet: PetState, nowIso: string): PetState {
     level,
     growthProgress: pet.growthProgress ?? 0,
     growthGoal: pet.growthGoal || PET_RULES.initialGrowthGoal,
-    availableFoodPoints: pet.availableFoodPoints ?? 0,
+    availableFoodPoints: clampAvailableFoodPoints(pet.availableFoodPoints ?? 0),
     happiness: clamp(pet.happiness ?? 0, 0, PET_RULES.maxHappiness),
     hunger: clamp(pet.hunger ?? PET_RULES.dailyHungerResetValue, 0, PET_RULES.maxHunger),
     hearts: clamp(pet.hearts ?? PET_RULES.maxHearts, 0, PET_RULES.maxHearts),
@@ -415,6 +419,10 @@ function hoursBetween(start: Date, end: Date): number {
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
+}
+
+function clampAvailableFoodPoints(value: number): number {
+  return clamp(value, 0, PET_RULES.maxAvailableFoodPoints);
 }
 
 function formatPokemonName(name: string): string {

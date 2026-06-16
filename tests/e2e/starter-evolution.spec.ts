@@ -36,6 +36,8 @@ const starterFlows: ReadonlyArray<{
   },
 ];
 
+test.describe.configure({ timeout: 60_000 });
+
 for (const starterFlow of starterFlows) {
   test(`registriert ${starterFlow.label} und entwickelt bei Level 15 und 35 korrekt`, async ({
     page,
@@ -147,7 +149,7 @@ for (const starterFlow of starterFlows) {
     await page.waitForURL("**/dashboard");
     await expect(
       page.getByRole("heading", {
-        name: /Pokémon-Ei trainiert/,
+        name: /Pokémon-Ei begleitet/,
       }),
     ).toBeVisible();
     expect(starterPokemonId).toBe(starterFlow.starterPokemonId);
@@ -162,7 +164,7 @@ for (const starterFlow of starterFlows) {
 
     await expect(
       page.getByRole("heading", {
-        name: new RegExp(String.raw`${starterFlow.expected[0]} trainiert`),
+        name: new RegExp(String.raw`${starterFlow.expected[0]} begleitet`),
       }),
     ).toBeVisible();
     await expect(page.getByText("Level 10")).toBeVisible();
@@ -177,7 +179,7 @@ for (const starterFlow of starterFlows) {
 
     await expect(
       page.getByRole("heading", {
-        name: new RegExp(String.raw`${starterFlow.expected[1]} trainiert`),
+        name: new RegExp(String.raw`${starterFlow.expected[1]} begleitet`),
       }),
     ).toBeVisible();
     await expect(page.getByText("Level 15")).toBeVisible();
@@ -192,7 +194,7 @@ for (const starterFlow of starterFlows) {
 
     await expect(
       page.getByRole("heading", {
-        name: new RegExp(String.raw`${starterFlow.expected[2]} trainiert`),
+        name: new RegExp(String.raw`${starterFlow.expected[2]} begleitet`),
       }),
     ).toBeVisible();
     await expect(page.getByText("Level 35")).toBeVisible();

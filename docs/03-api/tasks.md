@@ -59,7 +59,7 @@ Beispiel:
 Wesentliche Semantik (kurz)
 
 - Die Aktion führt zu folgenden Effekten:
-  - Trainingspunkte: `task.feed_points` werden zu `user.pendingFeedPoints` addiert. Diese Punkte werden erst über `POST /api/user/feed` in Motivation umgewandelt.
+  - Quest-Punkte: `task.feed_points` werden technisch zu `user.pendingFeedPoints` addiert.
   - Wachstum: Erhöht sich um `10 XP` pro neu abgeschlossenem Task, maximal bis `100`.
   - Level: Wenn der Wachstumswert den Cap erreicht und der Level-Cooldown erfüllt ist, steigt `pokemonLevel` um genau 1 und `growth` wird auf `0` gesetzt.
   - Cooldown: Ein Level-Up ist nur möglich, wenn `last_level_up_at` leer ist oder mindestens zwei Tage zurückliegt. Ist der Cooldown aktiv, bleibt `growth` bei `100`.

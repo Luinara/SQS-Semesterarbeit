@@ -202,7 +202,11 @@ export class BackendApiService {
           level: pokemonLevel,
           growthProgress: clamp(backendGameState.growth ?? 0, 0, PET_RULES.initialGrowthGoal),
           growthGoal: PET_RULES.initialGrowthGoal,
-          availableFoodPoints: backendGameState.pendingFeedPoints ?? 0,
+          availableFoodPoints: clamp(
+            backendGameState.pendingFeedPoints ?? 0,
+            0,
+            PET_RULES.maxAvailableFoodPoints
+          ),
           happiness: clamp(backendGameState.happiness ?? 0, 0, PET_RULES.maxHappiness),
           hunger: clamp(backendGameState.foodLevel ?? 0, 0, PET_RULES.maxHunger),
           hearts: PET_RULES.maxHearts,

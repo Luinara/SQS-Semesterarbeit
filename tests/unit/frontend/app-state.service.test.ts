@@ -194,7 +194,7 @@ describe("AppStateService", () => {
     });
   });
 
-  it("trainiert das Pokémon über Trainingspunkte und zeigt Feedback", async () => {
+  it("setzt Quest-Punkte für das Pokémon ein und zeigt Feedback", async () => {
     const initialSnapshot = createSnapshot(1, 0);
     initialSnapshot.gameState.pet.availableFoodPoints = PET_RULES.feedCost;
     initialSnapshot.backendGameState.pendingFeedPoints = PET_RULES.feedCost;
@@ -217,7 +217,7 @@ describe("AppStateService", () => {
     expect(service.pet()?.availableFoodPoints).toBe(0);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "feeding",
-      message: "Trainingspunkte wurden für dein Pokémon eingesetzt.",
+      message: "Quest-Punkte wurden für dein Pokémon eingesetzt.",
     });
   });
 

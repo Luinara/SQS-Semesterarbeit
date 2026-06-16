@@ -11,7 +11,6 @@ import { UiButtonComponent } from '../../../../shared/ui/button/ui-button.compon
 })
 export class TopBarComponent {
   readonly userName = input.required<string>();
-  readonly availableFoodPoints = input(0);
   readonly completedTasks = input(0);
   readonly totalTasks = input(0);
   readonly isBusy = input(false);
