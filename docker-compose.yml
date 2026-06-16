@@ -1,46 +1,72 @@
 services:
-
-  # ── PostgreSQL database ─────────────────────────────────────────────────────
   db:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: sqs_db
       POSTGRES_USER: sqs_user
-      POSTGRES_PASSWORD: sqs_password   # TODO: replace with a secret in production
+      POSTGRES_PASSWORD: sqs_password
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5433}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
 
-  # ── Java / Spring Boot backend ──────────────────────────────────────────────
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile             # TODO: create Dockerfile
+      dockerfile: Dockerfile
     restart: unless-stopped
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sqs_db
       SPRING_DATASOURCE_USERNAME: sqs_user
       SPRING_DATASOURCE_PASSWORD: sqs_password
       SPRING_PROFILES_ACTIVE: dev
+      SERVER_SERVLET_SESSION_COOKIE_SECURE: "false"
     ports:
-      - "8080:8080"
+      - "${BACKEND_PORT:-8181}:8181"
     depends_on:
       - db
 
-  # ── TypeScript / React frontend ─────────────────────────────────────────────
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile             # TODO: create Dockerfile
+      dockerfile: Dockerfile
     restart: unless-stopped
-    environment:
-      VITE_API_BASE_URL: http://localhost:8080/api
     ports:
-      - "3000:3000"
+      - "${FRONTEND_PORT:-3000}:3000"
     depends_on:
       - backend
 
+  quality-runner:
+    profiles:
+      - quality
+    build:
+      context: .
+      dockerfile: quality/Dockerfile.runner
+    restart: "no"
+    environment:
+      QUALITY_SOURCE_DIR: /workspace
+      QUALITY_WORK_DIR: /work/repo
+      QUALITY_OUTPUT_DIR: /quality-output
+    volumes:
+      - .:/workspace:ro
+      - quality_output:/quality-output
+    depends_on:
+      - backend
+      - frontend
+
+  quality-hub:
+    profiles:
+      - quality
+    build:
+      context: .
+      dockerfile: quality/Dockerfile.hub
+    restart: unless-stopped
+    ports:
+      - "${QUALITY_HUB_PORT:-8088}:8080"
+    volumes:
+      - quality_output:/usr/share/nginx/html/reports:ro
+
 volumes:
   db_data:
+  quality_output:

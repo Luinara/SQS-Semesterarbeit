@@ -16,7 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -51,7 +54,20 @@ class UserControllerTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    // New: check body JSON for unauthenticated water/feed
+    @Test
+    void testLevelUp_requiresAuth() throws Exception {
+        mockMvc.perform(post("/api/user/test-level-up"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"error\":\"unauthenticated\"}"));
+    }
+
+    @Test
+    void testMotivationDecay_requiresAuth() throws Exception {
+        mockMvc.perform(post("/api/user/test-motivation-decay"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"error\":\"unauthenticated\"}"));
+    }
+
     @Test
     void water_requiresAuth_returnsJsonErrorBody() throws Exception {
         mockMvc.perform(post("/api/user/water").contentType("application/json").content("{\"ml\":10}"))
@@ -94,7 +110,84 @@ class UserControllerTest {
                 .andExpect(status().isOk());
     }
 
-    // new tests for getGameState unauthorized
+    @Test
+    void testLevelUp_success_returnsGameState() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+
+        GameStateDto dto = new GameStateDto();
+        dto.setPokemonLevel(8);
+        when(userService.testLevelUp("tester")).thenReturn(dto);
+
+        mockMvc.perform(post("/api/user/test-level-up").session(session))
+                .andExpect(status().isOk());
+
+        verify(userService).testLevelUp("tester");
+    }
+
+    @Test
+    void testLevelUp_userNotFound_returns404() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+        when(userService.testLevelUp("tester")).thenReturn(null);
+
+        mockMvc.perform(post("/api/user/test-level-up").session(session))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("{\"error\":\"user not found\"}"));
+    }
+
+    @Test
+    void testMotivationDecay_success_returnsGameState() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+
+        GameStateDto dto = new GameStateDto();
+        dto.setHappiness(42);
+        when(userService.testMotivationDecay("tester")).thenReturn(dto);
+
+        mockMvc.perform(post("/api/user/test-motivation-decay").session(session))
+                .andExpect(status().isOk());
+
+        verify(userService).testMotivationDecay("tester");
+    }
+
+    @Test
+    void testMotivationDecay_userNotFound_returns404() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+        when(userService.testMotivationDecay("tester")).thenReturn(null);
+
+        mockMvc.perform(post("/api/user/test-motivation-decay").session(session))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("{\"error\":\"user not found\"}"));
+    }
+
+    @Test
+    void deleteAccount_requiresAuth_returnsJsonErrorBody() throws Exception {
+        mockMvc.perform(delete("/api/user/account"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"error\":\"unauthenticated\"}"));
+    }
+
+    @Test
+    void deleteAccount_authenticated_deletesUserAndInvalidatesSession() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        when(userService.deleteAccount("tester")).thenReturn(true);
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+
+        mockMvc.perform(delete("/api/user/account").session(session))
+                .andExpect(status().isNoContent());
+
+        verify(userService).deleteAccount("tester");
+        verify(authenticationService).logout("t");
+        assertThat(session.isInvalid()).isTrue();
+    }
+
     @Test
     void getGameState_withoutSession_returns401_andUnauthenticatedBody() throws Exception {
         mockMvc.perform(get("/api/user/game-state"))

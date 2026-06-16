@@ -1,0 +1,63 @@
+site_name: PokeHabit SQS Semesterarbeit
+site_description: Dokumentation der SQS-Semesterarbeit PokeHabit
+docs_dir: docs
+theme:
+  name: readthedocs
+  language: de
+nav:
+  - '01 Überblick': index.md
+  - '02 Architektur':
+      - arc42:
+          - Übersicht: 02-architecture/arc42/README.md
+          - Einführung und Ziele: 02-architecture/arc42/01-introduction-and-goals.md
+          - Randbedingungen: 02-architecture/arc42/02-constraints.md
+          - Kontextabgrenzung: 02-architecture/arc42/03-context-and-scope.md
+          - Lösungsstrategie: 02-architecture/arc42/04-solution-strategy.md
+          - Bausteinsicht: 02-architecture/arc42/05-building-block-view.md
+          - Laufzeitsicht: 02-architecture/arc42/06-runtime-view.md
+          - Verteilungssicht: 02-architecture/arc42/07-deployment-view.md
+          - Querschnittliche Konzepte: 02-architecture/arc42/08-crosscutting-concepts.md
+          - Architekturentscheidungen: 02-architecture/arc42/09-architecture-decisions.md
+          - Qualitätsanforderungen: 02-architecture/arc42/10-quality-requirements.md
+          - Risiken und technische Schulden: 02-architecture/arc42/11-risks-and-technical-debt.md
+          - Glossar: 02-architecture/arc42/12-glossary.md
+          - Frontend-Komponenten: 02-architecture/arc42/frontend-component-architecture.md
+      - C4-Diagramme: 02-architecture/diagrams/c4-diagram.md
+      - ADRs Englisch:
+          - Übersicht: adr/README.md
+          - ADR-001 Spring Boot: adr/ADR-001-use-spring-boot.md
+          - ADR-002 Angular TypeScript: adr/ADR-002-use-angular-typescript.md
+          - ADR-003 PostgreSQL: adr/ADR-003-use-postgresql.md
+          - ADR-004 PokeAPI: adr/ADR-004-use-pokeapi.md
+          - ADR-005 Feature-Packages: adr/ADR-005-use-feature-specific-folder-structure.md
+          - ADR-006 TypeScript: adr/ADR-006-use-typescript.md
+          - ADR-007 Prisma: adr/ADR-007-use-prisma.md
+          - ADR-008 Hidden Egg Assignment: adr/ADR-008-use-hidden-egg-assignment.md
+      - ADRs Deutsch:
+          - Übersicht: ger-adr/README.md
+          - ADR-001 Spring Boot: ger-adr/ADR-001-use-spring-boot.md
+          - ADR-002 Angular TypeScript: ger-adr/ADR-002-use-angular-typescript.md
+          - ADR-003 PostgreSQL: ger-adr/ADR-003-use-postgresql.md
+          - ADR-004 PokeAPI: ger-adr/ADR-004-use-pokeapi.md
+          - ADR-005 Feature-Packages: ger-adr/ADR-005-use-feature-specific-folder-structure.md
+          - ADR-006 TypeScript: ger-adr/ADR-006-use-typescript.md
+          - ADR-007 Prisma: ger-adr/ADR-007-use-prisma.md
+          - ADR-008 Ei-Pokémon: ger-adr/ADR-008-use-hidden-egg-assignment.md
+  - '03 API':
+      - Authentifizierung: 03-api/auth.md
+      - Tasks: 03-api/tasks.md
+      - User Actions: 03-api/user-actions.md
+      - Game State: 03-api/user-game-state.md
+      - Übergabe User Actions: 03-api/user-actions-handover.md
+  - '04 Qualität':
+      - Testpyramide: 04-quality/test-pyramid.md
+      - Frontend npm Security: 04-quality/frontend-npm-security.md
+      - Security Hotspots: 04-quality/security-hotspots.md
+      - Crypto Random IDs: 04-quality/crypto-random-ids.md
+      - Wetterdaten Code-Notizen: 04-quality/wetter-daten.md
+      - Wetterdaten manueller Check: 04-quality/weather-open-meteo-manual-check.md
+  - '05 Präsentation':
+      - Präsentationsablauf: 05-presentation/presentation-plan.md
+      - Präsentations-Sprechzettel: 05-presentation/presentation-cheat-sheet.md
+  - '06 Betrieb':
+      - ReadTheDocs veröffentlichen: 06-operations/readthedocs-publish.md

@@ -2,6 +2,7 @@ package io.github.luinara.sqs.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.luinara.sqs.authentication.AuthenticationService;
+import io.github.luinara.sqs.task.dto.TaskPublicDto;
 import io.github.luinara.sqs.user.UserEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -59,6 +60,16 @@ class TaskControllerTest {
     }
 
     @Test
+    void completeTask_withInvalidSessionAttribute_returns401() throws Exception {
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", 12345);
+
+        mockMvc.perform(post("/api/tasks/1/complete").session(session))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string("unauthenticated"));
+    }
+
+    @Test
     void completeTask_success_returnsGameState() throws Exception {
         // setup session
         UserEntity user = new UserEntity();
@@ -81,5 +92,33 @@ class TaskControllerTest {
         String body = mvc.getResponse().getContentAsString();
         Map map = om.readValue(body, Map.class);
         assertTrue(Boolean.TRUE.equals(map.get("success")));
+    }
+
+    @Test
+    void completeTask_alreadyCompleted_returns409JsonError() throws Exception {
+        when(authenticationService.validateToken("token123")).thenReturn(Optional.of("tester"));
+        when(taskService.completeTaskForUser("tester", 1L))
+                .thenReturn(new GameStateResult(409, "already completed", null));
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "token123");
+
+        mockMvc.perform(post("/api/tasks/1/complete").session(session))
+                .andExpect(status().isConflict())
+                .andExpect(content().json("{\"error\":\"already completed\"}"));
+    }
+
+    @Test
+    void completeTask_missingTask_returns404JsonError() throws Exception {
+        when(authenticationService.validateToken("token123")).thenReturn(Optional.of("tester"));
+        when(taskService.completeTaskForUser("tester", 99L))
+                .thenReturn(new GameStateResult(404, "task not found", null));
+
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "token123");
+
+        mockMvc.perform(post("/api/tasks/99/complete").session(session))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("{\"error\":\"task not found\"}"));
     }
 }

@@ -1,0 +1,313 @@
+@use 'mixins' as *;
+
+.pet-card {
+  @include surface-panel(1.65rem);
+
+  display: grid;
+  gap: 1.4rem;
+  border-color: rgba(30, 126, 86, 0.16);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52);
+}
+
+.pet-card__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.pet-card__header h2 {
+  margin: 0.85rem 0 0.45rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 2.1vw, 2.6rem);
+}
+
+.pet-card__header p {
+  max-width: 42rem;
+  color: var(--color-text-soft);
+}
+
+.pet-card__microcopy {
+  display: grid;
+  min-width: 10rem;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(28, 42, 70, 0.08);
+}
+
+.pet-card__microcopy strong {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+}
+
+.pet-card__microcopy span {
+  color: var(--color-text-soft);
+  font-size: 0.88rem;
+}
+
+.pet-card__feedback {
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(28, 42, 70, 0.12);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.78);
+  color: var(--color-text);
+  font-weight: 700;
+  animation: feedback-pop 320ms ease;
+}
+
+.pet-card__feedback--level-up {
+  border-color: rgba(37, 99, 235, 0.24);
+  background:
+    linear-gradient(90deg, rgba(219, 234, 254, 0.86), rgba(221, 247, 233, 0.72)),
+    rgba(255, 255, 255, 0.78);
+  box-shadow: 0 0.9rem 1.8rem rgba(37, 99, 235, 0.12);
+}
+
+.pet-card__feedback--feeding,
+.pet-card__feedback--quest {
+  border-color: rgba(30, 126, 86, 0.28);
+  background: rgba(221, 247, 233, 0.74);
+}
+
+.pet-card__feedback--hydration {
+  border-color: rgba(127, 166, 189, 0.28);
+  background: rgba(226, 239, 245, 0.72);
+}
+
+.pet-card__body {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 1.4rem;
+}
+
+.pet-card__details {
+  display: grid;
+  align-content: start;
+  gap: 1.3rem;
+}
+
+.pet-card__care-state {
+  display: grid;
+  gap: 0.3rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(28, 42, 70, 0.1);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.pet-card__care-state span {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pet-card__care-state strong {
+  color: var(--color-text);
+  line-height: 1.35;
+}
+
+.pet-card__care-state--needs-care {
+  border-color: rgba(194, 65, 99, 0.24);
+  background: rgba(255, 228, 235, 0.62);
+}
+
+.pet-card__care-state--ready-to-feed {
+  border-color: rgba(37, 99, 235, 0.2);
+  background: rgba(228, 239, 255, 0.78);
+}
+
+.pet-card__care-state--growing,
+.pet-card__care-state--thriving {
+  border-color: rgba(30, 126, 86, 0.28);
+  background: rgba(221, 247, 233, 0.72);
+}
+
+.pet-card__weather {
+  display: grid;
+  min-width: 0;
+  gap: 0.9rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(28, 42, 70, 0.1);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.pet-card__weather-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.25rem;
+}
+
+.pet-card__weather-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content max-content;
+  gap: 0.65rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.pet-card__weather-input-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.pet-card__weather-form input {
+  width: 100%;
+  min-height: 2.55rem;
+  padding: 0 0.85rem;
+  border: 1px solid rgba(28, 42, 70, 0.16);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--color-text);
+  font: inherit;
+  outline: none;
+}
+
+.pet-card__weather-form button {
+  white-space: nowrap;
+}
+
+.pet-card__weather-form input:focus {
+  border-color: rgba(37, 99, 235, 0.34);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.09);
+}
+
+.pet-card__weather-label {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pet-card__weather strong {
+  color: var(--color-text);
+}
+
+.pet-card__weather small {
+  color: var(--color-text-soft);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.pet-card__weather-updated,
+.pet-card__weather-auto {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.pet-card__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 0.9rem;
+}
+
+.pet-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid rgba(28, 42, 70, 0.08);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(135deg, rgba(247, 249, 252, 0.92), rgba(231, 247, 238, 0.62)),
+    rgba(255, 255, 255, 0.74);
+}
+
+.pet-card__hint {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.pet-card__hint strong {
+  color: var(--color-text);
+}
+
+.pet-card__hint span {
+  color: var(--color-text-soft);
+  font-size: 0.92rem;
+}
+
+.pet-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+@include respond-down(1024px) {
+  .pet-card__body {
+    grid-template-columns: 1fr;
+  }
+
+  .pet-card__weather-form {
+    grid-template-columns: minmax(0, 1fr) max-content max-content;
+  }
+}
+
+@include respond-down(860px) {
+  .pet-card__weather-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pet-card__weather-form input {
+    grid-column: 1 / -1;
+  }
+}
+
+@include respond-down(640px) {
+  .pet-card__header,
+  .pet-card__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pet-card__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .pet-card__microcopy {
+    width: 100%;
+  }
+
+  .pet-card__actions {
+    justify-content: stretch;
+  }
+
+  .pet-card__actions button {
+    flex: 1 1 11rem;
+  }
+
+  .pet-card__weather-form {
+    grid-template-columns: 1fr;
+  }
+
+  .pet-card__weather-form input {
+    grid-column: auto;
+  }
+}
+
+@keyframes feedback-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(-0.35rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,12 +1,19 @@
 package io.github.luinara.sqs.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameStateDto {
     private int waterLevel;
     private int foodLevel;
+    private Integer currentPokemonId;
+    @JsonProperty("isEgg")
+    private boolean isEgg;
     private String pokemonImageUrl;
+    private String pokemonName;
     private int pokemonLevel;
     private int growth;
     private int happiness;
@@ -16,39 +23,120 @@ public class GameStateDto {
     private boolean yesterdayLoggedIn;
     private String serverNow;
 
-    public GameStateDto() {}
+    public GameStateDto() {
+    }
 
     // getters and setters
-    public int getWaterLevel() { return waterLevel; }
-    public void setWaterLevel(int waterLevel) { this.waterLevel = waterLevel; }
+    public int getWaterLevel() {
+        return waterLevel;
+    }
 
-    public int getFoodLevel() { return foodLevel; }
-    public void setFoodLevel(int foodLevel) { this.foodLevel = foodLevel; }
+    public void setWaterLevel(int waterLevel) {
+        this.waterLevel = waterLevel;
+    }
 
-    public String getPokemonImageUrl() { return pokemonImageUrl; }
-    public void setPokemonImageUrl(String pokemonImageUrl) { this.pokemonImageUrl = pokemonImageUrl; }
+    public int getFoodLevel() {
+        return foodLevel;
+    }
 
-    public int getPokemonLevel() { return pokemonLevel; }
-    public void setPokemonLevel(int pokemonLevel) { this.pokemonLevel = pokemonLevel; }
+    public void setFoodLevel(int foodLevel) {
+        this.foodLevel = foodLevel;
+    }
 
-    public int getGrowth() { return growth; }
-    public void setGrowth(int growth) { this.growth = growth; }
+    public Integer getCurrentPokemonId() {
+        return currentPokemonId;
+    }
 
-    public int getHappiness() { return happiness; }
-    public void setHappiness(int happiness) { this.happiness = happiness; }
+    public void setCurrentPokemonId(Integer currentPokemonId) {
+        this.currentPokemonId = currentPokemonId;
+    }
 
-    public int getPendingFeedPoints() { return pendingFeedPoints; }
-    public void setPendingFeedPoints(int pendingFeedPoints) { this.pendingFeedPoints = pendingFeedPoints; }
+    @JsonIgnore
+    public boolean isEgg() {
+        return isEgg;
+    }
 
-    public List<TaskCompletionDto> getTasks() { return tasks == null ? List.of() : new ArrayList<>(tasks); }
-    public void setTasks(List<TaskCompletionDto> tasks) { this.tasks = tasks == null ? null : new ArrayList<>(tasks); }
+    public void setEgg(boolean egg) {
+        isEgg = egg;
+    }
 
-    public int getStreak() { return streak; }
-    public void setStreak(int streak) { this.streak = streak; }
+    public String getPokemonImageUrl() {
+        return pokemonImageUrl;
+    }
 
-    public boolean isYesterdayLoggedIn() { return yesterdayLoggedIn; }
-    public void setYesterdayLoggedIn(boolean yesterdayLoggedIn) { this.yesterdayLoggedIn = yesterdayLoggedIn; }
+    public void setPokemonImageUrl(String pokemonImageUrl) {
+        this.pokemonImageUrl = pokemonImageUrl;
+    }
 
-    public String getServerNow() { return serverNow; }
-    public void setServerNow(String serverNow) { this.serverNow = serverNow; }
+    public String getPokemonName() {
+        return pokemonName;
+    }
+
+    public void setPokemonName(String pokemonName) {
+        this.pokemonName = pokemonName;
+    }
+
+    public int getPokemonLevel() {
+        return pokemonLevel;
+    }
+
+    public void setPokemonLevel(int pokemonLevel) {
+        this.pokemonLevel = pokemonLevel;
+    }
+
+    public int getGrowth() {
+        return growth;
+    }
+
+    public void setGrowth(int growth) {
+        this.growth = growth;
+    }
+
+    public int getHappiness() {
+        return happiness;
+    }
+
+    public void setHappiness(int happiness) {
+        this.happiness = happiness;
+    }
+
+    public int getPendingFeedPoints() {
+        return pendingFeedPoints;
+    }
+
+    public void setPendingFeedPoints(int pendingFeedPoints) {
+        this.pendingFeedPoints = pendingFeedPoints;
+    }
+
+    public List<TaskCompletionDto> getTasks() {
+        return tasks == null ? List.of() : new ArrayList<>(tasks);
+    }
+
+    public void setTasks(List<TaskCompletionDto> tasks) {
+        this.tasks = tasks == null ? null : new ArrayList<>(tasks);
+    }
+
+    public int getStreak() {
+        return streak;
+    }
+
+    public void setStreak(int streak) {
+        this.streak = streak;
+    }
+
+    public boolean isYesterdayLoggedIn() {
+        return yesterdayLoggedIn;
+    }
+
+    public void setYesterdayLoggedIn(boolean yesterdayLoggedIn) {
+        this.yesterdayLoggedIn = yesterdayLoggedIn;
+    }
+
+    public String getServerNow() {
+        return serverNow;
+    }
+
+    public void setServerNow(String serverNow) {
+        this.serverNow = serverNow;
+    }
 }

@@ -14,8 +14,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -36,10 +39,14 @@ class TaskServiceTest {
     @Mock
     private io.github.luinara.sqs.pokemon.PokemonRepository pokemonRepository;
 
+    @Mock
+    private Clock clock;
+
     @InjectMocks
     private TaskService taskService;
 
     private UserEntity user;
+    private Instant now;
 
     @BeforeEach
     void setUp() {
@@ -51,6 +58,9 @@ class TaskServiceTest {
         user.setPokemonXp(0);
         user.setHydrationMl(50);
         user.setHunger(50);
+        now = Instant.parse("2026-06-15T10:00:00Z");
+        when(clock.instant()).thenReturn(now);
+        when(clock.getZone()).thenReturn(ZoneOffset.UTC);
     }
 
     @Test
@@ -81,6 +91,34 @@ class TaskServiceTest {
         UserEntity saved = captor.getValue();
         assertThat(saved.getPendingFeedPoints()).isEqualTo(5);
         assertThat(saved.getPokemonXp()).isEqualTo(10);
+    }
+
+    @Test
+    void completeTask_whenEggStillSet_returnsSelectedPokemonImageAndName() {
+        user.setEgg(true);
+        user.setCurrentPokemonId(7);
+
+        io.github.luinara.sqs.pokemon.PokemonEntity pokemon = new io.github.luinara.sqs.pokemon.PokemonEntity();
+        pokemon.setId(7);
+        pokemon.setName("squirtle");
+        pokemon.setImageUrl("/img/squirtle.png");
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
+        when(pokemonRepository.findById(7)).thenReturn(Optional.of(pokemon));
+
+        TaskEntity task = new TaskEntity();
+        task.setId(9L);
+        when(taskRepository.findById(9L)).thenReturn(Optional.of(task));
+        when(userTaskRepository.findByUserIdAndTaskId(1L, 9L)).thenReturn(Optional.empty());
+
+        GameStateResult res = taskService.completeTaskForUser("tester", 9L);
+
+        assertThat(res.status).isEqualTo(200);
+        assertThat(res.gameState).isNotNull();
+        assertThat(res.gameState.getCurrentPokemonId()).isEqualTo(7);
+        assertThat(res.gameState.isEgg()).isTrue();
+        assertThat(res.gameState.getPokemonName()).isNull();
+        assertThat(res.gameState.getPokemonImageUrl()).isEqualTo("/assets/egg.png");
     }
 
     @Test
@@ -132,7 +170,7 @@ class TaskServiceTest {
         // set user as egg and level 9 so one completion levels to 10
         user.setEgg(true);
         user.setPokemonLevel(9);
-        user.setPokemonXp(95); // +10 -> 105 -> levelUp to 10
+        user.setPokemonXp(95); // +10 -> full growth -> level up to 10
 
         GameStateResult res = taskService.completeTaskForUser("tester", 4L);
         assertThat(res.status).isEqualTo(200);
@@ -140,10 +178,11 @@ class TaskServiceTest {
         // user should have hatched
         assertThat(user.isEgg()).isFalse();
         assertThat(user.getHatchedAt()).isNotNull();
+        assertThat(user.getLastLevelUpAt()).isNotNull();
     }
 
     @Test
-    void completeTask_evolvesAtLevel25() {
+    void completeTask_evolvesAtLevel15() {
         when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
 
         TaskEntity task = new TaskEntity();
@@ -154,8 +193,8 @@ class TaskServiceTest {
         when(taskRepository.count()).thenReturn(1L);
 
         // set up user current pokemon id and a pokemon with evolution
-        user.setPokemonLevel(24);
-        user.setPokemonXp(95); // +10 => level 25
+        user.setPokemonLevel(14);
+        user.setPokemonXp(95); // +10 => level 15
         user.setCurrentPokemonId(100);
 
         io.github.luinara.sqs.pokemon.PokemonEntity p100 = new io.github.luinara.sqs.pokemon.PokemonEntity();
@@ -177,7 +216,7 @@ class TaskServiceTest {
     }
 
     @Test
-    void completeTask_doubleEvolution_atLevel50() {
+    void completeTask_evolvesAtLevel35() {
         when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
 
         TaskEntity task = new TaskEntity();
@@ -187,9 +226,8 @@ class TaskServiceTest {
         when(userTaskRepository.findByUserIdAndTaskId(1L, 6L)).thenReturn(Optional.empty());
         when(taskRepository.count()).thenReturn(1L);
 
-        // set up user to jump multiple levels in one completion
-        user.setPokemonLevel(20);
-        user.setPokemonXp(2995); // +10 => levelUps = 30 => newLevel = 50
+        user.setPokemonLevel(34);
+        user.setPokemonXp(95);
         user.setCurrentPokemonId(200);
 
         io.github.luinara.sqs.pokemon.PokemonEntity p200 = new io.github.luinara.sqs.pokemon.PokemonEntity();
@@ -197,18 +235,55 @@ class TaskServiceTest {
         p200.setEvolutionId(201);
         io.github.luinara.sqs.pokemon.PokemonEntity p201 = new io.github.luinara.sqs.pokemon.PokemonEntity();
         p201.setId(201);
-        p201.setEvolutionId(202);
-        io.github.luinara.sqs.pokemon.PokemonEntity p202 = new io.github.luinara.sqs.pokemon.PokemonEntity();
-        p202.setId(202);
-        p202.setEvolutionId(null);
+        p201.setEvolutionId(null);
 
         when(pokemonRepository.findById(200)).thenReturn(Optional.of(p200));
         when(pokemonRepository.findById(201)).thenReturn(Optional.of(p201));
-        when(pokemonRepository.findById(202)).thenReturn(Optional.of(p202));
 
         GameStateResult res = taskService.completeTaskForUser("tester", 6L);
         assertThat(res.status).isEqualTo(200);
-        // after two evolutions, currentPokemonId should be 202
-        assertThat(user.getCurrentPokemonId()).isEqualTo(202);
+        assertThat(user.getCurrentPokemonId()).isEqualTo(201);
+    }
+
+    @Test
+    void completeTask_levelUpBlockedWithinTwoDays_keepsGrowthAtCap() {
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
+
+        TaskEntity task = new TaskEntity();
+        task.setId(7L);
+        when(taskRepository.findById(7L)).thenReturn(Optional.of(task));
+
+        when(userTaskRepository.findByUserIdAndTaskId(1L, 7L)).thenReturn(Optional.empty());
+        user.setPokemonLevel(3);
+        user.setPokemonXp(95);
+        user.setLastLevelUpAt(java.time.OffsetDateTime.parse("2026-06-14T10:00:00Z"));
+
+        GameStateResult res = taskService.completeTaskForUser("tester", 7L);
+
+        assertThat(res.status).isEqualTo(200);
+        assertThat(user.getPokemonLevel()).isEqualTo(3);
+        assertThat(user.getPokemonXp()).isEqualTo(100);
+        assertThat(user.getLastLevelUpAt()).isEqualTo(java.time.OffsetDateTime.parse("2026-06-14T10:00:00Z"));
+    }
+
+    @Test
+    void completeTask_levelUpAfterTwoDays_setsLastLevelUpAt() {
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(user));
+
+        TaskEntity task = new TaskEntity();
+        task.setId(8L);
+        when(taskRepository.findById(8L)).thenReturn(Optional.of(task));
+
+        when(userTaskRepository.findByUserIdAndTaskId(1L, 8L)).thenReturn(Optional.empty());
+        user.setPokemonLevel(3);
+        user.setPokemonXp(100);
+        user.setLastLevelUpAt(java.time.OffsetDateTime.parse("2026-06-13T10:00:00Z"));
+
+        GameStateResult res = taskService.completeTaskForUser("tester", 8L);
+
+        assertThat(res.status).isEqualTo(200);
+        assertThat(user.getPokemonLevel()).isEqualTo(4);
+        assertThat(user.getPokemonXp()).isEqualTo(0);
+        assertThat(user.getLastLevelUpAt()).isEqualTo(java.time.OffsetDateTime.parse("2026-06-15T10:00:00Z"));
     }
 }

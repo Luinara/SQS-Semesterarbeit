@@ -1,0 +1,34 @@
+# Dieses Skript bündelt den lokalen Frontend-Setup für PowerShell.
+# Gerade auf Windows wird dadurch ein reproduzierbarer Start ohne manuelle Einzelschritte einfacher.
+$ErrorActionPreference = 'Stop'
+
+$scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Path
+$frontendDirectory = Split-Path -Parent $scriptDirectory
+
+function Invoke-NpmStep {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string] $Label,
+
+    [Parameter(Mandatory = $true)]
+    [string[]] $Arguments
+  )
+
+  Write-Output "==> $Label"
+
+  $process = Start-Process -FilePath 'npm.cmd' -ArgumentList $Arguments -Wait -NoNewWindow -PassThru
+
+  if ($process.ExitCode -ne 0) {
+    throw "npm.cmd $($Arguments -join ' ') ist mit Exit-Code $($process.ExitCode) fehlgeschlagen."
+  }
+}
+
+Write-Output '==> Wechsle in das Frontend-Verzeichnis...'
+Set-Location $frontendDirectory
+
+Invoke-NpmStep -Label 'Installiere npm-Abhängigkeiten...' -Arguments @('install')
+Invoke-NpmStep -Label 'Prüfe TypeScript-Typen...' -Arguments @('run', 'type-check')
+Invoke-NpmStep -Label 'Erzeuge einen Produktions-Build zur Verifikation...' -Arguments @('run', 'build')
+
+Write-Output '==> Frontend-Setup abgeschlossen.'
+Write-Output '==> Starte die App anschließend mit: npm start'

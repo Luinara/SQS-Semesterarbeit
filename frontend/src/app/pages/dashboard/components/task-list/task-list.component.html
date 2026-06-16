@@ -1,0 +1,57 @@
+<section class="task-list">
+  <header class="task-list__header">
+    <div>
+      <span class="eyebrow">Heute im Fokus</span>
+      <h2>Tagesquests</h2>
+      <p>Erledige deine Quests, sammle Punkte und bring dein Pokémon dem nächsten Level näher.</p>
+    </div>
+
+    <div class="task-list__summary">
+      <div class="task-list__summary-item">
+        <strong>{{ completedTasks() }}/{{ tasks().length }}</strong>
+        <span>Quests</span>
+      </div>
+      <div class="task-list__summary-item">
+        <strong>{{ availableFoodPoints() }}</strong>
+        <span>Trainingspunkte</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="task-list__meter">
+    <span>Offen: {{ qualityQuestProgress()?.pending ?? pendingTasks() }}</span>
+    <span>{{ questPercentage() }}% Tagesfortschritt</span>
+  </div>
+
+  <progress
+    class="task-list__native-progress"
+    aria-label="Quest-Fortschritt"
+    [value]="questPercentage()"
+    max="100"
+  ></progress>
+
+  <div class="task-list__progress" aria-hidden="true">
+    <span [style.width.%]="questPercentage()"></span>
+  </div>
+
+  <div class="task-list__items">
+    @if (waterTask(); as hydrationTask) {
+      <sqs-hydration-gauge
+        [task]="hydrationTask"
+        [waterLevel]="waterLevel()"
+        [isBusy]="isBusy()"
+        (waterAdded)="addWater($event)"
+      />
+    }
+
+    @for (task of visibleTasks(); track task.id) {
+      <sqs-task-card
+        [task]="task"
+        [isLocked]="isTaskLocked(task)"
+        [lockedReason]="getTaskLockedReason(task)"
+        [isBusy]="isBusy()"
+        (completeRequested)="finishTask($event)"
+      />
+    }
+  </div>
+</section>

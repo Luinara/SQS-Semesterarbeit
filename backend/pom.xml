@@ -129,10 +129,16 @@
                 </configuration>
             </plugin>
 
-            <!-- Failsafe – integration tests (*IT.java, default Maven conventions) -->
+            <!-- Failsafe – integration tests (*IT.java and *IntegrationTest.java) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                        <include>**/*IntegrationTest.java</include>
+                    </includes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -208,6 +214,7 @@
                 <version>4.8.6.4</version>
                 <configuration>
                     <effort>Default</effort>
+                    <excludeFilterFile>${project.basedir}/spotbugs-exclude.xml</excludeFilterFile>
                     <!-- Report bugs at Medium confidence and above -->
                     <threshold>Medium</threshold>
                     <failOnError>true</failOnError>

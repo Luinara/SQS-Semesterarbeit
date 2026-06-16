@@ -1,0 +1,65 @@
+<article class="hydration-gauge" [class.hydration-gauge--done]="isDone()">
+  <div class="hydration-gauge__header">
+    <div>
+      <span class="hydration-gauge__category">Quest</span>
+      <h3>{{ task().title }}</h3>
+      <p>{{ task().description }}</p>
+    </div>
+    <span class="hydration-gauge__points">+{{ task().points }}</span>
+  </div>
+
+  <div class="hydration-gauge__value">
+    <strong>{{ cappedWaterLevel() }} / {{ goalMl() }} ml</strong>
+    <span>
+      @if (isDone()) {
+        Wasserziel erreicht
+      } @else {
+        Noch {{ remainingMl() }} ml bis zum Ziel
+      }
+    </span>
+  </div>
+
+  <progress
+    class="hydration-gauge__native-progress"
+    aria-label="Wasser-Fortschritt"
+    [value]="cappedWaterLevel()"
+    [max]="goalMl()"
+  ></progress>
+
+  <div class="hydration-gauge__progress" aria-hidden="true">
+    <span [style.width.%]="progressPercent()"></span>
+  </div>
+
+  <div class="hydration-gauge__footer">
+    <span class="hydration-gauge__state">
+      @if (isDone()) {
+        Task erledigt
+      } @else {
+        Offen im Tagesplan
+      }
+    </span>
+
+    <div class="hydration-gauge__actions" aria-label="Wasser trinken">
+      <button
+        sqsButton
+        size="sm"
+        variant="secondary"
+        type="button"
+        [disabled]="isBusy() || isDone()"
+        (click)="addWater(250)"
+      >
+        +250 ml
+      </button>
+      <button
+        sqsButton
+        size="sm"
+        variant="secondary"
+        type="button"
+        [disabled]="isBusy() || isDone()"
+        (click)="addWater(500)"
+      >
+        +500 ml
+      </button>
+    </div>
+  </div>
+</article>

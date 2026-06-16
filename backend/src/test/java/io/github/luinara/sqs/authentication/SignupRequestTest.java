@@ -12,4 +12,10 @@ class SignupRequestTest {
         assertThat(req.getUsername()).isEqualTo("alice");
         assertThat(req.getPassword()).isEqualTo("password123");
     }
+
+    @Test
+    void constructor_setsStarterPokemonId() {
+        SignupRequest req = new SignupRequest("alice", "password123", 7);
+        assertThat(req.getStarterPokemonId()).isEqualTo(7);
+    }
 }

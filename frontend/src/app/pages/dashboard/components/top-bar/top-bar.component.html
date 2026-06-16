@@ -1,0 +1,46 @@
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="top-bar__logo">PH</span>
+
+    <div>
+      <p class="top-bar__eyebrow">PokeHabit</p>
+      <h1>Pokémon Quest Board</h1>
+    </div>
+  </div>
+
+  <div class="top-bar__meta">
+    <div class="top-bar__pill">
+      <span class="top-bar__avatar" aria-hidden="true">{{ userInitial() }}</span>
+      <div>
+        <strong>{{ userName() }}</strong>
+        <span>{{ completedTasks() }}/{{ totalTasks() }} Quests erledigt</span>
+      </div>
+    </div>
+
+    <div class="top-bar__pill top-bar__pill--soft">
+      <strong>{{ availableFoodPoints() }}</strong>
+      <span>Trainingspunkte</span>
+    </div>
+
+    @if (hasDemoAccess()) {
+      <div class="top-bar__pill top-bar__pill--demo" aria-label="Demo-Zugang">
+        <strong>Demo-Zugang</strong>
+        <span>{{ demoUsername() }} / {{ demoPassword() }}</span>
+      </div>
+    }
+
+    <button sqsButton size="sm" variant="ghost" [disabled]="isBusy()" (click)="requestLogout()">
+      Abmelden
+    </button>
+    <button
+      sqsButton
+      size="sm"
+      variant="ghost"
+      class="top-bar__danger-action"
+      [disabled]="isBusy()"
+      (click)="requestAccountDelete()"
+    >
+      Profil löschen
+    </button>
+  </div>
+</header>

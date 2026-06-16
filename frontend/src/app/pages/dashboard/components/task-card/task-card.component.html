@@ -1,0 +1,117 @@
+<article
+  class="task-card"
+  [class.task-card--done]="task().isCompleted"
+  [class.task-card--locked]="isLocked()"
+>
+  <div
+    class="task-card__icon"
+    [class.task-card__icon--green]="task().tone === 'green'"
+    [class.task-card__icon--amber]="task().tone === 'amber'"
+    [class.task-card__icon--rose]="task().tone === 'rose'"
+    [class.task-card__icon--slate]="task().tone === 'slate'"
+  >
+    @switch (task().icon) {
+      @case ('endpoint') {
+        <svg viewBox="0 0 24 24">
+          <path d="M4 7h16v10H4V7Z" />
+          <path d="M8 11h8M8 14h5" class="task-card__stroke" />
+        </svg>
+      }
+      @case ('lock') {
+        <svg viewBox="0 0 24 24">
+          <path d="M7 10h10v9H7v-9Z" />
+          <path d="M9 10V8a3 3 0 0 1 6 0v2" class="task-card__stroke" />
+        </svg>
+      }
+      @case ('layers') {
+        <svg viewBox="0 0 24 24">
+          <path d="m12 4 8 4-8 4-8-4 8-4Z" />
+          <path d="m4 12 8 4 8-4M4 16l8 4 8-4" class="task-card__stroke" />
+        </svg>
+      }
+      @case ('api') {
+        <svg viewBox="0 0 24 24">
+          <path d="M8 8 4 12l4 4M16 8l4 4-4 4M13 6l-2 12" class="task-card__stroke" />
+        </svg>
+      }
+      @case ('test') {
+        <svg viewBox="0 0 24 24">
+          <path d="M9 4h6v5l4 7a3 3 0 0 1-2.6 4H7.6A3 3 0 0 1 5 16l4-7V4Z" />
+          <path d="M9 9h6M8 15h8" class="task-card__stroke" />
+        </svg>
+      }
+      @case ('pipeline') {
+        <svg viewBox="0 0 24 24">
+          <path d="M5 7h4v4H5V7ZM15 13h4v4h-4v-4Z" />
+          <path d="M9 9h3a3 3 0 0 1 3 3v1" class="task-card__stroke" />
+        </svg>
+      }
+      @case ('coverage') {
+        <svg viewBox="0 0 24 24">
+          <path d="M4 18V6h16v12H4Z" />
+          <path d="M7 15V9M12 15v-4M17 15V8" class="task-card__stroke" />
+        </svg>
+      }
+      @case ('docs') {
+        <svg viewBox="0 0 24 24">
+          <path d="M6 4h9l3 3v13H6V4Z" />
+          <path d="M9 11h6M9 14h6M9 17h4" class="task-card__stroke" />
+        </svg>
+      }
+      @case ('decision') {
+        <svg viewBox="0 0 24 24">
+          <path d="M5 5h14v14H5V5Z" />
+          <path d="m8 12 3 3 5-6" class="task-card__stroke" />
+        </svg>
+      }
+      @default {
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3 15 10h6l-5 4 2 7-6-4-6 4 2-7-5-4h6l3-7Z" />
+        </svg>
+      }
+    }
+  </div>
+
+  <div class="task-card__content">
+    <div class="task-card__header">
+      <div>
+        <span class="task-card__category">Quest</span>
+        <h3>{{ task().title }}</h3>
+        <p>{{ task().description }}</p>
+      </div>
+      <span class="task-card__points">+{{ task().points }}</span>
+    </div>
+
+    <div class="task-card__reference">{{ task().checklistReference }}</div>
+
+    <div class="task-card__footer">
+      <span class="task-card__state">
+        @if (task().isCompleted) {
+          Task erledigt
+        } @else if (isLocked()) {
+          {{ lockedReason() }}
+        } @else {
+          Offen im Tagesplan
+        }
+      </span>
+
+      <button
+        sqsButton
+        size="sm"
+        [disabled]="task().isCompleted || isLocked() || isBusy()"
+        [variant]="task().isCompleted || isLocked() || isBusy() ? 'secondary' : 'primary'"
+        (click)="markTaskAsCompleted()"
+      >
+        {{
+          task().isCompleted
+            ? 'Erledigt'
+            : isLocked()
+              ? 'Gesperrt'
+              : isBusy()
+                ? 'Speichert...'
+                : 'Erledigen'
+        }}
+      </button>
+    </div>
+  </div>
+</article>

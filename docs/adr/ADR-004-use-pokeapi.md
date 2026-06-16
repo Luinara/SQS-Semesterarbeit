@@ -1,33 +1,45 @@
-# ADR-004: Integrate PokeAPI as external service
+# ADR-004: PokeAPI als externer Backend-Service
 
 ## Status
 Accepted
 
 ## Context
-The self-care app needs gamification elements. PokeAPI provides a free, well-documented
-REST API for Pokémon data.
+Die App braucht Pokémon-Daten für den Starter-Partner. Die PDF-Checkliste
+verlangt außerdem, dass das Backend selbst mit mindestens einem externen
+Service spricht. PokeAPI passt dazu gut, weil die Starter-Pokémon dort ohne API
+Key abrufbar sind und die Daten fachlich wirklich zur App gehören.
 
-## ALternatives
-- Manual database maintenance
-- Local Pokémon dataset
-- Commercial Pokémon APIs
+## Alternatives
+- Nur lokale Starter-Daten pflegen.
+- Pokémon-Daten ausschließlich im Frontend laden.
+- Einen kommerziellen Pokémon-Service anbinden.
 
 ## Decision
-Use PokeAPI (https://pokeapi.co/api/v2/) as the authoritative source for Pokémon data during database seeding.
+Das Backend nutzt PokeAPI (`https://pokeapi.co/api/v2`) beim Anlegen eines
+Users, um fehlende Starter-Pokémon in der Datenbank zu befüllen. Bereits
+vorhandene Pokémon werden wiederverwendet, damit Registrierungen nicht
+unnötig externe Requests auslösen und vorhandene Namen/Bilder nicht
+überschrieben werden. Lokale Evolutions-Metadaten dürfen ergänzt werden, weil
+die App nur die drei Starter-Ketten braucht.
 
-Imported data:
+Abgerufene Daten:
 
-- Pokémon ID
+- Pokémon-ID
 - Name
 - Official artwork
-- Evolution chain
+
+Der Zugriff läuft mit kurzen Timeouts. Wenn PokeAPI nicht erreichbar ist, einen
+Fehlerstatus liefert oder unvollständige Daten zurückgibt, nutzt das Backend den
+lokalen Starter-Katalog als Fallback. Im Testprofil sind externe Aufrufe
+deaktiviert; der Service selbst wird mit einem lokalen HTTP-Stub getestet.
 
 ## Consequences
-- No manual maintenance of Pokémon data.
-- No API key is required; the service is publicly available.
-- WireMock stubs the external API in integration tests to avoid network dependency.
-- Rate limits apply; caching should be considered before production use.
+- Die App startet auch ohne Internet oder bei PokeAPI-Ausfall weiter.
+- Der externe Service ist im Backend nachweisbar und nicht nur im Frontend.
+- Tests bleiben stabil, weil sie nicht von echter Netzverfügbarkeit abhängen.
+- Bei produktiver Nutzung wäre Caching sinnvoll, damit Registrierungen nicht
+  unnötig viele externe Requests auslösen.
 
 ## Downsides
-- Dependence on this particular service
-- no commercial licenses
+- Es gibt eine zusätzliche externe Abhängigkeit.
+- Die Pokémon-Daten sind nur so aktuell und verfügbar wie PokeAPI.

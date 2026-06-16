@@ -1,0 +1,178 @@
+@if (pet(); as currentPet) {
+  <section class="pet-card">
+    <div class="pet-card__header">
+      <div>
+        <span class="eyebrow">Pokémon Partner</span>
+        <h2>{{ displayName() }} trainiert mit deinen Quests</h2>
+        <p>
+          Erledigte Quests geben Trainingspunkte. Training steigert Motivation, Wachstum und die
+          Evolution deines Pokémon.
+        </p>
+      </div>
+
+      <div class="pet-card__microcopy">
+        <strong>{{ completedTasks() }}/{{ totalTasks() }}</strong>
+        <span>Quests erledigt</span>
+      </div>
+    </div>
+
+    @if (gameFeedback(); as feedback) {
+      <div
+        class="pet-card__feedback"
+        [class.pet-card__feedback--level-up]="feedback.kind === 'level-up'"
+        [class.pet-card__feedback--feeding]="feedback.kind === 'feeding'"
+        [class.pet-card__feedback--hydration]="feedback.kind === 'hydration'"
+        [class.pet-card__feedback--quest]="feedback.kind === 'quest'"
+      >
+        {{ feedback.message }}
+      </div>
+    }
+
+    <div class="pet-card__body">
+      <sqs-pet-visual
+        [petName]="displayName()"
+        [level]="currentPet.level"
+        [weatherScene]="weatherScene()"
+        [careState]="petCareState()"
+        [spriteUrl]="displaySpriteUrl()"
+        [pokemonTypes]="displayPokemonTypes()"
+        [pokemonSource]="displayPokemonSource()"
+        [isLevelingUp]="isLevelingUp()"
+      />
+
+      <div class="pet-card__details">
+        <div
+          class="pet-card__care-state"
+          [class.pet-card__care-state--needs-care]="petCareState() === 'needs-care'"
+          [class.pet-card__care-state--ready-to-feed]="petCareState() === 'ready-to-feed'"
+          [class.pet-card__care-state--growing]="petCareState() === 'growing'"
+          [class.pet-card__care-state--thriving]="petCareState() === 'thriving'"
+        >
+          <span>{{ careStateLabel() }}</span>
+          <strong>{{ careStateHint() }}</strong>
+        </div>
+
+        <div class="pet-card__weather">
+          <div class="pet-card__weather-copy">
+            <span class="pet-card__weather-label">Aktuelle Wetter-Szene</span>
+            <strong>{{ weatherScene().headline }}</strong>
+            <small>{{ weatherStatus() }}</small>
+            <span class="pet-card__weather-updated">{{ weatherUpdatedAtLabel() }}</span>
+            <span class="pet-card__weather-auto">
+              Hintergrund und Lichtstimmung folgen dem aktuellen Wetter.
+            </span>
+          </div>
+
+          <form
+            class="pet-card__weather-form"
+            (submit)="
+              submitWeatherCity($event, weatherCityInput.value); weatherCityInput.value = ''
+            "
+          >
+            <label class="pet-card__weather-input-label" for="weather-city-input">Stadt</label>
+            <input
+              #weatherCityInput
+              id="weather-city-input"
+              type="search"
+              name="weather-city"
+              autocomplete="address-level2"
+              [disabled]="weatherLoading()"
+              [placeholder]="weatherSnapshot()?.locationLabel ?? 'Stadt eingeben'"
+            />
+
+            <button
+              sqsButton
+              size="sm"
+              variant="secondary"
+              [disabled]="weatherLoading()"
+              type="submit"
+            >
+              Stadt laden
+            </button>
+
+            <button
+              sqsButton
+              size="sm"
+              variant="ghost"
+              [disabled]="weatherLoading()"
+              type="button"
+              (click)="requestWeatherRefresh()"
+            >
+              Aktualisieren
+            </button>
+          </form>
+        </div>
+
+        <sqs-progress-bar
+          [label]="'Wachstum bis Level ' + (currentPet.level + 1)"
+          [value]="currentPet.growthProgress"
+          [max]="currentPet.growthGoal"
+          [hint]="currentPet.growthProgress + ' / ' + currentPet.growthGoal + ' Wachstum'"
+        />
+
+        <div class="pet-card__stats">
+          <sqs-stat-badge label="Pokémon" [value]="pokemonStatus()" icon="pokemon" tone="green" />
+          <sqs-stat-badge
+            label="Trainingspunkte"
+            [value]="currentPet.availableFoodPoints"
+            icon="points"
+            tone="blue"
+          />
+          <sqs-stat-badge
+            label="Motivation"
+            [value]="currentPet.happiness + '%'"
+            icon="hearts"
+            tone="amber"
+          />
+          <sqs-stat-badge
+            label="Trainings"
+            [value]="currentPet.mealsServed"
+            icon="tasks"
+            tone="slate"
+          />
+        </div>
+
+        <div class="pet-card__footer">
+          <div class="pet-card__hint">
+            <strong>Training kostet {{ feedCostLabel() }}.</strong>
+            <span>
+              Level-Ups sind frühestens alle zwei Tage möglich. Mit dem Testbutton kannst du die
+              Animation sofort prüfen.
+            </span>
+          </div>
+
+          <div class="pet-card__actions">
+            <button
+              sqsButton
+              [disabled]="isBusy() || !canFeed()"
+              [variant]="isBusy() || !canFeed() ? 'secondary' : 'primary'"
+              (click)="requestFeeding()"
+            >
+              {{ isBusy() ? 'Speichert...' : 'Pokémon trainieren' }}
+            </button>
+
+            <button
+              sqsButton
+              variant="soft"
+              type="button"
+              [disabled]="isBusy()"
+              (click)="requestTestLevelUp()"
+            >
+              {{ isBusy() ? 'Bitte warten...' : 'Level-Up testen' }}
+            </button>
+
+            <button
+              sqsButton
+              variant="ghost"
+              type="button"
+              [disabled]="isBusy()"
+              (click)="requestTestMotivationDecay()"
+            >
+              {{ isBusy() ? 'Bitte warten...' : 'Motivation senken' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+}

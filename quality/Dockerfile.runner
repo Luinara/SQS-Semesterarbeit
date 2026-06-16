@@ -1,0 +1,22 @@
+FROM maven:3.9-eclipse-temurin-21 AS maven
+
+FROM mcr.microsoft.com/playwright:v1.60.0-noble
+
+COPY --from=maven /opt/java/openjdk /opt/java/openjdk
+COPY --from=maven /usr/share/maven /usr/share/maven
+COPY --from=maven /usr/bin/mvn /usr/bin/mvn
+
+ENV JAVA_HOME=/opt/java/openjdk
+ENV MAVEN_HOME=/usr/share/maven
+ENV PATH="/opt/java/openjdk/bin:/usr/share/maven/bin:${PATH}"
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+
+WORKDIR /work
+
+COPY quality/runner /quality/runner
+RUN mkdir -p /work /quality-output \
+    && chmod +x /quality/runner/run-quality.sh \
+    && chown -R pwuser:pwuser /work /quality /quality-output
+USER pwuser
+
+ENTRYPOINT ["/quality/runner/run-quality.sh"]

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,6 +79,63 @@ public class UserController {
         GameStateDto dto = userService.feedUser(username);
         if (dto == null) return ResponseEntity.status(404).body(Map.of("error", "user not found"));
         return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/test-level-up")
+    public ResponseEntity<?> testLevelUp(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return ResponseEntity.status(401).body(Map.of("error", "unauthenticated"));
+        Object tokenOrUser = session.getAttribute(USER_TOKEN);
+
+        if (!(tokenOrUser instanceof String))
+            return ResponseEntity.status(401).body(Map.of("error", "unauthenticated"));
+
+        String value = (String) tokenOrUser;
+        Optional<String> maybe = authenticationService.validateToken(value);
+        String username = maybe.orElse(value);
+
+        GameStateDto dto = userService.testLevelUp(username);
+        if (dto == null) return ResponseEntity.status(404).body(Map.of("error", "user not found"));
+        return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping("/test-motivation-decay")
+    public ResponseEntity<?> testMotivationDecay(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return ResponseEntity.status(401).body(Map.of("error", "unauthenticated"));
+        Object tokenOrUser = session.getAttribute(USER_TOKEN);
+
+        if (!(tokenOrUser instanceof String))
+            return ResponseEntity.status(401).body(Map.of("error", "unauthenticated"));
+
+        String value = (String) tokenOrUser;
+        Optional<String> maybe = authenticationService.validateToken(value);
+        String username = maybe.orElse(value);
+
+        GameStateDto dto = userService.testMotivationDecay(username);
+        if (dto == null) return ResponseEntity.status(404).body(Map.of("error", "user not found"));
+        return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping("/account")
+    public ResponseEntity<?> deleteAccount(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return ResponseEntity.status(401).body(Map.of("error", "unauthenticated"));
+
+        Object tokenOrUser = session.getAttribute(USER_TOKEN);
+        if (!(tokenOrUser instanceof String))
+            return ResponseEntity.status(401).body(Map.of("error", "unauthenticated"));
+
+        String value = (String) tokenOrUser;
+        Optional<String> maybe = authenticationService.validateToken(value);
+        String username = maybe.orElse(value);
+
+        boolean deleted = userService.deleteAccount(username);
+        authenticationService.logout(value);
+        session.invalidate();
+
+        if (!deleted) return ResponseEntity.status(404).body(Map.of("error", "user not found"));
+        return ResponseEntity.noContent().build();
     }
 
     public static class WaterRequest {

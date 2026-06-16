@@ -1,0 +1,8 @@
+* [Home](Home)
+* [Architektur](Architektur)
+* [API](API)
+* [Frontend](Frontend)
+* [Teststrategie](Teststrategie)
+* [Quality Hub](Quality-Hub)
+* [Abgabe-Checkliste](Abgabe-Checkliste)
+* [ReadTheDocs](ReadTheDocs)

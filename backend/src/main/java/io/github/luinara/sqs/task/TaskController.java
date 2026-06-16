@@ -1,5 +1,6 @@
 package io.github.luinara.sqs.task;
 
+import io.github.luinara.sqs.task.dto.TaskPublicDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PokeHabit Quality Hub</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Softwarequalität im Docker-Stack</p>
+          <h1>PokeHabit Quality Hub</h1>
+          <p class="lede">
+            Ein lokales Quality Gate für Backend, Frontend, Security, Architektur, Coverage und
+            browserbasierte Nutzerflüsse.
+          </p>
+        </div>
+        <section class="gate-panel" aria-label="Quality Gate Status">
+          <div class="gate-ring" id="gate-ring" style="--score: 0%">
+            <strong id="gate-score">0</strong>
+            <span>Score</span>
+          </div>
+          <div>
+            <span class="status-pill status-running" id="gate-status">Wartet</span>
+            <p id="gate-copy">Noch kein Report gefunden. Starte den Quality-Runner.</p>
+          </div>
+        </section>
+      </header>
+
+      <section class="summary-grid" aria-label="Quality Summary">
+        <article class="metric">
+          <span>Bestanden</span>
+          <strong id="metric-passed">0</strong>
+        </article>
+        <article class="metric">
+          <span>Fehlgeschlagen</span>
+          <strong id="metric-failed">0</strong>
+        </article>
+        <article class="metric">
+          <span>Übersprungen</span>
+          <strong id="metric-skipped">0</strong>
+        </article>
+        <article class="metric">
+          <span>Pflichtchecks</span>
+          <strong id="metric-required">0 / 0</strong>
+        </article>
+      </section>
+
+      <section class="content-band">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Pipeline</p>
+            <h2>Checkliste</h2>
+          </div>
+          <p id="report-time">Report wird geladen...</p>
+        </div>
+        <div class="checks" id="checks"></div>
+      </section>
+
+      <section class="content-band">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Nachweise</p>
+            <h2>Reports und Logs</h2>
+          </div>
+          <p>Alle Links kommen aus dem gemeinsamen Docker-Volume.</p>
+        </div>
+        <div class="evidence" id="evidence"></div>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

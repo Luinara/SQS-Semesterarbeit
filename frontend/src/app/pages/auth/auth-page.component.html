@@ -1,0 +1,70 @@
+<section class="auth-page page-shell">
+  <div class="auth-page__layout">
+    <article class="auth-page__story">
+      <span class="eyebrow">PokeHabit Dashboard</span>
+      <h1>Starte mit deinem Pokémon-Partner.</h1>
+      <p>
+        Plane deinen Tag mit kleinen Quests, sammle Trainingspunkte und halte deinen Partner fit.
+      </p>
+    </article>
+
+    <article class="auth-page__card">
+      <div class="auth-page__mode-switch" role="tablist" aria-label="Anmeldemodus wählen">
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="mode() === 'login'"
+          [class.auth-page__mode-switch-button--active]="mode() === 'login'"
+          [disabled]="isSubmitting()"
+          (click)="showMode('login')"
+        >
+          Login
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="mode() === 'register'"
+          [class.auth-page__mode-switch-button--active]="mode() === 'register'"
+          [disabled]="isSubmitting()"
+          (click)="showMode('register')"
+        >
+          Registrieren
+        </button>
+      </div>
+
+      <div class="auth-page__card-header">
+        <h2>{{ mode() === 'login' ? 'Willkommen zurück' : 'Lege dein Spielerprofil an' }}</h2>
+        <p>
+          {{
+            mode() === 'login'
+              ? 'Melde dich an und mach mit deinen Quests weiter.'
+              : 'Erstelle dein Profil und starte direkt mit dem Training.'
+          }}
+        </p>
+      </div>
+
+      @if (mode() === 'login') {
+        <sqs-auth-form
+          [mode]="'login'"
+          [feedbackMessage]="feedbackMessage()"
+          [hasError]="hasError()"
+          [isSubmitting]="isSubmitting()"
+          (credentialsSubmitted)="submitCredentials($event)"
+        />
+      } @else {
+        <sqs-auth-form
+          [mode]="'register'"
+          [feedbackMessage]="feedbackMessage()"
+          [hasError]="hasError()"
+          [isSubmitting]="isSubmitting()"
+          (credentialsSubmitted)="submitCredentials($event)"
+        />
+      }
+
+      <p class="auth-page__hint">
+        Dein Spielstand bleibt erhalten, und die Wetterwelt passt sich deiner Stadt an.
+      </p>
+    </article>
+  </div>
+</section>

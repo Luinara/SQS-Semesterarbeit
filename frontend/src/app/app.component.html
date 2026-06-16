@@ -1,0 +1,18 @@
+<div class="app-shell">
+  <div class="app-shell__ambient" aria-hidden="true">
+    <span class="app-shell__glow app-shell__glow--left"></span>
+    <span class="app-shell__glow app-shell__glow--right"></span>
+    <span class="app-shell__grain"></span>
+  </div>
+
+  <main class="app-shell__content">
+    @if (appState.isLoading()) {
+      <output class="app-shell__restore" aria-live="polite">
+        <span class="app-shell__restore-dot" aria-hidden="true"></span>
+        <span>Spielstand wird geladen...</span>
+      </output>
+    }
+
+    <router-outlet />
+  </main>
+</div>

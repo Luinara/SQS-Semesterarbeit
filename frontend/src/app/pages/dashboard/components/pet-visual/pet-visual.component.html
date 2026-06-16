@@ -1,0 +1,47 @@
+<div [class]="sceneClass()">
+  <span class="pet-visual__bubble pet-visual__bubble--left" aria-hidden="true"></span>
+  <span class="pet-visual__bubble pet-visual__bubble--right" aria-hidden="true"></span>
+  <span class="pet-visual__sky-mark" aria-hidden="true"></span>
+  <span class="pet-visual__sun-haze" aria-hidden="true"></span>
+  <span class="pet-visual__cloud pet-visual__cloud--one" aria-hidden="true"></span>
+  <span class="pet-visual__cloud pet-visual__cloud--two" aria-hidden="true"></span>
+
+  <div class="pet-visual__frame" [class.pet-visual__frame--level-up]="isLevelingUp()">
+    <img [src]="spriteUrl()" [alt]="'Pokémon Sprite für ' + petName()" />
+  </div>
+
+  <div class="pet-visual__meta">
+    <span class="pet-visual__tag">{{ weatherScene().badge }}</span>
+    <div class="pet-visual__identity">
+      <strong>{{ petName() }}</strong>
+    </div>
+  </div>
+
+  <div class="pet-visual__types">
+    @for (type of pokemonTypes(); track type) {
+      <span>{{ type }}</span>
+    }
+  </div>
+
+  <button
+    type="button"
+    class="pet-visual__care-status"
+    [attr.aria-label]="careStatus().label + ': ' + careStatus().description"
+    [attr.aria-expanded]="isCareTooltipVisible()"
+    [attr.aria-describedby]="isCareTooltipVisible() ? 'pet-care-tooltip' : null"
+    (mouseenter)="showCareTooltip()"
+    (mouseleave)="hideCareTooltip()"
+    (focus)="showCareTooltip()"
+    (blur)="hideCareTooltip()"
+    (click)="showCareTooltip()"
+  >
+    <span class="pet-visual__care-dot" aria-hidden="true"></span>
+    @if (isCareTooltipVisible()) {
+      <span id="pet-care-tooltip" class="pet-visual__care-tooltip" role="tooltip">
+        <strong>{{ careStatus().label }}</strong>
+        <small>{{ careStatus().description }}</small>
+      </span>
+    }
+  </button>
+  <div class="pet-visual__level">Level {{ level() }}</div>
+</div>

@@ -1,0 +1,73 @@
+<section class="quality-gate">
+  <div class="quality-gate__hero">
+    <div>
+      <span class="eyebrow">Tagesziel</span>
+      <h2>{{ qualityScore() }} / {{ qualityTarget() }}</h2>
+      <p>
+        @if (gateReached()) {
+          Tagesziel erreicht. Dein Pokémon kann jetzt stark weiterleveln.
+        } @else {
+          Noch {{ qualityTarget() - qualityScore() }} Punkte bis zum Tagesziel.
+        }
+      </p>
+    </div>
+
+    <div
+      class="quality-gate__ring"
+      [style.--quality-progress]="progressPercent() + '%'"
+      aria-hidden="true"
+    >
+      <strong>{{ progressPercent() }}%</strong>
+      <span>Punkte</span>
+    </div>
+  </div>
+
+  <progress
+    class="quality-gate__native-progress"
+    aria-label="Tagesziel-Fortschritt"
+    [value]="progressPercent()"
+    max="100"
+  ></progress>
+
+  <div class="quality-gate__meter" aria-hidden="true">
+    <span [style.width.%]="progressPercent()"></span>
+  </div>
+
+  <div class="quality-gate__grid">
+    <div class="quality-gate__metric">
+      <strong>{{ completedRequiredTasks() }}/{{ requiredTasks().length }}</strong>
+      <span>Quests</span>
+    </div>
+    <div class="quality-gate__metric">
+      <strong>{{ waterLevel() }} ml</strong>
+      <span>Wasserstand</span>
+    </div>
+    <div class="quality-gate__metric">
+      <strong>{{ foodLevel() }}%</strong>
+      <span>Energie</span>
+    </div>
+    <div class="quality-gate__metric">
+      <strong>{{ streak() }}</strong>
+      <span>Anmelde-Serie</span>
+    </div>
+  </div>
+
+  <div class="quality-gate__pyramid">
+    @for (task of visibleTasks(); track task.id) {
+      <span [class.quality-gate__stage--done]="task.isCompleted">
+        {{ task.title }}
+      </span>
+    }
+  </div>
+
+  <div class="quality-gate__missing">
+    <span>Nächste offene Quests</span>
+    @if (missingRequiredTasks().length > 0) {
+      @for (task of missingRequiredTasks(); track task.id) {
+        <strong>{{ task.title }}</strong>
+      }
+    } @else {
+      <strong>Alle Quests für heute erledigt.</strong>
+    }
+  </div>
+</section>
