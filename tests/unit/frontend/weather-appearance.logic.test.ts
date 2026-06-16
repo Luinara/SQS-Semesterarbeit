@@ -14,7 +14,7 @@ describe("weather-appearance.logic", () => {
     expect(mapWeatherCodeToCondition(96)).toBe("hail");
   });
 
-  it("liest Tag und Nacht aus der Wetter-Heute-Antwort", () => {
+  it("liest Tag, Nacht und Temperatur ohne Rundung aus der Wetter-Heute-Antwort", () => {
     const snapshot = parseWeatherSnapshot(
       {
         current: {
@@ -25,21 +25,23 @@ describe("weather-appearance.logic", () => {
         },
       },
       "Berlin",
+      "2026-05-20T07:42:00.000Z",
     );
 
     expect(snapshot.timeOfDay).toBe("night");
-    expect(snapshot.temperatureC).toBe(8);
+    expect(snapshot.temperatureC).toBe(8.4);
     expect(snapshot.label).toBe("Klar");
-    expect(snapshot.updatedAt).toBe("2026-05-19T23:00");
+    expect(snapshot.updatedAt).toBe("2026-05-20T07:42:00.000Z");
   });
 
-  it("erfindet keine lokale Aktualisierungszeit ohne API-Zeitstempel", () => {
+  it("nutzt ohne lokalen Aktualisierungszeitpunkt nicht den Open-Meteo-Zeitstempel", () => {
     const snapshot = parseWeatherSnapshot(
       {
         current: {
           temperature_2m: 8.4,
           weather_code: 0,
           is_day: 0,
+          time: "2026-05-19T23:00",
         },
       },
       "Berlin",

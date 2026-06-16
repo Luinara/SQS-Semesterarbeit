@@ -142,4 +142,29 @@ describe("WeatherService", () => {
     expect(service.location().label).toBe("Berlin");
     expect(fetch).toHaveBeenCalledTimes(2);
   });
+
+  it("setzt beim Aktualisieren die aktuelle Refresh-Zeit statt der Open-Meteo-Wetterzeit", async () => {
+    vi.setSystemTime(new Date("2026-06-16T07:42:30.000Z"));
+    vi.mocked(fetch).mockImplementation(() =>
+      Promise.resolve(
+        new Response(
+          JSON.stringify({
+            current: {
+              temperature_2m: 18.2,
+              weather_code: 3,
+              is_day: 1,
+              time: "2026-06-16T05:30",
+            },
+          }),
+          { status: 200 },
+        ),
+      ),
+    );
+
+    const service = new WeatherService();
+    await service.refresh();
+
+    expect(service.snapshot()?.updatedAt).toBe("2026-06-16T07:42:30.000Z");
+    expect(service.snapshot()?.updatedAt).not.toBe("2026-06-16T05:30");
+  });
 });

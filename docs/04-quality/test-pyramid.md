@@ -13,7 +13,7 @@ wird das durch Architektur-, Security- und statische Analysechecks.
 | Controller-/Security-nahe Tests | HTTP-Status, Auth-Pflicht, Fehlerkörper und Session-Verhalten prüfen | `TaskControllerTest`, `UserControllerTest`, `AuthenticationControllerUnitTest` | `mvn test` |
 | Integrationstests | Spring-Kontext, Repositorys und echte Persistenzpfade mit H2 prüfen | `AuthenticationControllerIntegrationTest`, `UserControllerIntegrationTest`, `AuthenticationControllerConcurrentSignUpIT` | `mvn verify` / Failsafe im Verify-Lauf |
 | Architekturtests | Paketregeln und Schichtengrenzen prüfen | `ArchitectureTest` mit ArchUnit | `mvn test` |
-| Externe-Service-Tests | PokeAPI-Anbindung ohne echtes Internet prüfen | `PokeApiPokemonServiceTest` mit lokalem HTTP-Stub | `mvn test` |
+| Externe-Service-Tests | Externe API-Anbindungen ohne echtes Internet prüfen | `PokeApiPokemonServiceTest`, `weather.service.test.ts`, `weather-appearance.logic.test.ts` | `mvn test`, `npm test` |
 | Frontend-Supply-Chain-Security | Lockfile und npm-Audit prüfen | `npm-security.test.ts`, `npm audit` | `npm run security:frontend` |
 | E2E-Tests | sichtbare Nutzerflüsse im Browser prüfen | `user-journey.spec.ts`, `starter-evolution.spec.ts` | `npm run test:e2e` |
 
@@ -34,7 +34,7 @@ weil Browsertests langsamer sind und mehr bewegliche Teile haben.
 | Sind geschützte Endpunkte wirklich geschützt? | `UserControllerTest`, `TaskControllerTest` |
 | Gibt es einen öffentlichen Endpunkt? | `TaskControllerTest` prüft `GET /api/tasks`. |
 | Funktioniert Persistenz über mehrere Schichten? | Spring-Boot-Integrationstests mit H2. |
-| Ist der externe Backend-Service ausfallsicher angebunden? | `PokeApiPokemonServiceTest` prüft API-Erfolg, Fehlerstatus und deaktivierten Zugriff. |
+| Ist die externe Wetter-API nachvollziehbar angebunden? | `weather.service.test.ts` prüft Stadtauflösung, Refresh und lokale Aktualisierungszeit; `weather-appearance.logic.test.ts` prüft das Mapping von Open-Meteo-Wettercodes auf die UI-Szene. |
 | Bleiben Controller von Repositorys getrennt? | `ArchitectureTest` mit ArchUnit. |
 | Gibt es Coverage-Nachweise? | JaCoCo im Backend, Vitest Coverage im Frontend. |
 | Gibt es einen echten Browserflow? | Playwright prüft Login, Dashboard, Wasser, Quest, Training, Logout und Starter-Entwicklung. |

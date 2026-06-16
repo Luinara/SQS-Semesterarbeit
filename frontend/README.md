@@ -267,6 +267,44 @@ Buttons:
 - `Stadt laden`: sucht eine Stadt und lädt das passende Wetter.
 - `Aktualisieren`: lädt das Wetter für die aktuelle Stadt neu.
 
+### Wetterdaten manuell prüfen
+
+Die App zeigt keine beliebigen Wetterdaten aus einer anderen Website, sondern
+die Antwort von Open-Meteo. Für einen sauberen Vergleich sollte deshalb immer
+derselbe Open-Meteo-Request geprüft werden. Andere Wetterseiten können andere
+Koordinaten, andere Modelle, andere Rundungen oder andere Aktualisierungszeiten
+nutzen.
+
+So lässt sich die Anzeige prüfen:
+
+1. Stadt wie in der App suchen, zum Beispiel Rosenheim:
+
+   ```text
+   https://geocoding-api.open-meteo.com/v1/search?name=Rosenheim&count=1&language=de&format=json
+   ```
+
+2. Aus der Antwort `latitude`, `longitude`, `name`, `admin1` und `country`
+   übernehmen. Diese Werte sollten zur Ortsanzeige der App passen.
+
+3. Mit denselben Koordinaten die Wetterdaten abrufen:
+
+   ```text
+   https://api.open-meteo.com/v1/forecast?latitude=47.8564&longitude=12.1225&current=temperature_2m,weather_code,is_day&timezone=auto
+   ```
+
+4. In der JSON-Antwort `current.temperature_2m`, `current.weather_code` und
+   `current.is_day` vergleichen. Die App übernimmt die Temperatur ohne Rundung
+   und mappt den Wettercode auf die sichtbare Szene, zum Beispiel Wolken,
+   Regen, Schnee, Hagel, Sturm oder Nebel.
+
+5. Die Zeile `Letzte Aktualisierung` ist bewusst nicht die Open-Meteo-Zeit
+   `current.time`. Sie zeigt den Zeitpunkt, zu dem die App den Refresh
+   erfolgreich ausgeführt hat.
+
+Für die Präsentation reicht als Nachweis: App öffnen, Stadt laden,
+Open-Meteo-URL mit denselben Koordinaten öffnen und Temperatur, Wettercode und
+Tag/Nacht-Wert vergleichen.
+
 ## API-Anbindung
 
 Komponenten rufen nicht direkt `fetch` auf. Dafür gibt es eine eigene Schicht:

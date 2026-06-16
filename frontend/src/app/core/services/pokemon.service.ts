@@ -48,7 +48,9 @@ export class PokemonService {
       const fallbackPokemon = fallbackPokemonBySpecies[species];
       this.cache.set(species, fallbackPokemon);
       this.snapshot.set(fallbackPokemon);
-      this.errorMessage.set('Pokémon-Sprite ist gerade nicht erreichbar. Fallback aktiv.');
+      this.errorMessage.set(
+        'Pokémon-Sprite ist gerade nicht erreichbar. Ein lokales Ersatz-Sprite wird angezeigt.'
+      );
     } finally {
       this.isLoading.set(false);
     }

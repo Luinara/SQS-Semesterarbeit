@@ -30,7 +30,7 @@ export class OpenMeteoWeatherAdapter implements WeatherAdapter {
     }
 
     const payload = (await response.json()) as WeatherApiResponse;
-    return parseWeatherSnapshot(payload, location.label);
+    return parseWeatherSnapshot(payload, location.label, new Date().toISOString());
   }
 
   async resolveCity(cityName: string): Promise<WeatherLocation> {

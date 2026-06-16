@@ -164,10 +164,81 @@
   font-weight: 600;
 }
 
-.pet-visual__care-dot {
+.pet-visual__care-status {
   position: absolute;
   right: 1.35rem;
   bottom: 1.35rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+
+.pet-visual__care-status:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.24);
+  outline-offset: 3px;
+}
+
+.pet-visual__care-tooltip {
+  position: absolute;
+  right: -0.25rem;
+  bottom: calc(100% + 0.55rem);
+  z-index: 4;
+  width: min(17rem, calc(100vw - 2rem));
+  margin-top: 0;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(28, 42, 70, 0.12);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 16px 30px rgba(28, 42, 70, 0.16);
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25;
+  animation: tooltip-in 140ms ease-out;
+}
+
+.pet-visual__care-tooltip strong,
+.pet-visual__care-tooltip small {
+  display: block;
+}
+
+.pet-visual__care-tooltip strong {
+  margin-bottom: 0.12rem;
+  color: var(--color-text);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.pet-visual__care-tooltip small {
+  color: var(--color-text-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.pet-visual__care-tooltip::after {
+  position: absolute;
+  right: 0.95rem;
+  bottom: -0.34rem;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-right: 1px solid rgba(28, 42, 70, 0.12);
+  border-bottom: 1px solid rgba(28, 42, 70, 0.12);
+  background: rgba(255, 255, 255, 0.96);
+  content: '';
+  rotate: 45deg;
+}
+
+.pet-visual__care-dot {
   width: 0.85rem;
   height: 0.85rem;
   border: 2px solid rgba(255, 255, 255, 0.82);
@@ -602,5 +673,17 @@
 
   72% {
     transform: translateX(0.18rem) rotate(1deg) scale(1.03);
+  }
+}
+
+@keyframes tooltip-in {
+  0% {
+    opacity: 0;
+    transform: translateY(0.25rem);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
