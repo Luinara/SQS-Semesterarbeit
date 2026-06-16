@@ -349,7 +349,7 @@ export class AppStateService {
     });
   }
 
-  async resetCurrentProgress(): Promise<void> {
+  async resetCurrentProgress(showReloadFeedback = true): Promise<void> {
     const username = this.activeUser()?.userName;
 
     if (!username || this.isActionPending()) {
@@ -359,11 +359,13 @@ export class AppStateService {
     await this.runAction(async () => {
       try {
         this.applyDashboardSnapshot(await this.backendApi.loadDashboard(username));
-        this.showFeedback({
-          id: createFeedbackId('info'),
-          kind: 'info',
-          message: 'Spielstand neu geladen.',
-        });
+        if (showReloadFeedback) {
+          this.showFeedback({
+            id: createFeedbackId('info'),
+            kind: 'info',
+            message: 'Spielstand neu geladen.',
+          });
+        }
       } catch (error) {
         this.showFeedback({
           id: createFeedbackId('info'),

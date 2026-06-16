@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, effect, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppStateService } from '../../core/services/app-state.service';
 import { PokemonService } from '../../core/services/pokemon.service';
@@ -16,14 +16,24 @@ import { TopBarComponent } from './components/top-bar/top-bar.component';
   styleUrl: './dashboard-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardPageComponent {
+export class DashboardPageComponent implements OnDestroy {
+  private static readonly DASHBOARD_REFRESH_INTERVAL_MS = 5000;
+
   private readonly router = inject(Router);
   readonly appState = inject(AppStateService);
   readonly weather = inject(WeatherService);
   readonly pokemon = inject(PokemonService);
+  private readonly dashboardRefreshInterval: ReturnType<typeof setInterval>;
 
   constructor() {
     this.weather.initialize();
+    this.dashboardRefreshInterval = setInterval(() => {
+      if (!this.appState.isAuthenticated() || this.appState.isActionPending()) {
+        return;
+      }
+
+      this.runAsync(() => this.appState.resetCurrentProgress(false));
+    }, DashboardPageComponent.DASHBOARD_REFRESH_INTERVAL_MS);
 
     effect(() => {
       const pet = this.appState.pet();
@@ -38,6 +48,10 @@ export class DashboardPageComponent {
 
       this.runAsync(() => this.pokemon.loadSpecies(pet.pokemonSpecies));
     });
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this.dashboardRefreshInterval);
   }
 
   completeTask(taskId: string): void {

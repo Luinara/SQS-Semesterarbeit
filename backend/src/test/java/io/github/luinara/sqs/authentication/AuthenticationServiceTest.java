@@ -19,7 +19,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.Clock;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -331,7 +330,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void db_login_resetsDailyGoals_whenCalendarDayChanged() {
+    void db_login_doesNotResetDailyGoals_whenCalendarDayChanged() {
         BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
         String hash = enc.encode("password123");
         Clock fixedClock = Clock.fixed(Instant.parse("2026-06-16T10:00:00Z"), ZoneOffset.UTC);
@@ -347,8 +346,7 @@ class AuthenticationServiceTest {
                 Optional.of(repo),
                 Optional.empty(),
                 Optional.empty(),
-                fixedClock,
-                Optional.of(userTaskRepository)
+                fixedClock
         );
         Optional<String> res = svc.login("daily", "password123");
 
@@ -357,13 +355,13 @@ class AuthenticationServiceTest {
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(repo).save(captor.capture());
         UserEntity saved = captor.getValue();
-        assertThat(saved.getHydrationMl()).isZero();
+        assertThat(saved.getHydrationMl()).isEqualTo(2500);
         assertThat(saved.getStreak()).isEqualTo(3);
-        verify(userTaskRepository).resetCompletionsByUserId(42L);
+        verify(userTaskRepository, never()).resetCompletionsByUserId(any());
     }
 
     @Test
-    void db_login_resetsDailyGoals_afterConfiguredOneMinuteInterval() {
+    void db_login_doesNotResetDailyGoals_afterConfiguredOneMinuteInterval() {
         BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
         String hash = enc.encode("password123");
         Clock fixedClock = Clock.fixed(Instant.parse("2026-06-16T10:01:00Z"), ZoneOffset.UTC);
@@ -379,9 +377,7 @@ class AuthenticationServiceTest {
                 Optional.of(repo),
                 Optional.empty(),
                 Optional.empty(),
-                Optional.of(userTaskRepository),
-                fixedClock,
-                Duration.ofMinutes(1)
+                fixedClock
         );
         Optional<String> res = svc.login("quick-reset", "password123");
 
@@ -390,9 +386,9 @@ class AuthenticationServiceTest {
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(repo).save(captor.capture());
         UserEntity saved = captor.getValue();
-        assertThat(saved.getHydrationMl()).isZero();
+        assertThat(saved.getHydrationMl()).isEqualTo(1500);
         assertThat(saved.getStreak()).isEqualTo(2);
-        verify(userTaskRepository).resetCompletionsByUserId(43L);
+        verify(userTaskRepository, never()).resetCompletionsByUserId(any());
     }
 
     @Test
@@ -437,8 +433,7 @@ class AuthenticationServiceTest {
                 Optional.of(repo),
                 Optional.empty(),
                 Optional.empty(),
-                fixedClock,
-                Optional.of(userTaskRepository)
+                fixedClock
         );
         Optional<String> res = svc.login("lazy", "password123");
 
@@ -451,10 +446,10 @@ class AuthenticationServiceTest {
         assertThat(saved.getPokemonLevel()).isEqualTo(7);
         assertThat(saved.getPokemonXp()).isZero();
         assertThat(saved.getHappiness()).isEqualTo(35);
-        assertThat(saved.getHydrationMl()).isZero();
+        assertThat(saved.getHydrationMl()).isEqualTo(1800);
         assertThat(saved.getLastLevelUpAt()).isNull();
         assertThat(saved.getLastLoginAt()).isEqualTo(OffsetDateTime.parse("2026-06-16T10:00:00Z"));
-        verify(userTaskRepository).resetCompletionsByUserId(21L);
+        verify(userTaskRepository, never()).resetCompletionsByUserId(any());
     }
 
     @Test
