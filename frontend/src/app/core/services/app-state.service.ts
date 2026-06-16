@@ -466,7 +466,11 @@ function getApiErrorMessage(error: unknown, fallback: string): string {
 }
 
 function createFeedbackId(kind: GameFeedback['kind']): string {
-  return `${kind}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return `${kind}-${Date.now()}-${createRandomIdPart()}`;
+}
+
+function createRandomIdPart(): string {
+  return globalThis.crypto?.randomUUID?.() ?? String(Date.now());
 }
 
 function createMotivationDecayFeedback(

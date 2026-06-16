@@ -423,8 +423,12 @@ function formatPokemonName(name: string): string {
 
 function createGameFeedback(kind: GameFeedback['kind'], message: string): GameFeedback {
   return {
-    id: `${kind}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    id: `${kind}-${Date.now()}-${createRandomIdPart()}`,
     kind,
     message,
   };
+}
+
+function createRandomIdPart(): string {
+  return globalThis.crypto?.randomUUID?.() ?? String(Date.now());
 }

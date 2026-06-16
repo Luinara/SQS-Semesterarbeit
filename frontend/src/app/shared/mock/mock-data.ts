@@ -255,6 +255,6 @@ function createQualityTask(
 }
 
 function createId(prefix: string): string {
-  const randomPart = Math.random().toString(36).slice(2, 8);
+  const randomPart = globalThis.crypto?.randomUUID?.() ?? String(Date.now());
   return `${prefix}-${randomPart}`;
 }
