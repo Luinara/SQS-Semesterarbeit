@@ -69,6 +69,7 @@ export class OpenMeteoWeatherAdapter implements WeatherAdapter {
     url.searchParams.set('latitude', String(location.latitude));
     url.searchParams.set('longitude', String(location.longitude));
     url.searchParams.set('current', 'temperature_2m,weather_code,is_day');
+    url.searchParams.set('elevation', 'nan');
     url.searchParams.set('timezone', 'auto');
 
     return url.toString();
@@ -113,6 +114,12 @@ function scoreGeocodingResult(
   const compactName = compactGeocodingText(normalizedName);
   let score = isPopulatedPlace ? 1000 : -500;
 
+  if (featureCode === 'PPLC') {
+    score += 900;
+  } else if (featureCode?.startsWith('PPLA')) {
+    score += 300;
+  }
+
   if (normalizedName === normalizedSearchTerm) {
     score += isPopulatedPlace ? 700 : 80;
   } else if (compactName.startsWith(compactSearchTerm)) {
@@ -130,7 +137,7 @@ function scoreGeocodingResult(
   }
 
   if (typeof result.population === 'number') {
-    score += Math.min(result.population, 1_000_000) / 10_000;
+    score += Math.min(result.population, 10_000_000) / 10_000;
   }
 
   return score - index;

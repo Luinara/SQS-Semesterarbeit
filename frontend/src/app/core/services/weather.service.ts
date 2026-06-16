@@ -8,6 +8,11 @@ const DEFAULT_LOCATION: WeatherLocation = {
   longitude: 13.41,
   label: 'Berlin',
 };
+const HAWAII_FALLBACK_LOCATION: WeatherLocation = {
+  latitude: 21.29637,
+  longitude: -157.70175,
+  label: 'Hawaii Kai, Hawaii, Vereinigte Staaten',
+};
 const WEATHER_LOCATION_STORAGE_KEY = 'sqs-weather-location';
 const WEATHER_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
 
@@ -95,11 +100,11 @@ function readStoredLocation(): WeatherLocation {
       typeof parsedValue.label === 'string' &&
       parsedValue.label.trim()
     ) {
-      return {
+      return migrateStoredLocation({
         latitude: parsedValue.latitude,
         longitude: parsedValue.longitude,
         label: parsedValue.label,
-      };
+      });
     }
   } catch {
     globalThis.localStorage?.removeItem(WEATHER_LOCATION_STORAGE_KEY);
@@ -110,4 +115,23 @@ function readStoredLocation(): WeatherLocation {
 
 function storeLocation(location: WeatherLocation): void {
   globalThis.localStorage?.setItem(WEATHER_LOCATION_STORAGE_KEY, JSON.stringify(location));
+}
+
+function migrateStoredLocation(location: WeatherLocation): WeatherLocation {
+  if (isLegacyHawaiiIslandLocation(location)) {
+    storeLocation(HAWAII_FALLBACK_LOCATION);
+    return HAWAII_FALLBACK_LOCATION;
+  }
+
+  return location;
+}
+
+function isLegacyHawaiiIslandLocation(location: WeatherLocation): boolean {
+  const normalizedLabel = location.label.toLowerCase();
+
+  return (
+    normalizedLabel === 'hawaii, hawaii, vereinigte staaten' &&
+    Math.abs(location.latitude - 19.54814) < 0.01 &&
+    Math.abs(location.longitude - -155.66495) < 0.01
+  );
 }
