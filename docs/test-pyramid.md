@@ -11,7 +11,7 @@ wird das durch Architektur-, Security- und statische Analysechecks.
 | --- | --- | --- | --- |
 | Unit-Tests | Fachlogik schnell und isoliert prüfen | `AuthenticationServiceTest`, `TaskServiceTest`, `UserServiceTest`, `tests/unit/frontend/*.test.ts` | `mvn test`, `npm test` |
 | Controller-/Security-nahe Tests | HTTP-Status, Auth-Pflicht, Fehlerkörper und Session-Verhalten prüfen | `TaskControllerTest`, `UserControllerTest`, `AuthenticationControllerUnitTest` | `mvn test` |
-| Integrationstests | Spring-Kontext, Repositorys und echte Persistenzpfade mit H2 prüfen | `AuthenticationControllerIntegrationTest`, `UserControllerIntegrationTest`, `AuthenticationControllerConcurrentSignUpIT` | `mvn test` / Failsafe im Verify-Lauf |
+| Integrationstests | Spring-Kontext, Repositorys und echte Persistenzpfade mit H2 prüfen | `AuthenticationControllerIntegrationTest`, `UserControllerIntegrationTest`, `AuthenticationControllerConcurrentSignUpIT` | `mvn verify` / Failsafe im Verify-Lauf |
 | Architekturtests | Paketregeln und Schichtengrenzen prüfen | `ArchitectureTest` mit ArchUnit | `mvn test` |
 | Externe-Service-Tests | PokeAPI-Anbindung ohne echtes Internet prüfen | `PokeApiPokemonServiceTest` mit lokalem HTTP-Stub | `mvn test` |
 | Frontend-Supply-Chain-Security | Lockfile und npm-Audit prüfen | `npm-security.test.ts`, `npm audit` | `npm run security:frontend` |
@@ -51,7 +51,7 @@ docker compose --profile quality up --build
 
 Pflichtchecks im Runner:
 
-- Backend-Tests mit JaCoCo
+- Backend-Unit- und Integrationstests mit JaCoCo
 - Checkstyle
 - SpotBugs
 - Frontend-Typecheck

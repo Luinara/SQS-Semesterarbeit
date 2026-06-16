@@ -165,10 +165,7 @@ export class BackendApiService {
     const pokemonSpecies =
       pokemonById ??
       backendPokemonSpecies ??
-      resolvePokemonSpeciesForLevel(
-        pokemonLevel,
-        starterPokemonSpeciesFallback ?? 'bulbasaur'
-      );
+      resolvePokemonSpeciesForLevel(pokemonLevel, starterPokemonSpeciesFallback ?? 'bulbasaur');
     const starterPokemonSpecies = resolveStarterPokemonSpecies(pokemonSpecies);
     const currentPokemonId =
       backendGameState.currentPokemonId ?? resolvePokemonIdBySpecies(pokemonSpecies);

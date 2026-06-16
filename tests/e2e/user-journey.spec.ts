@@ -14,7 +14,9 @@ const tasks = [
 ];
 
 test.describe("PokeHabit", () => {
-  test("führt vom Login durch Quest, Wasser, Training und Logout", async ({ page }, testInfo) => {
+  test("führt vom Login durch Quest, Wasser, Training und Logout", async ({
+    page,
+  }, testInfo) => {
     const completions = new Map<number, boolean>([
       [1, false],
       [2, false],

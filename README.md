@@ -17,6 +17,20 @@ Mit Software-Qualitätssicherungs-Dashboard:
 docker compose --profile quality up --build
 ```
 
+Backend lokal prüfen:
+
+```bash
+cd backend
+sh ./mvnw verify
+```
+
+Unter Windows geht alternativ:
+
+```powershell
+cd backend
+.\mvnw.cmd verify
+```
+
 Danach sind erreichbar:
 
 - App: `http://localhost:3000`
