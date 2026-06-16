@@ -41,6 +41,21 @@ PostgreSQL, externe Dienste und der Quality Hub. Im Backend sind die Pakete nach
 Features getrennt. Controller greifen nicht direkt auf Repositories zu; das
 prüfen wir mit ArchUnit."
 
+## Warum Angular statt React?
+
+"React wäre natürlich auch möglich gewesen. Der Vorteil von React ist die hohe
+Flexibilität und das große Ökosystem. Genau diese Offenheit hätte für uns aber
+mehr eigene Entscheidungen bedeutet: Routing, State-Struktur, Guards,
+Formularansatz und Projektkonventionen müssten stärker selbst kombiniert
+werden.
+
+Angular war für diese Arbeit passender, weil das Framework Routing, Services,
+Dependency Injection, Guards und TypeScript-Struktur direkt mitbringt. Das passt
+gut zum SQS-Fokus: klare Zuständigkeiten, testbare Services und ein einheitlicher
+Projektaufbau. Der Nachteil ist, dass Angular schwergewichtiger ist und Updates
+mehr Anpassungsaufwand haben können. Für uns war die feste Struktur aber ein
+bewusster Vorteil."
+
 ## Quality Hub
 
 "Qualitätssicherung sollte bei uns nicht nur als Liste in der Doku stehen.
@@ -87,6 +102,7 @@ funktionierender App und reproduzierbaren Quality Checks."
 
 - "Das ist nicht nur Doku, das läuft im Quality Hub wirklich durch."
 - "Der externe Service ist im Backend angebunden, nicht nur im Frontend."
+- "React wäre flexibler gewesen, Angular war für Struktur, Tests und Teamkonventionen passender."
 - "Wenn PokeAPI ausfällt, bleibt die Registrierung nutzbar."
 - "Die App ist per Docker startbar; der Quality Hub läuft im gleichen Profil."
 - "Wir haben bekannte Grenzen dokumentiert, statt sie in der Präsentation zu verstecken."
