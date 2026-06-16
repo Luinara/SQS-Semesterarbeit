@@ -96,4 +96,4 @@ nicht durch Doppelklicks verfälscht werden.
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | Vollständiges DDD (Domain-Driven Design = UI → Use Cases → Domain Model → API Adapter)  im Frontend      | Nicht passend für die Projektgröße. Es gibt sprechende Modelle, aber keine Aggregate oder Repositories im Frontend. |
 | Eigene Repository-Schicht im Frontend | HTTP wird direkt im `BackendApiService` gekapselt. Eine weitere Schicht hätte wenig Nutzen gebracht.                |
-| Lokales Auth-System                   | Authentifizierung läuft über Backend-Session; lokale Demo-Daten sind nur noch Hilfs- und Fallbackdaten. Außerdem handelt es sich um eine Demo.             |
+| Lokales Auth-System                   | Authentifizierung läuft über Backend-Session; lokale Demo-Daten sind nur noch Hilfs- und Fallbackdaten. Außerdem handelt es sich um eine **Demo**.             |
