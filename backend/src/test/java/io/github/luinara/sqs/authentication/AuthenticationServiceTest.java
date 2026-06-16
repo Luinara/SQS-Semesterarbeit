@@ -17,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -342,6 +344,42 @@ class AuthenticationServiceTest {
         verify(repo).save(captor.capture());
         UserEntity saved = captor.getValue();
         assertThat(saved.getStreak()).isEqualTo(1);
+    }
+
+    @Test
+    void db_login_appliesInactivityPenalty_whenUserSkippedFullDay() {
+        BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+        String hash = enc.encode("password123");
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-06-16T10:00:00Z"), ZoneOffset.UTC);
+
+        UserEntity entity = new UserEntity("lazy", hash);
+        entity.setStreak(4);
+        entity.setPokemonLevel(8);
+        entity.setPokemonXp(60);
+        entity.setHappiness(45);
+        entity.setLastLevelUpAt(OffsetDateTime.parse("2026-06-13T10:00:00Z"));
+        entity.setLastLoginAt(OffsetDateTime.parse("2026-06-14T09:00:00Z"));
+        when(repo.findByUsernameIgnoreCase("lazy")).thenReturn(Optional.of(entity));
+
+        AuthenticationService svc = new AuthenticationService(
+                Optional.of(repo),
+                Optional.empty(),
+                Optional.empty(),
+                fixedClock
+        );
+        Optional<String> res = svc.login("lazy", "password123");
+
+        assertThat(res).isPresent();
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(repo).save(captor.capture());
+        UserEntity saved = captor.getValue();
+        assertThat(saved.getStreak()).isEqualTo(1);
+        assertThat(saved.getPokemonLevel()).isEqualTo(7);
+        assertThat(saved.getPokemonXp()).isZero();
+        assertThat(saved.getHappiness()).isEqualTo(25);
+        assertThat(saved.getLastLevelUpAt()).isNull();
+        assertThat(saved.getLastLoginAt()).isEqualTo(OffsetDateTime.parse("2026-06-16T10:00:00Z"));
     }
 
     @Test

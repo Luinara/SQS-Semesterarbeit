@@ -101,21 +101,33 @@ Delete the currently authenticated user's account, including user-owned progress
 - The backend deletes `user_tasks` rows before deleting the `users` row.
 - Prisma migrations configure user-owned `user_stats` and `user_tasks` relations with `ON DELETE CASCADE`.
 
-## Streak update rules (Auth responsibility)
+## Streak und Inactivity Decay
 
-- The `streak` value is maintained and updated by the authentication/login flow. The rules are:
-  - If the user has no recorded last-login time (first login) → set `streak = 1`.
-  - If the recorded `lastLoginAt` falls on the previous UTC day (yesterday) → `streak = streak + 1`.
-  - Otherwise (last login was earlier than yesterday) → reset `streak = 1`.
-- The authentication code must update the stored `lastLoginAt`/`streak` atomically during login to avoid race conditions (use a DB transaction or optimistic locking).
+Der Login-Flow aktualisiert `lastLoginAt`, `streak` und bei verpassten Tagen
+auch den Spielstand:
+
+- erster Login: `streak = 1`
+- letzter Login war gestern: `streak = streak + 1`
+- letzter Login war heute: Streak bleibt unverändert
+- letzter Login war älter als gestern: `streak = 1`
+
+Wenn mindestens ein kompletter Kalendertag ausgelassen wurde, greift zusätzlich
+eine kleine Strafe:
+
+- pro verpasstem Tag: `pokemonLevel - 1`, aber nie unter Level `1`
+- pro verpasstem Tag: `happiness - 20`, aber nie unter `0`
+- `growth` wird auf `0` gesetzt
+
+Beispiel: letzter Login am 14.06., nächster Login am 16.06. → der 15.06. wurde
+verpasst. Das Pokémon verliert ein Level und 20 Motivation.
 
 ## Reset-Verhalten für Tasks (Frontend-Verantwortung in dieser Iteration)
 
-- For this iteration the backend returns the current `completed` flags as stored (e.g. from `user_tasks.completed`). There is no server-side daily reset implemented yet.
-- Weil `streak` während der Authentifizierung aktualisiert wird, kann der Client `yesterdayLoggedIn` nutzen, um zu entscheiden, ob die Anzeige erledigte Tasks übernimmt oder für die Tagesansicht zurücksetzt. Empfohlener Algorithmus beim initialen Laden:
-  - If `yesterdayLoggedIn == false`, treat all `tasks[].completed` as `false` for display purposes (the user did not log in yesterday, so per-day completions should appear reset).
-  - If `yesterdayLoggedIn == true`, display `tasks[].completed` as returned by the backend.
-- `serverNow` is provided to help the client avoid local clock drift.
+- Für diesen Stand gibt das Backend die gespeicherten `completed`-Flags zurück, also z. B. `user_tasks.completed`.
+- Weil `streak` während der Authentifizierung aktualisiert wird, kann der Client `yesterdayLoggedIn` nutzen, um zu entscheiden, ob die Anzeige erledigte Tasks übernimmt oder für die Tagesansicht zurücksetzt.
+- Wenn `yesterdayLoggedIn == false`, behandelt das Frontend `tasks[].completed` für die Tagesanzeige als `false`.
+- Wenn `yesterdayLoggedIn == true`, zeigt das Frontend `tasks[].completed` wie vom Backend geliefert.
+- `serverNow` hilft dem Client, nicht von der lokalen Uhr des Browsers abhängig zu sein.
 - Eine robuste serverseitige Tageshistorie mit append-only Completions und Eindeutigkeit pro Tag ist als bekannte fachliche Erweiterung dokumentiert. Für den aktuellen Abgabestand verlässt sich das Frontend bei Taskabschluss und Wasser-Autoabschluss auf die Serverantwort.
 
 ## Implementation notes

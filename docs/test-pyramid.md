@@ -30,6 +30,7 @@ weil Browsertests langsamer sind und mehr bewegliche Teile haben.
 | Frage aus SQS-Sicht | Nachweis |
 | --- | --- |
 | Funktioniert Login, Registrierung und Logout? | `AuthenticationServiceTest`, `AuthenticationControllerUnitTest`, `AuthenticationControllerIntegrationTest` |
+| Wird Inaktivität fachlich wirksam? | `AuthenticationServiceTest` prüft Streak-Reset, Level-Abzug und Motivationsverlust nach ausgelassenem Tag. |
 | Sind geschützte Endpunkte wirklich geschützt? | `UserControllerTest`, `TaskControllerTest` |
 | Gibt es einen öffentlichen Endpunkt? | `TaskControllerTest` prüft `GET /api/tasks`. |
 | Funktioniert Persistenz über mehrere Schichten? | Spring-Boot-Integrationstests mit H2. |
