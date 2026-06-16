@@ -124,17 +124,21 @@ verpasst. Das Pokémon verliert ein Level und 20 Motivation.
 
 ## Tagesreset für Wasser und Tasks
 
-Es gibt keinen dauerhaft laufenden Hintergrundtimer. Der Tageswechsel wird beim
-nächsten erfolgreichen Login serverseitig angewendet:
+Es gibt keinen dauerhaft laufenden Hintergrundtimer. Der Reset wird beim
+nächsten erfolgreichen Login serverseitig angewendet, sobald seit dem letzten
+Login mindestens das konfigurierte Reset-Intervall vergangen ist:
 
-- letzter Login war heute: Wasserstand und Task-Abschlüsse bleiben erhalten.
-- letzter Login war vor heute: `hydration_ml` wird auf `0` gesetzt.
-- letzter Login war vor heute: alle `user_tasks.completed`-Flags des Users werden auf `false` gesetzt.
-- letzter Login war gestern: `streak = streak + 1`, aber keine Inaktivitätsstrafe.
-- letzter Login war älter als gestern: `streak = 1` und die Inaktivitätsstrafe wird für komplett verpasste Kalendertage angewendet.
+- Standard: `pokehabit.daily-reset-interval=PT24H`.
+- Dev-/Demo-Profil: `pokehabit.daily-reset-interval=PT1M`, damit der Reset im
+  Akzeptanztest nach einer Minute sichtbar geprüft werden kann.
+- Wenn das Intervall erreicht ist: `hydration_ml` wird auf `0` gesetzt.
+- Wenn das Intervall erreicht ist: alle `user_tasks.completed`-Flags des Users
+  werden auf `false` gesetzt.
+- Die Login-Streak und Inaktivitätsstrafe bleiben weiterhin an
+  UTC-Kalendertage gekoppelt.
 
 `serverNow` hilft dem Client, nicht von der lokalen Uhr des Browsers abhängig
-zu sein. Die Tagesgrenze wird im Backend anhand von UTC-Kalendertagen bewertet.
+zu sein. Die Reset-Schwelle wird im Backend anhand der Serverzeit bewertet.
 
 ## Implementation notes
 
