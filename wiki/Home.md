@@ -46,7 +46,7 @@ demo / password123
 
 - Drei Schichten: Frontend, Backend und Persistenz.
 - Öffentlicher Endpunkt: `GET /api/tasks`.
-- Geschuetzte Endpunkte mit Session-Cookie.
+- Geschützte Endpunkte mit Session-Cookie.
 - Externe APIs: PokeAPI im Backend, Open-Meteo im Frontend.
 - Unit-, Controller-, Integrations-, Architektur-, Security- und E2E-Tests.
 - Quality Hub als sichtbares SQS-Dashboard.
