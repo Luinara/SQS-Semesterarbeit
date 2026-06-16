@@ -24,9 +24,6 @@ export class PetVisualComponent implements OnDestroy {
   readonly sceneClass = computed(
     () => `pet-visual pet-visual--${this.weatherScene().className} pet-visual--${this.careState()}`
   );
-  readonly pokemonSourceLabel = computed(() =>
-    this.pokemonSource() === 'api' ? 'Offizielles API-Sprite' : 'Lokales Ersatz-Sprite'
-  );
   readonly careStatus = computed(() => getCareStatusCopy(this.careState()));
   readonly isCareTooltipVisible = signal(false);
   private careTooltipHideTimeout: ReturnType<typeof setTimeout> | null = null;

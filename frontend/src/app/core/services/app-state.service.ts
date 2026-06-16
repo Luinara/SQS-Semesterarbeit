@@ -10,6 +10,7 @@ import {
   DashboardSnapshot,
 } from './backend-api.service';
 import { derivePetCareState } from '../state/app-state.logic';
+import { PET_RULES } from '../../shared/mock/mock-data';
 
 const ACTIVE_USERNAME_STORAGE_KEY = 'sqs.backend.activeUsername';
 
@@ -57,8 +58,8 @@ export class AppStateService {
   readonly completedTaskCount = computed(
     () => this.tasks().filter((task) => task.isCompleted).length
   );
-  readonly feedCost = 1;
-  readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) > 0);
+  readonly feedCost = PET_RULES.feedCost;
+  readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) >= this.feedCost);
   readonly petCareState = computed<PetCareState>(() => {
     const gameState = this.activeGameState();
 

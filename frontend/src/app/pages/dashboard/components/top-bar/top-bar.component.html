@@ -29,9 +29,6 @@
       </div>
     }
 
-    <button sqsButton size="sm" variant="secondary" [disabled]="isBusy()" (click)="requestReset()">
-      {{ isBusy() ? 'Lädt...' : 'Neu laden' }}
-    </button>
     <button sqsButton size="sm" variant="ghost" [disabled]="isBusy()" (click)="requestLogout()">
       Abmelden
     </button>

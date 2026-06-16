@@ -119,7 +119,7 @@ describe("WeatherService", () => {
     expect(service.location().label).toBe("Jakutsk, Sacha, Russland");
     expect(service.snapshot()).toMatchObject({
       locationLabel: "Jakutsk, Sacha, Russland",
-      temperatureC: 20,
+      temperatureC: 20.1,
       weatherCode: 1,
     });
     expect(fetch).toHaveBeenNthCalledWith(

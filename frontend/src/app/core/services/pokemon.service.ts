@@ -17,7 +17,7 @@ export class PokemonService {
   readonly isLoading = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly sourceLabel = computed(() =>
-    this.snapshot().source === 'api' ? 'API-Sprite' : 'Lokaler Fallback'
+    this.snapshot().source === 'api' ? 'Online geladen' : 'Lokal verfügbar'
   );
 
   async loadForLevel(
@@ -49,7 +49,7 @@ export class PokemonService {
       this.cache.set(species, fallbackPokemon);
       this.snapshot.set(fallbackPokemon);
       this.errorMessage.set(
-        'Pokémon-Sprite ist gerade nicht erreichbar. Ein lokales Ersatz-Sprite wird angezeigt.'
+        'Pokémon-Sprite ist gerade nicht erreichbar. Die App zeigt dein Pokémon trotzdem weiter an.'
       );
     } finally {
       this.isLoading.set(false);

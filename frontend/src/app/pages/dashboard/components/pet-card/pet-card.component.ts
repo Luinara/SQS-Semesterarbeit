@@ -29,7 +29,6 @@ export class PetCardComponent {
   readonly pokemon = input<PokemonSnapshot | null>(null);
   readonly pokemonImageUrl = input<string | null>(null);
   readonly pokemonLoading = input(false);
-  readonly pokemonSourceLabel = input('Lokaler Fallback');
   readonly feedCost = input(1);
   readonly isLevelingUp = input(false);
   readonly isBusy = input(false);
@@ -56,6 +55,7 @@ export class PetCardComponent {
     this.pet()?.isEgg ? 'fallback' : (this.pokemon()?.source ?? 'fallback')
   );
   readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) >= this.feedCost());
+  readonly feedCostLabel = computed(() => `${this.feedCost()} ${this.feedCost() === 1 ? 'Punkt' : 'Punkte'}`);
   readonly careStateLabel = computed(() => {
     switch (this.petCareState()) {
       case 'needs-care':
@@ -98,7 +98,7 @@ export class PetCardComponent {
     }
 
     const pokemon = this.pokemon();
-    return pokemon ? pokemon.displayName : 'Ersatz-Sprite';
+    return pokemon ? pokemon.displayName : 'Bereit';
   });
   readonly weatherStatus = computed(() => {
     if (this.weatherLoading()) {

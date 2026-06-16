@@ -8,7 +8,6 @@
       [demoUsername]="demoAccount.username"
       [demoPassword]="demoAccount.password"
       [isBusy]="appState.isActionPending()"
-      (resetRequested)="resetDemoData()"
       (logoutRequested)="logout()"
       (accountDeleteRequested)="deleteAccount()"
     />
@@ -40,7 +39,6 @@
           [pokemon]="pokemon.snapshot()"
           [pokemonImageUrl]="appState.pokemonImageUrl()"
           [pokemonLoading]="pokemon.isLoading()"
-          [pokemonSourceLabel]="pokemon.sourceLabel()"
           [feedCost]="appState.feedCost"
           [isLevelingUp]="appState.isPetLevelingUp()"
           [isBusy]="appState.isActionPending()"
