@@ -145,15 +145,14 @@ Quality-Nachweis der relevante Fokus."
 
 ## Aufteilung im Team
 
-Wenn alle sprechen müssen, ist diese Aufteilung naheliegend:
+Wenn alle drei Personen sprechen, ist diese Aufteilung naheliegend:
 
 | Rolle | Abschnitt |
 | --- | --- |
-| Person 1 | Einstieg und Live-Demo |
-| Person 2 | Backend, API, Security, externer Service |
-| Person 3 | Architektur, C4, ADRs |
-| Person 4 | Tests, Quality Hub, Risiken |
+| Person 1 | Einstieg, App-Idee und Live-Demo |
+| Person 2 | Backend, API, Security und externer Wetter-Service |
+| Person 3 | Architektur, C4, ADRs, Tests, Quality Hub und Risiken |
 
-Wenn am Ende nur eine Person sicher vorbereitet ist, kann dieselbe Struktur
-auch allein gesprochen werden. Dann pro Abschnitt eher knapp bleiben und die
+Wenn am Ende eine Person einen Teil übernehmen muss, kann sie die drei Blöcke
+in derselben Reihenfolge sprechen. Dann pro Abschnitt knapp bleiben und die
 Live-Demo nicht zu lang machen.

@@ -68,7 +68,8 @@ export function mapWeatherCodeToCondition(weatherCode: number): WeatherCondition
 
 export function parseWeatherSnapshot(
   response: WeatherApiResponse,
-  locationLabel: string
+  locationLabel: string,
+  updatedAt: string | null = null
 ): WeatherSnapshot {
   const current = response.current ?? {};
   const weatherCode = current.weather_code ?? 3;
@@ -78,11 +79,11 @@ export function parseWeatherSnapshot(
   return {
     condition,
     timeOfDay,
-    temperatureC: Math.round(current.temperature_2m ?? 0),
+    temperatureC: current.temperature_2m ?? 0,
     weatherCode,
     label: WEATHER_LABELS[condition],
     locationLabel,
-    updatedAt: current.time ?? null,
+    updatedAt,
   };
 }
 

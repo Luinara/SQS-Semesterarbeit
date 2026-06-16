@@ -86,21 +86,19 @@ export class PetCardComponent {
   });
   readonly pokemonStatus = computed(() => {
     if (this.pet()?.isEgg) {
-      return 'Ei bis Level 10';
+      return 'Ei bis Lvl. 10';
     }
 
     if (this.pokemonImageUrl()) {
-      return 'Pokémon-Sprite bereit';
+      return 'Sprite bereit';
     }
 
     if (this.pokemonLoading()) {
-      return 'Pokémon-Daten werden geladen';
+      return 'Daten laden';
     }
 
     const pokemon = this.pokemon();
-    return pokemon
-      ? `${pokemon.displayName} aus ${this.pokemonSourceLabel()}`
-      : 'Pokémon-Fallback bereit';
+    return pokemon ? pokemon.displayName : 'Ersatz-Sprite';
   });
   readonly weatherStatus = computed(() => {
     if (this.weatherLoading()) {
@@ -122,13 +120,13 @@ export class PetCardComponent {
       return 'Zeit unbekannt';
     }
 
-    const apiTimeLabel = formatWeatherApiTime(updatedAt);
+    const updatedAtTimeLabel = formatWeatherUpdatedAtTime(updatedAt);
 
-    if (!apiTimeLabel) {
+    if (!updatedAtTimeLabel) {
       return 'Aktualisierungszeit unbekannt';
     }
 
-    return `Letzte Aktualisierung: ${apiTimeLabel}`;
+    return `Letzte Aktualisierung: ${updatedAtTimeLabel}`;
   });
 
   requestFeeding(): void {
@@ -165,14 +163,7 @@ export class PetCardComponent {
   }
 }
 
-export function formatWeatherApiTime(updatedAt: string): string | null {
-  const apiTimestampMatch =
-    /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})T(?<hour>\d{2}):(?<minute>\d{2})/.exec(updatedAt);
-
-  if (apiTimestampMatch?.groups) {
-    return `${apiTimestampMatch.groups['hour']}:${apiTimestampMatch.groups['minute']} Uhr`;
-  }
-
+export function formatWeatherUpdatedAtTime(updatedAt: string): string | null {
   const updatedAtDate = new Date(updatedAt);
 
   if (Number.isNaN(updatedAtDate.getTime())) {
@@ -180,9 +171,6 @@ export function formatWeatherApiTime(updatedAt: string): string | null {
   }
 
   return `${new Intl.DateTimeFormat('de-DE', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
   }).format(updatedAtDate)} Uhr`;
