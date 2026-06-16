@@ -45,14 +45,15 @@
           <div class="pet-card__hint">
             <strong>Training kostet {{ feedCostLabel() }}.</strong>
             <span>
-              Level-Ups sind frühestens alle zwei Tage möglich. Mit dem Testbutton kannst du die
-              Animation sofort prüfen.
+              Nutze deine Quest-Punkte für Wachstum und Motivation. Level-Ups sind frühestens alle
+              zwei Tage möglich.
             </span>
           </div>
 
           <div class="pet-card__actions">
             <button
               sqsButton
+              class="pet-card__primary-action"
               [disabled]="isBusy() || !canFeed()"
               [variant]="isBusy() || !canFeed() ? 'secondary' : 'primary'"
               (click)="requestFeeding()"
@@ -62,6 +63,7 @@
 
             <button
               sqsButton
+              class="pet-card__utility-action"
               variant="soft"
               type="button"
               [disabled]="isBusy()"
@@ -72,6 +74,7 @@
 
             <button
               sqsButton
+              class="pet-card__utility-action"
               variant="ghost"
               type="button"
               [disabled]="isBusy()"
