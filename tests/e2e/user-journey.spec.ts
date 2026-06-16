@@ -161,7 +161,9 @@ test.describe("PokeHabit", () => {
     await expect(page.getByText("1000 / 3000 ml")).toBeVisible();
     await expect(page.getByText("+500 ml Wasser getrunken.")).toBeVisible();
 
-    await page.getByRole("button", { name: "Pokémon trainieren" }).click();
+    await page
+      .getByRole("button", { name: "Pokémon trainieren", exact: true })
+      .click();
     await expect(
       page.getByText("Trainingspunkte wurden für dein Pokémon eingesetzt."),
     ).toBeVisible();
