@@ -8,7 +8,7 @@
 | Wartbarkeit | Backend-Packages folgen Feature-Grenzen; Controller delegieren an Services; HTTP im Frontend bleibt in Services. |
 | Testbarkeit | Fachregeln sind in testbare Funktionen und Services ausgelagert. |
 | Security | Passwörter werden gehasht, Sessions laufen serverseitig, npm-Abhängigkeiten werden geprüft. |
-| Robustheit | Wetter- und Pokemon-Fallbacks verhindern leere UI-Zustände und erlauben Registrierung trotz PokeAPI-Ausfall. |
+| Robustheit | Wetter- und Pokémon-Fallbacks verhindern leere UI-Zustände und erlauben Registrierung trotz PokeAPI-Ausfall. |
 | Startbarkeit | App und Quality Gate laufen über Docker Compose. |
 
 ## Prüfszenarien

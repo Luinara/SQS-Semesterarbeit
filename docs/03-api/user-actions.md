@@ -113,11 +113,11 @@ Beispiel Response
   - Bei `0%` Motivation kostet weiterer Motivationsverlust etwas Wachstum/XP.
   - Unter ca. `25%` kann das Frontend den Pflegezustand als kritisch anzeigen.
   - Quests, Wassertracking und Level-Up werden dadurch aktuell nicht hart blockiert.
-  - Motivation kann über Trainingspunkte und `POST /api/user/feed` wieder erhoeht werden.
+  - Motivation kann über Trainingspunkte und `POST /api/user/feed` wieder erhöht werden.
 
 - Responses:
   - 200 OK - JSON body: aktueller `GameStateDto`.
-  - 401 Unauthorized - kein gueltiger Login / Session.
+  - 401 Unauthorized - kein gültiger Login / Session.
   - 404 Not Found - Benutzer nicht gefunden.
 
 Beispiel Request
@@ -184,6 +184,6 @@ Beispiel Response
 - Neue Spalte in `tasks` (feed_points) ist bereits in der JPA‑Entity `TaskEntity` vorhanden. Falls ihr mit Prisma/SQL migriert, legt eine Migration an, die `feed_points` (integer default 0) zur `tasks`‑Tabelle hinzufügt.
 - Neue Spalte in `users` (pending_feed_points) ist in `UserEntity` vorhanden und muss analog in die DB gemigt werden.
 
-## Test-Ergaenzung
+## Test-Ergänzung
 
 - `POST /api/user/test-motivation-decay` senkt `happiness` um 20 und begrenzt bei 0.

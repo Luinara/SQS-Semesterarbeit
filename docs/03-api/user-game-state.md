@@ -125,15 +125,15 @@ verpasst. Das Pokémon verliert ein Level und 20 Motivation.
 ## Tagesreset für Wasser und Tasks
 
 Es gibt keinen dauerhaft laufenden Hintergrundtimer. Der Tageswechsel wird beim
-naechsten erfolgreichen Login serverseitig angewendet:
+nächsten erfolgreichen Login serverseitig angewendet:
 
-- letzter Login war heute: Wasserstand und Task-Abschluesse bleiben erhalten.
+- letzter Login war heute: Wasserstand und Task-Abschlüsse bleiben erhalten.
 - letzter Login war vor heute: `hydration_ml` wird auf `0` gesetzt.
 - letzter Login war vor heute: alle `user_tasks.completed`-Flags des Users werden auf `false` gesetzt.
 - letzter Login war gestern: `streak = streak + 1`, aber keine Inaktivitätsstrafe.
 - letzter Login war älter als gestern: `streak = 1` und die Inaktivitätsstrafe wird für komplett verpasste Kalendertage angewendet.
 
-`serverNow` hilft dem Client, nicht von der lokalen Uhr des Browsers abhaengig
+`serverNow` hilft dem Client, nicht von der lokalen Uhr des Browsers abhängig
 zu sein. Die Tagesgrenze wird im Backend anhand von UTC-Kalendertagen bewertet.
 
 ## Implementation notes
@@ -166,5 +166,5 @@ Diese Doku liegt in `docs/03-api/user-game-state.md`.
 
 ## Bekannte Erweiterungen
 
-1. Optional append-only Task-Completions pro Datum modellieren, wenn eine Historie pro Tag benoetigt wird.
+1. Optional append-only Task-Completions pro Datum modellieren, wenn eine Historie pro Tag benötigt wird.
 2. Optional weitere echte Backend-E2E-Flows ergänzen, wenn Testdaten-Isolation für parallele Runs eingeführt wird.

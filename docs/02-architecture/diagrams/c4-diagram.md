@@ -21,9 +21,9 @@ Mermaid-Quelle: [c4-level-1-system-context.mmd](./mermaid/c4-level-1-system-cont
 
 | Element | Typ | Verantwortung |
 | --- | --- | --- |
-| Nutzer | Person | Registriert sich, meldet sich an, erledigt Quests, trinkt Wasser und trainiert den Pokemon-Partner. |
+| Nutzer | Person | Registriert sich, meldet sich an, erledigt Quests, trinkt Wasser und trainiert den Pokémon-Partner. |
 | PokeHabit | Softwaresystem | Stellt UI, Authentifizierung, Aufgabenverwaltung, Fortschritt und Gamification bereit. |
-| PokeAPI | Externes System | Liefert Pokemon-Namen und offizielles Artwork für Starter-Pokemon. |
+| PokeAPI | Externes System | Liefert Pokémon-Namen und offizielles Artwork für Starter-Pokémon. |
 | Open-Meteo | Externes System | Liefert Wetterdaten für die Dashboard-Szene. |
 
 ## Level 2: Container
@@ -35,10 +35,10 @@ Mermaid-Quelle: [c4-level-2-container.mmd](./mermaid/c4-level-2-container.mmd)
 | Container | Technologie | Verantwortung |
 | --- | --- | --- |
 | Frontend | Angular, TypeScript, SCSS | Zeigt Splash, Login, Registrierung und Dashboard; ruft Backend-Endpunkte mit Session-Cookie auf. |
-| Backend API | Java 21, Spring Boot, Spring Data JPA | Kapselt Auth, User-State, Tasks, Pokemon-Progression und PokeAPI-Zugriff. |
-| PostgreSQL | PostgreSQL | Persistiert Nutzer, Tasks, Starter-Pokemon, Wasserstand, XP, Level und Streak. |
+| Backend API | Java 21, Spring Boot, Spring Data JPA | Kapselt Auth, User-State, Tasks, Pokémon-Progression und PokeAPI-Zugriff. |
+| PostgreSQL | PostgreSQL | Persistiert Nutzer, Tasks, Starter-Pokémon, Wasserstand, XP, Level und Streak. |
 | Quality Hub | Nginx, statische HTML-App | Zeigt lokale Quality-Gate-Ergebnisse aus dem Docker-Volume. |
-| PokeAPI | Externer REST-Service | Liefert Starter-Pokemon-Daten für das Backend. |
+| PokeAPI | Externer REST-Service | Liefert Starter-Pokémon-Daten für das Backend. |
 | Open-Meteo | Externer REST-Service | Liefert Wetterdaten für das Frontend. |
 
 ## Level 3: Backend Components
@@ -53,7 +53,7 @@ Mermaid-Quelle: [c4-level-3-backend-components.mmd](./mermaid/c4-level-3-backend
 | UserController | `io.github.luinara.sqs.user` | Game-State, Wasser, Training und Account-Löschung. |
 | TaskController | `io.github.luinara.sqs.task` | Öffentliche Task-Liste und geschützter Task-Abschluss. |
 | AuthenticationService | `io.github.luinara.sqs.authentication` | Passwort-Hashing, Login-Schutz, Starter-Auswahl und Session-Logik. |
-| UserService | `io.github.luinara.sqs.user` | Pokemon-Level, XP, Evolution, Wasserstand und DTO-Mapping. |
+| UserService | `io.github.luinara.sqs.user` | Pokémon-Level, XP, Evolution, Wasserstand und DTO-Mapping. |
 | TaskService | `io.github.luinara.sqs.task` | Task-Auswahl, Tageslogik und Fortschrittsänderungen. |
 | PokeApiPokemonService | `io.github.luinara.sqs.pokemon` | Externer PokeAPI-Aufruf mit Timeout und lokalem Fallback. |
 | Repositories | `io.github.luinara.sqs.*` | Persistenz über Spring Data JPA. |
@@ -68,7 +68,7 @@ Mermaid-Quelle: [c4-frontend-components.mmd](./mermaid/c4-frontend-components.mm
 | --- | --- |
 | Routing und Guards | Trennen Gast-, Auth- und Dashboard-Routen. |
 | Pages | Bilden Splash, Auth und Dashboard als Hauptansichten. |
-| Dashboard Components | Zeigen Tasks, Wetter, Pokemon-Fokus, Wasserstand und Feedback. |
+| Dashboard Components | Zeigen Tasks, Wetter, Pokémon-Fokus, Wasserstand und Feedback. |
 | Shared UI | Wiederverwendbare UI-Bausteine. |
 | Core State & Services | Bündeln API-Zugriffe, Session-Restore und App-State. |
 | Models | Typisieren Requests, Responses und UI-Zustand. |

@@ -5,7 +5,7 @@
 Diese Notiz dokumentiert Security-Hotspots, die von SonarCloud oder ähnlichen
 statischen Analysewerkzeugen gemeldet wurden. Ein Hotspot bedeutet nicht
 automatisch eine Schwachstelle. Er muss im Projektkontext geprüft und entweder
-technisch entschaerft oder bewusst als sicher bewertet werden.
+technisch entschärft oder bewusst als sicher bewertet werden.
 
 ## Geprüfte Punkte
 
@@ -15,13 +15,13 @@ technisch entschaerft oder bewusst als sicher bewertet werden.
 | Quality Runner HTTP   | Docker-interne URLs mit `http`              | Interne Service-Healthchecks laufen nur im lokalen Docker-Netz. Die URLs sind jetzt konfigurierbar, damit bei TLS-Setups `https` per Environment Override genutzt werden kann.       |
 | Quality Runner PATH   | `spawn` mit vererbtem `PATH`                | Der Runner setzt für Kindprozesse einen festen, bekannten `PATH` und startet Bash über `/bin/bash`. `check.env` kann den `PATH` nicht überschreiben.                              |
 | Docker Copy           | Rekursives Kopieren in Images               | Das Frontend-Image kopiert gezielt Projektdateien, `src` und `public` statt pauschal das ganze Repository. Damit werden versehentliche sensible Dateien nicht ins Image übernommen. |
-| Docker User           | Container laufen standardmaessig als `root` | Runtime-Images wurden auf unprivilegierte User umgestellt, z. B. `USER app`, `nginxinc/nginx-unprivileged` und `USER pwuser`.                                                        |
+| Docker User           | Container laufen standardmäßig als `root` | Runtime-Images wurden auf unprivilegierte User umgestellt, z. B. `USER app`, `nginxinc/nginx-unprivileged` und `USER pwuser`.                                                        |
 | Session-Cookie        | `secure` Flag im Dev-Betrieb                | Der Default ist secure. Nur der lokale Docker-Dev-Stack setzt das Flag bewusst auf `false`, weil lokal ohne HTTPS gearbeitet wird.                                                   |
 
 ## Quality Runner PATH
 
 SonarCloud meldete, dass bei `spawn(...)` sichergestellt werden soll, dass die
-Umgebungsvariable `PATH` nur feste, nicht beschreibbare Verzeichnisse enthaelt.
+Umgebungsvariable `PATH` nur feste, nicht beschreibbare Verzeichnisse enthält.
 
 Die Umsetzung in `quality/runner/quality-runner.mjs` nutzt deshalb:
 
@@ -72,6 +72,6 @@ reduziert oder dokumentiert begrenzt:
 - fester `PATH` für Runner-Kindprozesse
 - direkte Bash-Pfadangabe
 - konfigurierbare interne URLs
-- keine unnoetigen Repository-Kopien in Docker-Images
+- keine unnötigen Repository-Kopien in Docker-Images
 - unprivilegierte Container-User im Runtime-Betrieb
 - secure Cookie als Default, Dev-Ausnahme nur im lokalen Docker-Stack

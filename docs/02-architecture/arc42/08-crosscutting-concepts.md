@@ -9,7 +9,7 @@ Browser gespeichert und im Backend gehasht.
 ## Zustandsverwaltung
 
 Der zentrale Zustand liegt im Angular-Service `AppStateService`. Dort laufen
-Nutzer, Tasks, Wasserstand, Pokemon, Feedback und Session-Restore zusammen.
+Nutzer, Tasks, Wasserstand, Pokémon, Feedback und Session-Restore zusammen.
 Reine Fachlogik liegt in separaten Funktionen, damit sie ohne Angular-Rendering
 getestet werden kann.
 
@@ -17,7 +17,7 @@ getestet werden kann.
 
 Controller liefern HTTP-Statuscodes und kurze Fehlermeldungen. Im Frontend
 werden technische Fehler in verständliche UI-Meldungen übersetzt. Wetter- und
-Pokemon-Daten haben Fallbacks, damit das Dashboard nicht leer bleibt.
+Pokémon-Daten haben Fallbacks, damit das Dashboard nicht leer bleibt.
 
 Der Backend-Zugriff auf PokeAPI ist absichtlich defensiv gebaut: kurze
 Verbindungs- und Request-Timeouts, keine Pflicht auf echte Netzverfügbarkeit im

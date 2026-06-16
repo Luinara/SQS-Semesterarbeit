@@ -38,7 +38,7 @@ dokumentiert.
 | Authentication | Registrierung, Login, Session und Demo-Seed. |
 | Task/User Actions | Questabschluss, Wassertracking, Training und Test-Level-Up. |
 | User Game State | Aktueller Spielstand für das Dashboard. |
-| Pokemon Integration | PokeAPI-Aufruf, Timeout, Fallback und Wiederverwendung vorhandener DB-Daten. |
+| Pokémon-Integration | PokeAPI-Aufruf, Timeout, Fallback und Wiederverwendung vorhandener DB-Daten. |
 | Persistence | Repositories und Entities für Nutzer, Tasks und Spielstand. |
 
 ## Ebene 2 - Quality Hub

@@ -26,7 +26,7 @@ Die ID-Erzeugung nutzt bevorzugt:
 globalThis.crypto?.randomUUID?.()
 ```
 
-Falls die API in einer Test- oder Altumgebung nicht verfuegbar ist, gibt es einen
+Falls die API in einer Test- oder Altumgebung nicht verfügbar ist, gibt es einen
 Fallback auf `Date.now()`. Dieser Fallback ist akzeptabel, weil die Werte nicht
 als Geheimnis, Authentifizierungsmerkmal oder Zugriffsschutz verwendet werden.
 
