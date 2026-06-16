@@ -1,35 +1,51 @@
-# Building Block View
+# Bausteinsicht
 
-This section describes the static decomposition of the Self-Care Companion.
-The system is split into a browser-based Angular frontend, a Spring Boot
-backend, a PostgreSQL database, external weather/Pokemon integrations, and a
-dockerized Quality Hub.
+PokeHabit ist in fünf große Bausteine getrennt: Angular-Frontend,
+Spring-Boot-Backend, PostgreSQL-Datenbank, externe Dienste und Quality Hub.
+Die Trennung ist für die Abgabe wichtig, weil App-Funktion, externe Services,
+Persistenz und Qualitätssicherung getrennt gezeigt und getestet werden können.
 
-The Angular component structure is documented in detail in
-[Frontend Component Architecture](frontend-component-architecture.md).
-That additional view also contains a design pattern analysis and clarifies that
-Domain-Driven Design is only used in a lightweight, domain-inspired way, not as
-a complete DDD architecture.
+Die Angular-Komponenten sind zusätzlich in
+[Frontend-Komponentenarchitektur](frontend-component-architecture.md)
+dokumentiert.
 
-## Level 1 - System Overview
+## Ebene 1 - Systemüberblick
 
-| Building block | Responsibility |
+| Baustein | Verantwortung |
 | --- | --- |
-| Angular Frontend | Provides the user interface for splash, authentication, dashboard, tasks, hydration, pet progress, starter evolution, and weather scene. |
-| Backend API | REST API for authentication, tasks, user game state, hydration, feed/training, account deletion, and persistence access. |
-| PostgreSQL Database | Persistent storage for users, tasks, task state, user stats, and pet progress. |
-| PokeAPI | External API used to enrich the gamification part with Pokemon-related data. |
-| Open-Meteo | External API used by the frontend weather adapter. |
+| Angular-Frontend | Oberfläche für Splash, Login, Registrierung, Dashboard, Quests, Wasser, Pokémon-Fortschritt und Wetter-Szene. |
+| Backend-API | REST-API für Authentifizierung, Tasks, Spielstand, Wassertracking, Training, Account-Löschung und Persistenzzugriff. |
+| PostgreSQL-Datenbank | Speichert Nutzer, Tasks, Taskstatus, Spielstand und Pokémon-Fortschritt. |
+| PokeAPI | Backend-Service für Starter-Pokémon und Evolutionsdaten; bei Ausfall greift ein lokaler Fallback. |
+| Open-Meteo | Frontend-Service für Wetterdaten der Dashboard-Szene. |
 | Quality Hub | Dockerisiertes Dashboard mit Runner für Tests, Coverage, Lint, statische Analyse, Security und E2E-Reports. |
 
-## Level 2 - Frontend Overview
+## Ebene 2 - Frontend
 
-| Building block | Responsibility |
+| Baustein | Verantwortung |
 | --- | --- |
-| Routes and Guards | Define navigation and protect guest-only or authenticated-only pages. |
-| Pages | Compose full application views such as Splash, Auth, and Dashboard. |
-| Feature Components | Implement dashboard-specific UI such as task list, task cards, pet card, pet visual, and top bar. |
-| Shared UI Components | Provide reusable presentation elements such as buttons, progress bars, and statistic badges. |
-| Core State and Services | Centralize application state, local persistence, and business operations exposed to components. |
-| Pure State Logic | Contains framework-independent rules for login, registration, task completion, pet feeding, and reset behavior. |
-| Shared Models and Mock Data | Define TypeScript contracts and demo data used by the frontend MVP. |
+| Routes und Guards | Routen definieren und Zugriff auf Auth-/Dashboard-Seiten steuern. |
+| Pages | Vollständige Ansichten wie Splash, Auth und Dashboard zusammensetzen. |
+| Dashboard-Komponenten | Tasks, Wasserstand, Pokémon-Karte, Wetter, Topbar und Tagesziel anzeigen. |
+| Shared UI | Wiederverwendbare Elemente wie Buttons, Progress Bars und Stat Badges. |
+| Core Services | Zustand, Backend-API, Pokémon-Daten und Wetterdaten kapseln. |
+| Shared Models | TypeScript-Verträge für API-Mapping und UI-Zustand bereitstellen. |
+
+## Ebene 2 - Backend
+
+| Baustein | Verantwortung |
+| --- | --- |
+| Authentication | Registrierung, Login, Session und Demo-Seed. |
+| Task/User Actions | Questabschluss, Wassertracking, Training und Test-Level-Up. |
+| User Game State | Aktueller Spielstand für das Dashboard. |
+| Pokemon Integration | PokeAPI-Aufruf, Timeout, Fallback und Wiederverwendung vorhandener DB-Daten. |
+| Persistence | Repositories und Entities für Nutzer, Tasks und Spielstand. |
+
+## Ebene 2 - Quality Hub
+
+| Baustein | Verantwortung |
+| --- | --- |
+| Quality Runner | Führt Maven-, npm- und Playwright-Checks im Docker-Profil `quality` aus. |
+| Report JSON | Maschinenlesbarer Status für alle Checks. |
+| Nginx Hub | Zeigt Score, Checkliste, Logs und HTML-Reports auf Port `8088`. |
+| Docker Volume | Hält Reports nach Runner-Ende für Browser-Refresh und Präsentation bereit. |

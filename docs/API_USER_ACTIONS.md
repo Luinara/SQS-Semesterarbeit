@@ -96,7 +96,7 @@ Beispiel Response
 
 - Tasks haben jetzt ein Feld `feed_points` (DB‑Spalte `feed_points`).
 - Beim Abschließen einer Task (`POST /api/tasks/{id}/complete`) werden die `feed_points` dieser Task dem Feld `user.pendingFeedPoints` hinzugefügt. Die Task‑Abschluss‑Action selbst erhöht nicht direkt `happiness` — das geschieht durch die separate `POST /api/user/feed` Aktion.
-- Growth (Pokémon XP), Level‑Ups, Hatch und Evolution bleiben beim Task‑Abschluss erhalten. Level‑Ups sind auf frühestens alle zwei Tage begrenzt.
+- Wachstum (`growth`), Level-Ups, Hatch und Evolution bleiben beim Task-Abschluss erhalten. Level-Ups sind auf frühestens alle zwei Tage begrenzt.
 
 ## DELETE /api/user/account
 

@@ -1,4 +1,4 @@
-# Risks and Technical Debt
+# Risiken und technische Schulden
 
 | Risiko / Schuld | Auswirkung | Umgang damit |
 | --- | --- | --- |

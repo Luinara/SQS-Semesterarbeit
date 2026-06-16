@@ -56,4 +56,5 @@ vorbereitet. Wichtige Einstiegspunkte:
 
 ReadTheDocs nutzt `.readthedocs.yaml`, `mkdocs.yml` und
 `docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys kann
-die Doku dort direkt gebaut werden.
+die Doku dort direkt gebaut werden. Die Schritte stehen in
+`docs/readthedocs-publish.md`.

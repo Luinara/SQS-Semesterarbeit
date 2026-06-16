@@ -1,4 +1,4 @@
-# Deployment View
+# Deployment-Sicht
 
 ## Lokales Docker-Deployment
 

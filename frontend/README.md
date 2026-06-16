@@ -140,7 +140,7 @@ dann ist das kein Frontend-Fehler. Das Backend läuft dann nicht auf Port `8181`
 3. Spieler loggt sich ein oder registriert sich.
 4. Quest-Board lädt Tagesquests und Spielstand.
 5. Spieler erledigt Quests.
-6. Punkte füllen Tagesziel und Feed-Punkte.
+6. Punkte füllen Tagesziel und Trainingspunkte.
 7. Spieler kann Wasser über die Wasser-Gauge speichern.
 8. Spieler kann das Pokémon trainieren.
 9. Wetter-Szene passt sich an Stadt und Wetterdaten an.
@@ -214,7 +214,7 @@ Sie zeigt:
 - Fortschritt in Prozent
 - Wasserstand
 - Energie
-- Login-Streak
+- Anmelde-Serie
 
 Wasser-Gauge:
 
@@ -237,7 +237,7 @@ Die Karte zeigt:
 
 Button:
 
-- `Pokémon trainieren`: nutzt Feed-Punkte für Training.
+- `Pokémon trainieren`: nutzt Trainingspunkte.
 
 Training ist nur aktiv, wenn Punkte vorhanden sind.
 

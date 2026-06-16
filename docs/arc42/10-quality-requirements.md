@@ -1,4 +1,4 @@
-# Quality Requirements
+# Qualitätsanforderungen
 
 ## Qualitätsziele
 

@@ -57,3 +57,4 @@ Das Repository enthält die ReadTheDocs-Konfiguration:
 
 Nach dem Verbinden des öffentlichen Repositorys mit ReadTheDocs kann die
 Dokumentation dort direkt aus dem `docs/`-Ordner gebaut werden.
+Die konkreten Schritte stehen in [ReadTheDocs veröffentlichen](readthedocs-publish.md).
