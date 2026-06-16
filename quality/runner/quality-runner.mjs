@@ -13,6 +13,8 @@ const frontendBaseUrl =
   process.env.QUALITY_FRONTEND_BASE_URL ?? createInternalDockerUrl('frontend', 3000);
 const backendHealthUrl =
   process.env.QUALITY_BACKEND_HEALTH_URL ?? createInternalDockerUrl('backend', 8181, '/api/tasks');
+const commandPath =
+  '/opt/java/openjdk/bin:/usr/share/maven/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin';
 const startedAt = new Date();
 
 mkdirSync(logRoot, { recursive: true });
@@ -223,7 +225,7 @@ function runShellCommand(check) {
   return new Promise((resolve) => {
     const logPath = join(logRoot, `${check.id}.log`);
     const fullCwd = join(repoRoot, check.cwd);
-    const env = check.env ? { ...process.env, ...check.env } : process.env;
+    const env = createCommandEnv(check.env);
 
     writeFileSync(
       logPath,
@@ -236,7 +238,7 @@ function runShellCommand(check) {
       ].join('\n')
     );
 
-    const child = spawn('bash', ['-lc', check.command], {
+    const child = spawn('/bin/bash', ['-lc', check.command], {
       cwd: fullCwd,
       env,
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -255,6 +257,14 @@ function runShellCommand(check) {
       resolve({ exitCode: code ?? 1 });
     });
   });
+}
+
+function createCommandEnv(extraEnv = {}) {
+  return {
+    ...process.env,
+    ...extraEnv,
+    PATH: commandPath,
+  };
 }
 
 function appendLog(logPath, chunk) {
