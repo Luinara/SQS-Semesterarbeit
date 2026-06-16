@@ -10,7 +10,7 @@ Die Architektur ist in `docs/02-architecture/arc42/` nach arc42 dokumentiert.
 | Frontend | UI, App-State, Wetter-Szene, API-Mapping |
 | Backend | Auth, Tasks, Spielstand, Pokemon-Daten, Sessions |
 | Datenbank | Nutzer, Tasks, Spielstand und Pokemon |
-| Externe APIs | PokeAPI fuer Starter-Pokemon, Open-Meteo fuer Wetter |
+| Externe APIs | PokeAPI für Starter-Pokemon, Open-Meteo für Wetter |
 
 ## Wichtige Dokumente
 
@@ -25,6 +25,6 @@ Die Architektur ist in `docs/02-architecture/arc42/` nach arc42 dokumentiert.
 
 ## Architekturregeln
 
-Die Schichtengrenzen werden mit ArchUnit geprueft. Controller, Services und
+Die Schichtengrenzen werden mit ArchUnit geprüft. Controller, Services und
 Repositorys sollen getrennt bleiben, damit HTTP, Fachlogik und Persistenz nicht
 ineinanderlaufen.

@@ -43,7 +43,7 @@ Der Angular-Proxy in `frontend/proxy.conf.json` leitet lokale Requests weiter:
 4. Quest erledigen.
 5. Wasserstand speichern.
 6. Pokemon trainieren.
-7. Wetter-Szene ueber Stadt und Open-Meteo aktualisieren.
+7. Wetter-Szene über Stadt und Open-Meteo aktualisieren.
 8. Logout.
 
 ## Checks
@@ -57,4 +57,4 @@ npm run lint
 npm run test:e2e
 ```
 
-Ausfuehrliche Frontend-Doku: `frontend/README.md`.
+Ausführliche Frontend-Doku: `frontend/README.md`.

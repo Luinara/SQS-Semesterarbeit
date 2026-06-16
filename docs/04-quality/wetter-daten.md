@@ -2,7 +2,7 @@
 
 Diese Notiz erklaert, wie die Wetterdaten in unserer App funktionieren. Wichtig:
 Die Nutzer geben in der App nur einen Stadtnamen ein, z.B. `Madrid`. Latitude
-und Longitude muessen Nutzer nicht kennen.
+und Longitude müssen Nutzer nicht kennen.
 
 ## Kurzer Ablauf
 
@@ -15,21 +15,21 @@ und Longitude muessen Nutzer nicht kennen.
    z.B. `Madrid, Madrid, Spanien`.
 6. `OpenMeteoWeatherAdapter.loadWeather(location)` ruft die Forecast API auf.
 7. Die Temperatur kommt aus `current.temperature_2m`.
-8. Wettercode und Tag/Nacht werden in eine UI-Wetterszene uebersetzt.
+8. Wettercode und Tag/Nacht werden in eine UI-Wetterszene übersetzt.
 9. Die App speichert den gewaehlten Ort im Browser-`localStorage`.
-10. Alle 10 Minuten aktualisiert die App das Wetter fuer den gespeicherten Ort.
+10. Alle 10 Minuten aktualisiert die App das Wetter für den gespeicherten Ort.
 
 ## Beteilige Dateien
 
 | Datei | Aufgabe |
 | --- | --- |
-| `frontend/src/app/core/services/weather.service.ts` | App-State fuer Wetter, Stadt-Suche, Speicherung, Refresh und Fehlertexte |
+| `frontend/src/app/core/services/weather.service.ts` | App-State für Wetter, Stadt-Suche, Speicherung, Refresh und Fehlertexte |
 | `frontend/src/app/core/services/weather.adapter.ts` | Open-Meteo API-Aufrufe: Geocoding und Forecast |
 | `frontend/src/app/core/state/weather-appearance.logic.ts` | Wandelt API-Daten in App-Snapshot und UI-Szene um |
-| `frontend/src/app/shared/models/weather.model.ts` | Typen fuer Location, Snapshot und Scene |
+| `frontend/src/app/shared/models/weather.model.ts` | Typen für Location, Snapshot und Scene |
 | `scripts/weather-curl-check.ps1` | Manuelles Prueftool mit echtem Forecast-Curl |
-| `tests/unit/frontend/weather.service.test.ts` | Tests fuer Stadtaufloesung, Refresh, Hawaii-Fix und Forecast-Call |
-| `tests/unit/frontend/weather-appearance.logic.test.ts` | Tests fuer Wettercode-Mapping und UI-Szene |
+| `tests/unit/frontend/weather.service.test.ts` | Tests für Stadtauflösung, Refresh, Hawaii-Fix und Forecast-Call |
+| `tests/unit/frontend/weather-appearance.logic.test.ts` | Tests für Wettercode-Mapping und UI-Szene |
 
 ## Stadtname zu Koordinaten
 
@@ -48,7 +48,7 @@ language=de
 format=json
 ```
 
-Beispiel fuer `Madrid`:
+Beispiel für `Madrid`:
 
 ```text
 name=Madrid&count=10&language=de&format=json
@@ -89,8 +89,8 @@ results[].population
 
 ## Warum gibt es ein Ranking?
 
-Open-Meteo kann mehrere Treffer fuer denselben Suchtext liefern. Beispiel:
-`Tokyo` kann Treffer in Japan, Papua-Neuguinea oder anderen Laendern liefern.
+Open-Meteo kann mehrere Treffer für denselben Suchtext liefern. Beispiel:
+`Tokyo` kann Treffer in Japan, Papua-Neuguinea oder anderen Ländern liefern.
 `Hawaii` kann einen Inselpunkt oder bewohnte Orte liefern.
 
 Darum bewertet die App die Treffer:
@@ -100,7 +100,7 @@ Darum bewertet die App die Treffer:
 - regionale Hauptorte (`PPLA*`) bekommen extra Gewicht
 - passende Namen bekommen Gewicht
 - passende Admin-Regionen bekommen Gewicht
-- niedrigere Hoehe ist besser als ein Berg-/Insel-Hoehenpunkt
+- niedrigere Höhe ist besser als ein Berg-/Insel-Höhenpunkt
 - groessere Population bekommt Gewicht
 - fruehere API-Treffer bleiben bei Gleichstand leicht vorne
 
@@ -130,7 +130,7 @@ elevation=nan
 timezone=auto
 ```
 
-Beispiel fuer Madrid:
+Beispiel für Madrid:
 
 ```powershell
 curl.exe -s "https://api.open-meteo.com/v1/forecast?latitude=40.4165&longitude=-3.70256&current=temperature_2m,weather_code,is_day&elevation=nan&timezone=auto"
@@ -170,7 +170,7 @@ Die App setzt im Forecast-Call:
 elevation=nan
 ```
 
-Damit soll Open-Meteo keine lokale Hoehenkorrektur fuer einen einzelnen Punkt
+Damit soll Open-Meteo keine lokale Höhenkorrektur für einen einzelnen Punkt
 anwenden. Das verhindert Ausreisser wie beim alten Hawaii-Problem, bei dem ein
 Insel-/Bergpunkt eine viel zu kalte Temperatur lieferte.
 
@@ -254,7 +254,7 @@ cloudy-day
 
 Diese Klasse steuert dann den Pet-Hintergrund.
 
-## Manuell wie die App pruefen
+## Manuell wie die App prüfen
 
 In PowerShell:
 
@@ -288,9 +288,9 @@ Beispielausgabe:
 }
 ```
 
-## Eigene Koordinaten pruefen
+## Eigene Koordinaten prüfen
 
-Wenn man bewusst einen bestimmten Punkt pruefen will, kann man eigene
+Wenn man bewusst einen bestimmten Punkt prüfen will, kann man eigene
 Koordinaten nutzen:
 
 ```powershell

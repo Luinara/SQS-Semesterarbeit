@@ -1,7 +1,7 @@
 # API
 
-Das Backend stellt REST-Endpunkte unter `/api` bereit. Authentifizierung laeuft
-ueber eine serverseitige Session mit `JSESSIONID`.
+Das Backend stellt REST-Endpunkte unter `/api` bereit. Authentifizierung läuft
+über eine serverseitige Session mit `JSESSIONID`.
 
 ## Auth
 
@@ -15,12 +15,12 @@ ueber eine serverseitige Session mit `JSESSIONID`.
 
 | Methode | Pfad | Zweck |
 | --- | --- | --- |
-| `GET` | `/api/tasks` | Oeffentliche Task-Liste laden |
-| `POST` | `/api/tasks/{id}/complete` | Task abschliessen |
+| `GET` | `/api/tasks` | Öffentliche Task-Liste laden |
+| `POST` | `/api/tasks/{id}/complete` | Task abschließen |
 | `GET` | `/api/user/game-state` | Spielstand laden |
 | `POST` | `/api/user/water` | Wasserstand speichern |
 | `POST` | `/api/user/feed` | Pokemon trainieren |
-| `DELETE` | `/api/user/account` | Account loeschen |
+| `DELETE` | `/api/user/account` | Account löschen |
 
 ## Frontend-Anbindung
 
@@ -30,7 +30,7 @@ Kapselung liegt in:
 - `frontend/src/app/core/services/backend-api.service.ts`
 - `frontend/src/app/core/services/app-state.service.ts`
 
-Ausfuehrliche API-Doku:
+Ausführliche API-Doku:
 
 - `docs/03-api/auth.md`
 - `docs/03-api/tasks.md`

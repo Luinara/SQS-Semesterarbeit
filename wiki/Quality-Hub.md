@@ -1,6 +1,6 @@
 # Quality Hub
 
-Der Quality Hub ist das sichtbare SQS-Dashboard fuer die Abgabe. Er startet per
+Der Quality Hub ist das sichtbare SQS-Dashboard für die Abgabe. Er startet per
 Docker Compose und zeigt echte Ergebnisse aus Backend, Frontend, Security,
 Architektur, Coverage und E2E.
 
@@ -33,4 +33,4 @@ Danach:
 Die Ergebnisse liegen im Docker-Volume `quality_output` und werden im Hub unter
 `/reports/` angezeigt.
 
-Ausfuehrliche Doku: `quality/README.md` und `docs/04-quality/test-pyramid.md`.
+Ausführliche Doku: `quality/README.md` und `docs/04-quality/test-pyramid.md`.

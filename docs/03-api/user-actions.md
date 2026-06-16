@@ -94,7 +94,7 @@ Beispiel Response
 
 ## POST /api/user/test-motivation-decay
 
-- Zweck: Manueller Test-Endpunkt fuer den Motivationsverlust im Dashboard.
+- Zweck: Manueller Test-Endpunkt für den Motivationsverlust im Dashboard.
 - Auth: erforderlich.
 - Request:
   - Method: POST
@@ -106,14 +106,14 @@ Beispiel Response
   - Der Wert wird bei `0` begrenzt und kann nicht negativ werden.
   - Wenn die Motivation schon bei `0` ist oder der Verlust groesser als die aktuelle Motivation ist, wird der verbleibende Verlust von `growth` abgezogen.
   - Auch `growth` wird bei `0` begrenzt und kann nicht negativ werden.
-  - Der Server persistiert die Aenderung und gibt den aktualisierten `GameStateDto` zurueck.
+  - Der Server persistiert die Änderung und gibt den aktualisierten `GameStateDto` zurück.
 
 - Fachliche Wirkung im aktuellen Stand:
   - Sinkende Motivation ist zuerst ein sichtbarer Pflege- und Feedback-Zustand.
   - Bei `0%` Motivation kostet weiterer Motivationsverlust etwas Wachstum/XP.
   - Unter ca. `25%` kann das Frontend den Pflegezustand als kritisch anzeigen.
   - Quests, Wassertracking und Level-Up werden dadurch aktuell nicht hart blockiert.
-  - Motivation kann ueber Trainingspunkte und `POST /api/user/feed` wieder erhoeht werden.
+  - Motivation kann über Trainingspunkte und `POST /api/user/feed` wieder erhoeht werden.
 
 - Responses:
   - 200 OK - JSON body: aktueller `GameStateDto`.

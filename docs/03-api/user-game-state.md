@@ -122,7 +122,7 @@ eine kleine Strafe:
 Beispiel: letzter Login am 14.06., nächster Login am 16.06. → der 15.06. wurde
 verpasst. Das Pokémon verliert ein Level und 20 Motivation.
 
-## Tagesreset fuer Wasser und Tasks
+## Tagesreset für Wasser und Tasks
 
 Es gibt keinen dauerhaft laufenden Hintergrundtimer. Der Tageswechsel wird beim
 naechsten erfolgreichen Login serverseitig angewendet:
@@ -130,8 +130,8 @@ naechsten erfolgreichen Login serverseitig angewendet:
 - letzter Login war heute: Wasserstand und Task-Abschluesse bleiben erhalten.
 - letzter Login war vor heute: `hydration_ml` wird auf `0` gesetzt.
 - letzter Login war vor heute: alle `user_tasks.completed`-Flags des Users werden auf `false` gesetzt.
-- letzter Login war gestern: `streak = streak + 1`, aber keine Inaktivitaetsstrafe.
-- letzter Login war aelter als gestern: `streak = 1` und die Inaktivitaetsstrafe wird fuer komplett verpasste Kalendertage angewendet.
+- letzter Login war gestern: `streak = streak + 1`, aber keine Inaktivitätsstrafe.
+- letzter Login war älter als gestern: `streak = 1` und die Inaktivitätsstrafe wird für komplett verpasste Kalendertage angewendet.
 
 `serverNow` hilft dem Client, nicht von der lokalen Uhr des Browsers abhaengig
 zu sein. Die Tagesgrenze wird im Backend anhand von UTC-Kalendertagen bewertet.

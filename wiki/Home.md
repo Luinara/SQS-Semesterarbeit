@@ -3,9 +3,9 @@
 PokeHabit ist die SQS-Semesterarbeit als Web-App mit Angular-Frontend,
 Spring-Boot-Backend, PostgreSQL und lokalem Quality Hub.
 
-Dieses Wiki ist der schnelle Einstieg fuer Review, Abgabe und Praesentation.
-Die ausfuehrliche technische Dokumentation bleibt parallel unter `docs/` und
-wird ueber MkDocs/ReadTheDocs gebaut.
+Dieses Wiki ist der schnelle Einstieg für Review, Abgabe und Präsentation.
+Die ausführliche technische Dokumentation bleibt parallel unter `docs/` und
+wird über MkDocs/ReadTheDocs gebaut.
 
 ## Schnellstart
 
@@ -33,7 +33,7 @@ demo / password123
 
 ## Einstiegspunkte
 
-| Thema | Wiki-Seite | Ausfuehrliche Doku |
+| Thema | Wiki-Seite | Ausführliche Doku |
 | --- | --- | --- |
 | Architektur | [Architektur](Architektur.md) | `docs/02-architecture/` |
 | API | [API](API.md) | `docs/03-api/` |
@@ -45,7 +45,7 @@ demo / password123
 ## Abgabe-relevante Nachweise
 
 - Drei Schichten: Frontend, Backend und Persistenz.
-- Oeffentlicher Endpunkt: `GET /api/tasks`.
+- Öffentlicher Endpunkt: `GET /api/tasks`.
 - Geschuetzte Endpunkte mit Session-Cookie.
 - Externe APIs: PokeAPI im Backend, Open-Meteo im Frontend.
 - Unit-, Controller-, Integrations-, Architektur-, Security- und E2E-Tests.

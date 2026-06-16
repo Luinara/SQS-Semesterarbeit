@@ -59,7 +59,7 @@ Erwartet wird ein Forecast-JSON mit `current.temperature_2m`, z.B.:
 }
 ```
 
-Die zugehoerige Doku steht in
+Die zugehörige Doku steht in
 `docs/04-quality/weather-open-meteo-manual-check.md`.
 
 ## Frontend security checks

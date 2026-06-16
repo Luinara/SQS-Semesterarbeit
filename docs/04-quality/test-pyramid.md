@@ -42,14 +42,14 @@ weil Browsertests langsamer sind und mehr bewegliche Teile haben.
 
 ## Manueller Wetter-API-Nachweis
 
-Der externe Wetter-Service ist automatisiert ueber `weather.service.test.ts`
+Der externe Wetter-Service ist automatisiert über `weather.service.test.ts`
 und `weather-appearance.logic.test.ts` abgesichert. Zusaetzlich gibt es einen
-manuellen Curl-/JSON-Nachweis fuer die Open-Meteo-Anbindung:
+manuellen Curl-/JSON-Nachweis für die Open-Meteo-Anbindung:
 
 - Doku: [weather-open-meteo-manual-check.md](weather-open-meteo-manual-check.md)
 - Tool: `scripts/weather-curl-check.ps1`
 - Temperaturfeld im JSON: `current.temperature_2m`
-- Wettercode fuer die Szene: `current.weather_code`
+- Wettercode für die Szene: `current.weather_code`
 - Tag/Nacht-Feld: `current.is_day`
 
 ## Quality Hub
