@@ -116,6 +116,22 @@ cd backend
 .\mvnw.cmd verify
 ```
 
+Wetterdaten manuell mit echten Open-Meteo-Curl-Aufrufen pruefen:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1
+```
+
+Einzelne Orte pruefen:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1 -City "Hawaii", "Tokyo"
+```
+
+Das Script zeigt die Geocoding- und Wetter-URLs als `curl.exe`-Befehle an und
+nutzt beim Wetterabruf `elevation=nan`, damit kein einzelner Berg- oder
+Hoehenpunkt die Temperatur verfaelscht.
+
 ## Quality Hub
 
 Der Quality Hub ist unser lokales SQS-Dashboard. Er zeigt echte Ergebnisse aus
