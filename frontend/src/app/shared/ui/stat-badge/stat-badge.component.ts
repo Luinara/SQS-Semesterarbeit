@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 type StatTone = 'blue' | 'green' | 'amber' | 'rose' | 'slate';
 type StatIcon = 'points' | 'hearts' | 'berries' | 'tasks' | 'pokemon';
@@ -15,4 +15,5 @@ export class StatBadgeComponent {
   readonly value = input.required<string | number>();
   readonly icon = input<StatIcon>('points');
   readonly tone = input<StatTone>('blue');
+  readonly hasLongValue = computed(() => String(this.value()).length > 12);
 }

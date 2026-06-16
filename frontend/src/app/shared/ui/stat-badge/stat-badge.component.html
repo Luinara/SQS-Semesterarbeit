@@ -4,6 +4,7 @@
   [class.stat-badge--amber]="tone() === 'amber'"
   [class.stat-badge--rose]="tone() === 'rose'"
   [class.stat-badge--slate]="tone() === 'slate'"
+  [class.stat-badge--long-value]="hasLongValue()"
 >
   <span class="stat-badge__icon" aria-hidden="true">
     @switch (icon()) {
