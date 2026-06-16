@@ -85,7 +85,7 @@ export class PetCardComponent {
   });
   readonly pokemonStatus = computed(() => {
     if (this.pet()?.isEgg) {
-      return 'Ei wartet auf Level 10';
+      return 'Ei bis Level 10';
     }
 
     if (this.pokemonImageUrl()) {
