@@ -123,9 +123,11 @@ verpasst. Das Pokémon verliert ein Level und 10 Motivation.
 
 ## Tagesreset für Wasser und Tasks
 
-Es gibt keinen dauerhaft laufenden Hintergrundtimer. Der Reset wird beim
-nächsten erfolgreichen Login serverseitig angewendet, sobald seit dem letzten
-Login mindestens das konfigurierte Reset-Intervall vergangen ist:
+Der Reset ist nicht an einen erneuten Login gekoppelt. Der Server bewertet den
+Reset beim Abruf von `GET /api/user/game-state` und vor relevanten
+Spielstandsaktionen. Das Frontend aktualisiert den Dashboard-Spielstand in einer
+laufenden Session regelmäßig, damit der Reset nach Ablauf des Intervalls
+sichtbar wird:
 
 - Standard: `pokehabit.daily-reset-interval=PT24H`.
 - Dev-/Demo-Profil: `pokehabit.daily-reset-interval=PT1M`, damit der Reset im
@@ -135,13 +137,15 @@ Login mindestens das konfigurierte Reset-Intervall vergangen ist:
   werden auf `false` gesetzt.
 - Die Login-Streak und Inaktivitätsstrafe bleiben weiterhin an
   UTC-Kalendertage gekoppelt.
+- `last_daily_reset_at` speichert den letzten Reset-Zeitpunkt, damit ein
+  laufender Polling-Client nicht bei jedem Abruf erneut zurücksetzt.
 
 `serverNow` hilft dem Client, nicht von der lokalen Uhr des Browsers abhängig
 zu sein. Die Reset-Schwelle wird im Backend anhand der Serverzeit bewertet.
 
 ## Implementation notes
 
-- Relevante Datenbankfelder: `hydration_ml`, `hunger`, `pokemon_level`, `pokemon_xp`, `happiness`, `pending_feed_points`, `last_level_up_at`, `last_login_at`, `streak`.
+- Relevante Datenbankfelder: `hydration_ml`, `hunger`, `pokemon_level`, `pokemon_xp`, `happiness`, `pending_feed_points`, `last_level_up_at`, `last_login_at`, `last_daily_reset_at`, `streak`.
 - Die Java-Persistenzschicht mappt diese Felder über `UserEntity`:
   - `hydrationMl` -> `hydration_ml` (int)
   - `hunger` -> `hunger` (int)
@@ -150,6 +154,7 @@ zu sein. Die Reset-Schwelle wird im Backend anhand der Serverzeit bewertet.
   - `streak` -> `streak` (int)
   - `pendingFeedPoints` -> `pending_feed_points` (int)
   - `lastLevelUpAt` -> `last_level_up_at` (timestamp)
+  - `lastDailyResetAt` -> `last_daily_reset_at` (timestamp)
 - The controller lives in the `user` feature package (`io.github.luinara.sqs.user.UserController`) and delegates to `UserService`, which builds DTOs specifically for the client. The API does not return JPA entities directly.
 - Timezone policy: server timestamps are provided in UTC. All date comparisons for daily boundaries should use UTC.
 

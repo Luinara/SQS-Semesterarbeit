@@ -70,7 +70,7 @@ Wesentliche Semantik (kurz)
 
 Tagesgrenzen / Reset
 
-- Der Reset von Wasserstand und `user_tasks.completed` wird serverseitig beim nächsten erfolgreichen Login angewendet, sobald das konfigurierte Reset-Intervall erreicht ist (siehe `docs/03-api/user-game-state.md`).
+- Der Reset von Wasserstand und `user_tasks.completed` wird serverseitig beim Abruf des Game-State und vor relevanten Spielstandsaktionen bewertet, sobald das konfigurierte Reset-Intervall erreicht ist (siehe `docs/03-api/user-game-state.md`).
 - Hinweis für Backend‑Integratoren: Weil aktuell kein `TaskCompletion`‑Log vorhanden ist, setzt der Server den bestehenden `user_tasks.completed`‑Wert zurück. Eine append-only Historie pro Tag bleibt eine spätere Erweiterung.
 
 Idempotency und Fehlerverhalten

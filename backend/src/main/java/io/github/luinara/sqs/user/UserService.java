@@ -7,11 +7,15 @@ import io.github.luinara.sqs.task.TaskService;
 import io.github.luinara.sqs.task.UserTaskRepository;
 import io.github.luinara.sqs.user.dto.GameStateDto;
 import io.github.luinara.sqs.user.dto.TaskCompletionDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -27,6 +31,7 @@ public class UserService {
     private static final int FIRST_EVOLUTION_LEVEL = 15;
     private static final int FINAL_EVOLUTION_LEVEL = 35;
     private static final int HAPPINESS_DECAY_PER_MISSED_DAY = 10;
+    private static final Duration DEFAULT_DAILY_RESET_INTERVAL = Duration.ofHours(24);
 
     private final UserRepository userRepository;
     private final PokemonRepository pokemonRepository;
@@ -34,14 +39,19 @@ public class UserService {
     private final UserTaskRepository userTaskRepository;
     private final JdbcTemplate jdbcTemplate;
     private final TaskService taskService;
+    private final Clock clock;
+    private final Duration dailyResetInterval;
 
+    @Autowired
     public UserService(
             UserRepository userRepository,
             PokemonRepository pokemonRepository,
             TaskRepository taskRepository,
             UserTaskRepository userTaskRepository,
             JdbcTemplate jdbcTemplate,
-            TaskService taskService
+            TaskService taskService,
+            Clock clock,
+            @Value("${pokehabit.daily-reset-interval:PT24H}") Duration dailyResetInterval
     ) {
         this.userRepository = userRepository;
         this.pokemonRepository = pokemonRepository;
@@ -49,14 +59,41 @@ public class UserService {
         this.userTaskRepository = userTaskRepository;
         this.jdbcTemplate = jdbcTemplate;
         this.taskService = taskService;
+        this.clock = clock;
+        this.dailyResetInterval = sanitizeDailyResetInterval(dailyResetInterval);
     }
 
+    UserService(
+            UserRepository userRepository,
+            PokemonRepository pokemonRepository,
+            TaskRepository taskRepository,
+            UserTaskRepository userTaskRepository,
+            JdbcTemplate jdbcTemplate,
+            TaskService taskService,
+            Clock clock
+    ) {
+        this(
+                userRepository,
+                pokemonRepository,
+                taskRepository,
+                userTaskRepository,
+                jdbcTemplate,
+                taskService,
+                clock,
+                DEFAULT_DAILY_RESET_INTERVAL
+        );
+    }
+
+    @Transactional
     public GameStateDto getGameStateForUsername(String username) {
         Optional<UserEntity> opt = userRepository.findByUsernameIgnoreCase(username);
         if (opt.isEmpty()) {
             return null; // caller should handle null -> 401 or 404
         }
         UserEntity user = opt.get();
+        OffsetDateTime now = OffsetDateTime.now(clock).withOffsetSameInstant(ZoneOffset.UTC);
+        applyDailyResetIfDue(user, now);
+
         GameStateDto dto = new GameStateDto();
         dto.setWaterLevel(user.getHydrationMl());
         dto.setFoodLevel(user.getHunger());
@@ -83,7 +120,6 @@ public class UserService {
         dto.setStreak(user.getStreak());
         // yesterdayLoggedIn helper: compute from lastLoginAt
         OffsetDateTime last = user.getLastLoginAt();
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         boolean yesterdayLoggedIn = false;
         if (last != null) {
             // if last login falls on previous UTC day
@@ -118,6 +154,7 @@ public class UserService {
         var opt = userRepository.findByUsernameIgnoreCase(username);
         if (opt.isEmpty()) return null;
         UserEntity user = opt.get();
+        applyDailyResetIfDue(user, OffsetDateTime.now(clock).withOffsetSameInstant(ZoneOffset.UTC));
         user.setHydrationMl(user.getHydrationMl() + ml);
         userRepository.save(user);
         completeWaterTaskIfReady(user);
@@ -137,6 +174,7 @@ public class UserService {
         var opt = userRepository.findByUsernameIgnoreCase(username);
         if (opt.isEmpty()) return null;
         UserEntity user = opt.get();
+        applyDailyResetIfDue(user, OffsetDateTime.now(clock).withOffsetSameInstant(ZoneOffset.UTC));
         int pending = user.getPendingFeedPoints();
         if (pending <= 0) return getGameStateForUsername(username);
         int needed = 100 - user.getHappiness();
@@ -232,5 +270,42 @@ public class UserService {
         int currentHappiness = user.getHappiness();
 
         user.setHappiness(Math.max(0, currentHappiness - motivationLoss));
+    }
+
+    private void applyDailyResetIfDue(UserEntity user, OffsetDateTime nowUtc) {
+        OffsetDateTime resetAnchor = resolveResetAnchor(user);
+
+        if (Duration.between(resetAnchor.toInstant(), nowUtc.toInstant()).compareTo(dailyResetInterval) < 0) {
+            return;
+        }
+
+        user.setHydrationMl(0);
+        user.setLastDailyResetAt(nowUtc);
+
+        if (user.getId() != null) {
+            userTaskRepository.resetCompletionsByUserId(user.getId());
+        }
+
+        userRepository.save(user);
+    }
+
+    private OffsetDateTime resolveResetAnchor(UserEntity user) {
+        if (user.getLastDailyResetAt() != null) {
+            return user.getLastDailyResetAt().withOffsetSameInstant(ZoneOffset.UTC);
+        }
+
+        if (user.getLastLoginAt() != null) {
+            return user.getLastLoginAt().withOffsetSameInstant(ZoneOffset.UTC);
+        }
+
+        return user.getCreatedAt().withOffsetSameInstant(ZoneOffset.UTC);
+    }
+
+    private static Duration sanitizeDailyResetInterval(Duration interval) {
+        if (interval == null || interval.isZero() || interval.isNegative()) {
+            return DEFAULT_DAILY_RESET_INTERVAL;
+        }
+
+        return interval;
     }
 }

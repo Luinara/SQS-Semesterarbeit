@@ -15,9 +15,10 @@ const tasks = [
 ];
 
 test.describe("Daily reset", () => {
-  test("zeigt nach abgelaufenem Reset-Intervall wieder offene Buttons und eine erhoehte Anmelde-Serie", async ({
+  test("zeigt nach abgelaufenem Reset-Intervall ohne neuen Login wieder offene Buttons", async ({
     page,
   }) => {
+    let loginCount = 0;
     let resetExpired = false;
     const completions = new Map<number, boolean>([
       [1, false],
@@ -44,6 +45,7 @@ test.describe("Daily reset", () => {
       const url = new URL(request.url());
 
       if (url.pathname === "/api/auth/login") {
+        loginCount += 1;
         await route.fulfill({ json: { message: "authenticated" } });
         return;
       }
@@ -67,6 +69,14 @@ test.describe("Daily reset", () => {
       }
 
       if (url.pathname === "/api/user/game-state") {
+        if (resetExpired) {
+          completions.set(1, false);
+          completions.set(2, false);
+          gameState.waterLevel = 0;
+          gameState.pendingFeedPoints = 0;
+          gameState.serverNow = "2026-06-16T10:01:00Z";
+        }
+
         await route.fulfill({ json: createGameState(gameState, completions) });
         return;
       }
@@ -119,12 +129,8 @@ test.describe("Daily reset", () => {
     ).toBeDisabled();
     await expect(questSummary(page)).toHaveText("2/2");
 
-    await page.getByRole("button", { name: "Abmelden" }).click();
-    await page.waitForURL("**/auth");
-    expect(resetExpired).toBe(true);
+    resetExpired = true;
 
-    await login(page);
-    await expect(streakMetric(page)).toContainText("3");
     await expect(page.getByText("0 / 3000 ml")).toBeVisible();
     await expect(page.getByRole("button", { name: "+250 ml" })).toBeEnabled();
     await expect(page.getByRole("button", { name: "+500 ml" })).toBeEnabled();
@@ -135,6 +141,7 @@ test.describe("Daily reset", () => {
         .getByRole("button", { name: "Erledigen" }),
     ).toBeEnabled();
     await expect(questSummary(page)).toHaveText("0/2");
+    expect(loginCount).toBe(1);
   });
 });
 

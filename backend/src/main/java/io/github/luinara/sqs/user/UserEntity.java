@@ -61,6 +61,9 @@ public class UserEntity {
     @Column(name = "last_task_completion_date")
     private OffsetDateTime lastTaskCompletionDate;
 
+    @Column(name = "last_daily_reset_at")
+    private OffsetDateTime lastDailyResetAt;
+
     @Column(name = "last_level_up_at")
     private OffsetDateTime lastLevelUpAt;
 
@@ -199,6 +202,14 @@ public class UserEntity {
 
     public void setLastTaskCompletionDate(OffsetDateTime lastTaskCompletionDate) {
         this.lastTaskCompletionDate = lastTaskCompletionDate;
+    }
+
+    public OffsetDateTime getLastDailyResetAt() {
+        return lastDailyResetAt;
+    }
+
+    public void setLastDailyResetAt(OffsetDateTime lastDailyResetAt) {
+        this.lastDailyResetAt = lastDailyResetAt;
     }
 
     public OffsetDateTime getLastLevelUpAt() {

@@ -8,11 +8,13 @@ import io.github.luinara.sqs.task.entity.TaskEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.time.Clock;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -42,14 +44,16 @@ class UserServiceTest {
     @Mock
     private TaskService taskService;
 
-    @InjectMocks
     private UserService userService;
 
+    private Clock clock;
     private OffsetDateTime nowUtc;
 
     @BeforeEach
     void setUp() {
-        nowUtc = OffsetDateTime.now(ZoneOffset.UTC);
+        clock = Clock.fixed(Instant.parse("2026-06-16T10:00:00Z"), ZoneOffset.UTC);
+        nowUtc = OffsetDateTime.now(clock).withOffsetSameInstant(ZoneOffset.UTC);
+        userService = createUserService(clock, Duration.ofDays(7));
         lenient().when(taskRepository.findAll()).thenReturn(List.of());
         lenient().when(userTaskRepository.findByUserId(any())).thenReturn(List.of());
     }
@@ -101,6 +105,51 @@ class UserServiceTest {
 
         assertThat(dto).isNotNull();
         assertThat(dto.isYesterdayLoggedIn()).isFalse();
+    }
+
+    @Test
+    void getGameState_resetsDailyProgress_afterConfiguredIntervalWithoutNewLogin() {
+        Clock resetClock = Clock.fixed(Instant.parse("2026-06-16T10:01:00Z"), ZoneOffset.UTC);
+        userService = createUserService(resetClock, Duration.ofMinutes(1));
+
+        UserEntity entity = new UserEntity();
+        entity.setId(17L);
+        entity.setUsername("timer");
+        entity.setHydrationMl(3000);
+        entity.setStreak(2);
+        entity.setLastLoginAt(OffsetDateTime.parse("2026-06-16T10:00:00Z"));
+
+        when(userRepository.findByUsernameIgnoreCase("timer")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.getGameStateForUsername("timer");
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getWaterLevel()).isZero();
+        assertThat(dto.getStreak()).isEqualTo(2);
+        assertThat(entity.getLastDailyResetAt()).isEqualTo(OffsetDateTime.parse("2026-06-16T10:01:00Z"));
+        verify(userTaskRepository).resetCompletionsByUserId(17L);
+        verify(userRepository).save(entity);
+    }
+
+    @Test
+    void getGameState_doesNotResetAgain_beforeNextInterval() {
+        Clock resetClock = Clock.fixed(Instant.parse("2026-06-16T10:01:30Z"), ZoneOffset.UTC);
+        userService = createUserService(resetClock, Duration.ofMinutes(1));
+
+        UserEntity entity = new UserEntity();
+        entity.setId(18L);
+        entity.setUsername("timer");
+        entity.setHydrationMl(500);
+        entity.setLastLoginAt(OffsetDateTime.parse("2026-06-16T10:00:00Z"));
+        entity.setLastDailyResetAt(OffsetDateTime.parse("2026-06-16T10:01:00Z"));
+
+        when(userRepository.findByUsernameIgnoreCase("timer")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.getGameStateForUsername("timer");
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getWaterLevel()).isEqualTo(500);
+        verify(userTaskRepository, never()).resetCompletionsByUserId(any());
     }
 
     @Test
@@ -427,5 +476,18 @@ class UserServiceTest {
         assertThat(deleted).isFalse();
         verify(userTaskRepository, never()).deleteByUserId(any());
         verify(userRepository, never()).delete(any());
+    }
+
+    private UserService createUserService(Clock serviceClock, Duration dailyResetInterval) {
+        return new UserService(
+                userRepository,
+                pokemonRepository,
+                taskRepository,
+                userTaskRepository,
+                jdbcTemplate,
+                taskService,
+                serviceClock,
+                dailyResetInterval
+        );
     }
 }
