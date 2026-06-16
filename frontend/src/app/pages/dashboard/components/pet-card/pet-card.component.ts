@@ -35,6 +35,7 @@ export class PetCardComponent {
   readonly isBusy = input(false);
   readonly feedRequested = output<void>();
   readonly testLevelUpRequested = output<void>();
+  readonly testMotivationDecayRequested = output<void>();
   readonly weatherRefreshRequested = output<void>();
   readonly weatherCitySubmitted = output<string>();
 
@@ -144,6 +145,14 @@ export class PetCardComponent {
     }
 
     this.testLevelUpRequested.emit();
+  }
+
+  requestTestMotivationDecay(): void {
+    if (this.isBusy()) {
+      return;
+    }
+
+    this.testMotivationDecayRequested.emit();
   }
 
   requestWeatherRefresh(): void {

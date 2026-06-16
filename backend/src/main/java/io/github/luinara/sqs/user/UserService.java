@@ -26,6 +26,7 @@ public class UserService {
     private static final int WATER_GOAL_ML = 3000;
     private static final int FIRST_EVOLUTION_LEVEL = 15;
     private static final int FINAL_EVOLUTION_LEVEL = 35;
+    private static final int HAPPINESS_DECAY_PER_MISSED_DAY = 20;
 
     private final UserRepository userRepository;
     private final PokemonRepository pokemonRepository;
@@ -173,6 +174,18 @@ public class UserService {
         }
 
         userRepository.save(user);
+        return getGameStateForUsername(username);
+    }
+
+    @Transactional
+    public GameStateDto testMotivationDecay(String username) {
+        var opt = userRepository.findByUsernameIgnoreCase(username);
+        if (opt.isEmpty()) return null;
+
+        UserEntity user = opt.get();
+        user.setHappiness(Math.max(0, user.getHappiness() - HAPPINESS_DECAY_PER_MISSED_DAY));
+        userRepository.save(user);
+
         return getGameStateForUsername(username);
     }
 

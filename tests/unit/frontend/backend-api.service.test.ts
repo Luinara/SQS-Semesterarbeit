@@ -287,6 +287,41 @@ describe("BackendApiService", () => {
     expect(snapshot.gameState.pet.growthProgress).toBe(0);
   });
 
+  it("loest einen Motivationstest ueber die User-API aus und laedt Tasks nach", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(
+        jsonResponse({
+          waterLevel: 0,
+          foodLevel: 0,
+          pokemonImageUrl: null,
+          pokemonLevel: 8,
+          growth: 0,
+          happiness: 40,
+          pendingFeedPoints: 0,
+          tasks: [{ id: 2, title: "30 Minuten lernen", completed: false }],
+          streak: 1,
+          yesterdayLoggedIn: false,
+          serverNow: "2026-06-15T10:00:00Z",
+        }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse([{ id: 2, title: "30 Minuten lernen" }]),
+      );
+
+    const snapshot = await new BackendApiService().testMotivationDecay("zoe");
+
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      "/api/user/test-motivation-decay",
+      expect.objectContaining({
+        credentials: "include",
+        method: "POST",
+      }),
+    );
+    expect(snapshot.gameState.pet.happiness).toBe(40);
+  });
+
   it("nutzt beim Test-Level-Up den bisherigen Starter als Fallback, wenn Backend keine Pokemon-ID liefert", async () => {
     vi.spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(

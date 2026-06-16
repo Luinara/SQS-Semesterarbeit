@@ -309,6 +309,41 @@ export class AppStateService {
     });
   }
 
+  async testMotivationDecay(): Promise<void> {
+    const username = this.activeUser()?.userName;
+
+    if (!username || this.isActionPending()) {
+      return;
+    }
+
+    await this.runAction(async () => {
+      try {
+        const previousHappiness = this.pet()?.happiness ?? 0;
+        const snapshot = await this.backendApi.testMotivationDecay(
+          username,
+          this.pet()?.starterPokemonSpecies
+        );
+        this.applyDashboardSnapshot(snapshot);
+        const nextHappiness = snapshot.gameState.pet.happiness;
+
+        this.showFeedback({
+          id: createFeedbackId('info'),
+          kind: 'info',
+          message:
+            nextHappiness < previousHappiness
+              ? `Motivationstest ausgefÃ¼hrt: ${previousHappiness}% -> ${nextHappiness}%.`
+              : 'Motivationstest ausgefÃ¼hrt. Motivation ist bereits bei 0%.',
+        });
+      } catch (error) {
+        this.showFeedback({
+          id: createFeedbackId('info'),
+          kind: 'info',
+          message: getApiErrorMessage(error, 'Motivationstest konnte nicht ausgefÃ¼hrt werden.'),
+        });
+      }
+    });
+  }
+
   async resetCurrentProgress(): Promise<void> {
     const username = this.activeUser()?.userName;
 

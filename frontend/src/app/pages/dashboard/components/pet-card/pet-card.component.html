@@ -158,6 +158,16 @@
             >
               {{ isBusy() ? 'Bitte warten...' : 'Level-Up testen' }}
             </button>
+
+            <button
+              sqsButton
+              variant="ghost"
+              type="button"
+              [disabled]="isBusy()"
+              (click)="requestTestMotivationDecay()"
+            >
+              {{ isBusy() ? 'Bitte warten...' : 'Motivation senken' }}
+            </button>
           </div>
         </div>
       </div>

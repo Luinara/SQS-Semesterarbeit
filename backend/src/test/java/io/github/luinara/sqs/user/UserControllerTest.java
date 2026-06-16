@@ -62,6 +62,13 @@ class UserControllerTest {
     }
 
     @Test
+    void testMotivationDecay_requiresAuth() throws Exception {
+        mockMvc.perform(post("/api/user/test-motivation-decay"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().json("{\"error\":\"unauthenticated\"}"));
+    }
+
+    @Test
     void water_requiresAuth_returnsJsonErrorBody() throws Exception {
         mockMvc.perform(post("/api/user/water").contentType("application/json").content("{\"ml\":10}"))
                 .andExpect(status().isUnauthorized())
@@ -127,6 +134,34 @@ class UserControllerTest {
         when(userService.testLevelUp("tester")).thenReturn(null);
 
         mockMvc.perform(post("/api/user/test-level-up").session(session))
+                .andExpect(status().isNotFound())
+                .andExpect(content().json("{\"error\":\"user not found\"}"));
+    }
+
+    @Test
+    void testMotivationDecay_success_returnsGameState() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+
+        GameStateDto dto = new GameStateDto();
+        dto.setHappiness(42);
+        when(userService.testMotivationDecay("tester")).thenReturn(dto);
+
+        mockMvc.perform(post("/api/user/test-motivation-decay").session(session))
+                .andExpect(status().isOk());
+
+        verify(userService).testMotivationDecay("tester");
+    }
+
+    @Test
+    void testMotivationDecay_userNotFound_returns404() throws Exception {
+        when(authenticationService.validateToken("t")).thenReturn(Optional.of("tester"));
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("USER_TOKEN", "t");
+        when(userService.testMotivationDecay("tester")).thenReturn(null);
+
+        mockMvc.perform(post("/api/user/test-motivation-decay").session(session))
                 .andExpect(status().isNotFound())
                 .andExpect(content().json("{\"error\":\"user not found\"}"));
     }
