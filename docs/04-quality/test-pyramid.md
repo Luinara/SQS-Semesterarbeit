@@ -7,15 +7,15 @@ wird das durch Architektur-, Security- und statische Analysechecks.
 
 ## Überblick
 
-| Ebene | Ziel | Beispiele im Projekt | Ausführung |
-| --- | --- | --- | --- |
-| Unit-Tests | Fachlogik schnell und isoliert prüfen | `AuthenticationServiceTest`, `TaskServiceTest`, `UserServiceTest`, `tests/unit/frontend/*.test.ts` | `mvn test`, `npm test` |
-| Controller-/Security-nahe Tests | HTTP-Status, Auth-Pflicht, Fehlerkörper und Session-Verhalten prüfen | `TaskControllerTest`, `UserControllerTest`, `AuthenticationControllerUnitTest` | `mvn test` |
-| Integrationstests | Spring-Kontext, Repositorys und echte Persistenzpfade mit H2 prüfen | `AuthenticationControllerIntegrationTest`, `UserControllerIntegrationTest`, `AuthenticationControllerConcurrentSignUpIT` | `mvn verify` / Failsafe im Verify-Lauf |
-| Architekturtests | Paketregeln und Schichtengrenzen prüfen | `ArchitectureTest` mit ArchUnit | `mvn test` |
-| Externe-Service-Tests | Externe API-Anbindungen ohne echtes Internet prüfen | `PokeApiPokemonServiceTest`, `weather.service.test.ts`, `weather-appearance.logic.test.ts` | `mvn test`, `npm test` |
-| Frontend-Supply-Chain-Security | Lockfile und npm-Audit prüfen | `npm-security.test.ts`, `npm audit` | `npm run security:frontend` |
-| E2E-Tests | sichtbare Nutzerflüsse im Browser prüfen | `user-journey.spec.ts`, `starter-evolution.spec.ts` | `npm run test:e2e` |
+| Ebene                           | Ziel                                                                                                   | Beispiele im Projekt                                                                                                     | Ausführung                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
+| Unit-Tests                      | Fachlogik schnell und isoliert prüfen                                                                  | `AuthenticationServiceTest`, `TaskServiceTest`, `UserServiceTest`, `tests/unit/frontend/*.test.ts`                       | `mvn test`, `npm test`                    |
+| Controller-/Security-nahe Tests | HTTP-Status, Auth-Pflicht, Fehlerkörper und Session-Verhalten prüfen                                   | `TaskControllerTest`, `UserControllerTest`, `AuthenticationControllerUnitTest`                                           | `mvn test`                                |
+| Integrationstests               | Spring-Kontext, Repositorys und echte Persistenzpfade mit H2 prüfen                                    | `AuthenticationControllerIntegrationTest`, `UserControllerIntegrationTest`, `AuthenticationControllerConcurrentSignUpIT` | `mvn verify` / Failsafe im Verify-Lauf    |
+| Architekturtests                | Paketregeln und Schichtengrenzen prüfen                                                                | `ArchitectureTest` mit ArchUnit                                                                                          | `mvn test`                                |
+| Externe-Service-Tests           | Externe API-Anbindungen ohne echtes Internet prüfen                                                    | `PokeApiPokemonServiceTest`, `weather.service.test.ts`, `weather-appearance.logic.test.ts`                               | `mvn test`, `npm test`                    |
+| Frontend-Supply-Chain-Security  | Lockfile und npm-Audit prüfen                                                                          | `npm-security.test.ts`, `npm audit`                                                                                      | `npm run security:frontend`               |
+| E2E-Tests                       | sichtbare Nutzerflüsse im Browser prüfen; ein Docker-Smoke-Test prüft zusätzlich echte `/api`-Requests | `user-journey.spec.ts`, `starter-evolution.spec.ts`, `fullstack-smoke.spec.ts`                                           | `npm run test:e2e`, Docker-Quality-Runner |
 
 ## Warum diese Aufteilung?
 
@@ -27,18 +27,18 @@ weil Browsertests langsamer sind und mehr bewegliche Teile haben.
 
 ## Abgedeckte Qualitätsfragen
 
-| Frage aus SQS-Sicht | Nachweis |
-| --- | --- |
-| Funktioniert Login, Registrierung und Logout? | `AuthenticationServiceTest`, `AuthenticationControllerUnitTest`, `AuthenticationControllerIntegrationTest` |
-| Wird Inaktivität fachlich wirksam? | `AuthenticationServiceTest` prüft Streak-Reset, Level-Abzug und Motivationsverlust nach ausgelassenem Tag. |
-| Sind geschützte Endpunkte wirklich geschützt? | `UserControllerTest`, `TaskControllerTest` |
-| Gibt es einen öffentlichen Endpunkt? | `TaskControllerTest` prüft `GET /api/tasks`. |
-| Funktioniert Persistenz über mehrere Schichten? | Spring-Boot-Integrationstests mit H2. |
-| Ist die externe Wetter-API nachvollziehbar angebunden? | `weather.service.test.ts` prüft Stadtauflösung, Refresh und lokale Aktualisierungszeit; `weather-appearance.logic.test.ts` prüft das Mapping von Open-Meteo-Wettercodes auf die UI-Szene. |
-| Bleiben Controller von Repositorys getrennt? | `ArchitectureTest` mit ArchUnit. |
-| Gibt es Coverage-Nachweise? | JaCoCo im Backend, Vitest Coverage im Frontend. |
-| Gibt es einen echten Browserflow? | Playwright prüft Login, Dashboard, Wasser, Quest, Training, Logout und Starter-Entwicklung. |
-| Werden Frontend-Abhängigkeiten geprüft? | `npm run security:frontend` kombiniert Lockfile-Test und `npm audit`. |
+| Frage aus SQS-Sicht                                    | Nachweis                                                                                                                                                                                                                                                                       |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Funktioniert Login, Registrierung und Logout?          | `AuthenticationServiceTest`, `AuthenticationControllerUnitTest`, `AuthenticationControllerIntegrationTest`                                                                                                                                                                     |
+| Wird Inaktivität fachlich wirksam?                     | `AuthenticationServiceTest` prüft Streak-Reset, Level-Abzug und Motivationsverlust nach ausgelassenem Tag.                                                                                                                                                                     |
+| Sind geschützte Endpunkte wirklich geschützt?          | `UserControllerTest`, `TaskControllerTest`                                                                                                                                                                                                                                     |
+| Gibt es einen öffentlichen Endpunkt?                   | `TaskControllerTest` prüft `GET /api/tasks`.                                                                                                                                                                                                                                   |
+| Funktioniert Persistenz über mehrere Schichten?        | Spring-Boot-Integrationstests mit H2.                                                                                                                                                                                                                                          |
+| Ist die externe Wetter-API nachvollziehbar angebunden? | `weather.service.test.ts` prüft Stadtauflösung, Refresh und lokale Aktualisierungszeit; `weather-appearance.logic.test.ts` prüft das Mapping von Open-Meteo-Wettercodes auf die UI-Szene.                                                                                      |
+| Bleiben Controller von Repositorys getrennt?           | `ArchitectureTest` mit ArchUnit.                                                                                                                                                                                                                                               |
+| Gibt es Coverage-Nachweise?                            | JaCoCo im Backend, Vitest Coverage im Frontend.                                                                                                                                                                                                                                |
+| Gibt es einen echten Browserflow?                      | Playwright prüft Login, Dashboard, Wasser, Quest, Training, Logout und Starter-Entwicklung. Die schnellen UI-Flows mocken die eigene API; `fullstack-smoke.spec.ts` läuft im Docker-Quality-Runner ohne `/api`-Mocking gegen Frontend, Backend, Session-Cookie und Persistenz. |
+| Werden Frontend-Abhängigkeiten geprüft?                | `npm run security:frontend` kombiniert Lockfile-Test und `npm audit`.                                                                                                                                                                                                          |
 
 ## Manueller Wetter-API-Nachweis
 
@@ -74,7 +74,8 @@ Pflichtchecks im Runner:
 
 Optionaler E2E-Check:
 
-- Playwright-User-Flow gegen den Docker-App-Stack, wenn Frontend und Backend erreichbar sind.
+- Playwright-User-Flows gegen den Docker-App-Stack, wenn Frontend und Backend erreichbar sind.
+- `fullstack-smoke.spec.ts` wird dabei mit `PLAYWRIGHT_FULLSTACK=1` aktiviert und prüft Registrierung, Session-Cookie, Nginx-Proxy `/api`, Backend und PostgreSQL-Persistenz nach Reload.
 
 ## Präsentationshinweis
 
