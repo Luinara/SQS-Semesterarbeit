@@ -5,8 +5,7 @@
   padding-bottom: 1.75rem;
 }
 
-//Right Card Box and Left Story Box Layout
-//Right
+// Gesamt-Layout: links = Story/Visual, rechts = Login/Register-Karte.
 .auth-page__layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(19rem, 29.5rem);
@@ -14,11 +13,12 @@
   align-items: start;
 }
 
+// Linke Box: Introtext, Ei-Visual und Quest/Wasser-Deko.
 .auth-page__story {
   @include surface-panel(1.35rem);
 }
 
-//right storybox length
+// Linke Box: Höhe, Innenabstand und Hintergrund.
 .auth-page__story {
   display: grid;
   align-content: start;
@@ -44,6 +44,7 @@
 }
 
 .auth-page__visual {
+  // Linke Box: Bild-/Deko-Bereich unter dem Introtext.
   position: relative;
   min-height: clamp(13rem, 20vw, 17rem);
   margin-top: clamp(0.2rem, 1.2vw, 0.75rem);
@@ -77,8 +78,9 @@
 }
 
 .auth-page__egg {
+  // Linke Box: Ei-Bild.
   position: absolute;
-  right: clamp(1.6rem, 8vw, 6.2rem);
+  left: 50%;
   bottom: 1.75rem;
   z-index: 3;
   width: clamp(6rem, 12.5vw, 8.8rem);
@@ -129,7 +131,7 @@
 .auth-page__quest-stack span::after {
   position: absolute;
   top: 50%;
-  right: 0.75rem;
+  right: 0.7rem;
   width: 42%;
   height: 0.32rem;
   content: '';
@@ -219,19 +221,20 @@
 .auth-page__progress span {
   display: block;
   width: 74%;
-  height: 100%;
+  height: 1%;
   border-radius: inherit;
   background: linear-gradient(90deg, #71ecc5 0%, #3da2e9 56%, #ef5aaa 100%);
 }
 
 .auth-page__card {
+  // Rechte Box: Login/Register-Formular.
   @include surface-panel(1.05rem);
 
   display: grid;
   align-content: start;
   justify-self: end;
   width: 100%;
-  max-width: 24.5rem;
+  max-width: 28rem;
   gap: 0.78rem;
 }
 
@@ -315,10 +318,10 @@
 @keyframes auth-egg-float {
   0%,
   100% {
-    transform: translateY(0) rotate(2deg);
+    transform: translateX(-50%) translateY(0) rotate(2deg);
   }
 
   50% {
-    transform: translateY(-0.55rem) rotate(-1deg);
+    transform: translateX(-50%) translateY(-0.55rem) rotate(-1deg);
   }
 }
