@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  computed,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { DEFAULT_WEATHER_SCENE } from '../../../../core/state/weather-appearance.logic';
 import { GameFeedback } from '../../../../shared/models/app-state.model';
 import { PetCareState, PokemonSnapshot, PetState } from '../../../../shared/models/pet.model';
@@ -8,6 +17,8 @@ import { ProgressBarComponent } from '../../../../shared/ui/progress-bar/progres
 import { StatBadgeComponent } from '../../../../shared/ui/stat-badge/stat-badge.component';
 import { PetVisualComponent } from '../pet-visual/pet-visual.component';
 
+const CARE_HINT_VISIBLE_MS = 20_000;
+
 @Component({
   selector: 'sqs-pet-card',
   standalone: true,
@@ -16,7 +27,9 @@ import { PetVisualComponent } from '../pet-visual/pet-visual.component';
   styleUrl: './pet-card.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PetCardComponent {
+export class PetCardComponent implements OnInit, OnDestroy {
+  private careHintTimeout: ReturnType<typeof globalThis.setTimeout> | null = null;
+
   readonly pet = input<PetState | null>(null);
   readonly completedTasks = input(0);
   readonly totalTasks = input(0);
@@ -37,6 +50,7 @@ export class PetCardComponent {
   readonly testMotivationDecayRequested = output<void>();
   readonly weatherRefreshRequested = output<void>();
   readonly weatherCitySubmitted = output<string>();
+  readonly isCareHintVisible = signal(true);
 
   readonly displayName = computed(() =>
     this.pet()?.isEgg
@@ -128,6 +142,19 @@ export class PetCardComponent {
 
     return `Letzte Aktualisierung: ${updatedAtTimeLabel}`;
   });
+
+  ngOnInit(): void {
+    this.careHintTimeout = globalThis.setTimeout(() => {
+      this.isCareHintVisible.set(false);
+      this.careHintTimeout = null;
+    }, CARE_HINT_VISIBLE_MS);
+  }
+
+  ngOnDestroy(): void {
+    if (this.careHintTimeout !== null) {
+      globalThis.clearTimeout(this.careHintTimeout);
+    }
+  }
 
   requestFeeding(): void {
     if (this.isBusy() || !this.canFeed()) {

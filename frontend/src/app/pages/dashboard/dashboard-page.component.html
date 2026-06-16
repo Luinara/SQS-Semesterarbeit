@@ -47,6 +47,9 @@
           (weatherCitySubmitted)="searchWeatherCity($event)"
         />
 
+      </section>
+
+      <aside class="dashboard-page__insights">
         <sqs-quality-gate-card
           [tasks]="appState.tasks()"
           [qualityScore]="appState.qualityScore()"
@@ -54,7 +57,7 @@
           [waterLevel]="appState.waterLevel()"
           [streak]="appState.streak()"
         />
-      </section>
+      </aside>
     </div>
   </section>
 }
