@@ -352,6 +352,32 @@ class UserServiceTest {
     }
 
     @Test
+    void testMotivationDecay_lowersHappinessAndClampsAtZero() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setHappiness(12);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.testMotivationDecay("tester");
+
+        assertThat(dto).isNotNull();
+        assertThat(entity.getHappiness()).isZero();
+        assertThat(dto.getHappiness()).isZero();
+        verify(userRepository).save(entity);
+    }
+
+    @Test
+    void testMotivationDecay_userNotFound_returnsNull() {
+        when(userRepository.findByUsernameIgnoreCase("nouser")).thenReturn(Optional.empty());
+
+        GameStateDto dto = userService.testMotivationDecay("nouser");
+
+        assertThat(dto).isNull();
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
     void deleteAccount_removesDependentRowsAndUser() {
         UserEntity entity = new UserEntity();
         entity.setId(42L);

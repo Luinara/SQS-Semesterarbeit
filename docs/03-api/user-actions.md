@@ -92,6 +92,48 @@ Beispiel Response
 }
 ```
 
+## POST /api/user/test-motivation-decay
+
+- Zweck: Manueller Test-Endpunkt fuer den Motivationsverlust im Dashboard.
+- Auth: erforderlich.
+- Request:
+  - Method: POST
+  - Path: `/api/user/test-motivation-decay`
+  - Body: none
+
+- Verhalten:
+  - Der Server senkt `happiness` um `20` Punkte.
+  - Der Wert wird bei `0` begrenzt und kann nicht negativ werden.
+  - Der Server persistiert die Aenderung und gibt den aktualisierten `GameStateDto` zurueck.
+
+- Fachliche Wirkung im aktuellen Stand:
+  - Sinkende Motivation ist vor allem ein sichtbarer Pflege- und Feedback-Zustand.
+  - Unter ca. `25%` kann das Frontend den Pflegezustand als kritisch anzeigen.
+  - Quests, Wassertracking und Level-Up werden dadurch aktuell nicht hart blockiert.
+  - Motivation kann ueber Trainingspunkte und `POST /api/user/feed` wieder erhoeht werden.
+
+- Responses:
+  - 200 OK - JSON body: aktueller `GameStateDto`.
+  - 401 Unauthorized - kein gueltiger Login / Session.
+  - 404 Not Found - Benutzer nicht gefunden.
+
+Beispiel Request
+
+```http
+POST /api/user/test-motivation-decay
+```
+
+Beispiel Response
+
+```json
+{
+  "happiness": 40,
+  "pokemonLevel": 5,
+  "pendingFeedPoints": 15,
+  "serverNow": "2026-06-13T07:16:00Z"
+}
+```
+
 ## Zusammenspiel mit Tasks
 
 - Tasks haben jetzt ein Feld `feed_points` (DB‑Spalte `feed_points`).
@@ -124,6 +166,8 @@ Beispiel Response
 - Das Backend entscheidet, wann die Quest `Wasser trinken` abgeschlossen wird: sobald `gameState.waterLevel >= 3000`.
 - Für Füttern: das Frontend zeigt die verfügbare `pendingFeedPoints` aus `gameState.pendingFeedPoints`. Nutzer können den Füttern‑Button drücken (POST /api/user/feed), um Punkte in `happiness` umzuwandeln.
 
+- Der Button `Motivation senken` ist ein manueller Testbutton. Er ruft `POST /api/user/test-motivation-decay` auf und zeigt danach den neuen Motivationswert im Dashboard.
+
 ## Tests & Verhaltenserwartungen
 
 - Unit‑Tests sollten folgende Fälle abdecken:
@@ -135,3 +179,7 @@ Beispiel Response
 
 - Neue Spalte in `tasks` (feed_points) ist bereits in der JPA‑Entity `TaskEntity` vorhanden. Falls ihr mit Prisma/SQL migriert, legt eine Migration an, die `feed_points` (integer default 0) zur `tasks`‑Tabelle hinzufügt.
 - Neue Spalte in `users` (pending_feed_points) ist in `UserEntity` vorhanden und muss analog in die DB gemigt werden.
+
+## Test-Ergaenzung
+
+- `POST /api/user/test-motivation-decay` senkt `happiness` um 20 und begrenzt bei 0.

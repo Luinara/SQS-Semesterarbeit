@@ -364,5 +364,171 @@ describe("app-state.logic", () => {
       true,
     );
     expect(canCompleteTaskInGameState(completedState, firstTaskId)).toBe(false);
+    expect(
+      canCompleteTaskInGameState(initialGameState, "unbekannte-quest"),
+    ).toBe(false);
+  });
+
+  it("normalisiert bekannte gespeicherte Quests und fehlende Zaehler", () => {
+    const initialGameState = createInitialGameState();
+
+    const normalized = normalizeGameState({
+      ...initialGameState,
+      tasks: [
+        { ...initialGameState.tasks[0], isCompleted: true },
+        {
+          ...initialGameState.tasks[1],
+          id: "alte-quest",
+          isCompleted: true,
+        },
+      ],
+      qualityTarget: 0,
+      qualityLastResetAt: undefined as unknown as string,
+      dailyQuestLastResetAt: undefined as unknown as string,
+      totalCompletedTasks: undefined as unknown as number,
+      totalEarnedPoints: undefined as unknown as number,
+    });
+
+    expect(normalized.tasks[0].isCompleted).toBe(true);
+    expect(normalized.tasks[1].isCompleted).toBe(false);
+    expect(normalized.qualityTarget).toBe(75);
+    expect(normalized.totalCompletedTasks).toBe(1);
+    expect(normalized.totalEarnedPoints).toBe(initialGameState.tasks[0].points);
+    expect(normalized.qualityLastResetAt).toBeTruthy();
+    expect(normalized.dailyQuestLastResetAt).toBeTruthy();
+  });
+
+  it("normalisiert fehlende und begrenzte Pokemon-Werte", () => {
+    const initialGameState = createInitialGameState();
+
+    const normalized = normalizeGameState({
+      ...initialGameState,
+      pet: {
+        ...initialGameState.pet,
+        name: "",
+        level: undefined as unknown as number,
+        growthProgress: undefined as unknown as number,
+        growthGoal: 0,
+        availableFoodPoints: undefined as unknown as number,
+        happiness: 150,
+        hunger: -5,
+        hearts: 10,
+        mealsServed: undefined as unknown as number,
+        dailyHappinessGained: 999,
+        happinessGainLastResetAt: undefined as unknown as string,
+        lastFedAt: undefined as unknown as string | null,
+        lastHappinessDecayAt: undefined as unknown as string | null,
+        lastLevelUpAt: undefined as unknown as string | null,
+        goodCareStreakDays: -2,
+        lastGoodCareDay: undefined as unknown as string | null,
+        isEgg: undefined as unknown as boolean,
+        starterPokemonSpecies: undefined as unknown as "bulbasaur",
+        pokemonSpecies: undefined as unknown as "bulbasaur",
+      },
+    });
+
+    expect(normalized.pet.name).toContain("Partner");
+    expect(normalized.pet.level).toBe(1);
+    expect(normalized.pet.growthProgress).toBe(0);
+    expect(normalized.pet.growthGoal).toBe(PET_RULES.initialGrowthGoal);
+    expect(normalized.pet.availableFoodPoints).toBe(0);
+    expect(normalized.pet.happiness).toBe(PET_RULES.maxHappiness);
+    expect(normalized.pet.hunger).toBe(0);
+    expect(normalized.pet.hearts).toBe(PET_RULES.maxHearts);
+    expect(normalized.pet.mealsServed).toBe(0);
+    expect(normalized.pet.dailyHappinessGained).toBe(
+      PET_RULES.dailyHappinessGainLimit,
+    );
+    expect(normalized.pet.lastFedAt).toBeNull();
+    expect(normalized.pet.lastHappinessDecayAt).toBeNull();
+    expect(normalized.pet.lastLevelUpAt).toBeNull();
+    expect(normalized.pet.goodCareStreakDays).toBe(0);
+    expect(normalized.pet.lastGoodCareDay).toBeNull();
+    expect(normalized.pet.isEgg).toBe(true);
+    expect(normalized.pet.starterPokemonSpecies).toBe("bulbasaur");
+  });
+
+  it("deckt wachsende und ruhige Pflegezustaende ab", () => {
+    const initialGameState = createInitialGameState();
+
+    expect(
+      derivePetCareState({
+        ...initialGameState,
+        pet: {
+          ...initialGameState.pet,
+          availableFoodPoints: 0,
+          happiness: 50,
+          growthProgress: 80,
+          growthGoal: 100,
+        },
+      }),
+    ).toBe("growing");
+
+    expect(
+      derivePetCareState({
+        ...initialGameState,
+        pet: {
+          ...initialGameState.pet,
+          availableFoodPoints: 0,
+          happiness: 50,
+          growthProgress: 0,
+          growthGoal: 0,
+        },
+      }),
+    ).toBe("calm");
+  });
+
+  it("laesst Motivation ohne Training oder vollen Fehltag unveraendert", () => {
+    const initialGameState = createInitialGameState();
+    const now = new Date("2026-06-15T12:00:00.000Z");
+
+    const withoutTraining = resetDailyProgressIfExpired(
+      {
+        ...initialGameState,
+        pet: {
+          ...initialGameState.pet,
+          happiness: 66,
+          lastFedAt: null,
+          happinessGainLastResetAt: "2026-06-15T08:00:00.000Z",
+        },
+      },
+      now,
+    );
+    const sameDayTraining = resetDailyProgressIfExpired(
+      {
+        ...initialGameState,
+        pet: {
+          ...initialGameState.pet,
+          happiness: 66,
+          lastFedAt: "2026-06-15T08:00:00.000Z",
+          happinessGainLastResetAt: "2026-06-15T08:00:00.000Z",
+        },
+      },
+      now,
+    );
+
+    expect(withoutTraining.pet.happiness).toBe(66);
+    expect(withoutTraining.pet.lastHappinessDecayAt).toBeNull();
+    expect(sameDayTraining.pet.happiness).toBe(66);
+    expect(sameDayTraining.pet.lastHappinessDecayAt).toBeNull();
+  });
+
+  it("begrenzt Motivationsverfall bei null", () => {
+    const initialGameState = createInitialGameState();
+
+    const resetState = resetDailyProgressIfExpired(
+      {
+        ...initialGameState,
+        pet: {
+          ...initialGameState.pet,
+          happiness: 10,
+          lastFedAt: "2026-06-10T08:00:00.000Z",
+          happinessGainLastResetAt: "2026-06-10T08:00:00.000Z",
+        },
+      },
+      new Date("2026-06-15T08:00:00.000Z"),
+    );
+
+    expect(resetState.pet.happiness).toBe(0);
   });
 });

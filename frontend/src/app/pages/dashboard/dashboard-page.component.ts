@@ -52,6 +52,10 @@ export class DashboardPageComponent {
     void this.appState.testLevelUp();
   }
 
+  testMotivationDecay(): void {
+    void this.appState.testMotivationDecay();
+  }
+
   addWater(amountMl: number): void {
     void this.appState.addWater(amountMl);
   }

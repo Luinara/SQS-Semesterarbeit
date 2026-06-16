@@ -149,6 +149,18 @@ export class BackendApiService {
     return this.createDashboardSnapshot(username, tasks, gameState, starterPokemonSpeciesFallback);
   }
 
+  async testMotivationDecay(
+    username: string,
+    starterPokemonSpeciesFallback?: StarterPokemonSpeciesName
+  ): Promise<DashboardSnapshot> {
+    const gameState = await this.getJson<BackendGameStateDto>('/api/user/test-motivation-decay', {
+      method: 'POST',
+    });
+    const tasks = await this.getJson<BackendTaskDto[]>('/api/tasks');
+
+    return this.createDashboardSnapshot(username, tasks, gameState, starterPokemonSpeciesFallback);
+  }
+
   private createDashboardSnapshot(
     username: string,
     tasks: BackendTaskDto[],

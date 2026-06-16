@@ -46,6 +46,7 @@
           [isBusy]="appState.isActionPending()"
           (feedRequested)="feedPet()"
           (testLevelUpRequested)="testLevelUpPet()"
+          (testMotivationDecayRequested)="testMotivationDecay()"
           (weatherRefreshRequested)="refreshWeather()"
           (weatherCitySubmitted)="searchWeatherCity($event)"
         />
