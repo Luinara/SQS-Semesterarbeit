@@ -49,7 +49,7 @@ sammelt Reports und zeigt direkt, ob das Gate grün oder rot ist."
 
 Vorher kurz die Testpyramide nennen:
 
-"Die Zuordnung steht in `docs/test-pyramid.md`: unten viele Unit-Tests, darüber
+"Die Zuordnung steht in `docs/04-quality/test-pyramid.md`: unten viele Unit-Tests, darüber
 Controller-, Integrations-, Security- und Architekturtests, und oben wenige
 Playwright-Flows."
 

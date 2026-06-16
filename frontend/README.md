@@ -462,7 +462,7 @@ Abgabe-Status:
 
 - Keine Passwörter oder Secrets im Frontend.
 - `npm run security:frontend` kombiniert Offline-Lockfile-Guards mit `npm audit`.
-- Bekannte Frontend-Supply-Chain-Risiken sind in `docs/frontend-npm-security.md` dokumentiert.
+- Bekannte Frontend-Supply-Chain-Risiken sind in `docs/04-quality/frontend-npm-security.md` dokumentiert.
 - Cookie- und CSP-Hardening bleiben Teil eines echten Produktionsdeployments.
 
 ## Checks vor Abgabe

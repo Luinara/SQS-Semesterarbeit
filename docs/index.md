@@ -1,8 +1,19 @@
 # PokeHabit Dokumentation
 
 PokeHabit ist die SQS-Semesterarbeit als Web-App mit Angular-Frontend,
-Spring-Boot-Backend, PostgreSQL und lokalem Quality Hub. Diese Dokumentation
-fasst die technischen Nachweise für Abgabe, Review und Präsentation zusammen.
+Spring-Boot-Backend, PostgreSQL und lokalem Quality Hub. Diese Dokumentation ist
+kapitelweise geordnet, damit Abgabe, Review und Präsentation schnell prüfbar
+bleiben.
+
+## Inhaltsverzeichnis
+
+| Kapitel | Inhalt |
+| --- | --- |
+| [02 Architektur](02-architecture/arc42/README.md) | arc42, C4-Diagramme, englische ADRs und deutsche ADR-Kopien |
+| [03 API](03-api/auth.md) | Authentifizierung, Tasks, User Actions, Game State und API-Handover |
+| [04 Qualität](04-quality/test-pyramid.md) | Testpyramide, Quality Hub, Coverage und Frontend-npm-Security |
+| [05 Präsentation](05-presentation/presentation-plan.md) | Ablaufplan und Sprechzettel für die Demo |
+| [06 Betrieb](06-operations/readthedocs-publish.md) | ReadTheDocs-Veröffentlichung und operative Hinweise |
 
 ## Schnellstart
 
@@ -30,13 +41,12 @@ Standard-URLs:
 
 | Bereich | Dokumentation |
 | --- | --- |
-| API-Verträge | `API_AUTH.md`, `API_TASKS.md`, `API_USER_ACTIONS.md`, `API_USER_GAME_STATE.md` |
-| Architektur | `arc42/` |
-| Architekturentscheidungen | `adr/` |
-| C4-Modell | `diagrams/c4-diagram.md` und `diagrams/structurizr/workspace.dsl` |
-| Qualitätssicherung | Quality Hub, JaCoCo, Vitest Coverage, Checkstyle, SpotBugs, ESLint, npm Audit, Playwright |
-| Testpyramide | `test-pyramid.md` |
-| Präsentation | `presentation-plan.md`, `presentation-cheat-sheet.md` |
+| API-Verträge | `03-api/` |
+| Architektur | `02-architecture/arc42/` |
+| Architekturentscheidungen | `adr/` und `ger-adr/` |
+| C4-Modell | `02-architecture/diagrams/c4-diagram.md` und `02-architecture/diagrams/structurizr/workspace.dsl` |
+| Qualitätssicherung | `04-quality/`, Quality Hub, JaCoCo, Vitest Coverage, Checkstyle, SpotBugs, ESLint, npm Audit, Playwright |
+| Präsentation | `05-presentation/` |
 
 ## Abgabe-relevante Punkte
 
@@ -56,5 +66,5 @@ Das Repository enthält die ReadTheDocs-Konfiguration:
 - `docs/requirements.txt`
 
 Nach dem Verbinden des öffentlichen Repositorys mit ReadTheDocs kann die
-Dokumentation dort direkt aus dem `docs/`-Ordner gebaut werden.
-Die konkreten Schritte stehen in [ReadTheDocs veröffentlichen](readthedocs-publish.md).
+Dokumentation direkt aus dem `docs/`-Ordner gebaut werden.
+Die konkreten Schritte stehen in [ReadTheDocs veröffentlichen](06-operations/readthedocs-publish.md).
