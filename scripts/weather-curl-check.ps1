@@ -100,7 +100,7 @@ function Get-LocationLabel {
     return $parts -join ", "
 }
 
-function Invoke-CurlJson {
+function Invoke-CurlText {
     param([Parameter(Mandatory = $true)][string]$Url)
 
     $json = & curl.exe -s $Url
@@ -109,11 +109,7 @@ function Invoke-CurlJson {
         throw "curl.exe failed with exit code $LASTEXITCODE for $Url"
     }
 
-    if ($RawJson) {
-        Write-Host $json
-    }
-
-    return $json | ConvertFrom-Json
+    return $json
 }
 
 Assert-Curl
@@ -124,10 +120,9 @@ foreach ($cityName in $City) {
     Write-Host ""
     Write-Host "============================================================"
     Write-Host "City: $cityName"
-    Write-Host "Geocoding curl:"
-    Write-Host "curl.exe -s `"$geocodingUrl`""
 
-    $geocoding = Invoke-CurlJson $geocodingUrl
+    $geocodingRawJson = Invoke-CurlText $geocodingUrl
+    $geocoding = $geocodingRawJson | ConvertFrom-Json
     $results = @($geocoding.results)
 
     if ($results.Count -eq 0) {
@@ -152,23 +147,26 @@ foreach ($cityName in $City) {
     )
     $rankedResults = @($candidateRows | Sort-Object AppScore -Descending)
 
-    Write-Host ""
-    Write-Host "Candidates ranked like the app:"
-    $rankedResults | Format-Table -AutoSize
-
     $selected = $rankedResults[0]
     $weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=$($selected.Latitude)&longitude=$($selected.Longitude)&current=temperature_2m,weather_code,is_day&elevation=nan&timezone=auto"
 
-    Write-Host "Selected app location:"
-    $selected | Format-List
+    Write-Host "Selected location: $($selected.Label)"
+    Write-Host "Coordinates: $($selected.Latitude), $($selected.Longitude)"
 
-    Write-Host "Weather curl:"
+    Write-Host "Forecast curl:"
     Write-Host "curl.exe -s `"$weatherUrl`""
 
-    $weather = Invoke-CurlJson $weatherUrl
+    $weatherRawJson = Invoke-CurlText $weatherUrl
+
+    if ($RawJson) {
+        Write-Host "Forecast JSON with temperature:"
+        Write-Host $weatherRawJson
+    }
+
+    $weather = $weatherRawJson | ConvertFrom-Json
     $current = $weather.current
 
-    Write-Host "Weather result:"
+    Write-Host "Temperature result:"
     [pscustomobject]@{
         Location = $selected.Label
         TemperatureC = $current.temperature_2m
