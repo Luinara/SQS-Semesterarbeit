@@ -8,11 +8,11 @@ den neuen Backend-Spielstand korrekt darstellt:
 - Wasser-Buttons sind wieder aktiv.
 - erledigte Quest-Buttons werden wieder zu offenen `Erledigen`-Buttons.
 - der Wasserstand steht wieder bei `0 / 3000 ml`.
-- die Anmelde-Serie zeigt den vom Backend erhoehten Wert.
+- die Anmelde-Serie bleibt am selben UTC-Tag unveraendert.
 
-Wichtig: Das Frontend fuehrt keinen eigenen Hintergrundtimer aus. Der Reset wird
-serverseitig beim naechsten erfolgreichen Login bewertet und ueber
-`GET /api/user/game-state` ans Frontend geliefert.
+Wichtig: Der Reset wird nicht durch einen neuen Login ausgeloest. Der Server
+bewertet den Reset beim Abruf von `GET /api/user/game-state`; das Frontend laedt
+den Spielstand waehrend einer laufenden Session regelmaessig neu.
 
 ## Automatisierter Nachweis
 
@@ -25,15 +25,14 @@ ueber gemockte API-Antworten:
    deaktiviert.
 3. User erledigt die Lernquest; der Quest-Button zeigt `Erledigt` und ist
    deaktiviert.
-4. User meldet sich ab; der Mock stellt den Serverzustand auf "Reset abgelaufen".
-5. Naechster Login liefert Wasser `0 ml`, alle Tasks `completed=false`,
-   Streak `3`.
+4. Der Mock stellt den Serverzustand auf "Reset abgelaufen".
+5. Der Auto-Refresh des Dashboards ruft `GET /api/user/game-state` erneut ab.
 6. Playwright prueft sichtbar im Browser:
    - `0 / 3000 ml`
    - `+250 ml` und `+500 ml` sind aktiv
    - `30 Minuten lernen` hat wieder den Button `Erledigen`
    - `0/2` Quests sind erledigt
-   - `Anmelde-Serie` zeigt `3`
+   - Es wurde kein zweiter Login ausgefuehrt.
 
 Ausfuehrung:
 
@@ -66,21 +65,23 @@ npm run test:e2e -- daily-reset.spec.ts
 - Quest-Button zeigt `Erledigt` und ist deaktiviert.
 - Anmelde-Serie bleibt unveraendert, wenn der Login am selben UTC-Tag erfolgt.
 
-## Testfall DR-02: Buttons nach Reset-Intervall werden offen
+## Testfall DR-02: Buttons nach Reset-Intervall werden ohne neuen Login offen
 
 **Vorbedingung**
 
 - User hat am Vortag oder vor dem Demo-Reset-Intervall Tasks abgeschlossen.
 - Backend ist fuer Demo/Dev z. B. mit `pokehabit.daily-reset-interval=PT1M`
   konfiguriert.
-- Seit dem letzten Login ist mindestens das konfigurierte Intervall vergangen.
+- Seit dem letzten Reset-Anker ist mindestens das konfigurierte Intervall
+  vergangen.
 
 **Schritte**
 
-1. User meldet sich erneut an.
-2. Dashboard oeffnet sich.
-3. Wasserkarte pruefen.
-4. Normale Questkarte pruefen.
+1. User bleibt im Dashboard eingeloggt.
+2. Mindestens eine Minute warten.
+3. Auto-Refresh des Dashboards abwarten.
+4. Wasserkarte pruefen.
+5. Normale Questkarte pruefen.
 
 **Erwartetes Ergebnis**
 
@@ -119,8 +120,9 @@ npm run test:e2e -- daily-reset.spec.ts
 
 **Schritte**
 
-1. User meldet sich erneut an.
-2. Dashboard pruefen.
+1. User bleibt im Dashboard eingeloggt.
+2. Mindestens eine Minute warten.
+3. Dashboard pruefen.
 
 **Erwartetes Ergebnis**
 
