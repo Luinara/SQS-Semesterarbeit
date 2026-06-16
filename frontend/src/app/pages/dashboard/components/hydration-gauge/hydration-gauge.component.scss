@@ -67,6 +67,15 @@
   font-weight: 700;
 }
 
+.hydration-gauge__native-progress {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .hydration-gauge__progress {
   overflow: hidden;
   height: 0.7rem;

@@ -19,14 +19,16 @@
     </span>
   </div>
 
-  <div
-    class="hydration-gauge__progress"
-    role="progressbar"
+  <progress
+    class="hydration-gauge__native-progress"
     aria-label="Wasser-Fortschritt"
-    [attr.aria-valuemin]="0"
-    [attr.aria-valuemax]="goalMl()"
-    [attr.aria-valuenow]="cappedWaterLevel()"
+    [value]="cappedWaterLevel()"
+    [max]="goalMl()"
   >
+    {{ cappedWaterLevel() }} / {{ goalMl() }} ml
+  </progress>
+
+  <div class="hydration-gauge__progress" aria-hidden="true">
     <span [style.width.%]="progressPercent()"></span>
   </div>
 

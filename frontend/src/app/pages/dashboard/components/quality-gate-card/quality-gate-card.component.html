@@ -15,16 +15,21 @@
     <div
       class="quality-gate__ring"
       [style.--quality-progress]="progressPercent() + '%'"
-      role="progressbar"
-      aria-label="Tagesziel-Fortschritt"
-      [attr.aria-valuemin]="0"
-      [attr.aria-valuemax]="100"
-      [attr.aria-valuenow]="progressPercent()"
+      aria-hidden="true"
     >
       <strong>{{ progressPercent() }}%</strong>
       <span>Punkte</span>
     </div>
   </div>
+
+  <progress
+    class="quality-gate__native-progress"
+    aria-label="Tagesziel-Fortschritt"
+    [value]="progressPercent()"
+    max="100"
+  >
+    {{ progressPercent() }}%
+  </progress>
 
   <div class="quality-gate__meter" aria-hidden="true">
     <span [style.width.%]="progressPercent()"></span>
