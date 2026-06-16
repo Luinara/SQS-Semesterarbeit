@@ -1,6 +1,9 @@
 #requires -Version 5.1
 param(
     [string[]]$City = @("Berlin", "Los Angeles", "Tokyo", "Jakarta", "Hawaii"),
+    [double]$Latitude,
+    [double]$Longitude,
+    [string]$Label = "Manual coordinates",
     [switch]$RawJson
 )
 
@@ -113,6 +116,43 @@ function Invoke-CurlText {
 }
 
 Assert-Curl
+
+if ($PSBoundParameters.ContainsKey("Latitude") -or $PSBoundParameters.ContainsKey("Longitude")) {
+    if (-not ($PSBoundParameters.ContainsKey("Latitude") -and $PSBoundParameters.ContainsKey("Longitude"))) {
+        throw "Please provide both -Latitude and -Longitude for a manual Forecast curl."
+    }
+
+    $weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=$Latitude&longitude=$Longitude&current=temperature_2m,weather_code,is_day&elevation=nan&timezone=auto"
+
+    Write-Host ""
+    Write-Host "============================================================"
+    Write-Host "Manual Forecast check: $Label"
+    Write-Host "Coordinates: $Latitude, $Longitude"
+    Write-Host "Forecast curl:"
+    Write-Host "curl.exe -s `"$weatherUrl`""
+
+    $weatherRawJson = Invoke-CurlText $weatherUrl
+
+    if ($RawJson) {
+        Write-Host "Forecast JSON with temperature:"
+        Write-Host $weatherRawJson
+    }
+
+    $weather = $weatherRawJson | ConvertFrom-Json
+    $current = $weather.current
+
+    Write-Host "Temperature result:"
+    [pscustomobject]@{
+        Location = $Label
+        TemperatureC = $current.temperature_2m
+        WeatherCode = $current.weather_code
+        IsDay = $current.is_day
+        LocalTime = $current.time
+        ElevationMode = "nan / grid-cell average"
+    } | Format-List
+
+    return
+}
 
 foreach ($cityName in $City) {
     $geocodingUrl = "https://geocoding-api.open-meteo.com/v1/search?name=$(Escape-UrlPart $cityName)&count=10&language=de&format=json"

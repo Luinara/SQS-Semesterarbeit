@@ -139,6 +139,18 @@ einzelner Berg- oder Hoehenpunkt die Temperatur verfaelscht.
 Mit `-RawJson` ist im Forecast-JSON ein Feld wie
 `"temperature_2m": 24.7` zu erwarten. Dieser Wert ist die Temperatur der App.
 
+Eigenen Forecast-Curl mit Koordinaten bauen:
+
+```powershell
+curl.exe -s "https://api.open-meteo.com/v1/forecast?latitude=DEINE_LATITUDE&longitude=DEINE_LONGITUDE&current=temperature_2m,weather_code,is_day&elevation=nan&timezone=auto"
+```
+
+Oder ueber das Script mit eigenen Koordinaten:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1 -Latitude 21.29637 -Longitude -157.70175 -Label "Mein Ort" -RawJson
+```
+
 ## Quality Hub
 
 Der Quality Hub ist unser lokales SQS-Dashboard. Er zeigt echte Ergebnisse aus
