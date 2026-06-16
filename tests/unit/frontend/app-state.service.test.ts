@@ -66,7 +66,7 @@ describe("AppStateService", () => {
   });
 
   it("ignoriert eine Sprite-URL, die nicht zur aktuellen Pokemon-ID passt", async () => {
-    const snapshot = createSnapshot(1, 0);
+    const snapshot = createSnapshot(10, 0);
     snapshot.backendGameState.currentPokemonId = 4;
     snapshot.backendGameState.pokemonImageUrl =
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png";
@@ -79,8 +79,22 @@ describe("AppStateService", () => {
     expect(service.pokemonImageUrl()).toBeNull();
   });
 
-  it("nutzt eine Sprite-URL, wenn sie zur aktuellen Pokemon-ID passt", async () => {
+  it("nutzt das Backend-Ei-PNG auch wenn die Starter-ID nicht im Dateinamen steckt", async () => {
     const snapshot = createSnapshot(1, 0);
+    snapshot.backendGameState.currentPokemonId = 4;
+    snapshot.backendGameState.isEgg = true;
+    snapshot.backendGameState.pokemonImageUrl = "/assets/egg.png";
+
+    const backendApi = createBackendApiMock({ login: snapshot });
+    const service = new AppStateService(backendApi);
+
+    await service.login({ username: "mira", password: "password123" });
+
+    expect(service.pokemonImageUrl()).toBe("/assets/egg.png");
+  });
+
+  it("nutzt eine Sprite-URL, wenn sie zur aktuellen Pokemon-ID passt", async () => {
+    const snapshot = createSnapshot(10, 0);
     snapshot.backendGameState.currentPokemonId = 4;
     snapshot.backendGameState.pokemonImageUrl =
       "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png";

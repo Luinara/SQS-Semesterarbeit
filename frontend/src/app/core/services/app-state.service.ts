@@ -44,6 +44,10 @@ export class AppStateService {
       return null;
     }
 
+    if (backendGameState.isEgg) {
+      return backendGameState.pokemonImageUrl;
+    }
+
     return isPokemonImageForCurrentId(
       backendGameState.pokemonImageUrl,
       backendGameState.currentPokemonId

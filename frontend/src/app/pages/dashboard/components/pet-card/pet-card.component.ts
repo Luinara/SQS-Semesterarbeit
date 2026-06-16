@@ -47,7 +47,7 @@ export class PetCardComponent {
   );
   readonly displaySpriteUrl = computed(() =>
     this.pet()?.isEgg
-      ? 'egg.svg'
+      ? (this.pokemonImageUrl() ?? 'egg.svg')
       : (this.pokemonImageUrl() ?? this.pokemon()?.spriteUrl ?? 'pet-placeholder.svg')
   );
   readonly displayPokemonTypes = computed(() =>
