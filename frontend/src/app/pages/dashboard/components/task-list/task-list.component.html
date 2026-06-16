@@ -23,14 +23,14 @@
     <span>{{ questPercentage() }}% Tagesfortschritt</span>
   </div>
 
-  <div
-    class="task-list__progress"
-    role="progressbar"
+  <progress
+    class="task-list__native-progress"
     aria-label="Quest-Fortschritt"
-    [attr.aria-valuemin]="0"
-    [attr.aria-valuemax]="100"
-    [attr.aria-valuenow]="questPercentage()"
-  >
+    [value]="questPercentage()"
+    max="100"
+  ></progress>
+
+  <div class="task-list__progress" aria-hidden="true">
     <span [style.width.%]="questPercentage()"></span>
   </div>
 

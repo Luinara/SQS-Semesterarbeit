@@ -61,6 +61,15 @@
   font-size: 0.9rem;
 }
 
+.task-list__native-progress {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .task-list__progress {
   overflow: hidden;
   height: 0.55rem;

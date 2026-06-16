@@ -16,7 +16,7 @@ const contentTypes = {
 };
 
 function resolveFile(requestUrl) {
-  let urlPath = '/';
+  let urlPath;
 
   try {
     urlPath = decodeURIComponent(new URL(requestUrl ?? '/', 'http://localhost').pathname);

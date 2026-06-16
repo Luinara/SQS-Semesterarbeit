@@ -27,9 +27,15 @@ export class WeatherService {
   readonly errorMessage = signal<string | null>(null);
   readonly scene = computed(() => resolveWeatherScene(this.snapshot()));
   private refreshIntervalId: ReturnType<typeof setInterval> | null = null;
+  private hasInitialized = false;
 
-  constructor() {
-    void this.refresh();
+  initialize(): void {
+    if (this.hasInitialized) {
+      return;
+    }
+
+    this.hasInitialized = true;
+    this.runAsync(() => this.refresh());
     this.startAutoRefresh();
   }
 
@@ -61,8 +67,15 @@ export class WeatherService {
 
   private startAutoRefresh(): void {
     this.refreshIntervalId ??= setInterval(() => {
-      void this.refresh();
+      this.runAsync(() => this.refresh());
     }, WEATHER_REFRESH_INTERVAL_MS);
+  }
+
+  private runAsync(action: () => Promise<unknown>): void {
+    action().catch(() => {
+      this.errorMessage.set('Wetterdaten sind gerade nicht verfÃ¼gbar.');
+      this.isLoading.set(false);
+    });
   }
 
   private async loadWeatherForLocation(
