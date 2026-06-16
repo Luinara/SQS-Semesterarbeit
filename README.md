@@ -97,6 +97,17 @@ docker compose --profile quality up --build
   Prozess beenden oder die Ports wie oben ändern.
 - Wenn Docker noch nicht läuft, Docker Desktop starten und den Befehl erneut
   ausführen.
+- Wenn Maven beim Docker-Build mit `pthread_create failed` oder
+  `Failed to start thread "GC Thread#0"` abbricht, den Build einmal seriell
+  starten:
+
+  ```powershell
+  $env:COMPOSE_PARALLEL_LIMIT = "1"
+  docker compose --profile quality up --build
+  ```
+
+  Falls das nicht reicht, Docker Desktop neu starten und unter
+  Settings > Resources mindestens 2 CPUs und 4 GB RAM zuweisen.
 - Wenn nach Codeänderungen alte Artefakte sichtbar sind, mit
   `docker compose up --build` neu bauen.
 

@@ -1,9 +1,10 @@
 FROM maven:3.9-eclipse-temurin-21 AS build
 
 WORKDIR /app
+ENV MAVEN_OPTS="-XX:ActiveProcessorCount=2 -XX:ParallelGCThreads=1 -XX:ConcGCThreads=1 -Xmx768m"
 COPY pom.xml .
 COPY src ./src
-RUN mvn -q -DskipTests package
+RUN mvn --batch-mode --no-transfer-progress -T 1 -DskipTests package
 
 FROM eclipse-temurin:21-jre
 
