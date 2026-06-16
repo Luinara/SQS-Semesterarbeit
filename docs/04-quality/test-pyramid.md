@@ -25,6 +25,12 @@ Integrationstests prüfen danach, ob die Regeln über die echten Endpunkte saube
 erreichbar sind. Playwright läuft bewusst nur für wenige wichtige Nutzerreisen,
 weil Browsertests langsamer sind und mehr bewegliche Teile haben.
 
+`SelfCareApplicationTests` ist der zentrale Spring-Boot-Smoke-Test fuer den
+Anwendungskontext. Er prueft nicht nur, dass Spring startet, sondern auch, dass
+zentrale Controller-, Service- und Repository-Beans vorhanden sind, das
+`test`-Profil aktiv ist, die H2-In-Memory-Datenbank verwendet wird und der
+zentrale `Clock`-Bean auf UTC laeuft.
+
 ## Abgedeckte Qualitätsfragen
 
 | Frage aus SQS-Sicht                                    | Nachweis                                                                                                                                                                                                                                                                                                                                                                        |
@@ -51,6 +57,20 @@ manuellen Curl-/JSON-Nachweis für die Open-Meteo-Anbindung:
 - Temperaturfeld im JSON: `current.temperature_2m`
 - Wettercode für die Szene: `current.weather_code`
 - Tag/Nacht-Feld: `current.is_day`
+
+## Lokale Java-Testumgebung
+
+Das Projekt zielt auf Java 21. Lokale Backend-Tests sollten mit einem JDK
+laufen, nicht mit einem reinen JRE, weil Mockito/Byte Buddy sonst keine
+Test-Doubles erzeugen kann. Die Testkonfiguration unter
+`backend/src/test/resources/mockito-extensions/org.mockito.plugins.MockMaker`
+setzt Mockito auf `mock-maker-subclass`, damit die Tests nicht vom
+Inline-Mock-Agent eines lokalen JRE abhaengen.
+
+Fuer lokale Java-25-Laeufe aktiviert das Maven-Profil
+`java-25-local-test-compatibility` automatisch `net.bytebuddy.experimental=true`
+und `jacoco.skip=true`. CI bleibt auf Java 21 ausgerichtet; dort bleibt JaCoCo
+aktiv und liefert den Coverage-Nachweis.
 
 ## Quality Hub
 
