@@ -27,7 +27,8 @@ die gepflegten lokalen Starter-Daten.
 
 ## Qualitätssicherung
 
-- TypeScript und Java-Compile-Checks prüfen Verträge früh.
+- TypeScript- und Java-Compile-Checks prüfen Account-Funktionen früh.
+Dadurch fallen Typfehler, kaputte Imports oder fehlende Methoden bereits beim Build auf.
 - Unit-Tests decken Fachlogik und Services ab.
 - Checkstyle, SpotBugs, ESLint und ArchUnit prüfen Wartbarkeit.
 - npm audit und Lockfile-Tests prüfen Frontend-Supply-Chain-Risiken.
