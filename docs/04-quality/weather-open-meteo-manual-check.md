@@ -4,6 +4,9 @@ Diese Seite dokumentiert, wie die Temperaturdaten der App ohne UI manuell
 geprueft werden koennen. Der Nachweis nutzt echte `curl.exe`-Aufrufe gegen die
 Open-Meteo Forecast API.
 
+Die ausfuehrlichen Code-Notizen zum kompletten App-Flow stehen in
+[wetter-daten.md](wetter-daten.md).
+
 ## Wichtig
 
 Fuer die Temperatur ist das Geocoding-JSON nicht der Nachweis. Geocoding liefert
