@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, effect, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppStateService } from '../../core/services/app-state.service';
 import { PokemonService } from '../../core/services/pokemon.service';
@@ -23,6 +23,8 @@ export class DashboardPageComponent implements OnDestroy {
   readonly appState = inject(AppStateService);
   readonly weather = inject(WeatherService);
   readonly pokemon = inject(PokemonService);
+  readonly busyTaskId = signal<string | null>(null);
+  readonly busyWaterAmountMl = signal<number | null>(null);
   private readonly dashboardRefreshInterval: ReturnType<typeof setInterval>;
 
   constructor() {
@@ -55,7 +57,12 @@ export class DashboardPageComponent implements OnDestroy {
   }
 
   completeTask(taskId: string): void {
-    this.runAsync(() => this.appState.completeTask(taskId));
+    if (this.isQuestListBusy()) {
+      return;
+    }
+
+    this.busyTaskId.set(taskId);
+    this.runAsync(() => this.appState.completeTask(taskId), () => this.busyTaskId.set(null));
   }
 
   feedPet(): void {
@@ -71,7 +78,12 @@ export class DashboardPageComponent implements OnDestroy {
   }
 
   addWater(amountMl: number): void {
-    this.runAsync(() => this.appState.addWater(amountMl));
+    if (this.isQuestListBusy()) {
+      return;
+    }
+
+    this.busyWaterAmountMl.set(amountMl);
+    this.runAsync(() => this.appState.addWater(amountMl), () => this.busyWaterAmountMl.set(null));
   }
 
   refreshWeather(): void {
@@ -106,9 +118,13 @@ export class DashboardPageComponent implements OnDestroy {
     await this.router.navigateByUrl('/auth');
   }
 
-  private runAsync(action: () => Promise<unknown>): void {
+  private isQuestListBusy(): boolean {
+    return this.busyTaskId() !== null || this.busyWaterAmountMl() !== null;
+  }
+
+  private runAsync(action: () => Promise<unknown>, afterAction?: () => void): void {
     action().catch((error: unknown) => {
       console.error('Dashboard action failed', error);
-    });
+    }).finally(() => afterAction?.());
   }
 }

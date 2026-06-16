@@ -15,7 +15,8 @@
           [tasks]="appState.tasks()"
           [waterLevel]="appState.waterLevel()"
           [qualityQuestProgress]="appState.qualityQuestProgress()"
-          [isBusy]="appState.isActionPending()"
+          [busyTaskId]="busyTaskId()"
+          [busyWaterAmountMl]="busyWaterAmountMl()"
           (taskCompleted)="completeTask($event)"
           (waterAdded)="addWater($event)"
         />
