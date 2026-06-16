@@ -14,7 +14,7 @@ function Invoke-NpmStep {
     [string[]] $Arguments
   )
 
-  Write-Host "==> $Label"
+  Write-Output "==> $Label"
 
   $process = Start-Process -FilePath 'npm.cmd' -ArgumentList $Arguments -Wait -NoNewWindow -PassThru
 
@@ -23,12 +23,12 @@ function Invoke-NpmStep {
   }
 }
 
-Write-Host '==> Wechsle in das Frontend-Verzeichnis...'
+Write-Output '==> Wechsle in das Frontend-Verzeichnis...'
 Set-Location $frontendDirectory
 
 Invoke-NpmStep -Label 'Installiere npm-Abhängigkeiten...' -Arguments @('install')
 Invoke-NpmStep -Label 'Prüfe TypeScript-Typen...' -Arguments @('run', 'type-check')
 Invoke-NpmStep -Label 'Erzeuge einen Produktions-Build zur Verifikation...' -Arguments @('run', 'build')
 
-Write-Host '==> Frontend-Setup abgeschlossen.'
+Write-Output '==> Frontend-Setup abgeschlossen.'
 Write-Host '==> Starte die App anschließend mit: npm start'

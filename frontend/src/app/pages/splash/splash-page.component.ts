@@ -21,7 +21,7 @@ import { UiButtonComponent } from '../../shared/ui/button/ui-button.component';
 export class SplashPageComponent implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly appState = inject(AppStateService);
-  private navigationTimeoutId: number | null = null;
+  private navigationTimeoutId: ReturnType<typeof globalThis.setTimeout> | null = null;
   private hasNavigated = false;
 
   readonly ctaLabel = computed(() =>
@@ -29,14 +29,16 @@ export class SplashPageComponent implements OnInit, OnDestroy {
   );
 
   ngOnInit(): void {
-    this.navigationTimeoutId = window.setTimeout(() => {
-      void this.navigateForward();
+    this.navigationTimeoutId = globalThis.setTimeout(() => {
+      this.navigateForward().catch((error: unknown) => {
+        console.error('Splash navigation failed', error);
+      });
     }, 2400);
   }
 
   ngOnDestroy(): void {
     if (this.navigationTimeoutId !== null) {
-      window.clearTimeout(this.navigationTimeoutId);
+      globalThis.clearTimeout(this.navigationTimeoutId);
     }
   }
 

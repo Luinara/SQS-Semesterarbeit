@@ -69,8 +69,10 @@
               submitWeatherCity($event, weatherCityInput.value); weatherCityInput.value = ''
             "
           >
+            <label class="pet-card__weather-input-label" for="weather-city-input">Stadt</label>
             <input
               #weatherCityInput
+              id="weather-city-input"
               type="search"
               name="weather-city"
               autocomplete="address-level2"

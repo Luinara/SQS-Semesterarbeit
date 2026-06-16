@@ -152,6 +152,15 @@
   min-width: 0;
 }
 
+.pet-card__weather-input-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .pet-card__weather-form input {
   width: 100%;
   min-height: 2.55rem;
