@@ -91,10 +91,10 @@ Nicht wild neue Features bauen. Ziel: kleine Änderungen, wenig Risiko, viel
 SQS-/Demo-Wirkung.
 
 - [x] PokeAPI-Logik leicht verbessern:
-  - [x] PokeAPI nur aufrufen, wenn das Pokemon noch nicht in der DB liegt.
+  - [x] PokeAPI nur aufrufen, wenn das Pokémon noch nicht in der DB liegt.
   - [x] vorhandene Starter-Daten nicht unnötig überschreiben; lokale Evolutionsdaten werden bei Bedarf ergänzt.
-  - [x] optional kleinen In-Memory-Cache für Starter-Pokemon geprüft: nicht nötig, weil DB-Reuse die externen Calls reduziert.
-  - [x] Test ergänzt: vorhandene Pokemon werden wiederverwendet und lösen keinen externen API-Call aus.
+  - [x] optional kleinen In-Memory-Cache für Starter-Pokémon geprüft: nicht nötig, weil DB-Reuse die externen Calls reduziert.
+  - [x] Test ergänzt: vorhandene Pokémon werden wiederverwendet und lösen keinen externen API-Call aus.
 - [x] Demo-UX im Frontend polieren:
   - [x] Login/Registrierung mit sauberem Ladezustand.
   - [x] nach Quest, Wasser und Training klares Feedback anzeigen.
