@@ -1,4 +1,5 @@
 import { AppStateService } from "../../../frontend/src/app/core/services/app-state.service";
+import { PET_RULES } from "../../../frontend/src/app/shared/mock/mock-data";
 import {
   BackendApiError,
   DashboardSnapshot,
@@ -195,12 +196,12 @@ describe("AppStateService", () => {
 
   it("trainiert das Pokémon über Trainingspunkte und zeigt Feedback", async () => {
     const initialSnapshot = createSnapshot(1, 0);
-    initialSnapshot.gameState.pet.availableFoodPoints = 10;
-    initialSnapshot.backendGameState.pendingFeedPoints = 10;
+    initialSnapshot.gameState.pet.availableFoodPoints = PET_RULES.feedCost;
+    initialSnapshot.backendGameState.pendingFeedPoints = PET_RULES.feedCost;
 
     const fedSnapshot = createSnapshot(1, 10);
-    fedSnapshot.gameState.pet.availableFoodPoints = 9;
-    fedSnapshot.backendGameState.pendingFeedPoints = 9;
+    fedSnapshot.gameState.pet.availableFoodPoints = 0;
+    fedSnapshot.backendGameState.pendingFeedPoints = 0;
     fedSnapshot.backendGameState.happiness = 1;
 
     const backendApi = createBackendApiMock({
@@ -213,7 +214,7 @@ describe("AppStateService", () => {
     await service.feedPet();
 
     expect(backendApi.feed).toHaveBeenCalledWith("mira", "bulbasaur");
-    expect(service.pet()?.availableFoodPoints).toBe(9);
+    expect(service.pet()?.availableFoodPoints).toBe(0);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "feeding",
       message: "Trainingspunkte wurden für dein Pokémon eingesetzt.",

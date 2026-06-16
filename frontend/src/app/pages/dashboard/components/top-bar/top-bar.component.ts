@@ -18,20 +18,11 @@ export class TopBarComponent {
   readonly demoPassword = input<string | null>(null);
   readonly isBusy = input(false);
 
-  readonly resetRequested = output<void>();
   readonly logoutRequested = output<void>();
   readonly accountDeleteRequested = output<void>();
 
   readonly userInitial = computed(() => this.userName().trim().charAt(0).toUpperCase() || 'S');
   readonly hasDemoAccess = computed(() => Boolean(this.demoUsername() && this.demoPassword()));
-
-  requestReset(): void {
-    if (this.isBusy()) {
-      return;
-    }
-
-    this.resetRequested.emit();
-  }
 
   requestLogout(): void {
     if (this.isBusy()) {

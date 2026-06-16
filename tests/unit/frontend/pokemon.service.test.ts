@@ -38,6 +38,6 @@ describe("PokemonService", () => {
 
     expect(service.snapshot().displayName).toBe("Venusaur");
     expect(service.snapshot().source).toBe("fallback");
-    expect(service.errorMessage()).toContain("lokales Ersatz-Sprite");
+    expect(service.errorMessage()).toContain("trotzdem weiter an");
   });
 });

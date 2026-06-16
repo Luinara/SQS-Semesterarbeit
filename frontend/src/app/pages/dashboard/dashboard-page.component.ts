@@ -68,10 +68,6 @@ export class DashboardPageComponent {
     void this.weather.searchCity(cityName);
   }
 
-  resetDemoData(): void {
-    void this.appState.resetCurrentProgress();
-  }
-
   async logout(): Promise<void> {
     await this.appState.logout();
     await this.router.navigateByUrl('/auth');
