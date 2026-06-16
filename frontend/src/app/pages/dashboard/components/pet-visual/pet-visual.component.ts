@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, computed, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  computed,
+  input,
+  signal,
+} from '@angular/core';
 import { DEFAULT_WEATHER_SCENE } from '../../../../core/state/weather-appearance.logic';
 import { PetCareState, PokemonSource } from '../../../../shared/models/pet.model';
 import { WeatherScene } from '../../../../shared/models/weather.model';
