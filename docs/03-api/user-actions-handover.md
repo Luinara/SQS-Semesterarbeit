@@ -236,7 +236,7 @@ Beispiel-Response:
 }
 ```
 
-### 5. Fortschritt Zuruecksetzen
+### 5. Fortschritt Zurücksetzen
 
 Frontend-Aktion aktuell:
 
