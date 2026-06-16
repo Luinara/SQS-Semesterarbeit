@@ -114,8 +114,10 @@ test.describe("Daily reset", () => {
       .locator("sqs-task-card")
       .filter({ hasText: "30 Minuten lernen" });
     await learningQuest.getByRole("button", { name: "Erledigen" }).click();
-    await expect(learningQuest.getByRole("button", { name: "Erledigt" })).toBeDisabled();
-    await expect(page.getByText("2/2")).toBeVisible();
+    await expect(
+      learningQuest.getByRole("button", { name: "Erledigt" }),
+    ).toBeDisabled();
+    await expect(questSummary(page)).toHaveText("2/2");
 
     await page.getByRole("button", { name: "Abmelden" }).click();
     await page.waitForURL("**/auth");
@@ -132,7 +134,7 @@ test.describe("Daily reset", () => {
         .filter({ hasText: "30 Minuten lernen" })
         .getByRole("button", { name: "Erledigen" }),
     ).toBeEnabled();
-    await expect(page.getByText("0/2")).toBeVisible();
+    await expect(questSummary(page)).toHaveText("0/2");
   });
 });
 
@@ -140,7 +142,9 @@ async function login(page: Page) {
   await page.goto("/auth", { waitUntil: "domcontentloaded", timeout: 10000 });
   await page.getByLabel("Spielername").fill("reset-demo");
   await page.getByLabel("Passwort").fill("password123");
-  await page.getByRole("button", { name: "Einloggen und weitermachen" }).click();
+  await page
+    .getByRole("button", { name: "Einloggen und weitermachen" })
+    .click();
   await page.waitForURL("**/dashboard");
 }
 
@@ -177,7 +181,16 @@ async function mockExternalServices(page: Page) {
 }
 
 function streakMetric(page: Page) {
-  return page.locator(".quality-gate__metric").filter({ hasText: "Anmelde-Serie" });
+  return page
+    .locator(".quality-gate__metric")
+    .filter({ hasText: "Anmelde-Serie" });
+}
+
+function questSummary(page: Page) {
+  return page
+    .locator(".task-list__summary-item")
+    .filter({ hasText: "Quests" })
+    .locator("strong");
 }
 
 function createGameState(
