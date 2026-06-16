@@ -12,7 +12,7 @@ Alle Game-State-Endpunkte hängen unter:
 
 ## Zweck
 
-Liefert den spielbezogenen Zustand des aktuell authentifizierten Users, damit das Frontend Questliste, Wasserstand, Energie, Pokémon-Daten, Motivation, Feed-Punkte und Login-/Streak-Informationen rendern kann.
+Liefert den spielbezogenen Zustand des aktuell authentifizierten Users, damit das Frontend Questliste, Wasserstand, Energie, Pokémon-Daten, Motivation, Trainingspunkte und Anmelde-Serie rendern kann.
 
 ## Authentifizierung
 
@@ -32,20 +32,20 @@ Content-Type: `application/json`
 
 Fields (JSON schema)
 
-- `waterLevel` (integer) — current water level (DB column `hydration_ml`). Unit/scale documented for the client.
-- `foodLevel` (integer) — current food level (DB column `hunger`).
-- `pokemonImageUrl` (string|null) — URL of the user's current Pokémon image or `null` if none/egg.
-- `pokemonLevel` (integer) — current Pokémon level (DB column `pokemon_level`).
+- `waterLevel` (integer) — aktueller Wasserstand aus `hydration_ml`.
+- `foodLevel` (integer) — aktueller Energiewert aus `hunger`.
+- `pokemonImageUrl` (string|null) — URL zum aktuellen Pokémon-Bild oder `null`, wenn noch kein Bild verfügbar ist.
+- `pokemonLevel` (integer) — aktuelles Pokémon-Level aus `pokemon_level`.
 - `growth` (integer) — Fortschritt Richtung nächstes Level. Der Wert steigt beim Abschließen von Tasks bis maximal `100`. Wenn der 2-Tage-Cooldown erfüllt ist, erhöht das Backend `pokemonLevel` und setzt `growth` auf `0`.
-- `happiness` (integer) — current happiness value.
-- `pendingFeedPoints` (integer) — verfügbare Feed-Punkte aus abgeschlossenen Tasks. Diese Punkte kann das Frontend über `POST /api/user/feed` in Motivation/Happiness umwandeln.
-- `tasks` (array of Task objects) — list of tasks visible to the user. Each Task object contains:
+- `happiness` (integer) — aktueller Motivationswert.
+- `pendingFeedPoints` (integer) — verfügbare Trainingspunkte aus abgeschlossenen Tasks. Diese Punkte kann das Frontend über `POST /api/user/feed` in Motivation umwandeln.
+- `tasks` (array of Task objects) — Aufgaben, die im Frontend sichtbar sind. Jeder Eintrag enthält:
   - `id` (number)
   - `title` (string)
-  - `completed` (boolean) — the value stored in the backend for the task (see Reset Notes below).
-- `streak` (integer) — number of consecutive days the user has logged in. This value is updated by the authentication (login) flow (see "Streak update rules" below).
-- `yesterdayLoggedIn` (boolean) — indicates whether the user had an active session on the previous day (used by the frontend to decide resetting the displayed task completions).
-- `serverNow` (string, ISO8601 UTC) — current server time. This is provided to help the client avoid local clock drift when applying the reset heuristic.
+  - `completed` (boolean) — im Backend gespeicherter Abschlussstatus der Task.
+- `streak` (integer) — Anzahl aufeinanderfolgender Login-Tage; wird im Login-Flow aktualisiert.
+- `yesterdayLoggedIn` (boolean) — zeigt, ob am Vortag eine aktive Session vorhanden war.
+- `serverNow` (string, ISO8601 UTC) — aktuelle Serverzeit, damit das Frontend nicht von der lokalen Uhr abhängig ist.
 
 ## Example response
 

@@ -43,7 +43,7 @@ Beispiel:
 
 ## POST /api/tasks/{taskId}/complete
 
-- Zweck: Meldet dem Server, dass der aktuell eingeloggte Benutzer die Task `taskId` abgeschlossen hat. Der Server wendet die Spiel‑Effekte an (`pendingFeedPoints`, Growth, Level, ggf. Hatch/Evolution) und liefert den aktualisierten Spielzustand zurück.
+- Zweck: Meldet dem Server, dass der aktuell eingeloggte Benutzer die Task `taskId` abgeschlossen hat. Der Server wendet die Spiel-Effekte an (`pendingFeedPoints`, Wachstum, Level, ggf. Hatch/Evolution) und liefert den aktualisierten Spielzustand zurück.
 - Auth: erforderlich (Session/Token). Nicht‑authentifizierte Anfragen -> 401 Unauthorized.
 - Request:
   - Method: POST
@@ -59,10 +59,10 @@ Beispiel:
 Wesentliche Semantik (kurz)
 
 - Die Aktion führt zu folgenden Effekten:
-  - Feed‑Punkte: `task.feed_points` werden zu `user.pendingFeedPoints` addiert. Diese Punkte werden erst über `POST /api/user/feed` in Motivation/Happiness umgewandelt.
-  - Growth: Erhöht sich um `10 XP` pro neu abgeschlossenem Task, maximal bis `100`.
-  - Level: Wenn Growth den Cap erreicht und der Level‑Cooldown erfüllt ist, steigt `pokemonLevel` um genau 1 und Growth wird auf `0` gesetzt.
-  - Cooldown: Ein Level‑Up ist nur möglich, wenn `last_level_up_at` leer ist oder mindestens zwei Tage zurückliegt. Ist der Cooldown aktiv, bleibt Growth bei `100`.
+  - Trainingspunkte: `task.feed_points` werden zu `user.pendingFeedPoints` addiert. Diese Punkte werden erst über `POST /api/user/feed` in Motivation umgewandelt.
+  - Wachstum: Erhöht sich um `10 XP` pro neu abgeschlossenem Task, maximal bis `100`.
+  - Level: Wenn der Wachstumswert den Cap erreicht und der Level-Cooldown erfüllt ist, steigt `pokemonLevel` um genau 1 und `growth` wird auf `0` gesetzt.
+  - Cooldown: Ein Level-Up ist nur möglich, wenn `last_level_up_at` leer ist oder mindestens zwei Tage zurückliegt. Ist der Cooldown aktiv, bleibt `growth` bei `100`.
   - Level‑abhängige Effekte:
     - Beim Erreichen von Level >= 10: Wenn `isEgg == true`, wird das Pokémon ausgebrütet (isEgg=false und `hatchedAt` gesetzt).
     - Bei Erreichen von Level >= 25 und >= 50: Wenn `evolutionId` vorhanden ist, wird das Pokémon einmal bzw. zweimal weiterentwickelt (sofern Evolutionskette vorhanden).
@@ -106,10 +106,10 @@ Sicherheitsaspekte
 Tests (Empfehlung)
 
 - Unit‑Tests für `TaskService.completeTaskForUser` (mocked `UserRepository`, `TaskRepository`, `UserTaskRepository`):
-  - erster Abschluss setzt `user_tasks.completed=true`, erhöht `pendingFeedPoints` und Growth
+  - erster Abschluss setzt `user_tasks.completed=true`, erhöht `pendingFeedPoints` und Wachstum
   - zweiter Abschluss derselben Task liefert 409
   - Level‑Up ohne `lastLevelUpAt` setzt Level und `lastLevelUpAt`
-  - Level‑Up innerhalb von zwei Tagen bleibt blockiert und hält Growth am Cap
+  - Level-Up innerhalb von zwei Tagen bleibt blockiert und hält `growth` am Cap
   - Hatch/Evolution‑Randfälle
 - Integrationstests (Testcontainers): End‑to‑end Szenarien mit echter DB‑Migration (wenn TaskCompletion später eingeführt)
 

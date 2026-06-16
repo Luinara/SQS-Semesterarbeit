@@ -1,4 +1,4 @@
-# Runtime View
+# Laufzeitsicht
 
 ## Login und Session
 
@@ -12,14 +12,14 @@
 1. Der Nutzer klickt im Dashboard auf `Erledigen`.
 2. Die Komponente ruft `AppStateService` auf; der Service nutzt `BackendApiService`.
 3. Das Backend prüft die Session und markiert die Task für diesen Nutzer als erledigt.
-4. Punkte, Growth und Feed-Punkte werden im Backend aktualisiert.
+4. Punkte, Wachstum und Trainingspunkte werden im Backend aktualisiert.
 5. Das Frontend lädt den Spielstand neu und zeigt Feedback an.
 
 ## Wasser und Training
 
 1. Wasser-Buttons senden die gewählte Menge an `/api/user/water`.
 2. Ab dem Grenzwert kann das Backend die Wasser-Quest automatisch abschließen.
-3. Training läuft über `/api/user/feed` und verbraucht Feed-Punkte.
+3. Training läuft über `/api/user/feed` und verbraucht Trainingspunkte.
 4. Das Frontend bekommt den aktualisierten Spielstand zurück.
 
 ## Quality-Hub-Lauf

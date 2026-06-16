@@ -1,4 +1,4 @@
-# Architecture Decisions
+# Architekturentscheidungen
 
 Die wichtigsten Architekturentscheidungen liegen als ADRs unter `docs/adr/`.
 

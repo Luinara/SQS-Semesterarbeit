@@ -1,4 +1,4 @@
-# Glossary
+# Glossar
 
 | Begriff | Bedeutung |
 | --- | --- |
@@ -7,8 +7,8 @@
 | Quality Gate | Pflichtchecks, die für den Abgabestand grün sein sollen. |
 | Quality Hub | Docker-Dashboard für Quality-Report, Logs und HTML-Reports. |
 | Quality Runner | Einmaliger Docker-Container, der Backend-, Frontend-, Security-, Coverage- und E2E-Checks ausführt. |
-| Feed Points | Punkte aus Quests, die für Pokemon-Training genutzt werden. |
-| Growth | Fortschritt Richtung nächstes Pokemon-Level. |
-| Hydration | Wasserstand, gemessen in Millilitern. |
-| Starter Pokemon | Pokemon-Partner aus der Registrierung. |
-| Session Cookie | Cookie für die Backend-Session. |
+| Trainingspunkte | Punkte aus Quests, die für Pokémon-Training genutzt werden. Technisches Feld: `pendingFeedPoints`. |
+| Wachstum | Fortschritt Richtung nächstes Pokémon-Level. Technisches Feld: `growth`. |
+| Wasserstand | Getrunkene Wassermenge, gemessen in Millilitern. |
+| Starter-Pokémon | Pokémon-Partner aus der Registrierung. |
+| Session-Cookie | Cookie für die Backend-Session. |

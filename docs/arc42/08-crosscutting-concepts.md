@@ -1,4 +1,4 @@
-# Crosscutting Concepts
+# Querschnittliche Konzepte
 
 ## Session und Authentifizierung
 
@@ -6,7 +6,7 @@ Das Backend arbeitet mit serverseitigen Sessions. Das Frontend sendet Requests
 mit Credentials, damit das Session-Cookie mitgeht. Passwörter werden nicht im
 Browser gespeichert und im Backend gehasht.
 
-## State Management
+## Zustandsverwaltung
 
 Der zentrale Zustand liegt im Angular-Service `AppStateService`. Dort laufen
 Nutzer, Tasks, Wasserstand, Pokemon, Feedback und Session-Restore zusammen.
@@ -25,7 +25,7 @@ Testprofil und ein lokaler Starter-Katalog als Fallback. Wenn PokeAPI beim
 Registrieren nicht antwortet, wird der User trotzdem angelegt und die App nutzt
 die gepflegten lokalen Starter-Daten.
 
-## Quality Assurance
+## Qualitätssicherung
 
 - TypeScript und Java-Compile-Checks prüfen Verträge früh.
 - Unit-Tests decken Fachlogik und Services ab.
@@ -34,7 +34,7 @@ die gepflegten lokalen Starter-Daten.
 - Playwright prüft sichtbare Klickwege.
 - Der Quality Hub sammelt die Nachweise für die Abgabe.
 
-## Documentation
+## Dokumentation
 
 Architektur steht in arc42 und ADRs. API-Verträge liegen unter `docs/API_*.md`.
 Der Docker-Start ist in der Root-README und in `quality/README.md` beschrieben.

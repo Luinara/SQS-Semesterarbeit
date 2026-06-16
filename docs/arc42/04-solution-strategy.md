@@ -1,11 +1,11 @@
-# Solution Strategy
+# Lösungsstrategie
 
 Die Lösung ist bewusst überschaubar gehalten: Die App soll in der Demo direkt
 benutzbar sein, und die Qualitätssicherung soll nicht nur in einzelnen
 Terminalbefehlen versteckt sein. Deshalb gibt es zusätzlich zum normalen
 Docker-Start den Quality Hub.
 
-## Strategic Decisions
+## Strategische Entscheidungen
 
 | Bereich | Strategie |
 | --- | --- |
@@ -16,7 +16,7 @@ Docker-Start den Quality Hub.
 | Qualitätssicherung | Der Quality Hub führt die wichtigsten Checks gebündelt aus und zeigt Logs/Reports an. |
 | Deployment | Docker Compose startet App, DB und optional den Quality Hub. |
 
-## Quality Approach
+## Qualitätsansatz
 
 - Unit-Tests prüfen Frontend-Logik, Services, Backend-Services und Controller.
 - ArchUnit, Checkstyle und SpotBugs prüfen die Backend-Struktur.

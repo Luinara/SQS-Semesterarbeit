@@ -1,31 +1,39 @@
-# Introduction and Goals
+# Einführung und Ziele
 
-This project, developed as part of a Software Quality Assurance (SQS) course, aims to create a self-care companion web application that integrates gamification elements to encourage healthy habits and task completion.
+PokeHabit ist unsere Web-App für die SQS-Semesterarbeit. Nutzer melden sich an,
+erledigen Tagesquests, trinken Wasser und sammeln Trainingspunkte für ein
+Pokemon-basiertes Begleittier. Die App besteht aus Angular-Frontend,
+Spring-Boot-Backend und PostgreSQL.
 
-## Requirements Overview
+Für die Abgabe ist nicht nur die App selbst wichtig. Wir zeigen auch, dass die
+Qualitätssicherung wirklich ausgeführt wird: Backend-Tests, Frontend-Tests,
+Coverage, statische Analyse, Security-Checks und Playwright-E2E laufen über den
+Docker-Quality-Hub und sind dort als Report sichtbar.
 
-The application provides a platform for users to complete self-care tasks. To increase motivation, the system incorporates Pokémon-themed gamification:
-* **Task Management:** Users can view, track, and complete daily self-care tasks.
-* **Pokémon Progression:** Completing tasks, drinking water, and training convert into growth, motivation, feed points, and starter evolution progress.
-* **Gamified Dashboard:** A visual representation of the user's progress, partner Pokémon, weather scene, daily target, and available actions.
+## Fachlicher Überblick
 
-Neben der eigentlichen App soll das Projekt zeigen, dass wir die wichtigsten SQS-Themen praktisch anwenden: Tests, statische Analyse, Security-Checks, Dokumentation und reproduzierbarer Start.
+- Nutzer können sich registrieren und anmelden.
+- Tagesquests und Wassertracking verändern den Spielstand.
+- Trainingspunkte steigern Motivation, Wachstum und Pokemon-Fortschritt.
+- Das Backend nutzt PokeAPI für Starter-Pokemon und fällt bei Problemen auf
+  lokale Daten zurück.
+- Das Frontend nutzt Wetterdaten für die Szene im Dashboard.
+- Demo- und Quality-Start laufen reproduzierbar über Docker Compose.
 
-## Quality Goals
+## Qualitätsziele
 
-The following quality goals are prioritized for this project:
+| Priorität | Ziel | Nachweis |
+| --- | --- | --- |
+| 1 | Reproduzierbarer Start | `docker compose up --build` startet App, Backend und Datenbank. |
+| 2 | Sichtbare Qualitätssicherung | `docker compose --profile quality up --build` startet den Quality Hub mit Logs und Reports. |
+| 3 | Testpyramide | Unit-, Integrations-, Architektur-, Security- und E2E-Tests sind dokumentiert und ausführbar. |
+| 4 | Stabile Demo | Demo-User, Starterdaten, Questfluss und E2E-Nutzerreise sind für die Präsentation abgesichert. |
+| 5 | Umgang mit externen Diensten | PokeAPI wird nur bei fehlenden Pokemon-Daten genutzt und hat Timeout/Fallback. |
 
-| Priority | Goal | Description |
-| :--- | :--- | :--- |
-| 1 | **High Test Coverage** | Aim for at least 80% line coverage across the codebase using JUnit, Mockito, and Vitest. |
-| 2 | **Automated Testing** | Unit-, Integrations-, E2E- und Architekturtests prüfen die wichtigsten Schichten des Projekts. |
-| 3 | **Code Quality & Maintainability** | Enforced by the dockerized Quality Hub, Checkstyle, SpotBugs, ESLint, npm security checks, and optional SonarQube analysis. |
-| 4 | **Resilience** | Handling external service failures (e.g., PokeAPI) gracefully through timeouts and retries. |
+## Stakeholder
 
-## Stakeholders
-
-| Role | Expectation |
-| :--- | :--- |
-| **Instructors (SQA Course)** | Expect a well-documented project that demonstrates mastery of quality assurance techniques, including automated testing and CI/CD integration. |
-| **Students (Developers)** | Aim to build a functional, maintainable, and well-tested application while learning SQA best practices. |
-| **End Users** | Expect a stable, responsive application that helps them manage self-care tasks in a fun and engaging way. |
+| Rolle | Erwartung |
+| --- | --- |
+| Prüfer im SQS-Modul | Können App, Doku und Quality Hub lokal nachvollziehen. |
+| Projektteam | Kann die Demo ohne manuelle Datenbank-Reparatur starten und erklären. |
+| Nutzer der App | Bekommen ein verständliches Dashboard für Quests, Wasser und Pokemon-Fortschritt. |
