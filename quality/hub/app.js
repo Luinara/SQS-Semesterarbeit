@@ -12,7 +12,7 @@ const metricFailed = document.querySelector('#metric-failed');
 const metricSkipped = document.querySelector('#metric-skipped');
 const metricRequired = document.querySelector('#metric-required');
 
-loadReport();
+await loadReport();
 setInterval(loadReport, 5000);
 
 async function loadReport() {

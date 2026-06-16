@@ -4,9 +4,12 @@
     <span class="progress-bar__hint">{{ hint() }}</span>
   </div>
 
-  <progress class="progress-bar__native" [attr.aria-label]="label()" [value]="value()" [max]="max()">
-    {{ value() }} / {{ max() }}
-  </progress>
+  <progress
+    class="progress-bar__native"
+    [attr.aria-label]="label()"
+    [value]="value()"
+    [max]="max()"
+  ></progress>
 
   <div class="progress-bar__track" aria-hidden="true">
     <span class="progress-bar__fill" [style.width.%]="percentage()"></span>

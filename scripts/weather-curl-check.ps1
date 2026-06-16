@@ -124,24 +124,24 @@ if ($PSBoundParameters.ContainsKey("Latitude") -or $PSBoundParameters.ContainsKe
 
     $weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=$Latitude&longitude=$Longitude&current=temperature_2m,weather_code,is_day&elevation=nan&timezone=auto"
 
-    Write-Host ""
-    Write-Host "============================================================"
-    Write-Host "Manual Forecast check: $Label"
-    Write-Host "Coordinates: $Latitude, $Longitude"
-    Write-Host "Forecast curl:"
-    Write-Host "curl.exe -s `"$weatherUrl`""
+    Write-Output ""
+    Write-Output "============================================================"
+    Write-Output "Manual Forecast check: $Label"
+    Write-Output "Coordinates: $Latitude, $Longitude"
+    Write-Output "Forecast curl:"
+    Write-Output "curl.exe -s `"$weatherUrl`""
 
     $weatherRawJson = Invoke-CurlText $weatherUrl
 
     if ($RawJson) {
-        Write-Host "Forecast JSON with temperature:"
-        Write-Host $weatherRawJson
+        Write-Output "Forecast JSON with temperature:"
+        Write-Output $weatherRawJson
     }
 
     $weather = $weatherRawJson | ConvertFrom-Json
     $current = $weather.current
 
-    Write-Host "Temperature result:"
+    Write-Output "Temperature result:"
     [pscustomobject]@{
         Location = $Label
         TemperatureC = $current.temperature_2m
@@ -157,16 +157,16 @@ if ($PSBoundParameters.ContainsKey("Latitude") -or $PSBoundParameters.ContainsKe
 foreach ($cityName in $City) {
     $geocodingUrl = "https://geocoding-api.open-meteo.com/v1/search?name=$(Escape-UrlPart $cityName)&count=10&language=de&format=json"
 
-    Write-Host ""
-    Write-Host "============================================================"
-    Write-Host "City: $cityName"
+    Write-Output ""
+    Write-Output "============================================================"
+    Write-Output "City: $cityName"
 
     $geocodingRawJson = Invoke-CurlText $geocodingUrl
     $geocoding = $geocodingRawJson | ConvertFrom-Json
     $results = @($geocoding.results)
 
     if ($results.Count -eq 0) {
-        Write-Host "No geocoding results found."
+        Write-Output "No geocoding results found."
         continue
     }
 
@@ -190,23 +190,23 @@ foreach ($cityName in $City) {
     $selected = $rankedResults[0]
     $weatherUrl = "https://api.open-meteo.com/v1/forecast?latitude=$($selected.Latitude)&longitude=$($selected.Longitude)&current=temperature_2m,weather_code,is_day&elevation=nan&timezone=auto"
 
-    Write-Host "Selected location: $($selected.Label)"
-    Write-Host "Coordinates: $($selected.Latitude), $($selected.Longitude)"
+    Write-Output "Selected location: $($selected.Label)"
+    Write-Output "Coordinates: $($selected.Latitude), $($selected.Longitude)"
 
-    Write-Host "Forecast curl:"
-    Write-Host "curl.exe -s `"$weatherUrl`""
+    Write-Output "Forecast curl:"
+    Write-Output "curl.exe -s `"$weatherUrl`""
 
     $weatherRawJson = Invoke-CurlText $weatherUrl
 
     if ($RawJson) {
-        Write-Host "Forecast JSON with temperature:"
-        Write-Host $weatherRawJson
+        Write-Output "Forecast JSON with temperature:"
+        Write-Output $weatherRawJson
     }
 
     $weather = $weatherRawJson | ConvertFrom-Json
     $current = $weather.current
 
-    Write-Host "Temperature result:"
+    Write-Output "Temperature result:"
     [pscustomobject]@{
         Location = $selected.Label
         TemperatureC = $current.temperature_2m
