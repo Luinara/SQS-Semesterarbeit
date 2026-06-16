@@ -62,7 +62,7 @@ class DevDataSeederTest {
         assertThat(user.getCurrentPokemonId()).isEqualTo(1);
         assertThat(user.isEgg()).isTrue();
         assertThat(user.getHydrationMl()).isZero();
-        assertThat(user.getHappiness()).isZero();
+        assertThat(user.getHappiness()).isEqualTo(60);
         assertThat(user.getPokemonLevel()).isEqualTo(1);
         assertThat(user.getPokemonXp()).isZero();
         assertThat(user.getPendingFeedPoints()).isZero();

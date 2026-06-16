@@ -83,7 +83,7 @@ public class DevDataSeeder implements ApplicationRunner {
             user.setCurrentPokemonId(1);
         }
         user.setEgg(true);
-        user.setHappiness(0);
+        user.setHappiness(60);
         user.setHydrationMl(0);
         user.setHunger(0);
         user.setPokemonLevel(1);
