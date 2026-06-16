@@ -1,4 +1,5 @@
 import { vi } from "vitest";
+// @ts-ignore: imported source is outside the tests rootDir
 import { WeatherService } from "../../../frontend/src/app/core/services/weather.service";
 
 const berlinWeatherResponse = {
