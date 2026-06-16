@@ -289,6 +289,31 @@ describe("AppStateService", () => {
     });
   });
 
+  it("zeigt Wachstumverlust, wenn Motivation bereits bei null ist", async () => {
+    const initialSnapshot = createSnapshot(3, 50);
+    initialSnapshot.gameState.pet.happiness = 0;
+    initialSnapshot.backendGameState.happiness = 0;
+    const decayedSnapshot = createSnapshot(3, 30);
+    decayedSnapshot.gameState.pet.happiness = 0;
+    decayedSnapshot.backendGameState.happiness = 0;
+
+    const backendApi = createBackendApiMock({
+      login: initialSnapshot,
+      testMotivationDecay: decayedSnapshot,
+    });
+    const service = new AppStateService(backendApi);
+
+    await service.login({ username: "mira", password: "password123" });
+    await service.testMotivationDecay();
+
+    expect(service.pet()?.happiness).toBe(0);
+    expect(service.pet()?.growthProgress).toBe(30);
+    expect(service.lastGameFeedback()).toMatchObject({
+      kind: "info",
+      message: "Motivation ist bereits bei 0%. Wachstum 50 -> 30.",
+    });
+  });
+
   it("triggert keine Animation, wenn das Level gleich bleibt", async () => {
     vi.useFakeTimers();
     const backendApi = createBackendApiMock({
