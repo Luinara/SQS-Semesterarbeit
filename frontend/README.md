@@ -232,6 +232,15 @@ Die Karte zeigt:
 - Motivation
 - Wetter-Szene
 
+Das Aktionspanel unter der Partnerkarte ist zweigeteilt:
+
+- links Pflege-Hinweis und `Pokémon trainieren`
+- rechts der helle Demo-Bereich mit `Level-Up testen` und `Motivation senken`
+
+Die Demo-Aktionen sind bewusst als Pruefhilfe gestaltet: Sie erlauben schnelle
+Sichtkontrolle fuer Level-Up-Feedback, Motivation und Backend-Spielstand, ohne
+in der Praesentation lange warten zu muessen.
+
 ### Wetter-Szene
 
 Die Wetter-Szene macht die App lebendiger und weniger statisch.

@@ -162,6 +162,11 @@ zu sein. Die Reset-Schwelle wird im Backend anhand der Serverzeit bewertet.
 ## Testabdeckung
 
 - Unit- und Controller-Tests decken Service-Mapping, unauthentifizierte Requests, Account-Löschung und Spielstand-Aktionen ab.
+- `UserServiceTest` prueft den Tagesreset mit `Duration.ofMinutes(1)` ohne
+  realen Wartezeitraum: Wasser wird auf `0` gesetzt, Quest-Completions werden
+  zurueckgesetzt und `lastDailyResetAt` wird aktualisiert.
+- `SelfCareApplicationTests` prueft den Spring-Kontext, zentrale Beans, das
+  aktive `test`-Profil, H2-In-Memory-Datenbank und den UTC-`Clock`-Bean.
 - Frontend-Service-Tests prüfen das Mapping der Backend-Payloads in die UI-Modelle.
 - Der Docker Quality Hub führt Backend-, Frontend-, Security-, Coverage- und E2E-Checks gesammelt aus.
 

@@ -23,6 +23,16 @@ Integrations- und Controller-Tests, wenige browserbasierte E2E-Flows.
 - `frontend/playwright.config.ts`
 - `docs/04-quality/test-pyramid.md`
 - `docs/04-quality/frontend-npm-security.md`
+- `docs/04-quality/daily-reset-testfaelle.md`
+
+## Lokale Java-Hinweise
+
+- Backend-Tests mit JDK ausfuehren, nicht mit reinem JRE.
+- `SelfCareApplicationTests` prueft Spring-Kontext, zentrale Beans, H2-Testprofil
+  und UTC-Clock.
+- `UserServiceTest` prueft den Daily Reset auch mit `Duration.ofMinutes(1)`.
+- Fuer Java 25 aktiviert Maven lokal ein Kompatibilitaetsprofil; CI bleibt auf
+  Java 21 mit JaCoCo-Coverage.
 
 ## Wetter-Nachweis
 
