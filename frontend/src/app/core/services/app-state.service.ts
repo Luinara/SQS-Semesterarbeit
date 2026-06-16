@@ -319,20 +319,24 @@ export class AppStateService {
     await this.runAction(async () => {
       try {
         const previousHappiness = this.pet()?.happiness ?? 0;
+        const previousGrowth = this.pet()?.growthProgress ?? 0;
         const snapshot = await this.backendApi.testMotivationDecay(
           username,
           this.pet()?.starterPokemonSpecies
         );
         this.applyDashboardSnapshot(snapshot);
         const nextHappiness = snapshot.gameState.pet.happiness;
+        const nextGrowth = snapshot.gameState.pet.growthProgress;
 
         this.showFeedback({
           id: createFeedbackId('info'),
           kind: 'info',
-          message:
-            nextHappiness < previousHappiness
-              ? `Motivationstest ausgefÃ¼hrt: ${previousHappiness}% -> ${nextHappiness}%.`
-              : 'Motivationstest ausgefÃ¼hrt. Motivation ist bereits bei 0%.',
+          message: createMotivationDecayFeedback(
+            previousHappiness,
+            nextHappiness,
+            previousGrowth,
+            nextGrowth
+          ),
         });
       } catch (error) {
         this.showFeedback({
@@ -462,6 +466,27 @@ function getApiErrorMessage(error: unknown, fallback: string): string {
 
 function createFeedbackId(kind: GameFeedback['kind']): string {
   return `${kind}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function createMotivationDecayFeedback(
+  previousHappiness: number,
+  nextHappiness: number,
+  previousGrowth: number,
+  nextGrowth: number
+): string {
+  if (nextHappiness < previousHappiness && nextGrowth < previousGrowth) {
+    return `Motivationstest ausgefÃ¼hrt: ${previousHappiness}% -> ${nextHappiness}%, Wachstum ${previousGrowth} -> ${nextGrowth}.`;
+  }
+
+  if (nextHappiness < previousHappiness) {
+    return `Motivationstest ausgefÃ¼hrt: ${previousHappiness}% -> ${nextHappiness}%.`;
+  }
+
+  if (nextGrowth < previousGrowth) {
+    return `Motivation ist bereits bei 0%. Wachstum ${previousGrowth} -> ${nextGrowth}.`;
+  }
+
+  return 'Motivationstest ausgefÃ¼hrt. Motivation und Wachstum sind bereits bei 0.';
 }
 
 function isPokemonImageForCurrentId(

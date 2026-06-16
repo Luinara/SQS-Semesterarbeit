@@ -356,6 +356,7 @@ class UserServiceTest {
         UserEntity entity = new UserEntity();
         entity.setUsername("tester");
         entity.setHappiness(12);
+        entity.setPokemonXp(50);
 
         when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
 
@@ -363,7 +364,27 @@ class UserServiceTest {
 
         assertThat(dto).isNotNull();
         assertThat(entity.getHappiness()).isZero();
+        assertThat(entity.getPokemonXp()).isEqualTo(42);
         assertThat(dto.getHappiness()).isZero();
+        assertThat(dto.getGrowth()).isEqualTo(42);
+        verify(userRepository).save(entity);
+    }
+
+    @Test
+    void testMotivationDecay_atZeroLowersGrowthOnly() {
+        UserEntity entity = new UserEntity();
+        entity.setUsername("tester");
+        entity.setHappiness(0);
+        entity.setPokemonXp(15);
+
+        when(userRepository.findByUsernameIgnoreCase("tester")).thenReturn(Optional.of(entity));
+
+        GameStateDto dto = userService.testMotivationDecay("tester");
+
+        assertThat(dto).isNotNull();
+        assertThat(entity.getHappiness()).isZero();
+        assertThat(entity.getPokemonXp()).isZero();
+        assertThat(dto.getGrowth()).isZero();
         verify(userRepository).save(entity);
     }
 

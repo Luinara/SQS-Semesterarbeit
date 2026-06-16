@@ -383,6 +383,38 @@ class AuthenticationServiceTest {
     }
 
     @Test
+    void db_login_lowersGrowthWhenMotivationPenaltyExceedsHappiness() {
+        BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+        String hash = enc.encode("password123");
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-06-16T10:00:00Z"), ZoneOffset.UTC);
+
+        UserEntity entity = new UserEntity("tired", hash);
+        entity.setStreak(2);
+        entity.setPokemonLevel(1);
+        entity.setPokemonXp(30);
+        entity.setHappiness(5);
+        entity.setLastLoginAt(OffsetDateTime.parse("2026-06-14T09:00:00Z"));
+        when(repo.findByUsernameIgnoreCase("tired")).thenReturn(Optional.of(entity));
+
+        AuthenticationService svc = new AuthenticationService(
+                Optional.of(repo),
+                Optional.empty(),
+                Optional.empty(),
+                fixedClock
+        );
+        Optional<String> res = svc.login("tired", "password123");
+
+        assertThat(res).isPresent();
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(repo).save(captor.capture());
+        UserEntity saved = captor.getValue();
+        assertThat(saved.getPokemonLevel()).isEqualTo(1);
+        assertThat(saved.getHappiness()).isZero();
+        assertThat(saved.getPokemonXp()).isEqualTo(15);
+    }
+
+    @Test
     void login_withNullUsernameOrPassword_returnsEmpty() {
         AuthenticationService svc = new AuthenticationService();
         Optional<String> r1 = svc.login(null, "pw");
