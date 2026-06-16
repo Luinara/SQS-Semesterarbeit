@@ -41,6 +41,16 @@ nav:
           - ADR-006 TypeScript: adr/ADR-006-use-typescript.md
           - ADR-007 Prisma: adr/ADR-007-use-prisma.md
           - ADR-008 Hidden Egg Assignment: adr/ADR-008-use-hidden-egg-assignment.md
+      - ADRs Deutsch:
+          - Übersicht: ger-adr/README.md
+          - ADR-001 Spring Boot: ger-adr/ADR-001-use-spring-boot.md
+          - ADR-002 Angular TypeScript: ger-adr/ADR-002-use-angular-typescript.md
+          - ADR-003 PostgreSQL: ger-adr/ADR-003-use-postgresql.md
+          - ADR-004 PokeAPI: ger-adr/ADR-004-use-pokeapi.md
+          - ADR-005 Feature-Packages: ger-adr/ADR-005-use-feature-specific-folder-structure.md
+          - ADR-006 TypeScript: ger-adr/ADR-006-use-typescript.md
+          - ADR-007 Prisma: ger-adr/ADR-007-use-prisma.md
+          - ADR-008 Ei-Pokémon: ger-adr/ADR-008-use-hidden-egg-assignment.md
       - C4-Diagramme: diagrams/c4-diagram.md
   - Qualität:
       - Frontend npm Security: frontend-npm-security.md
