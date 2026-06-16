@@ -7,6 +7,12 @@ const outputRoot = process.env.QUALITY_OUTPUT_DIR ?? '/quality-output';
 const logRoot = join(outputRoot, 'logs');
 const artifactRoot = join(outputRoot, 'artifacts');
 const reportPath = join(outputRoot, 'report.json');
+// Docker-internal health checks use service names; TLS can be enabled via QUALITY_* URL overrides.
+const internalDockerScheme = process.env.QUALITY_INTERNAL_SCHEME ?? 'http';
+const frontendBaseUrl =
+  process.env.QUALITY_FRONTEND_BASE_URL ?? createInternalDockerUrl('frontend', 3000);
+const backendHealthUrl =
+  process.env.QUALITY_BACKEND_HEALTH_URL ?? createInternalDockerUrl('backend', 8181, '/api/tasks');
 const startedAt = new Date();
 
 mkdirSync(logRoot, { recursive: true });
@@ -107,8 +113,8 @@ const checks = [
     cwd: 'frontend',
     required: false,
     preflight: async () => {
-      const frontendReady = await waitForHttp('http://frontend:3000', 90_000);
-      const backendReady = await waitForHttp('http://backend:8181/api/tasks', 90_000);
+      const frontendReady = await waitForHttp(frontendBaseUrl, 90_000);
+      const backendReady = await waitForHttp(backendHealthUrl, 90_000);
 
       if (!frontendReady || !backendReady) {
         return {
@@ -122,7 +128,7 @@ const checks = [
     },
     env: {
       PLAYWRIGHT_SKIP_WEB_SERVER: '1',
-      PLAYWRIGHT_BASE_URL: 'http://frontend:3000',
+      PLAYWRIGHT_BASE_URL: frontendBaseUrl,
       PLAYWRIGHT_EVIDENCE: '1',
       PLAYWRIGHT_HTML_OPEN: 'never',
     },
@@ -332,6 +338,13 @@ function updateGate() {
 
 function secondsSince(startTimestamp) {
   return Math.round((Date.now() - startTimestamp) / 1000);
+}
+
+function createInternalDockerUrl(host, port, pathname = '/') {
+  const url = new URL(pathname, `${internalDockerScheme}://${host}:${port}`);
+  const serializedUrl = url.toString();
+
+  return pathname === '/' ? serializedUrl.replace(/\/$/, '') : serializedUrl;
 }
 
 async function waitForHttp(url, timeoutMs) {
