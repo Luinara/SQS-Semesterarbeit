@@ -11,7 +11,7 @@ Frontend und der lokale Quality Hub.
 | --- | --- |
 | [structurizr/workspace.dsl](./structurizr/workspace.dsl) | Bearbeitbare Structurizr-DSL für System Context, Container und Backend-Komponenten. |
 | [c4-diagram.svg](./c4-diagram.svg) | Kompakte gerenderte Übersicht für Markdown-Preview und Präsentation. |
-| [mermaid/](./mermaid/) | Zusätzliche Mermaid-Quellen und SVGs, falls keine Structurizr-Umgebung verfügbar ist. |
+| [Mermaid](./mermaid/README.md)| Zusätzliche Mermaid-Quellen und SVGs, falls keine Structurizr-Umgebung verfügbar ist. |
 
 ## Level 1: System Context
 

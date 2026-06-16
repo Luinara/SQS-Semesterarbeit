@@ -1,9 +1,11 @@
 site_name: PokeHabit SQS Semesterarbeit
 site_description: Dokumentation der SQS-Semesterarbeit PokeHabit
 docs_dir: docs
+
 theme:
   name: readthedocs
   language: de
+  favicon: favicon.ico
 nav:
   - '01 Überblick': index.md
   - '02 Architektur':
@@ -22,7 +24,9 @@ nav:
           - Risiken und technische Schulden: 02-architecture/arc42/11-risks-and-technical-debt.md
           - Glossar: 02-architecture/arc42/12-glossary.md
           - Frontend-Komponenten: 02-architecture/arc42/frontend-component-architecture.md
-      - C4-Diagramme: 02-architecture/diagrams/c4-diagram.md
+      - Diagramme:
+          - C4-Diagramm: 02-architecture/diagrams/c4-diagram.md
+          - Mermaid-Quellen: 02-architecture/diagrams/mermaid/README.md
       - ADRs Englisch:
           - Übersicht: adr/README.md
           - ADR-001 Spring Boot: adr/ADR-001-use-spring-boot.md
@@ -59,5 +63,6 @@ nav:
   - '05 Präsentation':
       - Präsentationsablauf: 05-presentation/presentation-plan.md
       - Präsentations-Sprechzettel: 05-presentation/presentation-cheat-sheet.md
+      - Präsentationsplan: presentation-plan.md
   - '06 Betrieb':
       - ReadTheDocs veröffentlichen: 06-operations/readthedocs-publish.md
