@@ -36,36 +36,36 @@ export class DashboardPageComponent {
         return;
       }
 
-      void this.pokemon.loadSpecies(pet.pokemonSpecies);
+      this.runAsync(() => this.pokemon.loadSpecies(pet.pokemonSpecies));
     });
   }
 
   completeTask(taskId: string): void {
-    void this.appState.completeTask(taskId);
+    this.runAsync(() => this.appState.completeTask(taskId));
   }
 
   feedPet(): void {
-    void this.appState.feedPet();
+    this.runAsync(() => this.appState.feedPet());
   }
 
   testLevelUpPet(): void {
-    void this.appState.testLevelUp();
+    this.runAsync(() => this.appState.testLevelUp());
   }
 
   testMotivationDecay(): void {
-    void this.appState.testMotivationDecay();
+    this.runAsync(() => this.appState.testMotivationDecay());
   }
 
   addWater(amountMl: number): void {
-    void this.appState.addWater(amountMl);
+    this.runAsync(() => this.appState.addWater(amountMl));
   }
 
   refreshWeather(): void {
-    void this.weather.refresh();
+    this.runAsync(() => this.weather.refresh());
   }
 
   searchWeatherCity(cityName: string): void {
-    void this.weather.searchCity(cityName);
+    this.runAsync(() => this.weather.searchCity(cityName));
   }
 
   async logout(): Promise<void> {
@@ -90,5 +90,11 @@ export class DashboardPageComponent {
     }
 
     await this.router.navigateByUrl('/auth');
+  }
+
+  private runAsync(action: () => Promise<unknown>): void {
+    action().catch((error: unknown) => {
+      console.error('Dashboard action failed', error);
+    });
   }
 }

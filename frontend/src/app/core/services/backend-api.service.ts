@@ -230,22 +230,24 @@ export class BackendApiService {
     };
   }
 
-  private async getJson<T>(url: string, init: RequestInit = {}): Promise<T> {
+  private async getJson<T>(url: string, init?: RequestInit): Promise<T> {
     const response = await this.request(url, init);
     return (await response.json()) as T;
   }
 
-  private async request(url: string, init: RequestInit = {}): Promise<Response> {
+  private async request(url: string, init?: RequestInit): Promise<Response> {
     let response: Response;
+    const headers = new Headers(init?.headers);
+
+    if (init?.body && !headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
 
     try {
       response = await fetch(url, {
         ...init,
         credentials: 'include',
-        headers: {
-          ...(init.body ? { 'Content-Type': 'application/json' } : {}),
-          ...(init.headers ?? {}),
-        },
+        headers,
       });
     } catch {
       throw new BackendApiError(0, BACKEND_UNREACHABLE_MESSAGE);
