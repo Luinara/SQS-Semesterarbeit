@@ -104,10 +104,33 @@ Die Ausgabe konzentriert sich auf den Forecast:
 
 ## Forecast-Curl-Snippet
 
+### Eigenen Curl direkt bauen
+
+Wenn eigene Koordinaten bekannt sind, kann der Forecast-Curl direkt gebaut
+werden. Nur `latitude` und `longitude` ersetzen:
+
+```powershell
+curl.exe -s "https://api.open-meteo.com/v1/forecast?latitude=DEINE_LATITUDE&longitude=DEINE_LONGITUDE&current=temperature_2m,weather_code,is_day&elevation=nan&timezone=auto"
+```
+
 Beispiel fuer Hawaii Kai:
 
 ```powershell
 curl.exe -s "https://api.open-meteo.com/v1/forecast?latitude=21.29637&longitude=-157.70175&current=temperature_2m,weather_code,is_day&elevation=nan&timezone=auto"
+```
+
+### Eigenen Forecast ueber das Script testen
+
+Das Script kann auch ohne Stadtname direkt mit eigenen Koordinaten laufen:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\weather-curl-check.ps1 -Latitude 21.29637 -Longitude -157.70175 -Label "Mein Ort" -RawJson
+```
+
+Erwartet wird wieder ein Forecast-JSON mit:
+
+```text
+current.temperature_2m
 ```
 
 Beispielausgabe der Forecast API:
