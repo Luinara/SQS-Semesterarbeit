@@ -44,6 +44,49 @@ const jakutskWeatherResponse = {
   },
 };
 
+const hawaiiGeocodingResponse = {
+  results: [
+    {
+      name: "Hawaii",
+      admin1: "Hawaii",
+      country: "Vereinigte Staaten",
+      latitude: 19.54814,
+      longitude: -155.66495,
+      elevation: 3162,
+      feature_code: "ISL",
+      population: 185079,
+    },
+    {
+      name: "Hawaii",
+      admin1: "Departamento Santa Rosa",
+      country: "Guatemala",
+      latitude: 13.86036,
+      longitude: -90.41127,
+      elevation: 9999,
+      feature_code: "PPL",
+    },
+    {
+      name: "Hawaii Kai",
+      admin1: "Hawaii",
+      country: "Vereinigte Staaten",
+      latitude: 21.29637,
+      longitude: -157.70175,
+      elevation: 3,
+      feature_code: "PPLX",
+      population: 30620,
+    },
+  ],
+};
+
+const hawaiiWeatherResponse = {
+  current: {
+    temperature_2m: 26,
+    weather_code: 0,
+    is_day: 1,
+    time: "2026-06-16T17:00",
+  },
+};
+
 describe("WeatherService", () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -132,6 +175,32 @@ describe("WeatherService", () => {
     expect(fetch).toHaveBeenLastCalledWith(
       expect.stringContaining("longitude=129.72289"),
     );
+  });
+
+  it("bevorzugt bei Hawaii einen bewohnten Ort statt des kalten Inselmittelpunkts", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(berlinWeatherResponse), { status: 200 }),
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(hawaiiGeocodingResponse), { status: 200 }),
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(hawaiiWeatherResponse), { status: 200 }),
+      );
+
+    const service = new WeatherService();
+    await service.searchCity("Hawaii");
+
+    expect(service.location().label).toBe("Hawaii Kai, Hawaii, Vereinigte Staaten");
+    expect(service.snapshot()).toMatchObject({
+      condition: "clear",
+      locationLabel: "Hawaii Kai, Hawaii, Vereinigte Staaten",
+      temperatureC: 26,
+    });
+    expect(fetch).toHaveBeenNthCalledWith(2, expect.stringContaining("count=10"));
+    expect(fetch).toHaveBeenLastCalledWith(expect.stringContaining("latitude=21.29637"));
+    expect(fetch).toHaveBeenLastCalledWith(expect.stringContaining("longitude=-157.70175"));
   });
 
   it("aktualisiert Wetter Heute automatisch alle zehn Minuten", () => {
