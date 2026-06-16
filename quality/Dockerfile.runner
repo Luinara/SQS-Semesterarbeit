@@ -14,6 +14,9 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 WORKDIR /work
 
 COPY quality/runner /quality/runner
-RUN chmod +x /quality/runner/run-quality.sh
+RUN mkdir -p /work /quality-output \
+    && chmod +x /quality/runner/run-quality.sh \
+    && chown -R pwuser:pwuser /work /quality /quality-output
+USER pwuser
 
 ENTRYPOINT ["/quality/runner/run-quality.sh"]
