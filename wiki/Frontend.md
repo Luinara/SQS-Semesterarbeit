@@ -37,7 +37,7 @@ Der Angular-Proxy in `frontend/proxy.conf.json` leitet lokale Requests weiter:
 
 ## App-Flow
 
-1. Splash-Screen oeffnen.
+1. Splash-Screen öffnen.
 2. Einloggen oder registrieren.
 3. Tagesquests laden.
 4. Quest erledigen.
