@@ -25,6 +25,8 @@ export class DashboardPageComponent {
   readonly demoAccount = DEMO_ACCOUNT;
 
   constructor() {
+    this.weather.initialize();
+
     effect(() => {
       const pet = this.appState.pet();
 

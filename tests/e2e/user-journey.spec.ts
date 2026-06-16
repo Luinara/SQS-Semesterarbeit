@@ -1,3 +1,4 @@
+import { Page } from "@playwright/test";
 import { expect, test } from "../../frontend/testing/playwright-test";
 
 const tasks = [
@@ -27,7 +28,7 @@ test.describe("PokeHabit", () => {
       pokemonImageUrl: "/pet-placeholder.svg",
       pokemonLevel: 2,
       growth: 40,
-      happiness: 55,
+      happiness: 75,
       pendingFeedPoints: 10,
       streak: 2,
       yesterdayLoggedIn: true,
@@ -94,6 +95,12 @@ test.describe("PokeHabit", () => {
         return;
       }
 
+      if (url.pathname === "/api/user/test-motivation-decay") {
+        gameState.happiness = Math.max(0, gameState.happiness - 10);
+        await route.fulfill({ json: createGameState(gameState, completions) });
+        return;
+      }
+
       await route.fulfill({ status: 404, json: { error: "not mocked" } });
     });
 
@@ -147,6 +154,13 @@ test.describe("PokeHabit", () => {
       page.getByRole("heading", { name: "Tagesquests" }),
     ).toBeVisible();
     await expect(page.getByText("500 / 3000 ml")).toBeVisible();
+    await expect(motivationBadge(page)).toContainText("75%");
+
+    await page.getByRole("button", { name: "Motivation senken" }).click();
+    await expect(motivationBadge(page)).toContainText("65%");
+    await expect(
+      page.getByText("Motivationstest ausgefuehrt: 75% -> 65%."),
+    ).toBeVisible();
 
     await page
       .locator("sqs-task-card")
@@ -204,4 +218,8 @@ function createGameState(
       completed: completions.get(task.id) ?? false,
     })),
   };
+}
+
+function motivationBadge(page: Page) {
+  return page.locator("sqs-stat-badge").filter({ hasText: "Motivation" });
 }

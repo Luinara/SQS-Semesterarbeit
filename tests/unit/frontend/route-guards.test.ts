@@ -98,5 +98,5 @@ function runGuard(
     undefined,
   );
 
-  return runInInjectionContext(injector, () => guard({} as never, {} as never));
+  return runInInjectionContext(injector, () => guard());
 }
