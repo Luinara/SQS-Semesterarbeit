@@ -42,7 +42,7 @@ Der Angular-Proxy in `frontend/proxy.conf.json` leitet lokale Requests weiter:
 3. Tagesquests laden.
 4. Quest erledigen.
 5. Wasserstand speichern.
-6. Pokemon trainieren.
+6. Pokémon trainieren.
 7. Wetter-Szene über Stadt und Open-Meteo aktualisieren.
 8. Logout.
 

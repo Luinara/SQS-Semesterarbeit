@@ -19,7 +19,7 @@ Das Backend stellt REST-Endpunkte unter `/api` bereit. Authentifizierung läuft
 | `POST` | `/api/tasks/{id}/complete` | Task abschließen |
 | `GET` | `/api/user/game-state` | Spielstand laden |
 | `POST` | `/api/user/water` | Wasserstand speichern |
-| `POST` | `/api/user/feed` | Pokemon trainieren |
+| `POST` | `/api/user/feed` | Pokémon trainieren |
 | `DELETE` | `/api/user/account` | Account löschen |
 
 ## Frontend-Anbindung

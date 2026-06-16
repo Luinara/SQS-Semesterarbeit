@@ -8,9 +8,9 @@ Die Architektur ist in `docs/02-architecture/arc42/` nach arc42 dokumentiert.
 | Bereich | Aufgabe |
 | --- | --- |
 | Frontend | UI, App-State, Wetter-Szene, API-Mapping |
-| Backend | Auth, Tasks, Spielstand, Pokemon-Daten, Sessions |
-| Datenbank | Nutzer, Tasks, Spielstand und Pokemon |
-| Externe APIs | PokeAPI für Starter-Pokemon, Open-Meteo für Wetter |
+| Backend | Auth, Tasks, Spielstand, Pokémon-Daten, Sessions |
+| Datenbank | Nutzer, Tasks, Spielstand und Pokémon |
+| Externe APIs | PokeAPI für Starter-Pokémon, Open-Meteo für Wetter |
 
 ## Wichtige Dokumente
 

@@ -6,7 +6,7 @@
 - Docker-Start für App, Backend, Datenbank und Quality Hub.
 - Demo-Login: `demo / password123`.
 - Öffentlicher Endpunkt `GET /api/tasks`.
-- Geschuetzte Endpunkte mit Session-Cookie.
+- Geschützte Endpunkte mit Session-Cookie.
 - PokeAPI-Anbindung im Backend mit Fallback.
 - Open-Meteo-Anbindung im Frontend.
 - Tests für Backend, Frontend, Security, Architektur und E2E.
@@ -24,8 +24,8 @@
 
 - Kein neues Auth-System.
 - Kein komplettes UI-Redesign.
-- Kein grosser Datenmodell-Umbau.
-- Keine grossen neuen Features kurz vor der Abgabe.
+- Kein großer Datenmodell-Umbau.
+- Keine großen neuen Features kurz vor der Abgabe.
 
 ## Demo-Reihenfolge
 
@@ -33,7 +33,7 @@
 2. Login mit `demo / password123`.
 3. Quest abschließen.
 4. Wasser speichern.
-5. Pokemon trainieren.
+5. Pokémon trainieren.
 6. Wetter-Stadt laden.
 7. Quality Hub zeigen.
 8. C4, Testpyramide und API-Doku zeigen.
