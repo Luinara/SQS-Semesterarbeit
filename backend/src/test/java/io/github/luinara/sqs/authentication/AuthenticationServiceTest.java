@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -359,6 +360,39 @@ class AuthenticationServiceTest {
         assertThat(saved.getHydrationMl()).isZero();
         assertThat(saved.getStreak()).isEqualTo(3);
         verify(userTaskRepository).resetCompletionsByUserId(42L);
+    }
+
+    @Test
+    void db_login_resetsDailyGoals_afterConfiguredOneMinuteInterval() {
+        BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
+        String hash = enc.encode("password123");
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-06-16T10:01:00Z"), ZoneOffset.UTC);
+
+        UserEntity entity = new UserEntity("quick-reset", hash);
+        entity.setId(43L);
+        entity.setHydrationMl(1500);
+        entity.setStreak(2);
+        entity.setLastLoginAt(OffsetDateTime.parse("2026-06-16T10:00:00Z"));
+        when(repo.findByUsernameIgnoreCase("quick-reset")).thenReturn(Optional.of(entity));
+
+        AuthenticationService svc = new AuthenticationService(
+                Optional.of(repo),
+                Optional.empty(),
+                Optional.empty(),
+                Optional.of(userTaskRepository),
+                fixedClock,
+                Duration.ofMinutes(1)
+        );
+        Optional<String> res = svc.login("quick-reset", "password123");
+
+        assertThat(res).isPresent();
+
+        ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(repo).save(captor.capture());
+        UserEntity saved = captor.getValue();
+        assertThat(saved.getHydrationMl()).isZero();
+        assertThat(saved.getStreak()).isEqualTo(2);
+        verify(userTaskRepository).resetCompletionsByUserId(43L);
     }
 
     @Test

@@ -8,6 +8,7 @@ import io.github.luinara.sqs.task.UserTaskRepository;
 import io.github.luinara.sqs.user.UserEntity;
 import io.github.luinara.sqs.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,6 +42,7 @@ public class AuthenticationService {
     private static final int DEFAULT_STARTER_POKEMON_ID = 1;
     private static final int MIN_POKEMON_LEVEL = 1;
     private static final int HAPPINESS_DECAY_PER_MISSED_DAY = 10;
+    private static final Duration DEFAULT_DAILY_RESET_INTERVAL = Duration.ofHours(24);
 
     private final Map<String, String> users = new ConcurrentHashMap<>();
     private final Map<String, String> sessions = new ConcurrentHashMap<>();
@@ -52,6 +54,7 @@ public class AuthenticationService {
     private final PokeApiPokemonService pokeApiPokemonService; // optional
     private final UserTaskRepository userTaskRepository; // optional
     private final Clock clock;
+    private final Duration dailyResetInterval;
 
     @Autowired
     public AuthenticationService(
@@ -59,7 +62,8 @@ public class AuthenticationService {
             Optional<PokemonRepository> pokemonRepository,
             Optional<PokeApiPokemonService> pokeApiPokemonService,
             Optional<UserTaskRepository> userTaskRepository,
-            Clock clock
+            Clock clock,
+            @Value("${pokehabit.daily-reset-interval:PT24H}") Duration dailyResetInterval
     ) {
         // If a JPA repository is available (e.g., when running with database profile), use it.
         this.userRepository = userRepository.orElse(null);
@@ -67,6 +71,18 @@ public class AuthenticationService {
         this.pokeApiPokemonService = pokeApiPokemonService.orElse(null);
         this.userTaskRepository = userTaskRepository.orElse(null);
         this.clock = clock;
+        this.dailyResetInterval = sanitizeDailyResetInterval(dailyResetInterval);
+    }
+
+    public AuthenticationService(
+            Optional<UserRepository> userRepository,
+            Optional<PokemonRepository> pokemonRepository,
+            Optional<PokeApiPokemonService> pokeApiPokemonService,
+            Optional<UserTaskRepository> userTaskRepository,
+            Clock clock
+    ) {
+        this(userRepository, pokemonRepository, pokeApiPokemonService, userTaskRepository, clock,
+                DEFAULT_DAILY_RESET_INTERVAL);
     }
 
     public AuthenticationService(
@@ -113,6 +129,7 @@ public class AuthenticationService {
         this.pokeApiPokemonService = null;
         this.userTaskRepository = null;
         this.clock = Clock.systemUTC();
+        this.dailyResetInterval = DEFAULT_DAILY_RESET_INTERVAL;
     }
 
     /**
@@ -229,12 +246,14 @@ public class AuthenticationService {
 
         LocalDate lastDate = last.withOffsetSameInstant(ZoneOffset.UTC).toLocalDate();
 
+        if (isDailyResetDue(last, nowUtc)) {
+            resetDailyGoals(entity);
+        }
+
         if (lastDate.isEqual(today)) {
             entity.setLastLoginAt(nowUtc);
             return;
         }
-
-        resetDailyGoals(entity);
 
         if (lastDate.isEqual(today.minusDays(1))) {
             entity.setStreak(entity.getStreak() + 1);
@@ -254,6 +273,11 @@ public class AuthenticationService {
         if (userTaskRepository != null && entity.getId() != null) {
             userTaskRepository.resetCompletionsByUserId(entity.getId());
         }
+    }
+
+    private boolean isDailyResetDue(OffsetDateTime lastLoginAt, OffsetDateTime nowUtc) {
+        return Duration.between(lastLoginAt.toInstant(), nowUtc.toInstant())
+                .compareTo(dailyResetInterval) >= 0;
     }
 
     private void applyInactivityPenalty(UserEntity entity, long missedDays) {
@@ -398,6 +422,14 @@ public class AuthenticationService {
 
     private static String normalizeUsername(String username) {
         return username.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private static Duration sanitizeDailyResetInterval(Duration interval) {
+        if (interval == null || interval.isZero() || interval.isNegative()) {
+            return DEFAULT_DAILY_RESET_INTERVAL;
+        }
+
+        return interval;
     }
 
     private record LoginFailure(int attempts, Instant blockedUntil) {
