@@ -1,17 +1,19 @@
 .dashboard-page {
   display: grid;
+  width: min(1500px, calc(100% - 1.5rem));
   gap: 1.25rem;
 }
 
 .dashboard-page__layout {
   display: grid;
-  grid-template-columns: minmax(18rem, 24rem) minmax(0, 1fr);
-  gap: 1.25rem;
-  align-items: start;
+  grid-template-columns: minmax(16rem, 21rem) minmax(0, 1fr) minmax(17rem, 21rem);
+  gap: 1rem;
+  align-items: stretch;
 }
 
 .dashboard-page__sidebar,
-.dashboard-page__content {
+.dashboard-page__content,
+.dashboard-page__insights {
   min-width: 0;
 }
 
@@ -20,8 +22,34 @@
   gap: 1.25rem;
 }
 
-@media (max-width: 1024px) {
+.dashboard-page__insights {
+  position: sticky;
+  top: 1rem;
+  align-self: stretch;
+}
+
+.dashboard-page__insights sqs-quality-gate-card {
+  display: block;
+  height: 100%;
+}
+
+@media (max-width: 1280px) {
+  .dashboard-page__layout {
+    grid-template-columns: minmax(14.5rem, 18rem) minmax(0, 1fr) minmax(15.5rem, 18rem);
+    gap: 0.85rem;
+  }
+
+  .dashboard-page__insights {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 900px) {
   .dashboard-page__layout {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-page__insights {
+    grid-column: auto;
   }
 }

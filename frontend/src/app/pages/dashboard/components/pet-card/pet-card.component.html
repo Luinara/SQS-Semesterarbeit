@@ -28,30 +28,76 @@
       </div>
     }
 
+    @if (isCareHintVisible()) {
+      <div
+        class="pet-card__care-toast"
+        [class.pet-card__care-toast--needs-care]="petCareState() === 'needs-care'"
+        [class.pet-card__care-toast--ready-to-feed]="petCareState() === 'ready-to-feed'"
+        [class.pet-card__care-toast--growing]="petCareState() === 'growing'"
+        [class.pet-card__care-toast--thriving]="petCareState() === 'thriving'"
+        role="status"
+      >
+        <span>{{ careStateLabel() }}</span>
+        <strong>{{ careStateHint() }}</strong>
+      </div>
+    }
+
     <div class="pet-card__body">
-      <sqs-pet-visual
-        [petName]="displayName()"
-        [level]="currentPet.level"
-        [weatherScene]="weatherScene()"
-        [careState]="petCareState()"
-        [spriteUrl]="displaySpriteUrl()"
-        [pokemonTypes]="displayPokemonTypes()"
-        [pokemonSource]="displayPokemonSource()"
-        [isLevelingUp]="isLevelingUp()"
-      />
+      <div class="pet-card__showcase">
+        <sqs-pet-visual
+          [petName]="displayName()"
+          [level]="currentPet.level"
+          [weatherScene]="weatherScene()"
+          [careState]="petCareState()"
+          [spriteUrl]="displaySpriteUrl()"
+          [pokemonTypes]="displayPokemonTypes()"
+          [pokemonSource]="displayPokemonSource()"
+          [isLevelingUp]="isLevelingUp()"
+        />
+
+        <div class="pet-card__footer">
+          <div class="pet-card__hint">
+            <strong>Training kostet {{ feedCostLabel() }}.</strong>
+            <span>
+              Level-Ups sind frühestens alle zwei Tage möglich. Mit dem Testbutton kannst du die
+              Animation sofort prüfen.
+            </span>
+          </div>
+
+          <div class="pet-card__actions">
+            <button
+              sqsButton
+              [disabled]="isBusy() || !canFeed()"
+              [variant]="isBusy() || !canFeed() ? 'secondary' : 'primary'"
+              (click)="requestFeeding()"
+            >
+              {{ isBusy() ? 'Speichert...' : 'Pokémon trainieren' }}
+            </button>
+
+            <button
+              sqsButton
+              variant="soft"
+              type="button"
+              [disabled]="isBusy()"
+              (click)="requestTestLevelUp()"
+            >
+              {{ isBusy() ? 'Bitte warten...' : 'Level-Up testen' }}
+            </button>
+
+            <button
+              sqsButton
+              variant="ghost"
+              type="button"
+              [disabled]="isBusy()"
+              (click)="requestTestMotivationDecay()"
+            >
+              {{ isBusy() ? 'Bitte warten...' : 'Motivation senken' }}
+            </button>
+          </div>
+        </div>
+      </div>
 
       <div class="pet-card__details">
-        <div
-          class="pet-card__care-state"
-          [class.pet-card__care-state--needs-care]="petCareState() === 'needs-care'"
-          [class.pet-card__care-state--ready-to-feed]="petCareState() === 'ready-to-feed'"
-          [class.pet-card__care-state--growing]="petCareState() === 'growing'"
-          [class.pet-card__care-state--thriving]="petCareState() === 'thriving'"
-        >
-          <span>{{ careStateLabel() }}</span>
-          <strong>{{ careStateHint() }}</strong>
-        </div>
-
         <div class="pet-card__weather">
           <div class="pet-card__weather-copy">
             <span class="pet-card__weather-label">Aktuelle Wetter-Szene</span>
@@ -130,47 +176,6 @@
             icon="tasks"
             tone="slate"
           />
-        </div>
-
-        <div class="pet-card__footer">
-          <div class="pet-card__hint">
-            <strong>Training kostet {{ feedCostLabel() }}.</strong>
-            <span>
-              Level-Ups sind frühestens alle zwei Tage möglich. Mit dem Testbutton kannst du die
-              Animation sofort prüfen.
-            </span>
-          </div>
-
-          <div class="pet-card__actions">
-            <button
-              sqsButton
-              [disabled]="isBusy() || !canFeed()"
-              [variant]="isBusy() || !canFeed() ? 'secondary' : 'primary'"
-              (click)="requestFeeding()"
-            >
-              {{ isBusy() ? 'Speichert...' : 'Pokémon trainieren' }}
-            </button>
-
-            <button
-              sqsButton
-              variant="soft"
-              type="button"
-              [disabled]="isBusy()"
-              (click)="requestTestLevelUp()"
-            >
-              {{ isBusy() ? 'Bitte warten...' : 'Level-Up testen' }}
-            </button>
-
-            <button
-              sqsButton
-              variant="ghost"
-              type="button"
-              [disabled]="isBusy()"
-              (click)="requestTestMotivationDecay()"
-            >
-              {{ isBusy() ? 'Bitte warten...' : 'Motivation senken' }}
-            </button>
-          </div>
         </div>
       </div>
     </div>
