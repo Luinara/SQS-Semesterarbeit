@@ -1,34 +1,59 @@
-##############################################
-# Java / Maven
-##############################################
+# ---------------------------------------------------------------------------
+# PokeHabit / SQS Semesterarbeit
+# Keep source, documentation, lockfiles, migrations, Dockerfiles and wrapper
+# scripts in Git. Ignore local dependencies, build output, reports and secrets.
+# ---------------------------------------------------------------------------
 
-# Compiled class files
+# ---------------------------------------------------------------------------
+# Operating system noise
+# ---------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ---------------------------------------------------------------------------
+# Editors and IDEs
+# ---------------------------------------------------------------------------
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.factorypath
+nbproject/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# Temporary editor files
+*.swp
+*.swo
+*~
+\#*\#
+.\#*
+
+# ---------------------------------------------------------------------------
+# Local secrets and environment files
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.template
+*.local
+
+# ---------------------------------------------------------------------------
+# Java / Maven / Spring Boot
+# ---------------------------------------------------------------------------
 *.class
-
-# Log files
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package / archive files
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# Virtual machine crash logs
-hs_err_pid*
-replay_pid*
-
-# Maven build output
 target/
+backend/target/
+
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -36,111 +61,140 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
+
+# Keep backend/mvnw, backend/mvnw.cmd and wrapper properties tracked.
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
-##############################################
-# TypeScript / Node.js / React
-##############################################
+# JVM crash logs
+hs_err_pid*
+replay_pid*
 
-# Dependencies
+# ---------------------------------------------------------------------------
+# Node / Angular / TypeScript
+# ---------------------------------------------------------------------------
 node_modules/
+frontend/node_modules/
+db/node_modules/
+
+.angular/
+frontend/.angular/
+.tmp/
+frontend/.tmp/
+.vite/
 .pnp
 .pnp.js
 
-# Build output
 dist/
+frontend/dist/
 build/
 out/
 .next/
 
-# TypeScript incremental compilation
 *.tsbuildinfo
 
-# Environment variables (keep .env.example)
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Keep package-lock.json files tracked.
+!package-lock.json
+!frontend/package-lock.json
+!db/package-lock.json
 
-# Test coverage
+# ---------------------------------------------------------------------------
+# Tests, coverage and reports
+# ---------------------------------------------------------------------------
 coverage/
+frontend/coverage/
 .nyc_output/
-quality-output/
+playwright-report/
+frontend/playwright-report/
+test-results/
+frontend/test-results/
 
-# Package manager logs
+surefire-reports/
+failsafe-reports/
+jacoco.exec
+
+quality-output/
+quality_output/
+quality/reports/
+
+# ---------------------------------------------------------------------------
+# Documentation build output
+# ---------------------------------------------------------------------------
+site/
+docs/site/
+
+# Python tooling for docs
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---------------------------------------------------------------------------
+# Database and Prisma local artifacts
+# ---------------------------------------------------------------------------
+*.db
+*.sqlite
+*.sqlite3
+prisma/dev.db
+db/prisma/dev.db
+
+# Keep schema, seeds and migrations tracked.
+!db/prisma/schema.prisma
+!db/prisma/seed.ts
+!db/prisma/migrations/
+!db/prisma/migrations/**
+
+# ---------------------------------------------------------------------------
+# Logs and runtime output
+# ---------------------------------------------------------------------------
+*.log
+logs/
+*.pid
+*.seed
+*.pid.lock
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Vite
-.vite/
+# ---------------------------------------------------------------------------
+# Docker and local compose overrides
+# ---------------------------------------------------------------------------
+docker-compose.override.yml
+compose.override.yml
 
-# Playwright test results
-playwright-report/
-test-results/
-
-##############################################
-# IDE / Editor files
-##############################################
-
-# IntelliJ IDEA / JetBrains
-.idea/
-*.iml
-*.iws
-*.ipr
-
-# Eclipse
-.classpath
-.project
-.settings/
-.factorypath
-
-# Visual Studio Code
-.vscode/
-
-# NetBeans
-nbproject/
-nbbuild/
-nbdist/
-.nb-gradle/
-
-# Vim / Emacs swap files
-*.swp
-*.swo
-*~
-\#*\#
-.\#*
-
-# macOS metadata
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows thumbnails / desktop.ini
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-##############################################
-# SonarQube
-##############################################
-
+# ---------------------------------------------------------------------------
+# Analysis tools
+# ---------------------------------------------------------------------------
 .sonar/
 .scannerwork/
 
-##############################################
-# Miscellaneous
-##############################################
+# ---------------------------------------------------------------------------
+# Archives and generated packages
+# ---------------------------------------------------------------------------
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
 
-# Gradle (in case of future migration)
+# ---------------------------------------------------------------------------
+# Gradle, in case the backend is migrated later
+# ---------------------------------------------------------------------------
 .gradle/
 gradle-app.setting
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
 
-# Local agent notes
-sqsagent.md
-SQSAGENT.md
+# ---------------------------------------------------------------------------
+# Generated GitHub automation scratch data
+# ---------------------------------------------------------------------------
+.github/java-upgrade/
+.github/modernize/
