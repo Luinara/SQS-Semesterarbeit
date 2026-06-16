@@ -262,7 +262,7 @@ describe("app-state.logic", () => {
       new Date("2026-06-01T08:00:00.000Z"),
     );
 
-    expect(resetState.pet.happiness).toBe(62);
+    expect(resetState.pet.happiness).toBe(70);
     expect(resetState.pet.dailyHappinessGained).toBe(0);
   });
 
@@ -306,7 +306,7 @@ describe("app-state.logic", () => {
       new Date("2026-06-14T08:00:00.000Z"),
     );
 
-    expect(resetState.pet.happiness).toBe(44);
+    expect(resetState.pet.happiness).toBe(60);
     expect(resetState.pet.lastHappinessDecayAt).toBe(
       "2026-06-14T08:00:00.000Z",
     );

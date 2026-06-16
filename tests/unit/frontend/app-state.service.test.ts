@@ -267,8 +267,8 @@ describe("AppStateService", () => {
     initialSnapshot.gameState.pet.happiness = 60;
     initialSnapshot.backendGameState.happiness = 60;
     const decayedSnapshot = createSnapshot(3, 40);
-    decayedSnapshot.gameState.pet.happiness = 40;
-    decayedSnapshot.backendGameState.happiness = 40;
+    decayedSnapshot.gameState.pet.happiness = 50;
+    decayedSnapshot.backendGameState.happiness = 50;
 
     const backendApi = createBackendApiMock({
       login: initialSnapshot,
@@ -283,18 +283,18 @@ describe("AppStateService", () => {
       "mira",
       "bulbasaur",
     );
-    expect(service.pet()?.happiness).toBe(40);
+    expect(service.pet()?.happiness).toBe(50);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "info",
-      message: "Motivationstest ausgefÃ¼hrt: 60% -> 40%.",
+      message: "Motivationstest ausgefuehrt: 60% -> 50%.",
     });
   });
 
-  it("zeigt Wachstumverlust, wenn Motivation bereits bei null ist", async () => {
+  it("laesst Wachstum unveraendert, wenn Motivation bereits bei null ist", async () => {
     const initialSnapshot = createSnapshot(3, 50);
     initialSnapshot.gameState.pet.happiness = 0;
     initialSnapshot.backendGameState.happiness = 0;
-    const decayedSnapshot = createSnapshot(3, 30);
+    const decayedSnapshot = createSnapshot(3, 50);
     decayedSnapshot.gameState.pet.happiness = 0;
     decayedSnapshot.backendGameState.happiness = 0;
 
@@ -308,10 +308,10 @@ describe("AppStateService", () => {
     await service.testMotivationDecay();
 
     expect(service.pet()?.happiness).toBe(0);
-    expect(service.pet()?.growthProgress).toBe(30);
+    expect(service.pet()?.growthProgress).toBe(50);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "info",
-      message: "Motivation ist bereits bei 0%. Wachstum 50 -> 30.",
+      message: "Motivation ist bereits bei 0%.",
     });
   });
 

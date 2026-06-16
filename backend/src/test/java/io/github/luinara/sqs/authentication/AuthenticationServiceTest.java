@@ -416,7 +416,7 @@ class AuthenticationServiceTest {
         assertThat(saved.getStreak()).isEqualTo(1);
         assertThat(saved.getPokemonLevel()).isEqualTo(7);
         assertThat(saved.getPokemonXp()).isZero();
-        assertThat(saved.getHappiness()).isEqualTo(25);
+        assertThat(saved.getHappiness()).isEqualTo(35);
         assertThat(saved.getHydrationMl()).isZero();
         assertThat(saved.getLastLevelUpAt()).isNull();
         assertThat(saved.getLastLoginAt()).isEqualTo(OffsetDateTime.parse("2026-06-16T10:00:00Z"));
@@ -424,7 +424,7 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void db_login_lowersGrowthWhenMotivationPenaltyExceedsHappiness() {
+    void db_login_clampsMotivationAtZeroWithoutLoweringGrowth() {
         BCryptPasswordEncoder enc = new BCryptPasswordEncoder();
         String hash = enc.encode("password123");
         Clock fixedClock = Clock.fixed(Instant.parse("2026-06-16T10:00:00Z"), ZoneOffset.UTC);
@@ -452,7 +452,7 @@ class AuthenticationServiceTest {
         UserEntity saved = captor.getValue();
         assertThat(saved.getPokemonLevel()).isEqualTo(1);
         assertThat(saved.getHappiness()).isZero();
-        assertThat(saved.getPokemonXp()).isEqualTo(15);
+        assertThat(saved.getPokemonXp()).isEqualTo(30);
     }
 
     @Test

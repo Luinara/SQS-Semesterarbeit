@@ -26,7 +26,7 @@ public class UserService {
     private static final int WATER_GOAL_ML = 3000;
     private static final int FIRST_EVOLUTION_LEVEL = 15;
     private static final int FINAL_EVOLUTION_LEVEL = 35;
-    private static final int HAPPINESS_DECAY_PER_MISSED_DAY = 20;
+    private static final int HAPPINESS_DECAY_PER_MISSED_DAY = 10;
 
     private final UserRepository userRepository;
     private final PokemonRepository pokemonRepository;
@@ -230,12 +230,7 @@ public class UserService {
 
     private void applyMotivationDecay(UserEntity user, int motivationLoss) {
         int currentHappiness = user.getHappiness();
-        int remainingLoss = Math.max(0, motivationLoss - currentHappiness);
 
         user.setHappiness(Math.max(0, currentHappiness - motivationLoss));
-
-        if (remainingLoss > 0) {
-            user.setPokemonXp(Math.max(0, user.getPokemonXp() - remainingLoss));
-        }
     }
 }

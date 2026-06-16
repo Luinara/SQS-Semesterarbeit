@@ -40,7 +40,7 @@ public class AuthenticationService {
     private static final Duration LOGIN_LOCKOUT_DURATION = Duration.ofMinutes(15);
     private static final int DEFAULT_STARTER_POKEMON_ID = 1;
     private static final int MIN_POKEMON_LEVEL = 1;
-    private static final int HAPPINESS_DECAY_PER_MISSED_DAY = 20;
+    private static final int HAPPINESS_DECAY_PER_MISSED_DAY = 10;
 
     private final Map<String, String> users = new ConcurrentHashMap<>();
     private final Map<String, String> sessions = new ConcurrentHashMap<>();
@@ -276,13 +276,8 @@ public class AuthenticationService {
 
     private void applyMotivationDecay(UserEntity entity, int motivationLoss) {
         int currentHappiness = entity.getHappiness();
-        int remainingLoss = Math.max(0, motivationLoss - currentHappiness);
 
         entity.setHappiness(Math.max(0, currentHappiness - motivationLoss));
-
-        if (remainingLoss > 0) {
-            entity.setPokemonXp(Math.max(0, entity.getPokemonXp() - remainingLoss));
-        }
     }
 
     /**
