@@ -16,6 +16,28 @@ den Spielstand waehrend einer laufenden Session regelmaessig neu.
 
 ## Automatisierter Nachweis
 
+### Backend-JUnit
+
+Der Service-Test
+`backend/src/test/java/io/github/luinara/sqs/user/UserServiceTest.java`
+enthaelt den technischen Nachweis fuer das kurze Reset-Intervall:
+
+- `getGameState_resetsDailyProgress_afterConfiguredIntervalWithoutNewLogin`
+  instanziiert `UserService` mit `Duration.ofMinutes(1)`.
+- Der Test setzt `lastLoginAt` auf `2026-06-16T10:00:00Z` und die feste
+  Test-Clock auf `2026-06-16T10:01:00Z`.
+- Erwartet wird, dass `waterLevel` auf `0` faellt,
+  `lastDailyResetAt` gesetzt wird, `resetCompletionsByUserId(...)`
+  aufgerufen wird und der User gespeichert wird.
+- `getGameState_doesNotResetAgain_beforeNextInterval` prueft den Gegenfall:
+  Nach einem Reset um `10:01:00Z` darf bei `10:01:30Z` noch kein weiterer
+  Reset passieren.
+
+Damit ist die Backend-Regel fuer `pokehabit.daily-reset-interval=PT1M`
+automatisiert abgesichert, ohne im Test real eine Minute warten zu muessen.
+
+### Browser-E2E
+
 Der Playwright-Test `tests/e2e/daily-reset.spec.ts` simuliert das Reset-Intervall
 ueber gemockte API-Antworten:
 
@@ -47,7 +69,10 @@ Manueller Kurztest ohne 24 Stunden Wartezeit:
   Reset und prueft den sichtbaren Browserzustand.
 - Echte App lokal: Backend nur temporaer mit
   `pokehabit.daily-reset-interval=PT1M` starten, im Dashboard eine Quest/Wasser
-  erledigen, mindestens eine Minute warten und den Auto-Refresh abwarten.
+  erledigen, mindestens eine Minute warten und den Auto-Refresh abwarten. Das
+  Dashboard fragt den Spielstand regelmaessig neu ab; dadurch wird der Reset
+  kurz nach Ablauf des Intervalls sichtbar, ohne dass der User neu einloggen
+  muss.
 - Wichtig: Die eingecheckte Dev-Konfiguration bleibt auf `PT24H`.
 
 ## Testfall DR-01: Buttons vor Ablauf bleiben erledigt

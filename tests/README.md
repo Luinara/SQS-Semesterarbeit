@@ -2,7 +2,8 @@
 
 Dieser Ordner ist die zentrale Sammelstelle für repository-weite Tests.
 Die Anwendung selbst bleibt in `frontend/` und `backend/`, aber die Tests sind bewusst nach Testart getrennt.
-Die abgabeorientierte Zuordnung zur Testpyramide steht in `docs/test-pyramid.md`.
+Die abgabeorientierte Zuordnung zur Testpyramide steht in
+`docs/04-quality/test-pyramid.md`.
 
 | Directory       | Purpose                                              | Primary tools                    |
 | --------------- | ---------------------------------------------------- | -------------------------------- |
@@ -19,6 +20,9 @@ Die abgabeorientierte Zuordnung zur Testpyramide steht in `docs/test-pyramid.md`
 - Frontend-E2E-Tests laufen über `frontend/playwright.config.ts`.
 - Die Playwright-Spezifikationen liegen zentral unter `tests/e2e/`.
 - Backend-Tests bleiben technisch unter `backend/src/test/java/`, folgen aber derselben fachlichen Einteilung in Unit-, Integrations- und Architekturtests.
+- Backend-Tests sollten lokal mit einem JDK laufen. Fuer Java 25 aktiviert Maven
+  automatisch ein lokales Kompatibilitaetsprofil; in CI bleibt Java 21 mit
+  JaCoCo-Coverage massgeblich.
 
 ## Aktueller Frontend-Fokus
 
@@ -72,7 +76,7 @@ npm run security:frontend
 ```
 
 Der Offline-Teil liegt in `tests/unit/frontend/npm-security.test.ts`.
-Die fachliche Doku steht in `docs/frontend-npm-security.md`.
+Die fachliche Doku steht in `docs/04-quality/frontend-npm-security.md`.
 
 ## Naming conventions
 
