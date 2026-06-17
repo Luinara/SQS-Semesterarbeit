@@ -1,6 +1,8 @@
 <header class="top-bar">
   <div class="top-bar__brand">
-    <span class="top-bar__logo">PH</span>
+    <span class="top-bar__logo" aria-hidden="true">
+      <img src="egg.svg" alt="" />
+    </span>
 
     <div>
       <p class="top-bar__eyebrow">PokeHabit</p>
@@ -16,18 +18,6 @@
         <span>{{ completedTasks() }}/{{ totalTasks() }} Quests erledigt</span>
       </div>
     </div>
-
-    <div class="top-bar__pill top-bar__pill--soft">
-      <strong>{{ availableFoodPoints() }}</strong>
-      <span>Trainingspunkte</span>
-    </div>
-
-    @if (hasDemoAccess()) {
-      <div class="top-bar__pill top-bar__pill--demo" aria-label="Demo-Zugang">
-        <strong>Demo-Zugang</strong>
-        <span>{{ demoUsername() }} / {{ demoPassword() }}</span>
-      </div>
-    }
 
     <button sqsButton size="sm" variant="ghost" [disabled]="isBusy()" (click)="requestLogout()">
       Abmelden

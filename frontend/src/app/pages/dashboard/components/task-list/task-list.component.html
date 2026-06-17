@@ -11,10 +11,6 @@
         <strong>{{ completedTasks() }}/{{ tasks().length }}</strong>
         <span>Quests</span>
       </div>
-      <div class="task-list__summary-item">
-        <strong>{{ availableFoodPoints() }}</strong>
-        <span>Trainingspunkte</span>
-      </div>
     </div>
   </header>
 
@@ -39,7 +35,7 @@
       <sqs-hydration-gauge
         [task]="hydrationTask"
         [waterLevel]="waterLevel()"
-        [isBusy]="isBusy()"
+        [busyAmountMl]="busyWaterAmountMl()"
         (waterAdded)="addWater($event)"
       />
     }
@@ -49,7 +45,7 @@
         [task]="task"
         [isLocked]="isTaskLocked(task)"
         [lockedReason]="getTaskLockedReason(task)"
-        [isBusy]="isBusy()"
+        [isBusy]="isTaskBusy(task)"
         (completeRequested)="finishTask($event)"
       />
     }

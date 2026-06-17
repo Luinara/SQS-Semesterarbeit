@@ -55,6 +55,7 @@ nav:
       - Übergabe User Actions: 03-api/user-actions-handover.md
   - '04 Qualität':
       - Testpyramide: 04-quality/test-pyramid.md
+      - Daily-Reset-Testfaelle: 04-quality/daily-reset-testfaelle.md
       - Frontend npm Security: 04-quality/frontend-npm-security.md
       - Security Hotspots: 04-quality/security-hotspots.md
       - Crypto Random IDs: 04-quality/crypto-random-ids.md

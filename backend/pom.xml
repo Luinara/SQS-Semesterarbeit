@@ -28,6 +28,8 @@
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <archunit.version>1.3.0</archunit.version>
+        <jacoco.skip>false</jacoco.skip>
+        <net.bytebuddy.experimental>false</net.bytebuddy.experimental>
         <!-- JaCoCo XML report path – used when running `mvn sonar:sonar` locally.
              The CI uses sonarqube-scan-action with root sonar-project.properties instead. -->
         <sonar.coverage.jacoco.xmlReportPaths>
@@ -123,6 +125,9 @@
                         <exclude>**/*IT.java</exclude>
                         <exclude>**/*IntegrationTest.java</exclude>
                     </excludes>
+                    <systemPropertyVariables>
+                        <net.bytebuddy.experimental>${net.bytebuddy.experimental}</net.bytebuddy.experimental>
+                    </systemPropertyVariables>
                     <!-- Force forking so the agent is effective -->
                     <forkCount>1</forkCount>
                     <reuseForks>true</reuseForks>
@@ -154,6 +159,9 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.12</version>
+                <configuration>
+                    <skip>${jacoco.skip}</skip>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -230,5 +238,20 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>java-25-local-test-compatibility</id>
+            <activation>
+                <jdk>[25,)</jdk>
+            </activation>
+            <properties>
+                <!-- CI uses Java 21. This keeps local Java 25 IDE/Maven test runs usable
+                     with the JaCoCo and Byte Buddy versions managed by this project. -->
+                <jacoco.skip>true</jacoco.skip>
+                <net.bytebuddy.experimental>true</net.bytebuddy.experimental>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

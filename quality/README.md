@@ -42,6 +42,7 @@ Pflichtchecks:
 Optional:
 
 - `npm run test:e2e` gegen den Docker-Frontend-Service, wenn App und Backend erreichbar sind.
+- Dabei wird `PLAYWRIGHT_FULLSTACK=1` gesetzt. So läuft zusätzlich ein Smoke-Test ohne `/api`-Mocking, der Registrierung, Session-Cookie, Nginx-Proxy, Backend und Persistenz nach Reload prüft.
 
 Die Ergebnisse liegen im Docker-Volume `quality_output` und werden vom Hub unter `/reports/`
 ausgeliefert.

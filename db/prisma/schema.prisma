@@ -39,6 +39,7 @@ model User {
 
   streak Int @default(0)
   lastTaskCompletionDate DateTime? @map("last_task_completion_date")
+  lastDailyResetAt DateTime? @map("last_daily_reset_at")
 
   pokemonLevel Int @default(1) @map("pokemon_level")
   pokemonXp Int @default(0) @map("pokemon_xp")

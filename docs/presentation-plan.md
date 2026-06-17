@@ -13,14 +13,14 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
 
 2. Browser-Tabs öffnen:
 
-   | Tab | URL | Zweck |
-   | --- | --- | --- |
-   | App | `http://localhost:3000` | Live-Demo |
-   | Backend | `http://localhost:8181/api/tasks` | öffentlicher REST-Endpunkt |
-   | Quality Hub | `http://localhost:8088` | Tests, Coverage, Security, E2E |
-   | Testpyramide | `docs/test-pyramid.md` | SQS-Testnachweis |
-   | Doku | ReadTheDocs-URL oder lokale `docs/index.md` | arc42, ADRs, C4 |
-   | C4 | `docs/diagrams/c4-diagram.md` | Architekturüberblick |
+   | Tab          | URL                                         | Zweck                          |
+   | ------------ | ------------------------------------------- | ------------------------------ |
+   | App          | `http://localhost:3000`                     | Live-Demo                      |
+   | Backend      | `http://localhost:8181/api/tasks`           | öffentlicher REST-Endpunkt     |
+   | Quality Hub  | `http://localhost:8088`                     | Tests, Coverage, Security, E2E |
+   | Testpyramide | `docs/test-pyramid.md`                      | SQS-Testnachweis               |
+   | Doku         | ReadTheDocs-URL oder lokale `docs/index.md` | arc42, ADRs, C4                |
+   | C4           | `docs/diagrams/c4-diagram.md`               | Architekturüberblick           |
 
 3. Demo-Login bereithalten:
 
@@ -29,31 +29,30 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
    ```
 
 4. Fallback, falls Live-Docker hakt:
-
    - Quality Hub Screenshot oder letzter Report aus dem Docker-Volume zeigen.
    - C4-Diagramm und Testkonzept aus der Doku zeigen.
    - Kurz sagen: "Die App ist dockerisiert; wenn der Live-Start auf dem Vorführrechner hängt, zeigen wir den letzten lokal erzeugten Quality-Report."
 
 ## 15-Minuten-Ablauf
 
-| Zeit | Inhalt | Was zeigen | Kernaussage |
-| --- | --- | --- | --- |
-| 0:00 - 1:00 | Einstieg | App-Startseite oder Dashboard | "PokeHabit verbindet kleine Self-Care-Aufgaben mit einem Pokémon-Partner." |
-| 1:00 - 3:30 | Live-Demo Nutzerfluss | Registrierung/Login, Dashboard, Quest, Wasser, Training, Logout | "Die App ist nicht nur ein Mockup; Frontend und Backend sprechen über echte REST-Endpunkte." |
-| 3:30 - 5:00 | API und Security | `/api/tasks`, geschützter Game-State, Session-Cookie erklären | "Es gibt öffentliche und geschützte Endpunkte, Passwörter werden gehasht, Sessions laufen serverseitig." |
-| 5:00 - 6:30 | Externer Service | Wetter-Szene im Dashboard oder Code `WeatherService` / `OpenMeteoWeatherAdapter` | "Die App nutzt Open-Meteo für echte Wetterdaten und passt die Dashboard-Szene daran an." |
-| 6:30 - 8:30 | Architektur | C4-Diagramm + Structurizr-DSL | "Das System ist in Frontend, Backend, Persistenz, externe Dienste und Quality Hub getrennt." |
-| 8:30 - 11:30 | Testkonzept | Testpyramide + Quality Hub | "Die Testpyramide ordnet Unit-, Integrations-, Security-, Architektur- und E2E-Tests ein. Der Quality Hub führt die Checks sichtbar aus." |
-| 11:30 - 13:00 | Doku und Entscheidungen | arc42, ADRs, ReadTheDocs | "Die wichtigsten Architekturentscheidungen sind nachvollziehbar dokumentiert." |
-| 13:00 - 14:30 | Risiken und Grenzen | arc42 Risiken | "Wir benennen bewusst Grenzen: Deployment-Hardening, externe APIs, Tageshistorie." |
-| 14:30 - 15:00 | Abschluss | Quality Hub oder App | "Das Projekt ist per Docker startbar und die Qualitätssicherung ist reproduzierbar." |
+| Zeit          | Inhalt                  | Was zeigen                                                                       | Kernaussage                                                                                                                               |
+| ------------- | ----------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| 0:00 - 1:00   | Einstieg                | App-Startseite oder Dashboard                                                    | "PokeHabit verbindet kleine Self-Care-Aufgaben mit einem Pokémon-Partner."                                                                |
+| 1:00 - 3:30   | Live-Demo Nutzerfluss   | Registrierung/Login, Dashboard, Quest, Wasser, Level-Up-Test, Logout             | "Die App ist nicht nur ein Mockup; Frontend und Backend sprechen über echte REST-Endpunkte."                                              |
+| 3:30 - 5:00   | API und Security        | `/api/tasks`, geschützter Game-State, Session-Cookie erklären                    | "Es gibt öffentliche und geschützte Endpunkte, Passwörter werden gehasht, Sessions laufen serverseitig."                                  |
+| 5:00 - 6:30   | Externer Service        | Wetter-Szene im Dashboard oder Code `WeatherService` / `OpenMeteoWeatherAdapter` | "Die App nutzt Open-Meteo für echte Wetterdaten und passt die Dashboard-Szene daran an."                                                  |
+| 6:30 - 8:30   | Architektur             | C4-Diagramm + Structurizr-DSL                                                    | "Das System ist in Frontend, Backend, Persistenz, externe Dienste und Quality Hub getrennt."                                              |
+| 8:30 - 11:30  | Testkonzept             | Testpyramide + Quality Hub                                                       | "Die Testpyramide ordnet Unit-, Integrations-, Security-, Architektur- und E2E-Tests ein. Der Quality Hub führt die Checks sichtbar aus." |
+| 11:30 - 13:00 | Doku und Entscheidungen | arc42, ADRs, ReadTheDocs                                                         | "Die wichtigsten Architekturentscheidungen sind nachvollziehbar dokumentiert."                                                            |
+| 13:00 - 14:30 | Risiken und Grenzen     | arc42 Risiken                                                                    | "Wir benennen bewusst Grenzen: Deployment-Hardening, externe APIs, Tageshistorie."                                                        |
+| 14:30 - 15:00 | Abschluss               | Quality Hub oder App                                                             | "Das Projekt ist per Docker startbar und die Qualitätssicherung ist reproduzierbar."                                                      |
 
 ## Sprechtext pro Abschnitt
 
 ### Einstieg
 
 "Wir zeigen PokeHabit, eine kleine Self-Care-Web-App. Nutzer erledigen tägliche
-Aufgaben, trinken Wasser und trainieren dadurch einen Pokémon-Partner. Für die
+Aufgaben, trinken Wasser und begleiten dadurch einen Pokémon-Partner. Für die
 Semesterarbeit war uns wichtig, nicht nur eine Oberfläche zu bauen, sondern den
 Qualitätsnachweis lokal sichtbar zu machen."
 
@@ -61,7 +60,7 @@ Qualitätsnachweis lokal sichtbar zu machen."
 
 "Ich logge mich mit dem Demo-User ein. Das Dashboard lädt den Nutzerzustand aus
 dem Backend. Wenn ich eine Quest abschließe oder Wasser trinke, geht das über
-die API zurück ins Backend und wird persistiert. Das Training verändert XP,
+die API zurück ins Backend und wird persistiert. Quest-Fortschritt verändert XP,
 Level und später auch die Entwicklung des Pokémon."
 
 ### API und Security
@@ -114,25 +113,25 @@ Quality-Nachweis der relevante Fokus."
 
 ## Mögliche Fragen und gute Antworten
 
-| Frage | Antwort |
-| --- | --- |
-| Warum Angular statt React? | "React wäre möglich gewesen und ist flexibler. Dagegen sprach für uns, dass React Routing, State-Struktur, Guards, Formularansatz und Projektkonventionen stärker offenlässt. Angular bringt diese Struktur direkter mit, was für Testbarkeit, Teamarbeit und klare Trennung in dieser Semesterarbeit besser gepasst hat." |
-| Wo ist der externe Service? | "`WeatherService` im Frontend nutzt den `OpenMeteoWeatherAdapter`. Der Adapter ruft Open-Meteo Geocoding für die Stadt und danach die Forecast-API für Temperatur, Wettercode und Tag/Nacht ab." |
-| Was passiert, wenn die Wetter-API down ist? | "Die App bleibt nutzbar. Im Dashboard wird eine Fehlermeldung angezeigt, und die Wetter-Szene fällt auf den lokalen Standardzustand zurück." |
-| Was ist euer Security-Nachweis? | "Session-Cookie, Passwort-Hashing, Login-Lockout, Tests für unauthentifizierte Requests und npm Security Check im Quality Hub." |
-| Wie erfüllt ihr die Testpyramide? | "Die Zuordnung steht in `docs/test-pyramid.md`: Backend-Unit- und Integrationstests, Frontend-Unit-Tests, ArchUnit, Security-nahe Controller-Tests und Playwright-E2E." |
-| Wo sieht man Coverage? | "Im Quality Hub über JaCoCo für Backend und Vitest Coverage für Frontend." |
-| Warum eigener Quality Hub statt nur Terminal? | "Für die Abgabe ist es schneller prüfbar: ein Docker-Start, ein Dashboard, Links zu Logs und Reports." |
-| Was würdet ihr als nächstes verbessern? | "Als Nächstes würden wir vor allem das Produktgefühl ausbauen: ein schöneres, stärker animiertes UI, mehr Pokémon-Auswahl statt nur fester Starter und eine Sammelbox, in der man Pokémon horten kann, eventuell auch mit seltenen Shinies. Danach wären eigene Tasks spannend: Nutzer könnten Aufgaben selbst anlegen und dafür vorgefertigte Punkte-Templates wählen, damit die Gamification fair bleibt. Technisch kämen dann noch produktives Deployment-Hardening und besseres Caching dazu." |
+| Frage                                         | Antwort                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Warum Angular statt React?                    | "React wäre möglich gewesen und ist flexibler. Dagegen sprach für uns, dass React Routing, State-Struktur, Guards, Formularansatz und Projektkonventionen stärker offenlässt. Angular bringt diese Struktur direkter mit, was für Testbarkeit, Teamarbeit und klare Trennung in dieser Semesterarbeit besser gepasst hat."                                                                                                                                                                         |
+| Wo ist der externe Service?                   | "`WeatherService` im Frontend nutzt den `OpenMeteoWeatherAdapter`. Der Adapter ruft Open-Meteo Geocoding für die Stadt und danach die Forecast-API für Temperatur, Wettercode und Tag/Nacht ab."                                                                                                                                                                                                                                                                                                   |
+| Was passiert, wenn die Wetter-API down ist?   | "Die App bleibt nutzbar. Im Dashboard wird eine Fehlermeldung angezeigt, und die Wetter-Szene fällt auf den lokalen Standardzustand zurück."                                                                                                                                                                                                                                                                                                                                                       |
+| Was ist euer Security-Nachweis?               | "Session-Cookie, Passwort-Hashing, Login-Lockout, Tests für unauthentifizierte Requests und npm Security Check im Quality Hub."                                                                                                                                                                                                                                                                                                                                                                    |
+| Wie erfüllt ihr die Testpyramide?             | "Die Zuordnung steht in `docs/test-pyramid.md`: Backend-Unit- und Integrationstests, Frontend-Unit-Tests, ArchUnit, Security-nahe Controller-Tests und Playwright-E2E."                                                                                                                                                                                                                                                                                                                            |
+| Wo sieht man Coverage?                        | "Im Quality Hub über JaCoCo für Backend und Vitest Coverage für Frontend."                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| Warum eigener Quality Hub statt nur Terminal? | "Für die Abgabe ist es schneller prüfbar: ein Docker-Start, ein Dashboard, Links zu Logs und Reports."                                                                                                                                                                                                                                                                                                                                                                                             |
+| Was würdet ihr als nächstes verbessern?       | "Als Nächstes würden wir vor allem das Produktgefühl ausbauen: ein schöneres, stärker animiertes UI, mehr Pokémon-Auswahl statt nur fester Starter und eine Sammelbox, in der man Pokémon horten kann, eventuell auch mit seltenen Shinies. Danach wären eigene Tasks spannend: Nutzer könnten Aufgaben selbst anlegen und dafür vorgefertigte Punkte-Templates wählen, damit die Gamification fair bleibt. Technisch kämen dann noch produktives Deployment-Hardening und besseres Caching dazu." |
 
 ## Aufteilung im Team
 
 Wenn alle drei Personen sprechen, ist diese Aufteilung naheliegend:
 
-| Rolle | Abschnitt |
-| --- | --- |
-| Person 1 | Einstieg, App-Idee und Live-Demo |
-| Person 2 | Backend, API, Security und externer Wetter-Service |
+| Rolle    | Abschnitt                                             |
+| -------- | ----------------------------------------------------- |
+| Person 1 | Einstieg, App-Idee und Live-Demo                      |
+| Person 2 | Backend, API, Security und externer Wetter-Service    |
 | Person 3 | Architektur, C4, ADRs, Tests, Quality Hub und Risiken |
 
 Wenn am Ende eine Person einen Teil übernehmen muss, kann sie die drei Blöcke

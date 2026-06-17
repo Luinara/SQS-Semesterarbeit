@@ -50,10 +50,10 @@ export function calculateQuestProgressPercentage(
 })
 export class TaskListComponent {
   readonly tasks = input.required<TaskItem[]>();
-  readonly availableFoodPoints = input(0);
   readonly waterLevel = input(0);
   readonly qualityQuestProgress = input<QualityQuestProgress | null>(null);
-  readonly isBusy = input(false);
+  readonly busyTaskId = input<string | null>(null);
+  readonly busyWaterAmountMl = input<number | null>(null);
   readonly taskCompleted = output<string>();
   readonly waterAdded = output<number>();
 
@@ -66,7 +66,7 @@ export class TaskListComponent {
   );
 
   finishTask(taskId: string): void {
-    if (this.isBusy()) {
+    if (this.hasActiveListAction()) {
       return;
     }
 
@@ -74,11 +74,15 @@ export class TaskListComponent {
   }
 
   addWater(amountMl: number): void {
-    if (this.isBusy()) {
+    if (this.hasActiveListAction()) {
       return;
     }
 
     this.waterAdded.emit(amountMl);
+  }
+
+  isTaskBusy(task: TaskItem): boolean {
+    return this.busyTaskId() === task.id;
   }
 
   isTaskLocked(_task: TaskItem): boolean {
@@ -87,6 +91,10 @@ export class TaskListComponent {
 
   getTaskLockedReason(task: TaskItem): string {
     return this.isTaskLocked(task) ? 'Noch nicht bereit' : '';
+  }
+
+  private hasActiveListAction(): boolean {
+    return this.busyTaskId() !== null || this.busyWaterAmountMl() !== null;
   }
 }
 

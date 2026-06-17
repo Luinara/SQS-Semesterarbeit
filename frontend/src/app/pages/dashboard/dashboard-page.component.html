@@ -2,11 +2,8 @@
   <section class="dashboard-page page-shell">
     <sqs-top-bar
       [userName]="currentUser.userName"
-      [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
       [completedTasks]="appState.completedTaskCount()"
       [totalTasks]="appState.totalTaskCount()"
-      [demoUsername]="demoAccount.username"
-      [demoPassword]="demoAccount.password"
       [isBusy]="appState.isActionPending()"
       (logoutRequested)="logout()"
       (accountDeleteRequested)="deleteAccount()"
@@ -16,16 +13,24 @@
       <aside class="dashboard-page__sidebar">
         <sqs-task-list
           [tasks]="appState.tasks()"
-          [availableFoodPoints]="appState.pet()?.availableFoodPoints ?? 0"
           [waterLevel]="appState.waterLevel()"
           [qualityQuestProgress]="appState.qualityQuestProgress()"
-          [isBusy]="appState.isActionPending()"
+          [busyTaskId]="busyTaskId()"
+          [busyWaterAmountMl]="busyWaterAmountMl()"
           (taskCompleted)="completeTask($event)"
           (waterAdded)="addWater($event)"
         />
       </aside>
 
       <section class="dashboard-page__content">
+        <sqs-quality-gate-card
+          [tasks]="appState.tasks()"
+          [qualityScore]="appState.qualityScore()"
+          [qualityTarget]="appState.qualityTarget()"
+          [waterLevel]="appState.waterLevel()"
+          [streak]="appState.streak()"
+        />
+
         <sqs-pet-card
           [pet]="appState.pet()"
           [completedTasks]="appState.completedTaskCount()"
@@ -39,7 +44,6 @@
           [pokemon]="pokemon.snapshot()"
           [pokemonImageUrl]="appState.pokemonImageUrl()"
           [pokemonLoading]="pokemon.isLoading()"
-          [feedCost]="appState.feedCost"
           [isLevelingUp]="appState.isPetLevelingUp()"
           [isBusy]="appState.isActionPending()"
           (feedRequested)="feedPet()"
@@ -47,15 +51,6 @@
           (testMotivationDecayRequested)="testMotivationDecay()"
           (weatherRefreshRequested)="refreshWeather()"
           (weatherCitySubmitted)="searchWeatherCity($event)"
-        />
-
-        <sqs-quality-gate-card
-          [tasks]="appState.tasks()"
-          [qualityScore]="appState.qualityScore()"
-          [qualityTarget]="appState.qualityTarget()"
-          [waterLevel]="appState.waterLevel()"
-          [foodLevel]="appState.foodLevel()"
-          [streak]="appState.streak()"
         />
       </section>
     </div>

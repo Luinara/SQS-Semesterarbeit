@@ -90,6 +90,7 @@ public class DevDataSeeder implements ApplicationRunner {
         user.setPokemonXp(0);
         user.setPendingFeedPoints(0);
         user.setLastTaskCompletionDate(null);
+        user.setLastDailyResetAt(null);
         user.setLastLevelUpAt(null);
         user.setHatchedAt(null);
     }

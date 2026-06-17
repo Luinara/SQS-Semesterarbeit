@@ -131,6 +131,7 @@ const checks = [
     env: {
       PLAYWRIGHT_SKIP_WEB_SERVER: '1',
       PLAYWRIGHT_BASE_URL: frontendBaseUrl,
+      PLAYWRIGHT_FULLSTACK: '1',
       PLAYWRIGHT_EVIDENCE: '1',
       PLAYWRIGHT_HTML_OPEN: 'never',
     },

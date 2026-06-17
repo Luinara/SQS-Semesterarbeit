@@ -7,7 +7,7 @@ Reihenfolge sicher können und die Begriffe sauber treffen.
 
 "Wir zeigen PokeHabit. Das ist eine kleine Self-Care-App, in der Nutzer
 tägliche Aufgaben erledigen, Wasser tracken und dadurch einen Pokémon-Partner
-trainieren. Wichtig war uns, dass das Projekt nicht nur hübsch aussieht,
+begleiten. Wichtig war uns, dass das Projekt nicht nur hübsch aussieht,
 sondern auch technisch nachweisbar funktioniert."
 
 ## Demo-Reihenfolge
@@ -17,7 +17,7 @@ sondern auch technisch nachweisbar funktioniert."
 3. Dashboard zeigen.
 4. Eine Quest erledigen.
 5. Wasser trinken.
-6. Pokémon trainieren.
+6. Level-Up-Test zeigen.
 7. Logout zeigen.
 8. Kurz `/api/tasks` öffnen und sagen: "Das ist ein öffentlicher Endpunkt."
 

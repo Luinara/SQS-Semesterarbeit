@@ -45,20 +45,20 @@
         size="sm"
         variant="secondary"
         type="button"
-        [disabled]="isBusy() || isDone()"
+        [disabled]="isAmountBusy(250) || isDone()"
         (click)="addWater(250)"
       >
-        +250 ml
+        {{ isAmountBusy(250) ? 'Speichert...' : '+250 ml' }}
       </button>
       <button
         sqsButton
         size="sm"
         variant="secondary"
         type="button"
-        [disabled]="isBusy() || isDone()"
+        [disabled]="isAmountBusy(500) || isDone()"
         (click)="addWater(500)"
       >
-        +500 ml
+        {{ isAmountBusy(500) ? 'Speichert...' : '+500 ml' }}
       </button>
     </div>
   </div>
