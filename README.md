@@ -97,6 +97,17 @@ docker compose --profile quality up --build
   Prozess beenden oder die Ports wie oben ändern.
 - Wenn Docker noch nicht läuft, Docker Desktop starten und den Befehl erneut
   ausführen.
+- Wenn Maven beim Docker-Build mit `pthread_create failed` oder
+  `Failed to start thread "GC Thread#0"` abbricht, den Build einmal seriell
+  starten:
+
+  ```powershell
+  $env:COMPOSE_PARALLEL_LIMIT = "1"
+  docker compose --profile quality up --build
+  ```
+
+  Falls das nicht reicht, Docker Desktop neu starten und unter
+  Settings > Resources mindestens 2 CPUs und 4 GB RAM zuweisen.
 - Wenn nach Codeänderungen alte Artefakte sichtbar sind, mit
   `docker compose up --build` neu bauen.
 
@@ -181,9 +192,9 @@ vorbereitet. Wichtige Einstiegspunkte:
 - `docs/05-presentation/presentation-cheat-sheet.md`
 
 ReadTheDocs nutzt `.readthedocs.yaml`, `mkdocs.yml` und
-`docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys kann
-die Doku dort direkt gebaut werden. Die Schritte stehen in
-`docs/06-operations/readthedocs-publish.md`.
+`docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys ist
+die Doku dort direkt gebaut: https://luinarasqs-semesterarbeit.readthedocs.io/de/unlimitedgaming_soph/. 
+Die Schritte stehen in `docs/06-operations/readthedocs-publish.md`.
 
 Zusätzlich liegt unter `wiki/` eine schlankere Wiki-Fassung mit `Home.md`,
 `_Sidebar.md` und Abgabe-/Review-Einstiegen. `docs/` bleibt die ausführliche

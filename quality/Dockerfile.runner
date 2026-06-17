@@ -8,6 +8,7 @@ COPY --from=maven /usr/bin/mvn /usr/bin/mvn
 
 ENV JAVA_HOME=/opt/java/openjdk
 ENV MAVEN_HOME=/usr/share/maven
+ENV MAVEN_OPTS="-XX:ActiveProcessorCount=2 -XX:ParallelGCThreads=1 -XX:ConcGCThreads=1 -Xmx768m"
 ENV PATH="/opt/java/openjdk/bin:/usr/share/maven/bin:${PATH}"
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
