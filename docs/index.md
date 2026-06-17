@@ -16,7 +16,7 @@ bleiben.
 | [06 Betrieb](06-operations/readthedocs-publish.md)      | ReadTheDocs-Veröffentlichung und operative Hinweise                 |
 
 ## Schnellstart
-
+todo
 App und Datenbank:
 
 ```bash
