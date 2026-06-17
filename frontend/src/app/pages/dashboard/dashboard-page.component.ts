@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, effect, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { AppStateService } from '../../core/services/app-state.service';
 import { PokemonService } from '../../core/services/pokemon.service';
@@ -62,7 +69,10 @@ export class DashboardPageComponent implements OnDestroy {
     }
 
     this.busyTaskId.set(taskId);
-    this.runAsync(() => this.appState.completeTask(taskId), () => this.busyTaskId.set(null));
+    this.runAsync(
+      () => this.appState.completeTask(taskId),
+      () => this.busyTaskId.set(null)
+    );
   }
 
   feedPet(): void {
@@ -83,7 +93,10 @@ export class DashboardPageComponent implements OnDestroy {
     }
 
     this.busyWaterAmountMl.set(amountMl);
-    this.runAsync(() => this.appState.addWater(amountMl), () => this.busyWaterAmountMl.set(null));
+    this.runAsync(
+      () => this.appState.addWater(amountMl),
+      () => this.busyWaterAmountMl.set(null)
+    );
   }
 
   refreshWeather(): void {
@@ -123,8 +136,10 @@ export class DashboardPageComponent implements OnDestroy {
   }
 
   private runAsync(action: () => Promise<unknown>, afterAction?: () => void): void {
-    action().catch((error: unknown) => {
-      console.error('Dashboard action failed', error);
-    }).finally(() => afterAction?.());
+    action()
+      .catch((error: unknown) => {
+        console.error('Dashboard action failed', error);
+      })
+      .finally(() => afterAction?.());
   }
 }
