@@ -40,6 +40,12 @@ test.describe("Daily reset", () => {
       serverNow: "2026-06-16T10:00:00Z",
     };
 
+    await page.route("**/assets/egg.png", async (route) => {
+      await route.fulfill({
+        path: "../backend/src/main/resources/static/assets/egg.png",
+      });
+    });
+
     await page.route("**/api/**", async (route) => {
       const request = route.request();
       const url = new URL(request.url());

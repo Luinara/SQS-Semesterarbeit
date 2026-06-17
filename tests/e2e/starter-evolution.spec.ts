@@ -56,6 +56,12 @@ for (const starterFlow of starterFlows) {
       serverNow: "2026-06-15T10:00:00Z",
     };
 
+    await page.route("**/assets/egg.png", async (route) => {
+      await route.fulfill({
+        path: "../backend/src/main/resources/static/assets/egg.png",
+      });
+    });
+
     await page.route("**/api/**", async (route) => {
       const request = route.request();
       const url = new URL(request.url());
@@ -155,7 +161,7 @@ for (const starterFlow of starterFlows) {
     expect(starterPokemonId).toBe(starterFlow.starterPokemonId);
     await expect(page.locator("sqs-pet-visual img")).toHaveAttribute(
       "src",
-      /egg\.svg/,
+      /egg\.png/,
     );
 
     for (let index = 0; index < 9; index += 1) {
