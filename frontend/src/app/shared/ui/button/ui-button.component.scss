@@ -99,14 +99,15 @@
       rgba(238, 199, 91, 0.88) 100%
     ),
     rgba(255, 255, 255, 0.86);
-  color: #fff;
+  color: #111827;
+  text-shadow: none;
   box-shadow:
     0 9px 17px rgba(51, 126, 125, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 :host(.ui-button--secondary):hover:not(:disabled) {
-  color: #fff;
+  color: #111827;
 }
 
 :host(.ui-button--ghost) {
@@ -135,14 +136,15 @@
       rgba(212, 78, 169, 0.88) 100%
     ),
     rgba(221, 247, 233, 0.95);
-  color: #fff;
+  color: #111827;
+  text-shadow: none;
   box-shadow:
     0 9px 17px rgba(90, 101, 160, 0.13),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 :host(.ui-button--soft):hover:not(:disabled) {
-  color: #fff;
+  color: #111827;
 }
 
 :host(.ui-button--small) {

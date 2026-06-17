@@ -13,13 +13,10 @@
   align-items: start;
 }
 
-// Linke Box: Introtext, Ei-Visual und Quest/Wasser-Deko.
-.auth-page__story {
-  @include surface-panel(1.35rem);
-}
-
 // Linke Box: Höhe, Innenabstand und Hintergrund.
 .auth-page__story {
+  @include surface-panel(1.35rem);
+
   display: grid;
   align-content: start;
   gap: 2rem;
