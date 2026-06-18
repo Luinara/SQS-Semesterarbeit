@@ -61,7 +61,9 @@ nav:
       - Qualitätsmodell nach GQM: 04-quality/gqm.md
       - Qualitätskosten und technische Schulden: 04-quality/quality-costs.md
       - Docker und reproduzierbares Deployment: 04-quality/docker-deployment.md
+      - Testkonzept: 04-quality/test-concept.md
       - Testpyramide: 04-quality/test-pyramid.md
+      - Messung von Softwarequalität: 04-quality/metrics-and-static-analysis.md
       - Daily-Reset-Testfälle: 04-quality/daily-reset-testfaelle.md
       - Frontend npm Security: 04-quality/frontend-npm-security.md
       - Security Hotspots: 04-quality/security-hotspots.md

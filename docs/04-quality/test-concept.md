@@ -4,7 +4,7 @@ Dieses Kapitel beschreibt das dokumentierte und implementierte Testkonzept des P
 Anwendung systematisch abzusichern und die in der Aufgabenstellung geforderte vollständige Testpyramide nachvollziehbar umzusetzen.
 
 Das Testkonzept ergänzt die bestehende Dokumentation zur Testpyramide und fasst zusammen, welche Testarten verwendet werden, 
-welche Risiken dadurch abgesichert werden, welche Grenzen bewusst gesetzt wurden und wie die Tests in die CI/CD-Pipeline integriert sind.
+welche Risiken dadurch abgesichert werden, welche Grenzen bewusst gesetzt wurden und wie die Tests in die CI-Pipeline integriert sind.
 
 ## Ziele des Testkonzepts
 
@@ -23,7 +23,7 @@ Das Testkonzept verfolgt folgende Ziele:
 Die Tests orientieren sich an der Testpyramide. Dabei liegt der Schwerpunkt auf vielen schnellen Unit-Tests, ergänzt 
 durch Integrationstests, Architekturtests, Security-Tests und wenige, gezielte End-to-End-Tests.
 
-Die detaillierte Beschreibung der Testpyramide befindet sich auf der Seite `Testpyramide`. 
+Die detaillierte Beschreibung der Testpyramide befindet sich auf der Seite [Testpyramide](test-pyramid.md). 
 Diese Seite beschreibt die konkrete Umsetzung der einzelnen Testarten im Projekt.
 
 ## Eingesetzte Testarten
@@ -32,7 +32,7 @@ Diese Seite beschreibt die konkrete Umsetzung der einzelnen Testarten im Projekt
 
 Unit-Tests prüfen einzelne Klassen, Funktionen oder Komponenten isoliert. Sie bilden die Basis der Testpyramide und sollen schnell, stabil und unabhängig von externen Systemen ausführbar sein.
 
-Im Backend werden Unit-Tests vor allem für Services, Mapper, Validierungslogik und fachliche Regeln eingesetzt. Im Frontend werden Komponenten, Hooks und Hilfsfunktionen getestet.
+Im Backend werden Unit-Tests vor allem für Services, Mapper, Validierungslogik und fachliche Regeln eingesetzt. Im Frontend werden Komponenten, Services, Guards und Hilfsfunktionen getestet.
 
 ### Integrationstests
 
@@ -89,7 +89,9 @@ ermittelt. Die Coverage-Berichte werden in der CI-Pipeline erzeugt und als Artef
 Die Coverage dient nicht als alleiniger Qualitätsnachweis. Entscheidend ist zusätzlich, dass kritische Geschäftslogik, 
 Sicherheitslogik, Integrationspunkte und zentrale Benutzerflüsse sinnvoll getestet werden.
 
-## CI/CD-Integration
+Die 80-%-Grenze gilt als Zielwert für die bewertungsrelevanten Projektbereiche. Generierte Dateien, Konfigurationen und reine Framework-Bootstrap-Klassen werden dabei nicht als fachlich relevante Kernlogik betrachtet.
+
+## CI-Integration
 
 Die Tests sind in die GitHub-Actions-Pipeline integriert. Die Pipeline führt automatisiert Build, Tests, 
 Coverage-Erzeugung, statische Analyse und End-to-End-Tests aus.
