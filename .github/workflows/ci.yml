@@ -82,33 +82,31 @@ jobs:
       - name: Run unit and integration tests
         run: mvn --batch-mode --no-transfer-progress verify
 
-      - name: Debug JaCoCo output
-        id: debug-jacoco
-        if: always()
+      - name: Verify JaCoCo report was generated
+        id: verify-jacoco
         run: |
-          echo 'Listing target directory'
-          ls -la target || true
-          echo 'Listing target/site'
-          ls -la target/site || true
-          echo 'Listing target/site/jacoco'
-          ls -la target/site/jacoco || true
           if [ -f target/site/jacoco/jacoco.xml ]; then
-            echo 'JaCoCo report exists';
-            wc -c target/site/jacoco/jacoco.xml || true
+            echo "✓ JaCoCo report exists"
+            ls -lah target/site/jacoco/jacoco.xml
+            wc -c target/site/jacoco/jacoco.xml
             echo "jacoco_exists=true" >> "$GITHUB_OUTPUT"
           else
-            echo 'JaCoCo report NOT found at target/site/jacoco/jacoco.xml';
-            echo 'Contents of target/site/jacoco:'; ls -la target/site/jacoco || true;
+            echo "❌ ERROR: JaCoCo report NOT found at target/site/jacoco/jacoco.xml"
+            echo "Listing target/site directory:"
+            ls -lah target/site || true
+            echo "Listing target/site/jacoco directory:"
+            ls -lah target/site/jacoco || echo "Directory does not exist"
             echo "jacoco_exists=false" >> "$GITHUB_OUTPUT"
+            exit 1
           fi
 
       - name: Upload JaCoCo coverage report
-        if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v8
         with:
           name: backend-jacoco-report
           path: target/site/jacoco/jacoco.xml
-          retention-days: 14
+          retention-days: 30
+          compression-level: 0
 
   # ──────────────────────────────────────────────────────────────────────────
 
@@ -192,13 +190,25 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
+      - name: Verify frontend coverage report
+        run: |
+          if [ -f coverage/lcov.info ]; then
+            echo "✓ Frontend coverage report exists"
+            ls -lah coverage/lcov.info
+            wc -c coverage/lcov.info
+          else
+            echo "⚠️ Frontend coverage report not found at coverage/lcov.info"
+            echo "Listing coverage directory:"
+            ls -lah coverage || echo "Directory does not exist"
+          fi
+
       - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v8
         with:
           name: frontend-coverage-report
-          path: frontend/coverage
-          retention-days: 14
+          path: coverage
+          retention-days: 30
+          if-no-files-found: warn
 
   # ──────────────────────────────────────────────────────────────────────────
 
@@ -291,6 +301,7 @@ jobs:
       # Check if JaCoCo artifact exists before attempting to download it
       - name: Download JaCoCo coverage report
         id: download-jacoco
+        continue-on-error: true
         uses: actions/download-artifact@v8
         with:
           name: backend-jacoco-report
@@ -298,6 +309,7 @@ jobs:
 
       - name: Download frontend coverage report
         id: download-frontend-coverage
+        continue-on-error: true
         uses: actions/download-artifact@v8
         with:
           name: frontend-coverage-report
@@ -308,13 +320,11 @@ jobs:
           if [ -f backend/target/site/jacoco/jacoco.xml ]; then
             echo "✓ JaCoCo report successfully downloaded"
             ls -lah backend/target/site/jacoco/jacoco.xml
-            echo "File size:"
             wc -c backend/target/site/jacoco/jacoco.xml
           else
-            echo "❌ ERROR: JaCoCo artifact not found at backend/target/site/jacoco/jacoco.xml"
-            echo "Directory contents:"
-            ls -lah backend/target/site/jacoco/ || echo "Directory does not exist"
-            exit 1
+            echo "❌ WARNING: JaCoCo artifact not found at backend/target/site/jacoco/jacoco.xml"
+            echo "SonarCloud will analyze without backend coverage data."
+            ls -lah backend/target/site/jacoco/ 2>/dev/null || echo "Directory does not exist"
           fi
 
       - name: Verify frontend coverage artifact
