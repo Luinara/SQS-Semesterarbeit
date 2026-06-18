@@ -15,7 +15,7 @@ um den Stand, der für die Abgabe gebaut und geprüft wurde.
 | Externer Backend-Service | PokeAPI wird im Backend über `PokeApiPokemonService` angebunden. Timeout und Fallback sind getestet. |
 | Externer Frontend-Service | Open-Meteo wird im Frontend für die Wetter-Szene genutzt; bei Fehlern bleibt ein lokaler Zustand sichtbar. |
 | Qualitätssicherung | Der Quality Hub führt Maven-, npm- und Playwright-Checks aus und sammelt Logs/Reports im Docker-Volume. |
-| ReadTheDocs | Die Konfiguration liegt im Repository; die öffentliche Veröffentlichung hängt vom verbundenen öffentlichen Repo ab. |
+| ReadTheDocs | Die Konfiguration liegt im Repository;  |
 
 ## Organisatorische Randbedingungen
 
