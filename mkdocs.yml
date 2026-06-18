@@ -47,6 +47,9 @@ nav:
           - ADR-006 TypeScript: ger-adr/ADR-006-use-typescript.md
           - ADR-007 Prisma: ger-adr/ADR-007-use-prisma.md
           - ADR-008 Ei-Pokémon: ger-adr/ADR-008-use-hidden-egg-assignment.md
+          - ADR-009 Authentifizierung: ger-adr/ADR-009-authentication-strategy.md
+          - ADR-010 H2 für Backend-Tests: ger-adr/ADR-010-use-h2-for-backend-tests.md
+          - ADR-011 Playwright für End-to-End-Tests: ger-adr/ADR-011-use-playwright-for-e2e-tests.md
   - '03 API':
       - Authentifizierung: 03-api/auth.md
       - Tasks: 03-api/tasks.md
@@ -54,8 +57,10 @@ nav:
       - Game State: 03-api/user-game-state.md
       - Übergabe User Actions: 03-api/user-actions-handover.md
   - '04 Qualität':
+      - ISO-25010 Qualitätsmodell: 04-quality/iso-25010.md
+      - Qualitätsmodell nach GQM: 04-quality/gqm.md
       - Testpyramide: 04-quality/test-pyramid.md
-      - Daily-Reset-Testfaelle: 04-quality/daily-reset-testfaelle.md
+      - Daily-Reset-Testfälle: 04-quality/daily-reset-testfaelle.md
       - Frontend npm Security: 04-quality/frontend-npm-security.md
       - Security Hotspots: 04-quality/security-hotspots.md
       - Crypto Random IDs: 04-quality/crypto-random-ids.md
@@ -66,4 +71,4 @@ nav:
       - Präsentations-Sprechzettel: 05-presentation/presentation-cheat-sheet.md
       - Präsentationsplan: presentation-plan.md
   - '06 Betrieb':
-      - ReadTheDocs veröffentlichen: 06-operations/readthedocs-publish.md
+      - ReadTheDocs: 06-operations/readthedocs-publish.md
