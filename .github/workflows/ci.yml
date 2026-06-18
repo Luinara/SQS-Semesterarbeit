@@ -358,18 +358,17 @@ jobs:
           echo -n "Frontend LCOV: "
           [ -f frontend/coverage/lcov.info ] && echo "✓ EXISTS ($(wc -c < frontend/coverage/lcov.info) bytes)" || echo "✗ MISSING"
 
-      # Runs the SonarQube Scanner using the root sonar-project.properties.
+      # Runs the SonarCloud Scanner for the entire monorepo.
       # Analyses both the Java backend and the TypeScript frontend in one pass.
-      - name: SonarQube scan
+      # Coverage reports are loaded from backend/target/site/jacoco/jacoco.xml and frontend/coverage/lcov.info
+      - name: SonarCloud scan
         if: steps.sonar-check.outputs.configured == 'true'
-        uses: sonarsource/sonarqube-scan-action@2f77a1ec69fb1d595b06f35ab27e97605bdef703 # v5.3.2
+        uses: sonarsource/sonarcloud-github-action@master
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          # Explicitly pass coverage report paths to ensure SonarScanner finds them
-          SONAR_JAVA_BINARIES: backend/target/classes
-          SONAR_COVERAGE_JACOCO_XMLREPORTPATHS: backend/target/site/jacoco/jacoco.xml
-          SONAR_JAVASCRIPT_LCOV_REPORTPATHS: frontend/coverage/lcov.info
+          # Override paths to ensure SonarCloud finds the coverage reports
+          SONARQUBE_SCANNER_PARAMS: -Dsonar.projectBaseDir=. -Dsonar.sources=backend/src/main/java,frontend/src -Dsonar.tests=backend/src/test/java,tests/unit -Dsonar.coverage.jacoco.xmlReportPaths=backend/target/site/jacoco/jacoco.xml -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info -Dsonar.java.binaries=backend/target/classes
 
   # ──────────────────────────────────────────────────────────────────────────
   # END-TO-END TESTS
