@@ -11,14 +11,14 @@ dokumentiert.
 
 ## Ebene 1 - Systemüberblick
 
-| Baustein             | Verantwortung                                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Angular-Frontend     | Oberfläche für Splash, Login, Registrierung, Dashboard, Quests, Wasser, Pokémon-Fortschritt und Wetter-Szene. |
-| Backend-API          | REST-API für Authentifizierung, Tasks, Spielstand, Wassertracking, Account-Löschung und Persistenzzugriff.    |
-| PostgreSQL-Datenbank | Speichert Nutzer, Tasks, Taskstatus, Spielstand und Pokémon-Fortschritt.                                      |
-| PokeAPI              | Backend-Service für Starter-Pokémon und Evolutionsdaten; bei Ausfall greift ein lokaler Fallback.             |
-| Open-Meteo           | Frontend-Service für Wetterdaten der Dashboard-Szene.                                                         |
-| Quality Hub          | Dockerisiertes Dashboard mit Runner für Tests, Coverage, Lint, statische Analyse, Security und E2E-Reports.   |
+| Baustein             | Verantwortung                                                                                                             |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Angular-Frontend     | Oberfläche für Splash, Login, Registrierung, Dashboard, Quests, Wasser, Pokémon-Fortschritt und Wetter-Szene.             |
+| Backend-API          | REST-API für Authentifizierung, Tasks, Spielstand, Wassertracking, Account-Löschung und Persistenzzugriff.                |
+| PostgreSQL-Datenbank | Speichert Nutzer, Tasks, Taskstatus, Spielstand und Pokémon-Fortschritt.                                                  |
+| PokeAPI              | Externer Dienst für Starter-Pokémon und Evolutionsdaten; bei Ausfall greift das Backend auf lokale Fallback-Daten zurück. |
+| Open-Meteo           | Externer Wetterdienst für die Wetterdaten der Dashboard-Szene; wird über das Frontend angebunden.                         |
+| Quality Hub          | Dockerisiertes Dashboard mit Runner für Tests, Coverage, Lint, statische Analyse, Security und E2E-Reports.               |
 
 ## Ebene 2 - Frontend
 
@@ -33,13 +33,27 @@ dokumentiert.
 
 ## Ebene 2 - Backend
 
-| Baustein            | Verantwortung                                                                |
-| ------------------- | ---------------------------------------------------------------------------- |
-| Authentication      | Registrierung, Login, Session und Demo-Seed.                                 |
-| Task/User Actions   | Questabschluss, Wassertracking und Test-Level-Up.                            |
-| User Game State     | Aktueller Spielstand für das Dashboard.                                      |
-| Pokémon-Integration | PokeAPI-Aufruf, Timeout, Fallback und Wiederverwendung vorhandener DB-Daten. |
-| Persistence         | Repositories und Entities für Nutzer, Tasks und Spielstand.                  |
+| Baustein                  | Verantwortung                                                                |
+| ------------------------- | ---------------------------------------------------------------------------- |
+| Authentication            | Registrierung, Login, Session-Erzeugung und Demo-Seed.                       |
+| Quest- und Nutzeraktionen | Questabschluss, Wassertracking und Test-Level-Up.                            |
+| User Game State           | Bereitstellung des aktuellen Spielstands für das Dashboard.                  |
+| Pokémon-Integration       | PokeAPI-Aufruf, Timeout, Fallback und Wiederverwendung vorhandener DB-Daten. |
+| Persistence               | Repositories und Entities für Nutzer, Tasks, Spielstand und Pokémon-Daten.   |
+
+## Architekturzuordnung im Backend
+
+Die folgende Zuordnung beschreibt die wichtigsten Backend-Bausteine und ihre Rolle im Architekturansatz.
+
+| Bereich             | Rolle in der Architektur                 | Beispiele                                         |
+| ------------------- | ---------------------------------------- | ------------------------------------------------- |
+| REST-Controller     | Primäre Adapter                          | AuthController, TaskController, PokemonController |
+| Services            | Anwendungskern / fachliche Logik         | UserService, TaskService, PokemonService          |
+| Repositories        | Sekundäre Adapter für Persistenz         | UserRepository, TaskRepository, PokemonRepository |
+| Externe API-Clients | Sekundäre Adapter für Fremdsysteme       | PokeAPI-Client                                    |
+| Datenbank           | Externes Persistenzsystem                | PostgreSQL                                        |
+| Externe Dienste     | Externe Fremdsysteme                     | PokeAPI, Open-Meteo                               |
+| Quality Hub         | Querschnittlicher Unterstützungsbaustein | Unit-, Integration-, E2E- und Coverage-Reports    |
 
 ## Ebene 2 - Quality Hub
 
