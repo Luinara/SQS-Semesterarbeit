@@ -236,6 +236,7 @@ jobs:
   sonarqube:
     name: 'SonarQube Analysis'
     runs-on: ubuntu-latest
+    if: success()
     # Needs the analyze jobs (so Checkstyle/SpotBugs/ESLint/Prettier pass first)
     # and the test jobs (which upload the coverage artifacts consumed below).
     needs: [backend-test, backend-analyze, frontend-analyze, frontend-test]
@@ -290,19 +291,43 @@ jobs:
       # Check if JaCoCo artifact exists before attempting to download it
       - name: Download JaCoCo coverage report
         id: download-jacoco
-        continue-on-error: true
         uses: actions/download-artifact@v8
         with:
           name: backend-jacoco-report
           path: backend/target/site/jacoco
+
+      - name: Download frontend coverage report
+        id: download-frontend-coverage
+        uses: actions/download-artifact@v8
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage
 
       - name: Verify JaCoCo artifact
         run: |
           if [ -f backend/target/site/jacoco/jacoco.xml ]; then
             echo "✓ JaCoCo report successfully downloaded"
             ls -lah backend/target/site/jacoco/jacoco.xml
+            echo "File size:"
+            wc -c backend/target/site/jacoco/jacoco.xml
           else
-            echo "⚠️ JaCoCo artifact not found – SonarCloud will analyze without coverage data"
+            echo "❌ ERROR: JaCoCo artifact not found at backend/target/site/jacoco/jacoco.xml"
+            echo "Directory contents:"
+            ls -lah backend/target/site/jacoco/ || echo "Directory does not exist"
+            exit 1
+          fi
+
+      - name: Verify frontend coverage artifact
+        run: |
+          if [ -f frontend/coverage/lcov.info ]; then
+            echo "✓ Frontend coverage report successfully downloaded"
+            ls -lah frontend/coverage/lcov.info
+            echo "File size:"
+            wc -c frontend/coverage/lcov.info
+          else
+            echo "⚠️ Frontend coverage artifact not found – SonarCloud will analyze without frontend coverage data"
+            echo "Directory contents:"
+            ls -lah frontend/coverage/ || echo "Directory does not exist"
           fi
 
       # Runs the SonarQube Scanner using the root sonar-project.properties.
