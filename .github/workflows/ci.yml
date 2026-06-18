@@ -271,33 +271,8 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      # Compile the backend so SonarQube can perform bytecode analysis.
-      # Tests are skipped here because coverage data comes from artifacts.
-      - name: Compile backend
-        run: mvn --batch-mode --no-transfer-progress compile -DskipTests
-        working-directory: backend
-
-      # Install frontend dependencies so SonarQube can resolve TypeScript types.
-      - name: Install frontend dependencies
-        run: npm ci
-        working-directory: frontend
-
-      # Check SonarQube secrets
-      - name: Check SonarQube secrets
-        id: sonar-check
-        run: |
-          if [ -n "$SONAR_TOKEN" ] && [ -n "$SONAR_HOST_URL" ]; then
-            echo "configured=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "⚠️  SONAR_TOKEN or SONAR_HOST_URL is not configured – skipping SonarQube analysis."
-            echo "   Set both secrets in Settings → Secrets and variables → Actions."
-          fi
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
-      # Check if JaCoCo artifact exists before attempting to download it
+      # Download coverage artifacts FIRST, before compiling or installing dependencies.
+      # SonarScanner must find these reports in their configured locations.
       - name: Download JaCoCo coverage report
         id: download-jacoco
         continue-on-error: true
@@ -339,6 +314,50 @@ jobs:
             ls -lah frontend/coverage/ || echo "Directory does not exist"
           fi
 
+      # Compile the backend so SonarQube can perform bytecode analysis.
+      # Tests are skipped here because coverage data comes from artifacts (now already downloaded).
+      - name: Compile backend
+        run: mvn --batch-mode --no-transfer-progress compile -DskipTests
+        working-directory: backend
+
+      # Install frontend dependencies so SonarQube can resolve TypeScript types.
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      # Check SonarQube secrets
+      - name: Check SonarQube secrets
+        id: sonar-check
+        run: |
+          if [ -n "$SONAR_TOKEN" ] && [ -n "$SONAR_HOST_URL" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "⚠️  SONAR_TOKEN or SONAR_HOST_URL is not configured – skipping SonarQube analysis."
+            echo "   Set both secrets in Settings → Secrets and variables → Actions."
+          fi
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+      # Final check: verify both coverage files exist before SonarScanner runs
+      - name: List directory structure before SonarQube scan
+        run: |
+          echo "=== Repository root ==="
+          ls -la
+          echo ""
+          echo "=== Backend structure ==="
+          find backend/target -type f -name "*.xml" 2>/dev/null | head -20
+          echo ""
+          echo "=== Frontend coverage ==="
+          find frontend/coverage -type f 2>/dev/null | head -20
+          echo ""
+          echo "=== Verifying coverage files ==="
+          echo -n "Backend JaCoCo: "
+          [ -f backend/target/site/jacoco/jacoco.xml ] && echo "✓ EXISTS ($(wc -c < backend/target/site/jacoco/jacoco.xml) bytes)" || echo "✗ MISSING"
+          echo -n "Frontend LCOV: "
+          [ -f frontend/coverage/lcov.info ] && echo "✓ EXISTS ($(wc -c < frontend/coverage/lcov.info) bytes)" || echo "✗ MISSING"
+
       # Runs the SonarQube Scanner using the root sonar-project.properties.
       # Analyses both the Java backend and the TypeScript frontend in one pass.
       - name: SonarQube scan
@@ -347,6 +366,10 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          # Explicitly pass coverage report paths to ensure SonarScanner finds them
+          SONAR_JAVA_BINARIES: backend/target/classes
+          SONAR_COVERAGE_JACOCO_XMLREPORTPATHS: backend/target/site/jacoco/jacoco.xml
+          SONAR_JAVASCRIPT_LCOV_REPORTPATHS: frontend/coverage/lcov.info
 
   # ──────────────────────────────────────────────────────────────────────────
   # END-TO-END TESTS
