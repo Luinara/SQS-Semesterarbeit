@@ -66,6 +66,10 @@ Das Repository enthält die ReadTheDocs-Konfiguration:
 - `mkdocs.yml`
 - `docs/requirements.txt`
 
-Nach dem Verbinden des öffentlichen Repositorys mit ReadTheDocs kann die
-Dokumentation direkt aus dem `docs/`-Ordner gebaut werden.
-Die konkreten Schritte stehen in [ReadTheDocs veröffentlichen](06-operations/readthedocs-publish.md).
+Nach dem Verbinden des öffentlichen Repositorys mit ReadTheDocs wurde die
+Dokumentation direkt aus dem `docs/`-Ordner gebaut.
+Die konkreten Schritte stehen in [ReadTheDocs](06-operations/readthedocs-publish.md).
+
+Die öffentliche Dokumentation ist unter folgender URL erreichbar:
+
+[https://luinarasqs-semesterarbeit.readthedocs.io/de/latest/](https://luinarasqs-semesterarbeit.readthedocs.io/de/latest/)
