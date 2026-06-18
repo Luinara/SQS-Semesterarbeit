@@ -10,7 +10,6 @@ import {
   DashboardSnapshot,
 } from './backend-api.service';
 import { derivePetCareState } from '../state/app-state.logic';
-import { PET_RULES } from '../../shared/mock/mock-data';
 
 const ACTIVE_USERNAME_STORAGE_KEY = 'sqs.backend.activeUsername';
 
@@ -23,6 +22,7 @@ export class AppStateService {
   private readonly activeBackendGameState = signal<BackendGameStateDto | null>(null);
   private readonly isSessionRestoring = signal(false);
   private readonly activeActionCount = signal(0);
+  private isBackgroundRefreshInFlight = false;
   private feedbackClearTimeout: ReturnType<typeof setTimeout> | null = null;
   private levelUpAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -44,6 +44,10 @@ export class AppStateService {
       return null;
     }
 
+    if (backendGameState.isEgg) {
+      return backendGameState.pokemonImageUrl;
+    }
+
     return isPokemonImageForCurrentId(
       backendGameState.pokemonImageUrl,
       backendGameState.currentPokemonId
@@ -58,8 +62,6 @@ export class AppStateService {
   readonly completedTaskCount = computed(
     () => this.tasks().filter((task) => task.isCompleted).length
   );
-  readonly feedCost = PET_RULES.feedCost;
-  readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) >= this.feedCost);
   readonly petCareState = computed<PetCareState>(() => {
     const gameState = this.activeGameState();
 
@@ -265,7 +267,7 @@ export class AppStateService {
           this.showFeedback({
             id: createFeedbackId('feeding'),
             kind: 'feeding',
-            message: 'Trainingspunkte wurden für dein Pokémon eingesetzt.',
+            message: 'Quest-Punkte wurden für dein Pokémon eingesetzt.',
           });
         }
       } catch (error) {
@@ -349,21 +351,39 @@ export class AppStateService {
     });
   }
 
-  async resetCurrentProgress(): Promise<void> {
+  async resetCurrentProgress(showReloadFeedback = true): Promise<void> {
     const username = this.activeUser()?.userName;
 
     if (!username || this.isActionPending()) {
       return;
     }
 
+    if (!showReloadFeedback) {
+      if (this.isBackgroundRefreshInFlight) {
+        return;
+      }
+
+      this.isBackgroundRefreshInFlight = true;
+
+      try {
+        this.applyDashboardSnapshot(await this.backendApi.loadDashboard(username));
+      } finally {
+        this.isBackgroundRefreshInFlight = false;
+      }
+
+      return;
+    }
+
     await this.runAction(async () => {
       try {
         this.applyDashboardSnapshot(await this.backendApi.loadDashboard(username));
-        this.showFeedback({
-          id: createFeedbackId('info'),
-          kind: 'info',
-          message: 'Spielstand neu geladen.',
-        });
+        if (showReloadFeedback) {
+          this.showFeedback({
+            id: createFeedbackId('info'),
+            kind: 'info',
+            message: 'Spielstand neu geladen.',
+          });
+        }
       } catch (error) {
         this.showFeedback({
           id: createFeedbackId('info'),

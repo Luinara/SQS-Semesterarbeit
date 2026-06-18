@@ -15,7 +15,7 @@ const tasks = [
 ];
 
 test.describe("PokeHabit", () => {
-  test("führt vom Login durch Quest, Wasser, Training und Logout", async ({
+  test("führt vom Login durch Quest, Wasser, Training, Level-Up und Logout", async ({
     page,
   }, testInfo) => {
     const completions = new Map<number, boolean>([
@@ -82,8 +82,11 @@ test.describe("PokeHabit", () => {
       }
 
       if (url.pathname === "/api/user/feed") {
-        gameState.pendingFeedPoints -= 1;
-        gameState.happiness += 1;
+        gameState.pendingFeedPoints = Math.max(
+          0,
+          gameState.pendingFeedPoints - 10,
+        );
+        gameState.happiness = Math.min(100, gameState.happiness + 1);
         await route.fulfill({ json: createGameState(gameState, completions) });
         return;
       }
@@ -155,6 +158,7 @@ test.describe("PokeHabit", () => {
     ).toBeVisible();
     await expect(page.getByText("500 / 3000 ml")).toBeVisible();
     await expect(motivationBadge(page)).toContainText("75%");
+    await expect(questPointsBadge(page)).toContainText("10 / 250");
 
     await page.getByRole("button", { name: "Motivation senken" }).click();
     await expect(motivationBadge(page)).toContainText("65%");
@@ -179,13 +183,14 @@ test.describe("PokeHabit", () => {
       .getByRole("button", { name: "Pokémon trainieren", exact: true })
       .click();
     await expect(
-      page.getByText("Trainingspunkte wurden für dein Pokémon eingesetzt."),
+      page.getByText("Quest-Punkte wurden für dein Pokémon eingesetzt."),
     ).toBeVisible();
+    await expect(questPointsBadge(page)).toContainText("20 / 250");
 
     await page.getByRole("button", { name: "Level-Up testen" }).click();
     await expect(page.getByText("Level-Up auf 3.")).toBeVisible();
 
-    await testInfo.attach("Demo-Screenshot nach Training", {
+    await testInfo.attach("Demo-Screenshot nach Level-Up", {
       body: await page.screenshot({ fullPage: true }),
       contentType: "image/png",
     });
@@ -222,4 +227,8 @@ function createGameState(
 
 function motivationBadge(page: Page) {
   return page.locator("sqs-stat-badge").filter({ hasText: "Motivation" });
+}
+
+function questPointsBadge(page: Page) {
+  return page.locator("sqs-stat-badge").filter({ hasText: "Quest-Punkte" });
 }

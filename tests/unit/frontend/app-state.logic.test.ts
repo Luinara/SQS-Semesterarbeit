@@ -71,6 +71,24 @@ describe("app-state.logic", () => {
     expect(updatedGameState.qualityScore).toBe(firstTask.points);
   });
 
+  it("begrenzt verfuegbare Quest-Punkte beim Task-Abschluss auf 250", () => {
+    const initialGameState = createInitialGameState();
+    const firstTask = initialGameState.tasks[0];
+
+    const updatedGameState = completeTaskInGameState(
+      {
+        ...initialGameState,
+        pet: {
+          ...initialGameState.pet,
+          availableFoodPoints: 248,
+        },
+      },
+      firstTask.id,
+    );
+
+    expect(updatedGameState.pet.availableFoodPoints).toBe(250);
+  });
+
   it("lässt einen bereits erledigten Task beim zweiten Versuch unverändert", () => {
     const initialGameState = createInitialGameState();
     const firstTaskId = initialGameState.tasks[0].id;
@@ -111,7 +129,7 @@ describe("app-state.logic", () => {
     expect(result.feedback?.kind).toBe("level-up");
   });
 
-  it("trainiert das Pokémon nur, wenn genug Quest-Punkte vorhanden sind", () => {
+  it("pflegt das Pokémon nur, wenn genug Quest-Punkte vorhanden sind", () => {
     const initialGameState = createInitialGameState();
 
     const result = feedPetInGameStateWithFeedback(initialGameState);
@@ -120,7 +138,7 @@ describe("app-state.logic", () => {
     expect(result.feedback?.kind).toBe("info");
   });
 
-  it("erhöht Motivation beim Training, aber nur bis zum Tageslimit", () => {
+  it("erhöht Motivation bei Pflege, aber nur bis zum Tageslimit", () => {
     const initialGameState = createInitialGameState();
     let gameState = {
       ...initialGameState,
@@ -246,7 +264,7 @@ describe("app-state.logic", () => {
     expect(normalized.tasks.every((task) => !task.isCompleted)).toBe(true);
   });
 
-  it("senkt Motivation nach 24 Stunden ohne Training", () => {
+  it("senkt Motivation nach 24 Stunden ohne Pflege", () => {
     const initialGameState = createInitialGameState();
 
     const resetState = resetDailyProgressIfExpired(
@@ -266,7 +284,7 @@ describe("app-state.logic", () => {
     expect(resetState.pet.dailyHappinessGained).toBe(0);
   });
 
-  it("räumt ungültige Trainingszeitpunkte beim Tagesreset auf", () => {
+  it("räumt ungültige Pflegezeitpunkte beim Tagesreset auf", () => {
     const initialGameState = createInitialGameState();
 
     const resetState = resetDailyProgressIfExpired(
@@ -409,7 +427,7 @@ describe("app-state.logic", () => {
         level: undefined as unknown as number,
         growthProgress: undefined as unknown as number,
         growthGoal: 0,
-        availableFoodPoints: undefined as unknown as number,
+        availableFoodPoints: 999,
         happiness: 150,
         hunger: -5,
         hearts: 10,
@@ -431,7 +449,7 @@ describe("app-state.logic", () => {
     expect(normalized.pet.level).toBe(1);
     expect(normalized.pet.growthProgress).toBe(0);
     expect(normalized.pet.growthGoal).toBe(PET_RULES.initialGrowthGoal);
-    expect(normalized.pet.availableFoodPoints).toBe(0);
+    expect(normalized.pet.availableFoodPoints).toBe(250);
     expect(normalized.pet.happiness).toBe(PET_RULES.maxHappiness);
     expect(normalized.pet.hunger).toBe(0);
     expect(normalized.pet.hearts).toBe(PET_RULES.maxHearts);
@@ -446,6 +464,20 @@ describe("app-state.logic", () => {
     expect(normalized.pet.lastGoodCareDay).toBeNull();
     expect(normalized.pet.isEgg).toBe(true);
     expect(normalized.pet.starterPokemonSpecies).toBe("bulbasaur");
+  });
+
+  it("normalisiert negative Quest-Punkte auf null", () => {
+    const initialGameState = createInitialGameState();
+
+    const normalized = normalizeGameState({
+      ...initialGameState,
+      pet: {
+        ...initialGameState.pet,
+        availableFoodPoints: -12,
+      },
+    });
+
+    expect(normalized.pet.availableFoodPoints).toBe(0);
   });
 
   it("deckt wachsende und ruhige Pflegezustaende ab", () => {
@@ -478,11 +510,11 @@ describe("app-state.logic", () => {
     ).toBe("calm");
   });
 
-  it("laesst Motivation ohne Training oder vollen Fehltag unveraendert", () => {
+  it("laesst Motivation ohne Pflege oder vollen Fehltag unveraendert", () => {
     const initialGameState = createInitialGameState();
     const now = new Date("2026-06-15T12:00:00.000Z");
 
-    const withoutTraining = resetDailyProgressIfExpired(
+    const withoutCare = resetDailyProgressIfExpired(
       {
         ...initialGameState,
         pet: {
@@ -494,7 +526,7 @@ describe("app-state.logic", () => {
       },
       now,
     );
-    const sameDayTraining = resetDailyProgressIfExpired(
+    const sameDayCare = resetDailyProgressIfExpired(
       {
         ...initialGameState,
         pet: {
@@ -507,10 +539,10 @@ describe("app-state.logic", () => {
       now,
     );
 
-    expect(withoutTraining.pet.happiness).toBe(66);
-    expect(withoutTraining.pet.lastHappinessDecayAt).toBeNull();
-    expect(sameDayTraining.pet.happiness).toBe(66);
-    expect(sameDayTraining.pet.lastHappinessDecayAt).toBeNull();
+    expect(withoutCare.pet.happiness).toBe(66);
+    expect(withoutCare.pet.lastHappinessDecayAt).toBeNull();
+    expect(sameDayCare.pet.happiness).toBe(66);
+    expect(sameDayCare.pet.lastHappinessDecayAt).toBeNull();
   });
 
   it("begrenzt Motivationsverfall bei null", () => {

@@ -127,6 +127,11 @@ cd backend
 .\mvnw.cmd verify
 ```
 
+Hinweis fuer lokale Java-Setups: Die Backend-Tests sollten mit einem JDK
+laufen, nicht mit einem reinen JRE. Wenn lokal Java 25 verwendet wird, aktiviert
+Maven automatisch ein Kompatibilitaetsprofil fuer Mockito/Byte Buddy und
+ueberspringt JaCoCo nur lokal. In CI bleibt Java 21 mit JaCoCo-Coverage aktiv.
+
 Wetterdaten manuell mit echten Open-Meteo-Curl-Aufrufen prüfen:
 
 ```powershell

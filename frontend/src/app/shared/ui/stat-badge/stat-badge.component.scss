@@ -1,13 +1,13 @@
 .stat-badge {
-  --stat-icon-size: 2.65rem;
+  --stat-icon-size: 2.25rem;
 
   display: grid;
   grid-template-columns: var(--stat-icon-size) minmax(0, 1fr);
   align-items: center;
-  gap: 0.8rem;
+  gap: 0.65rem;
   min-width: 0;
-  min-height: 5.6rem;
-  padding: 0.85rem 0.9rem;
+  min-height: 4.65rem;
+  padding: 0.68rem 0.75rem;
   border: 1px solid rgba(28, 42, 70, 0.08);
   border-radius: var(--radius-md);
   background: linear-gradient(180deg, rgba(244, 248, 255, 0.96) 0%, rgba(229, 239, 255, 0.9) 100%);
@@ -50,6 +50,27 @@
   stroke: none;
 }
 
+.stat-badge__glyph {
+  display: block;
+  overflow: visible;
+}
+
+.stat-badge__icon .stat-badge__glyph--heart {
+  width: 1.24rem;
+  height: 1.24rem;
+}
+
+.stat-badge__icon .stat-badge__glyph--square {
+  width: 1.12rem;
+  height: 1.12rem;
+}
+
+.stat-badge__icon .stat-badge__glyph--circle,
+.stat-badge__icon .stat-badge__glyph--star {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
 .stat-badge__stroke {
   fill: none;
   stroke: currentColor;
@@ -67,7 +88,7 @@
 
 .stat-badge__value {
   font-family: var(--font-display);
-  font-size: 1.26rem;
+  font-size: 1.08rem;
   line-height: 1.08;
   color: var(--color-text);
   overflow-wrap: anywhere;
@@ -75,12 +96,12 @@
 
 .stat-badge__label {
   color: var(--color-text-soft);
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   line-height: 1.2;
   overflow-wrap: anywhere;
 }
 
 .stat-badge--long-value .stat-badge__value {
-  font-size: 1.02rem;
+  font-size: 0.92rem;
   line-height: 1.18;
 }

@@ -1,10 +1,10 @@
-# API-Dokumentation — User Game State
+# API-Dokumentation: User Game State
 
 ## Basis-Pfad
 
-Alle Game-State-Endpunkte hängen unter:
+Alle Game-State-Endpunkte liegen unter:
 
-```
+```txt
 /api/user
 ```
 
@@ -12,42 +12,48 @@ Alle Game-State-Endpunkte hängen unter:
 
 ## Zweck
 
-Liefert den spielbezogenen Zustand des aktuell authentifizierten Users, damit das Frontend Questliste, Wasserstand, Energie, Pokémon-Daten, Motivation, Trainingspunkte und Anmelde-Serie rendern kann.
+Liefert den spielbezogenen Zustand des aktuell authentifizierten Users.
+
+Das Frontend nutzt die Daten für Questliste, Wasserstand, Energie, Pokémon-Daten, Motivation, Quest-Punkte und Anmelde-Serie.
 
 ## Authentifizierung
 
-- Der Endpunkt erfordert einen authentifizierten User (Session-basiert oder Token-basiert gemäß bestehender Authentifizierung).
-- Nicht authentifizierte Requests liefern `401 Unauthorized`.
+* Der Endpunkt erfordert einen authentifizierten User.
+* Die Authentifizierung erfolgt gemäß bestehender Auth-Doku über Session bzw. Token.
+* Nicht authentifizierte Requests liefern `401 Unauthorized`.
 
 ## Request
 
-- Method: GET
-- Path: `/api/user/game-state`
-- No body required.
-- Optional future query parameter: `?date=YYYY-MM-DD` for debug or historical views.
+* Methode: GET
+* Pfad: `/api/user/game-state`
+* Kein Request Body erforderlich.
+* Optionaler zukünftiger Query-Parameter: `?date=YYYY-MM-DD` für Debug- oder Historienansichten.
 
-## Response (200 OK)
+## Response: 200 OK
 
 Content-Type: `application/json`
 
-Fields (JSON schema)
+Felder im JSON:
 
-- `waterLevel` (integer) — aktueller Wasserstand aus `hydration_ml`.
-- `foodLevel` (integer) — aktueller Energiewert aus `hunger`.
-- `pokemonImageUrl` (string|null) — URL zum aktuellen Pokémon-Bild oder `null`, wenn noch kein Bild verfügbar ist.
-- `pokemonLevel` (integer) — aktuelles Pokémon-Level aus `pokemon_level`.
-- `growth` (integer) — Fortschritt Richtung nächstes Level. Der Wert steigt beim Abschließen von Tasks bis maximal `100`. Wenn der 2-Tage-Cooldown erfüllt ist, erhöht das Backend `pokemonLevel` und setzt `growth` auf `0`.
-- `happiness` (integer) — aktueller Motivationswert.
-- `pendingFeedPoints` (integer) — verfügbare Trainingspunkte aus abgeschlossenen Tasks. Diese Punkte kann das Frontend über `POST /api/user/feed` in Motivation umwandeln.
-- `tasks` (array of Task objects) — Aufgaben, die im Frontend sichtbar sind. Jeder Eintrag enthält:
-  - `id` (number)
-  - `title` (string)
-  - `completed` (boolean) — im Backend gespeicherter Abschlussstatus der Task.
-- `streak` (integer) — Anzahl aufeinanderfolgender Login-Tage; wird im Login-Flow aktualisiert.
-- `yesterdayLoggedIn` (boolean) — zeigt, ob am Vortag eine aktive Session vorhanden war.
-- `serverNow` (string, ISO8601 UTC) — aktuelle Serverzeit, damit das Frontend nicht von der lokalen Uhr abhängig ist.
+* `waterLevel` (integer): aktueller Wasserstand aus `hydration_ml`.
+* `foodLevel` (integer): aktueller Energiewert aus `hunger`.
+* `pokemonImageUrl` (string|null): URL zum aktuellen Pokémon-Bild oder `null`, wenn noch kein Bild verfügbar ist.
+* `pokemonLevel` (integer): aktuelles Pokémon-Level aus `pokemon_level`.
+* `growth` (integer): Fortschritt Richtung nächstes Level.
+* `happiness` (integer): aktueller Motivationswert.
+* `pendingFeedPoints` (integer): technisch gespeicherte Quest-Punkte aus abgeschlossenen Tasks.
+* `tasks` (array): Aufgaben, die im Frontend sichtbar sind.
+* `streak` (integer): Anzahl aufeinanderfolgender Login-Tage.
+* `yesterdayLoggedIn` (boolean): zeigt, ob am Vortag eine aktive Session vorhanden war.
+* `serverNow` (string, ISO8601 UTC): aktuelle Serverzeit, damit das Frontend nicht von der lokalen Uhr abhängig ist.
 
-## Example response
+Ein Task-Objekt enthält:
+
+* `id` (number)
+* `title` (string)
+* `completed` (boolean): im Backend gespeicherter Abschlussstatus der Task.
+
+## Beispiel-Response
 
 ```json
 {
@@ -68,101 +74,154 @@ Fields (JSON schema)
 }
 ```
 
-## Errors
+## Fehler
 
-- `401 Unauthorized` — request is not authenticated.
-- `500 Internal Server Error` — unexpected server error.
+* `401 Unauthorized`: Request ist nicht authentifiziert.
+* `500 Internal Server Error`: unerwarteter Serverfehler.
 
 ## DELETE /api/user/account
 
-## Purpose
+## Zweck
 
-Delete the currently authenticated user's account, including user-owned progress such as task completion rows, and invalidate the current session.
+Löscht den aktuell authentifizierten User-Account.
 
-## Authentication
+Dabei werden auch userbezogene Fortschrittsdaten gelöscht und die aktuelle Session invalidiert.
 
-- This endpoint requires an authenticated session.
-- Unauthenticated requests return `401 Unauthorized`.
+## Authentifizierung
+
+* Der Endpunkt erfordert eine authentifizierte Session.
+* Nicht authentifizierte Requests liefern `401 Unauthorized`.
 
 ## Request
 
-- Method: DELETE
-- Path: `/api/user/account`
-- No body required.
+* Methode: DELETE
+* Pfad: `/api/user/account`
+* Kein Request Body erforderlich.
 
 ## Responses
 
-- `204 No Content` — account was deleted and the session was invalidated.
-- `401 Unauthorized` — request is not authenticated.
-- `404 Not Found` — the session pointed to a user that no longer exists.
+* `204 No Content`: Account wurde gelöscht und die Session invalidiert.
+* `401 Unauthorized`: Request ist nicht authentifiziert.
+* `404 Not Found`: Die Session verweist auf einen User, der nicht mehr existiert.
 
-## Persistence notes
+## Persistenz-Hinweise
 
-- The backend deletes `user_tasks` rows before deleting the `users` row.
-- Prisma migrations configure user-owned `user_stats` and `user_tasks` relations with `ON DELETE CASCADE`.
+* Das Backend löscht `user_tasks`-Einträge vor dem Löschen des `users`-Eintrags.
+* Prisma-Migrationen konfigurieren userbezogene `user_stats`- und `user_tasks`-Relationen mit `ON DELETE CASCADE`.
 
 ## Streak und Inactivity Decay
 
-Der Login-Flow aktualisiert `lastLoginAt`, `streak` und bei verpassten Tagen
-auch den Spielstand:
+Der Login-Flow aktualisiert `lastLoginAt`, `streak` und bei verpassten Tagen auch den Spielstand.
 
-- erster Login: `streak = 1`
-- letzter Login war gestern: `streak = streak + 1`
-- letzter Login war heute: Streak bleibt unverändert
-- letzter Login war älter als gestern: `streak = 1`
+Regeln für die Login-Serie:
 
-Wenn mindestens ein kompletter Kalendertag ausgelassen wurde, greift zusätzlich
-eine kleine Strafe:
+* Erster Login: `streak = 1`
+* Letzter Login war gestern: `streak = streak + 1`
+* Letzter Login war heute: Streak bleibt unverändert.
+* Letzter Login war älter als gestern: `streak = 1`
 
-- pro verpasstem Tag: `pokemonLevel - 1`, aber nie unter Level `1`
-- pro verpasstem Tag: `happiness - 20`, aber nie unter `0`
-- wenn ein Level verloren geht, wird `growth` auf `0` gesetzt
-- wenn kein Level mehr abgezogen werden kann oder die Motivation bereits bei `0` ist, wird verbleibender Motivationsverlust von `growth` abgezogen, aber nie unter `0`
+Wenn mindestens ein kompletter Kalendertag ausgelassen wurde, greift zusätzlich eine kleine Strafe.
 
-Beispiel: letzter Login am 14.06., nächster Login am 16.06. → der 15.06. wurde
-verpasst. Das Pokémon verliert ein Level und 20 Motivation.
+Regeln für verpasste Tage:
+
+* Pro verpasstem Tag: `pokemonLevel - 1`, aber nie unter Level `1`.
+* Pro verpasstem Tag: `happiness - 10`, aber nie unter `0`.
+* Wenn ein Level verloren geht, wird `growth` auf `0` gesetzt.
+
+Beispiel: letzter Login am 14.06., nächster Login am 16.06.
+
+Der 15.06. wurde verpasst, daher verliert das Pokémon ein Level und 10 Motivation.
 
 ## Tagesreset für Wasser und Tasks
 
-Es gibt keinen dauerhaft laufenden Hintergrundtimer. Der Tageswechsel wird beim
-nächsten erfolgreichen Login serverseitig angewendet:
+Der Reset ist nicht an einen erneuten Login gekoppelt.
 
-- letzter Login war heute: Wasserstand und Task-Abschlüsse bleiben erhalten.
-- letzter Login war vor heute: `hydration_ml` wird auf `0` gesetzt.
-- letzter Login war vor heute: alle `user_tasks.completed`-Flags des Users werden auf `false` gesetzt.
-- letzter Login war gestern: `streak = streak + 1`, aber keine Inaktivitätsstrafe.
-- letzter Login war älter als gestern: `streak = 1` und die Inaktivitätsstrafe wird für komplett verpasste Kalendertage angewendet.
+Der Server bewertet den Reset bei `GET /api/user/game-state` und vor relevanten Spielstandsaktionen.
 
-`serverNow` hilft dem Client, nicht von der lokalen Uhr des Browsers abhängig
-zu sein. Die Tagesgrenze wird im Backend anhand von UTC-Kalendertagen bewertet.
+Das Frontend aktualisiert den Dashboard-Spielstand in einer laufenden Session regelmäßig.
 
-## Implementation notes
+Dadurch wird der Reset nach Ablauf des Intervalls sichtbar.
 
-- Relevante Datenbankfelder: `hydration_ml`, `hunger`, `pokemon_level`, `pokemon_xp`, `happiness`, `pending_feed_points`, `last_level_up_at`, `last_login_at`, `streak`.
-- Die Java-Persistenzschicht mappt diese Felder über `UserEntity`:
-  - `hydrationMl` -> `hydration_ml` (int)
-  - `hunger` -> `hunger` (int)
-  - `pokemonLevel` -> `pokemon_level` (int)
-  - `pokemonXp` -> `pokemon_xp` (int)
-  - `streak` -> `streak` (int)
-  - `pendingFeedPoints` -> `pending_feed_points` (int)
-  - `lastLevelUpAt` -> `last_level_up_at` (timestamp)
-- The controller lives in the `user` feature package (`io.github.luinara.sqs.user.UserController`) and delegates to `UserService`, which builds DTOs specifically for the client. The API does not return JPA entities directly.
-- Timezone policy: server timestamps are provided in UTC. All date comparisons for daily boundaries should use UTC.
+* Standard und Dev-Profil: `pokehabit.daily-reset-interval=PT24H`.
+* Für manuelle Kurztests kann temporär `pokehabit.daily-reset-interval=PT1M` genutzt werden.
+* Diese Kurztest-Konfiguration wird nicht dauerhaft eingecheckt.
+* Wenn das Intervall erreicht ist, wird `hydration_ml` auf `0` gesetzt.
+* Wenn das Intervall erreicht ist, werden alle `user_tasks.completed`-Flags des Users auf `false` gesetzt.
+* Login-Streak und Inaktivitätsstrafe bleiben an UTC-Kalendertage gekoppelt.
+* `last_daily_reset_at` speichert den letzten Reset-Zeitpunkt.
+
+`serverNow` hilft dem Client, nicht von der lokalen Browser-Uhr abhängig zu sein.
+
+Die Reset-Schwelle wird im Backend anhand der Serverzeit bewertet.
+
+## Implementierungshinweise
+
+Relevante Datenbankfelder:
+
+* `hydration_ml`
+* `hunger`
+* `pokemon_level`
+* `pokemon_xp`
+* `happiness`
+* `pending_feed_points`
+* `last_level_up_at`
+* `last_login_at`
+* `last_daily_reset_at`
+* `streak`
+
+Die Java-Persistenzschicht mappt diese Felder über `UserEntity`:
+
+* `hydrationMl` -> `hydration_ml` (int)
+* `hunger` -> `hunger` (int)
+* `pokemonLevel` -> `pokemon_level` (int)
+* `pokemonXp` -> `pokemon_xp` (int)
+* `streak` -> `streak` (int)
+* `pendingFeedPoints` -> `pending_feed_points` (int)
+* `lastLevelUpAt` -> `last_level_up_at` (timestamp)
+* `lastDailyResetAt` -> `last_daily_reset_at` (timestamp)
+
+Der Controller liegt im `user`-Feature-Package.
+
+Pfad: `io.github.luinara.sqs.user.UserController`
+
+Der Controller delegiert an `UserService`.
+
+`UserService` baut DTOs speziell für den Client.
+
+Die API gibt keine JPA-Entities direkt zurück.
+
+## Zeitzonen-Regel
+
+Server-Zeitstempel werden in UTC bereitgestellt.
+
+Alle Datumsvergleiche für Tagesgrenzen verwenden UTC.
 
 ## Testabdeckung
 
-- Unit- und Controller-Tests decken Service-Mapping, unauthentifizierte Requests, Account-Löschung und Spielstand-Aktionen ab.
-- Frontend-Service-Tests prüfen das Mapping der Backend-Payloads in die UI-Modelle.
-- Der Docker Quality Hub führt Backend-, Frontend-, Security-, Coverage- und E2E-Checks gesammelt aus.
+* Unit- und Controller-Tests decken Service-Mapping, unauthentifizierte Requests, Account-Löschung und Spielstandsaktionen ab.
+* `UserServiceTest` prüft den Tagesreset mit `Duration.ofMinutes(1)` ohne realen Wartezeitraum.
+* Dabei werden Wasser auf `0` gesetzt, Quest-Completions zurückgesetzt und `lastDailyResetAt` aktualisiert.
+* `SelfCareApplicationTests` prüft Spring-Kontext, zentrale Beans, aktives `test`-Profil, H2-In-Memory-Datenbank und UTC-`Clock`-Bean.
+* Frontend-Service-Tests prüfen das Mapping der Backend-Payloads in UI-Modelle.
+* Der Docker Quality Hub führt Backend-, Frontend-, Security-, Coverage- und E2E-Checks gesammelt aus.
 
-## File location
+## Dateiablage
 
-Diese Doku liegt in `docs/03-api/user-game-state.md`.
+Diese Doku liegt unter:
 
-## Notes about `growth`
+```txt
+docs/03-api/user-game-state.md
+```
 
-- `growth` ist der numerische Fortschritt zum nächsten Level. Es steigt beim Abschluss von Tasks. Wenn `growth >= 100` und der 2-Tage-Cooldown seit `lastLevelUpAt` erfüllt ist, erhöht das Backend `pokemonLevel`, setzt `growth` zurück und aktualisiert `lastLevelUpAt`.
+## Hinweise zu `growth`
+
+`growth` ist der numerische Fortschritt zum nächsten Level.
+
+Der Wert steigt beim Abschluss von Tasks.
+
+Wenn `growth >= 100` und der 2-Tage-Cooldown seit `lastLevelUpAt` erfüllt ist, erhöht das Backend `pokemonLevel`.
+
+Danach setzt das Backend `growth` zurück und aktualisiert `lastLevelUpAt`.
 
 ## Bekannte Erweiterungen
 

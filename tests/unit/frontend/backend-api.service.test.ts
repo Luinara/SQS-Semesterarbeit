@@ -61,6 +61,60 @@ describe("BackendApiService", () => {
     expect(snapshot.gameState.qualityScore).toBe(10);
   });
 
+  it("begrenzt Quest-Punkte aus dem Backend auf 0 bis 250", async () => {
+    vi.spyOn(globalThis, "fetch")
+      .mockResolvedValueOnce(jsonResponse({ message: "authenticated" }))
+      .mockResolvedValueOnce(jsonResponse([]))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          waterLevel: 0,
+          foodLevel: 0,
+          currentPokemonId: 1,
+          pokemonImageUrl: "/assets/egg.png",
+          pokemonName: "bulbasaur",
+          pokemonLevel: 1,
+          growth: 0,
+          happiness: 0,
+          pendingFeedPoints: 999,
+          tasks: [],
+          streak: 1,
+          yesterdayLoggedIn: false,
+          serverNow: "2026-06-15T10:00:00Z",
+        }),
+      )
+      .mockResolvedValueOnce(jsonResponse({ message: "authenticated" }))
+      .mockResolvedValueOnce(jsonResponse([]))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          waterLevel: 0,
+          foodLevel: 0,
+          currentPokemonId: 1,
+          pokemonImageUrl: "/assets/egg.png",
+          pokemonName: "bulbasaur",
+          pokemonLevel: 1,
+          growth: 0,
+          happiness: 0,
+          pendingFeedPoints: -4,
+          tasks: [],
+          streak: 1,
+          yesterdayLoggedIn: false,
+          serverNow: "2026-06-15T10:00:00Z",
+        }),
+      );
+
+    const cappedSnapshot = await new BackendApiService().login(
+      "zoe",
+      "secret123",
+    );
+    const flooredSnapshot = await new BackendApiService().login(
+      "zoe",
+      "secret123",
+    );
+
+    expect(cappedSnapshot.gameState.pet.availableFoodPoints).toBe(250);
+    expect(flooredSnapshot.gameState.pet.availableFoodPoints).toBe(0);
+  });
+
   it("registriert den gewÃ¤hlten Starter und nutzt Backend-PokÃ©monnamen im Snapshot", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")

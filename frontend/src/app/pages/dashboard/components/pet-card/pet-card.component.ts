@@ -17,6 +17,8 @@ import { PetVisualComponent } from '../pet-visual/pet-visual.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PetCardComponent {
+  private static readonly MAX_AVAILABLE_POINTS = 250;
+
   readonly pet = input<PetState | null>(null);
   readonly completedTasks = input(0);
   readonly totalTasks = input(0);
@@ -29,7 +31,7 @@ export class PetCardComponent {
   readonly pokemon = input<PokemonSnapshot | null>(null);
   readonly pokemonImageUrl = input<string | null>(null);
   readonly pokemonLoading = input(false);
-  readonly feedCost = input(1);
+  readonly feedCost = input(10);
   readonly isLevelingUp = input(false);
   readonly isBusy = input(false);
   readonly feedRequested = output<void>();
@@ -45,7 +47,7 @@ export class PetCardComponent {
   );
   readonly displaySpriteUrl = computed(() =>
     this.pet()?.isEgg
-      ? 'egg.svg'
+      ? (this.pokemonImageUrl() ?? 'egg.svg')
       : (this.pokemonImageUrl() ?? this.pokemon()?.spriteUrl ?? 'pet-placeholder.svg')
   );
   readonly displayPokemonTypes = computed(() =>
@@ -55,44 +57,17 @@ export class PetCardComponent {
     this.pet()?.isEgg ? 'fallback' : (this.pokemon()?.source ?? 'fallback')
   );
   readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) >= this.feedCost());
-  readonly feedCostLabel = computed(
-    () => `${this.feedCost()} ${this.feedCost() === 1 ? 'Punkt' : 'Punkte'}`
+  readonly availablePointsLabel = computed(
+    () =>
+      `${clamp(
+        this.pet()?.availableFoodPoints ?? 0,
+        0,
+        PetCardComponent.MAX_AVAILABLE_POINTS
+      )} / ${PetCardComponent.MAX_AVAILABLE_POINTS}`
   );
-  readonly careStateLabel = computed(() => {
-    switch (this.petCareState()) {
-      case 'needs-care':
-        return 'Braucht Quest-Punkte';
-      case 'ready-to-feed':
-        return 'Bereit für Training';
-      case 'growing':
-        return 'Kurz vor Level-Up';
-      case 'thriving':
-        return 'Sehr fit';
-      default:
-        return 'Stabil';
-    }
-  });
-  readonly careStateHint = computed(() => {
-    switch (this.petCareState()) {
-      case 'needs-care':
-        return 'Erledige eine Quest oder trainiere dein Pokémon.';
-      case 'ready-to-feed':
-        return 'Du hast genug Quest-Punkte für die nächste Trainingseinheit.';
-      case 'growing':
-        return 'Der nächste Level ist schon in Reichweite.';
-      case 'thriving':
-        return 'Dein Tagesfortschritt sieht stark aus.';
-      default:
-        return 'Ein guter Moment für die nächste Quest.';
-    }
-  });
   readonly pokemonStatus = computed(() => {
     if (this.pet()?.isEgg) {
       return 'Ei bis Lvl. 10';
-    }
-
-    if (this.pokemonImageUrl()) {
-      return 'Sprite bereit';
     }
 
     if (this.pokemonLoading()) {
@@ -100,7 +75,9 @@ export class PetCardComponent {
     }
 
     const pokemon = this.pokemon();
-    return pokemon ? pokemon.displayName : 'Bereit';
+    const species = this.pet()?.pokemonSpecies;
+
+    return pokemon?.displayName ?? (species ? formatPokemonName(species) : 'Pokémon');
   });
   readonly weatherStatus = computed(() => {
     if (this.weatherLoading()) {
@@ -176,4 +153,12 @@ export function formatWeatherUpdatedAtTime(updatedAt: string): string | null {
     hour: '2-digit',
     minute: '2-digit',
   }).format(updatedAtDate)} Uhr`;
+}
+
+function formatPokemonName(name: string): string {
+  return `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
 }

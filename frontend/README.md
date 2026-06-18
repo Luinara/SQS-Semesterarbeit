@@ -1,6 +1,6 @@
 # PokeHabit Frontend
 
-Diese README beschreibt unser Frontend für PokeHabit. Die App ist keine klassische To-do-Liste, sondern eine kleine Game-App: Man erledigt Tagesquests, sammelt Punkte, trinkt Wasser, trainiert sein Pokémon und bekommt eine Wetter-Szene, die aus echten Wetterdaten kommt.
+Diese README beschreibt unser Frontend für PokeHabit. Die App ist keine klassische To-do-Liste, sondern eine kleine Game-App: Man erledigt Tagesquests, sammelt Punkte, trinkt Wasser, begleitet sein Pokémon und bekommt eine Wetter-Szene, die aus echten Wetterdaten kommt.
 
 Wichtig für die Abgabe: Im sichtbaren UI soll die App nicht nach Technik-Demo aussehen. Begriffe wie API, Backend oder Abgabe gehören nicht auf Buttons und Karten. Technisch ist das Frontend aber sauber an das Spring-Backend angebunden.
 
@@ -140,10 +140,9 @@ dann ist das kein Frontend-Fehler. Das Backend läuft dann nicht auf Port `8181`
 3. Spieler loggt sich ein oder registriert sich.
 4. Quest-Board lädt Tagesquests und Spielstand.
 5. Spieler erledigt Quests.
-6. Punkte füllen Tagesziel und Trainingspunkte.
+6. Punkte füllen Tagesziel und Level-Fortschritt.
 7. Spieler kann Wasser über die Wasser-Gauge speichern.
-8. Spieler kann das Pokémon trainieren.
-9. Wetter-Szene passt sich an Stadt und Wetterdaten an.
+8. Wetter-Szene passt sich an Stadt und Wetterdaten an.
 
 So kann man die Demo gut zeigen: anmelden, klicken, Feedback sehen, Spielstand aktualisiert sich.
 
@@ -181,7 +180,6 @@ Sie zeigt:
 
 - Spielername
 - erledigte Quests
-- verfügbare Trainingspunkte
 
 Buttons:
 
@@ -232,14 +230,16 @@ Die Karte zeigt:
 - Level
 - Wachstum
 - Motivation
-- Trainingspunkte
 - Wetter-Szene
 
-Button:
+Das Aktionspanel unter der Partnerkarte ist zweigeteilt:
 
-- `Pokémon trainieren`: nutzt Trainingspunkte.
+- links Pflege-Hinweis und `Pokémon trainieren`
+- rechts der helle Demo-Bereich mit `Level-Up testen` und `Motivation senken`
 
-Training ist nur aktiv, wenn Punkte vorhanden sind.
+Die Demo-Aktionen sind bewusst als Pruefhilfe gestaltet: Sie erlauben schnelle
+Sichtkontrolle fuer Level-Up-Feedback, Motivation und Backend-Spielstand, ohne
+in der Praesentation lange warten zu muessen.
 
 ### Wetter-Szene
 
@@ -371,12 +371,6 @@ Wasser trinken:
 Tagesziel-Karte -> DashboardPage -> AppStateService.addWater -> BackendApiService.addWater
 ```
 
-Pokémon trainieren:
-
-```text
-PetCard -> DashboardPage -> AppStateService.feedPet -> BackendApiService.feed
-```
-
 Wetter:
 
 ```text
@@ -459,7 +453,7 @@ Aktuell wichtig:
 - Quest-Board sehen
 - Wasserbutton klicken
 - Quest erledigen
-- Pokémon trainieren
+- Level-Up-Test ausführen
 - Logout ausführen
 
 Befehl:

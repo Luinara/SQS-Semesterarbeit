@@ -59,19 +59,19 @@ Beispiel:
 Wesentliche Semantik (kurz)
 
 - Die Aktion führt zu folgenden Effekten:
-  - Trainingspunkte: `task.feed_points` werden zu `user.pendingFeedPoints` addiert. Diese Punkte werden erst über `POST /api/user/feed` in Motivation umgewandelt.
+  - Quest-Punkte: `task.feed_points` werden technisch zu `user.pendingFeedPoints` addiert.
   - Wachstum: Erhöht sich um `10 XP` pro neu abgeschlossenem Task, maximal bis `100`.
   - Level: Wenn der Wachstumswert den Cap erreicht und der Level-Cooldown erfüllt ist, steigt `pokemonLevel` um genau 1 und `growth` wird auf `0` gesetzt.
   - Cooldown: Ein Level-Up ist nur möglich, wenn `last_level_up_at` leer ist oder mindestens zwei Tage zurückliegt. Ist der Cooldown aktiv, bleibt `growth` bei `100`.
   - Level‑abhängige Effekte:
     - Beim Erreichen von Level >= 10: Wenn `isEgg == true`, wird das Pokémon ausgebrütet (isEgg=false und `hatchedAt` gesetzt).
-    - Bei Erreichen von Level >= 25 und >= 50: Wenn `evolutionId` vorhanden ist, wird das Pokémon einmal bzw. zweimal weiterentwickelt (sofern Evolutionskette vorhanden).
+    - Bei Erreichen von Level >= 15 und >= 35: Wenn `evolutionId` vorhanden ist, wird das Pokémon einmal bzw. zweimal weiterentwickelt (sofern Evolutionskette vorhanden).
 - Implementation‑Hinweis: In dieser Iteration wird für Persistenz das vorhandene Modell `user_tasks` (boolean `completed`) verwendet; langfristig wird ein `task_completions`‑Log empfohlen, das Tages‑Eindeutigkeit robust handhabt.
 
-Tagesgrenzen / Reset (Frontend / Übergangsregel)
+Tagesgrenzen / Reset
 
-- Übergangsregel: Der tägliche Reset der Anzeige wird in der aktuellen Iteration vom Frontend gehandhabt (siehe `docs/03-api/user-game-state.md`).
-- Hinweis für Backend‑Integratoren: Weil aktuell kein `TaskCompletion`‑Log vorhanden ist, kann der Server nur den `user_tasks.completed`‑Wert setzen; eine echte "1x pro UTC‑Tag"‑Semantik wird erst mit einem späteren DB‑Änderungs‑Feature robust.
+- Der Reset von Wasserstand und `user_tasks.completed` wird serverseitig beim Abruf des Game-State und vor relevanten Spielstandsaktionen bewertet, sobald das konfigurierte Reset-Intervall erreicht ist (siehe `docs/03-api/user-game-state.md`).
+- Hinweis für Backend‑Integratoren: Weil aktuell kein `TaskCompletion`‑Log vorhanden ist, setzt der Server den bestehenden `user_tasks.completed`‑Wert zurück. Eine append-only Historie pro Tag bleibt eine spätere Erweiterung.
 
 Idempotency und Fehlerverhalten
 

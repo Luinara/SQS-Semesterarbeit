@@ -3,10 +3,10 @@
     <div class="pet-card__header">
       <div>
         <span class="eyebrow">Pokémon Partner</span>
-        <h2>{{ displayName() }} trainiert mit deinen Quests</h2>
+        <h2>{{ displayName() }} begleitet deine Quests</h2>
         <p>
-          Erledigte Quests geben Trainingspunkte. Training steigert Motivation, Wachstum und die
-          Evolution deines Pokémon.
+          Erledigte Quests bringen Tagesfortschritt, Wachstum und die nächste Entwicklung deines
+          Pokémon näher.
         </p>
       </div>
 
@@ -16,42 +16,33 @@
       </div>
     </div>
 
-    @if (gameFeedback(); as feedback) {
-      <div
-        class="pet-card__feedback"
-        [class.pet-card__feedback--level-up]="feedback.kind === 'level-up'"
-        [class.pet-card__feedback--feeding]="feedback.kind === 'feeding'"
-        [class.pet-card__feedback--hydration]="feedback.kind === 'hydration'"
-        [class.pet-card__feedback--quest]="feedback.kind === 'quest'"
-      >
-        {{ feedback.message }}
-      </div>
-    }
+    <div
+      class="pet-card__feedback"
+      [class.pet-card__feedback--empty]="!gameFeedback()"
+      [class.pet-card__feedback--level-up]="gameFeedback()?.kind === 'level-up'"
+      [class.pet-card__feedback--feeding]="gameFeedback()?.kind === 'feeding'"
+      [class.pet-card__feedback--hydration]="gameFeedback()?.kind === 'hydration'"
+      [class.pet-card__feedback--quest]="gameFeedback()?.kind === 'quest'"
+      aria-live="polite"
+    >
+      {{ gameFeedback()?.message || 'Bereit' }}
+    </div>
 
     <div class="pet-card__body">
-      <sqs-pet-visual
-        [petName]="displayName()"
-        [level]="currentPet.level"
-        [weatherScene]="weatherScene()"
-        [careState]="petCareState()"
-        [spriteUrl]="displaySpriteUrl()"
-        [pokemonTypes]="displayPokemonTypes()"
-        [pokemonSource]="displayPokemonSource()"
-        [isLevelingUp]="isLevelingUp()"
-      />
+      <div class="pet-card__showcase">
+        <sqs-pet-visual
+          [petName]="displayName()"
+          [level]="currentPet.level"
+          [weatherScene]="weatherScene()"
+          [careState]="petCareState()"
+          [spriteUrl]="displaySpriteUrl()"
+          [pokemonTypes]="displayPokemonTypes()"
+          [pokemonSource]="displayPokemonSource()"
+          [isLevelingUp]="isLevelingUp()"
+        />
+      </div>
 
       <div class="pet-card__details">
-        <div
-          class="pet-card__care-state"
-          [class.pet-card__care-state--needs-care]="petCareState() === 'needs-care'"
-          [class.pet-card__care-state--ready-to-feed]="petCareState() === 'ready-to-feed'"
-          [class.pet-card__care-state--growing]="petCareState() === 'growing'"
-          [class.pet-card__care-state--thriving]="petCareState() === 'thriving'"
-        >
-          <span>{{ careStateLabel() }}</span>
-          <strong>{{ careStateHint() }}</strong>
-        </div>
-
         <div class="pet-card__weather">
           <div class="pet-card__weather-copy">
             <span class="pet-card__weather-label">Aktuelle Wetter-Szene</span>
@@ -113,8 +104,8 @@
         <div class="pet-card__stats">
           <sqs-stat-badge label="Pokémon" [value]="pokemonStatus()" icon="pokemon" tone="green" />
           <sqs-stat-badge
-            label="Trainingspunkte"
-            [value]="currentPet.availableFoodPoints"
+            label="Quest-Punkte"
+            [value]="availablePointsLabel()"
             icon="points"
             tone="blue"
           />
@@ -124,35 +115,37 @@
             icon="hearts"
             tone="amber"
           />
-          <sqs-stat-badge
-            label="Trainings"
-            [value]="currentPet.mealsServed"
-            icon="tasks"
-            tone="slate"
-          />
         </div>
+      </div>
 
-        <div class="pet-card__footer">
+      <div class="pet-card__control-row">
+        <div class="pet-card__training-action">
           <div class="pet-card__hint">
-            <strong>Training kostet {{ feedCostLabel() }}.</strong>
+            <strong>Quests und Wasser halten deinen Partner fit.</strong>
             <span>
-              Level-Ups sind frühestens alle zwei Tage möglich. Mit dem Testbutton kannst du die
-              Animation sofort prüfen.
+              Level-Ups sind frühestens alle zwei Tage möglich; die Demo-Aktionen helfen beim
+              schnellen Prüfen.
             </span>
           </div>
 
-          <div class="pet-card__actions">
-            <button
-              sqsButton
-              [disabled]="isBusy() || !canFeed()"
-              [variant]="isBusy() || !canFeed() ? 'secondary' : 'primary'"
-              (click)="requestFeeding()"
-            >
-              {{ isBusy() ? 'Speichert...' : 'Pokémon trainieren' }}
-            </button>
+          <button
+            sqsButton
+            class="pet-card__primary-action"
+            [disabled]="isBusy() || !canFeed()"
+            [variant]="isBusy() || !canFeed() ? 'secondary' : 'primary'"
+            type="button"
+            (click)="requestFeeding()"
+          >
+            {{ isBusy() ? 'Bitte warten...' : 'Pokémon trainieren' }}
+          </button>
+        </div>
 
+        <div class="pet-card__demo-actions">
+          <span class="pet-card__control-label">Demo</span>
+          <div class="pet-card__demo-buttons">
             <button
               sqsButton
+              class="pet-card__utility-action"
               variant="soft"
               type="button"
               [disabled]="isBusy()"
@@ -163,6 +156,7 @@
 
             <button
               sqsButton
+              class="pet-card__utility-action"
               variant="ghost"
               type="button"
               [disabled]="isBusy()"

@@ -1,9 +1,15 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { AppStateService } from '../../core/services/app-state.service';
 import { PokemonService } from '../../core/services/pokemon.service';
 import { WeatherService } from '../../core/services/weather.service';
-import { DEMO_ACCOUNT } from '../../shared/mock/mock-data';
 import { PetCardComponent } from './components/pet-card/pet-card.component';
 import { QualityGateCardComponent } from './components/quality-gate-card/quality-gate-card.component';
 import { TaskListComponent } from './components/task-list/task-list.component';
@@ -17,15 +23,26 @@ import { TopBarComponent } from './components/top-bar/top-bar.component';
   styleUrl: './dashboard-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardPageComponent {
+export class DashboardPageComponent implements OnDestroy {
+  private static readonly DASHBOARD_REFRESH_INTERVAL_MS = 5000;
+
   private readonly router = inject(Router);
   readonly appState = inject(AppStateService);
   readonly weather = inject(WeatherService);
   readonly pokemon = inject(PokemonService);
-  readonly demoAccount = DEMO_ACCOUNT;
+  readonly busyTaskId = signal<string | null>(null);
+  readonly busyWaterAmountMl = signal<number | null>(null);
+  private readonly dashboardRefreshInterval: ReturnType<typeof setInterval>;
 
   constructor() {
     this.weather.initialize();
+    this.dashboardRefreshInterval = setInterval(() => {
+      if (!this.appState.isAuthenticated() || this.appState.isActionPending()) {
+        return;
+      }
+
+      this.runAsync(() => this.appState.resetCurrentProgress(false));
+    }, DashboardPageComponent.DASHBOARD_REFRESH_INTERVAL_MS);
 
     effect(() => {
       const pet = this.appState.pet();
@@ -42,8 +59,20 @@ export class DashboardPageComponent {
     });
   }
 
+  ngOnDestroy(): void {
+    clearInterval(this.dashboardRefreshInterval);
+  }
+
   completeTask(taskId: string): void {
-    this.runAsync(() => this.appState.completeTask(taskId));
+    if (this.isQuestListBusy()) {
+      return;
+    }
+
+    this.busyTaskId.set(taskId);
+    this.runAsync(
+      () => this.appState.completeTask(taskId),
+      () => this.busyTaskId.set(null)
+    );
   }
 
   feedPet(): void {
@@ -59,7 +88,15 @@ export class DashboardPageComponent {
   }
 
   addWater(amountMl: number): void {
-    this.runAsync(() => this.appState.addWater(amountMl));
+    if (this.isQuestListBusy()) {
+      return;
+    }
+
+    this.busyWaterAmountMl.set(amountMl);
+    this.runAsync(
+      () => this.appState.addWater(amountMl),
+      () => this.busyWaterAmountMl.set(null)
+    );
   }
 
   refreshWeather(): void {
@@ -94,9 +131,15 @@ export class DashboardPageComponent {
     await this.router.navigateByUrl('/auth');
   }
 
-  private runAsync(action: () => Promise<unknown>): void {
-    action().catch((error: unknown) => {
-      console.error('Dashboard action failed', error);
-    });
+  private isQuestListBusy(): boolean {
+    return this.busyTaskId() !== null || this.busyWaterAmountMl() !== null;
+  }
+
+  private runAsync(action: () => Promise<unknown>, afterAction?: () => void): void {
+    action()
+      .catch((error: unknown) => {
+        console.error('Dashboard action failed', error);
+      })
+      .finally(() => afterAction?.());
   }
 }

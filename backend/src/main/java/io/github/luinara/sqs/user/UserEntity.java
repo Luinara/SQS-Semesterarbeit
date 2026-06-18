@@ -14,6 +14,8 @@ import jakarta.persistence.Version;
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class UserEntity {
+    public static final int MIN_PENDING_FEED_POINTS = 0;
+    public static final int MAX_PENDING_FEED_POINTS = 250;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,6 +62,9 @@ public class UserEntity {
 
     @Column(name = "last_task_completion_date")
     private OffsetDateTime lastTaskCompletionDate;
+
+    @Column(name = "last_daily_reset_at")
+    private OffsetDateTime lastDailyResetAt;
 
     @Column(name = "last_level_up_at")
     private OffsetDateTime lastLevelUpAt;
@@ -201,6 +206,14 @@ public class UserEntity {
         this.lastTaskCompletionDate = lastTaskCompletionDate;
     }
 
+    public OffsetDateTime getLastDailyResetAt() {
+        return lastDailyResetAt;
+    }
+
+    public void setLastDailyResetAt(OffsetDateTime lastDailyResetAt) {
+        this.lastDailyResetAt = lastDailyResetAt;
+    }
+
     public OffsetDateTime getLastLevelUpAt() {
         return lastLevelUpAt;
     }
@@ -210,11 +223,18 @@ public class UserEntity {
     }
 
     public int getPendingFeedPoints() {
-        return pendingFeedPoints;
+        return clampPendingFeedPoints(pendingFeedPoints);
     }
 
     public void setPendingFeedPoints(int pendingFeedPoints) {
-        this.pendingFeedPoints = pendingFeedPoints;
+        this.pendingFeedPoints = clampPendingFeedPoints(pendingFeedPoints);
+    }
+
+    private static int clampPendingFeedPoints(int pendingFeedPoints) {
+        return Math.max(
+                MIN_PENDING_FEED_POINTS,
+                Math.min(MAX_PENDING_FEED_POINTS, pendingFeedPoints)
+        );
     }
 
     public Long getVersion() {

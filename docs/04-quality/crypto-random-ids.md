@@ -3,7 +3,7 @@
 ## Zweck
 
 Im Frontend werden an einigen Stellen kurzlebige IDs erzeugt, zum Beispiel für
-UI-Feedback-Meldungen oder lokale Demo-Daten. Diese IDs sind keine Passwoerter,
+UI-Feedback-Meldungen oder lokale Demo-Daten. Diese IDs sind keine Passwörter,
 Tokens, Session-IDs oder fachlichen Berechtigungen. Sie dienen nur dazu, einzelne
 UI-Ereignisse eindeutig zu kennzeichnen.
 

@@ -1,6 +1,6 @@
 # API — Benutzeraktionen: Water, Feed & Account
 
-Dieses Dokument beschreibt die Endpunkte, mit denen der Client Wasser trinken, Pokémon füttern/trainieren und den eigenen Account löschen kann.
+Dieses Dokument beschreibt die Endpunkte, mit denen der Client Wasser trinken, den Pokémon-Spielstand aktualisieren und den eigenen Account löschen kann.
 
 Hinweis: Authentifizierung wie im Projektstandard (Session / USER_TOKEN) wird erwartet. Alle Zeiten und Werte verwenden UTC‑Konventionen, Responses enthalten `GameStateDto` (siehe `docs/03-api/user-game-state.md`).
 
@@ -113,7 +113,7 @@ Beispiel Response
   - Bei `0%` Motivation kostet weiterer Motivationsverlust etwas Wachstum/XP.
   - Unter ca. `25%` kann das Frontend den Pflegezustand als kritisch anzeigen.
   - Quests, Wassertracking und Level-Up werden dadurch aktuell nicht hart blockiert.
-  - Motivation kann über Trainingspunkte und `POST /api/user/feed` wieder erhöht werden.
+  - Motivation kann über Quest-Punkte und `POST /api/user/feed` wieder erhöht werden.
 
 - Responses:
   - 200 OK - JSON body: aktueller `GameStateDto`.
