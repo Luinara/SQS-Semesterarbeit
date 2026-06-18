@@ -363,7 +363,7 @@ jobs:
       # Coverage reports are loaded from backend/target/site/jacoco/jacoco.xml and frontend/coverage/lcov.info
       - name: SonarCloud scan
         if: steps.sonar-check.outputs.configured == 'true'
-        uses: sonarsource/sonarcloud-github-action@3f12c8b0d8b4d8f2a7fb4c9e6d1d2f9a2d0a1d6e
+        uses: sonarsource/sonarcloud-github-action@ba3875ecf642b2129de2b589510c81a8b53dbf4e
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
