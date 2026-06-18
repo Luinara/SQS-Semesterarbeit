@@ -238,7 +238,7 @@ jobs:
     runs-on: ubuntu-latest
     # Needs the analyze jobs (so Checkstyle/SpotBugs/ESLint/Prettier pass first)
     # and the test jobs (which upload the coverage artifacts consumed below).
-    needs: [backend-analyze, frontend-analyze, frontend-test]
+    needs: [backend-test, backend-analyze, frontend-analyze, frontend-test]
 
     steps:
       - uses: actions/checkout@v6
