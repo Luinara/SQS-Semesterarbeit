@@ -4,7 +4,27 @@ Diese Notiz erklärt, wie die Wetterdaten in unserer App funktionieren. Wichtig:
 Die Nutzer geben in der App nur einen Stadtnamen ein, z.B. `Madrid`. Latitude
 und Longitude müssen Nutzer nicht kennen.
 
+## Aktueller Architekturstand
+
+Die Wetter-API liegt jetzt im Backend. Das Frontend ruft nur noch unsere
+Endpunkte auf:
+
+```text
+GET /api/weather/location?city=Madrid
+GET /api/weather/current?latitude=40.4165&longitude=-3.70256&label=Madrid
+```
+
+Das Backend kapselt die Open-Meteo-Aufrufe in
+`backend/src/main/java/io/github/luinara/sqs/weather/WeatherService.java`.
+`frontend/src/app/core/services/weather.adapter.ts` spricht dadurch nicht mehr
+direkt mit `api.open-meteo.com`.
+
 ## Kurzer Ablauf
+
+Hinweis: Dieser Detailabschnitt beschreibt noch den urspruenglichen Frontend-
+Adapter-Ablauf. Fuer die aktuelle Architektur ist der Abschnitt
+`Aktueller Architekturstand` massgeblich; die Open-Meteo-Aufrufe laufen jetzt
+serverseitig ueber das Backend.
 
 1. Nutzer gibt in der App eine Stadt ein, z.B. `Madrid`.
 2. `WeatherService.searchCity("Madrid")` nimmt den Text entgegen.
