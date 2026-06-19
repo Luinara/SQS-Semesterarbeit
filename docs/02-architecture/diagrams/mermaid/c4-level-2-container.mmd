@@ -8,8 +8,10 @@ flowchart LR
     end
 
     POKEAPI["PokeAPI: Externe REST API"]
+    WEATHER["Open-Meteo: Externe Wetter-API"]
 
     USER -->|HTTPS / Browser| FE
     FE -->|REST JSON /api| BE
     BE -->|JDBC / JPA| DB
     BE -->|HTTPS / JSON| POKEAPI
+    BE -->|HTTPS / JSON| WEATHER
