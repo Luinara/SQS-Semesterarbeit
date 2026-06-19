@@ -256,7 +256,7 @@
     <text x="1085" y="799" text-anchor="middle" class="tiny">8181</text>
 
     <ellipse cx="1265" cy="788" rx="42" ry="25" class="db"/>
-    <text x="1265" y="784" text-anchor="middle" class="label">Postgres</text>
+    <text x="1265" y="784" text-anchor="middle" class="label">PostgreSQL</text>
     <text x="1265" y="800" text-anchor="middle" class="tiny">5432</text>
 
     <rect x="1045" y="835" width="105" height="35" class="seed"/>
