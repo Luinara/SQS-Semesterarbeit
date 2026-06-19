@@ -11,6 +11,8 @@ import { PetCareState, PokemonSource } from '../../../../shared/models/pet.model
 import { WeatherScene } from '../../../../shared/models/weather.model';
 
 export const CARE_TOOLTIP_HIDE_DELAY_MS = 10_000;
+const DEFAULT_POKEMON_SPRITE_URL =
+  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png';
 
 @Component({
   selector: 'sqs-pet-visual',
@@ -24,7 +26,7 @@ export class PetVisualComponent implements OnDestroy {
   readonly level = input.required<number>();
   readonly weatherScene = input<WeatherScene>(DEFAULT_WEATHER_SCENE);
   readonly careState = input<PetCareState>('calm');
-  readonly spriteUrl = input('pet-placeholder.svg');
+  readonly spriteUrl = input(DEFAULT_POKEMON_SPRITE_URL);
   readonly pokemonTypes = input<string[]>([]);
   readonly pokemonSource = input<PokemonSource>('fallback');
   readonly isLevelingUp = input(false);

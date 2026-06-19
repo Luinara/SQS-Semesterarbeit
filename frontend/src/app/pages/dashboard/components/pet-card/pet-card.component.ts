@@ -8,6 +8,9 @@ import { ProgressBarComponent } from '../../../../shared/ui/progress-bar/progres
 import { StatBadgeComponent } from '../../../../shared/ui/stat-badge/stat-badge.component';
 import { PetVisualComponent } from '../pet-visual/pet-visual.component';
 
+const DEFAULT_POKEMON_SPRITE_URL =
+  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png';
+
 @Component({
   selector: 'sqs-pet-card',
   standalone: true,
@@ -48,7 +51,7 @@ export class PetCardComponent {
   readonly displaySpriteUrl = computed(() =>
     this.pet()?.isEgg
       ? (this.pokemonImageUrl() ?? 'egg.svg')
-      : (this.pokemonImageUrl() ?? this.pokemon()?.spriteUrl ?? 'pet-placeholder.svg')
+      : (this.pokemonImageUrl() ?? this.pokemon()?.spriteUrl ?? DEFAULT_POKEMON_SPRITE_URL)
   );
   readonly displayPokemonTypes = computed(() =>
     this.pet()?.isEgg ? [] : (this.pokemon()?.types ?? [])

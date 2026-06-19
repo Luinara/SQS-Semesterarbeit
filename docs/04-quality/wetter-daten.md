@@ -21,24 +21,18 @@ direkt mit `api.open-meteo.com`.
 
 ## Kurzer Ablauf
 
-Hinweis: Dieser Detailabschnitt beschreibt noch den urspruenglichen Frontend-
-Adapter-Ablauf. Fuer die aktuelle Architektur ist der Abschnitt
-`Aktueller Architekturstand` massgeblich; die Open-Meteo-Aufrufe laufen jetzt
-serverseitig ueber das Backend.
-
 1. Nutzer gibt in der App eine Stadt ein, z.B. `Madrid`.
 2. `WeatherService.searchCity("Madrid")` nimmt den Text entgegen.
-3. `OpenMeteoWeatherAdapter.resolveCity("Madrid")` fragt die Open-Meteo
-   Geocoding API ab.
-4. Die App wählt aus den Geocoding-Treffern den besten normalen Ort aus.
-5. Der gewählte Ort liefert `latitude`, `longitude` und ein lesbares Label,
-   z.B. `Madrid, Madrid, Spanien`.
-6. `OpenMeteoWeatherAdapter.loadWeather(location)` ruft die Forecast API auf.
-7. Die Temperatur kommt aus `current.temperature_2m`.
-8. Wettercode und Tag/Nacht werden in eine UI-Wetterszene übersetzt.
-9. Die App speichert den gewählten Ort im Browser-`localStorage`.
-10. Alle 10 Minuten aktualisiert die App das Wetter für den gespeicherten Ort.
-
+3. `BackendWeatherAdapter.resolveCity("Madrid")` fragt `/api/weather/location` im Backend ab.
+4. Der Backend-`WeatherService` fragt die Open-Meteo Geocoding API ab.
+5. Das Backend waehlt aus den Geocoding-Treffern den besten normalen Ort aus.
+6. Der gewaehlte Ort liefert `latitude`, `longitude` und ein lesbares Label, z.B. `Madrid, Madrid, Spanien`.
+7. `BackendWeatherAdapter.loadWeather(location)` ruft `/api/weather/current` im Backend auf.
+8. Der Backend-`WeatherService` ruft die Open-Meteo Forecast API auf.
+9. Das Backend mappt Temperatur, Wettercode und Tag/Nacht in einen Wetter-Snapshot.
+10. Das Frontend uebersetzt den Snapshot in eine UI-Wetterszene.
+11. Die App speichert den gewaehlten Ort im Browser-`localStorage`.
+12. Alle 10 Minuten aktualisiert die App das Wetter fuer den gespeicherten Ort.
 ## Beteilige Dateien
 
 | Datei | Aufgabe |

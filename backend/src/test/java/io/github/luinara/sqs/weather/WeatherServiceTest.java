@@ -31,6 +31,7 @@ class WeatherServiceTest {
     void resolveCity_prefersPopulatedHawaiiLocation() throws IOException {
         startServer("""
                 {
+                  "generationtime_ms": 0.052,
                   "results": [
                     {
                       "name": "Hawaii",
@@ -123,6 +124,8 @@ class WeatherServiceTest {
     private static String forecastBody(double temperatureC, int weatherCode, int isDay) {
         return """
                 {
+                  "latitude": 40.42,
+                  "longitude": -3.7,
                   "current": {
                     "temperature_2m": %s,
                     "weather_code": %d,

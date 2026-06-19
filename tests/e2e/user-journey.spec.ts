@@ -1,6 +1,9 @@
 import { Page } from "@playwright/test";
 import { expect, test } from "../../frontend/testing/playwright-test";
 
+const ivysaurSpriteUrl =
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png";
+
 const tasks = [
   {
     id: 1,
@@ -25,7 +28,7 @@ test.describe("PokeHabit", () => {
     const gameState = {
       waterLevel: 500,
       foodLevel: 0,
-      pokemonImageUrl: "/pet-placeholder.svg",
+      pokemonImageUrl: ivysaurSpriteUrl,
       pokemonLevel: 2,
       growth: 40,
       happiness: 75,
@@ -138,7 +141,7 @@ test.describe("PokeHabit", () => {
           sprites: {
             other: {
               "official-artwork": {
-                front_default: "/pet-placeholder.svg",
+                front_default: ivysaurSpriteUrl,
               },
             },
           },

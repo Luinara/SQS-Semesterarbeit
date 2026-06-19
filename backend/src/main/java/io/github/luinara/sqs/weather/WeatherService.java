@@ -1,6 +1,7 @@
 package io.github.luinara.sqs.weather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.luinara.sqs.weather.dto.WeatherLocationDto;
 import io.github.luinara.sqs.weather.dto.WeatherSnapshotDto;
@@ -66,7 +67,8 @@ public class WeatherService {
         this.forecastBaseUrl = trimTrailingSlash(forecastBaseUrl);
         this.geocodingBaseUrl = trimTrailingSlash(geocodingBaseUrl);
         this.httpClient = httpClient;
-        this.objectMapper = objectMapper;
+        this.objectMapper = objectMapper.copy()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public WeatherLocationDto resolveCity(String cityName) {
@@ -125,6 +127,7 @@ public class WeatherService {
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
+                    .version(HttpClient.Version.HTTP_1_1)
                     .timeout(REQUEST_TIMEOUT)
                     .GET()
                     .build();

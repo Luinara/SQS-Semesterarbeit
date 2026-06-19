@@ -374,7 +374,7 @@ Tagesziel-Karte -> DashboardPage -> AppStateService.addWater -> BackendApiServic
 Wetter:
 
 ```text
-PetCard -> WeatherService -> OpenMeteoWeatherAdapter -> weather-appearance.logic
+PetCard -> WeatherService -> BackendWeatherAdapter -> /api/weather -> Backend WeatherService -> Open-Meteo
 ```
 
 ## Projektstruktur

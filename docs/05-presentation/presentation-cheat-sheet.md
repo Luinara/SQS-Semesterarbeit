@@ -30,7 +30,7 @@ außerdem Schutz gegen wiederholte Fehlversuche."
 ## Externer Service
 
 "Als externen Service nutzen wir Open-Meteo für die Wetter-Szene im Dashboard.
-Der `WeatherService` ruft über den `OpenMeteoWeatherAdapter` zuerst die
+Das Frontend ruft `/api/weather/location` und `/api/weather/current` auf. Der Backend-`WeatherService` ruft serverseitig zuerst die
 Geocoding-API für die eingegebene Stadt auf und lädt danach aktuelle
 Wetterdaten. Daraus entstehen Wettercode, Temperatur und Tag/Nacht-Status für
 die visuelle Szene. Wenn Open-Meteo nicht erreichbar ist, bleibt die App
