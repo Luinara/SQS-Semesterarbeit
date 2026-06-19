@@ -52,51 +52,51 @@ class AuthenticationServiceTest {
 
     @Test
     void createUserSuccessAndLogin() {
-        boolean created = authService.createUser("alice", "password123");
+        boolean created = authService.createUser("hugo", "password123");
         assertTrue(created, "user should be created");
 
-        Optional<String> token = authService.login("alice", "password123");
+        Optional<String> token = authService.login("hugo", "password123");
         assertTrue(token.isPresent(), "login should succeed with correct password");
     }
 
     @Test
     void createDuplicateUserReturnsFalse() {
-        boolean created1 = authService.createUser("bob", "password123");
-        boolean created2 = authService.createUser("bob", "anotherPass");
+        boolean created1 = authService.createUser("bobo", "password123");
+        boolean created2 = authService.createUser("bobo", "anotherPass");
         assertTrue(created1);
         assertFalse(created2, "creating a duplicate username should return false");
     }
 
     @Test
     void loginWithWrongPasswordFails() {
-        authService.createUser("carol", "secret123");
-        Optional<String> token = authService.login("carol", "wrongpass");
+        authService.createUser("peter", "secret123");
+        Optional<String> token = authService.login("peter", "wrongpass");
         assertTrue(token.isEmpty(), "login should fail with wrong password");
     }
 
     @Test
     void login_blocksUserAfterRepeatedFailures() {
-        authService.createUser("carol", "secret123");
+        authService.createUser("peter", "secret123");
 
         for (int index = 0; index < 5; index += 1) {
-            assertThat(authService.login("carol", "wrongpass")).isEmpty();
+            assertThat(authService.login("peter", "wrongpass")).isEmpty();
         }
 
-        assertThat(authService.login("carol", "secret123")).isEmpty();
+        assertThat(authService.login("peter", "secret123")).isEmpty();
     }
 
     @Test
     void login_successClearsPreviousFailures() {
-        authService.createUser("carol", "secret123");
+        authService.createUser("peter", "secret123");
 
-        assertThat(authService.login("carol", "wrongpass")).isEmpty();
-        assertThat(authService.login("carol", "secret123")).isPresent();
+        assertThat(authService.login("peter", "wrongpass")).isEmpty();
+        assertThat(authService.login("peter", "secret123")).isPresent();
 
         for (int index = 0; index < 4; index += 1) {
-            assertThat(authService.login("carol", "wrongpass")).isEmpty();
+            assertThat(authService.login("peter", "wrongpass")).isEmpty();
         }
 
-        assertThat(authService.login("carol", "secret123")).isPresent();
+        assertThat(authService.login("peter", "secret123")).isPresent();
     }
 
     @Test
@@ -126,15 +126,15 @@ class AuthenticationServiceTest {
     void inMemory_createLoginLogoutFlow() {
         AuthenticationService svc = new AuthenticationService();
 
-        boolean created = svc.createUser("alice", "password123");
+        boolean created = svc.createUser("hugo", "password123");
         assertThat(created).isTrue();
 
-        Optional<String> tokenOpt = svc.login("alice", "password123");
+        Optional<String> tokenOpt = svc.login("hugo", "password123");
         assertThat(tokenOpt).isPresent();
 
         String token = tokenOpt.get();
         Optional<String> validated = svc.validateToken(token);
-        assertThat(validated).contains("alice");
+        assertThat(validated).contains("hugo");
 
         svc.logout(token);
         assertThat(svc.validateToken(token)).isEmpty();
@@ -144,8 +144,8 @@ class AuthenticationServiceTest {
     void inMemory_duplicateCreateReturnsFalse() {
         AuthenticationService svc = new AuthenticationService();
 
-        boolean first = svc.createUser("bob", "password123");
-        boolean second = svc.createUser("bob", "password123");
+        boolean first = svc.createUser("bobo", "password123");
+        boolean second = svc.createUser("bobo", "password123");
 
         assertThat(first).isTrue();
         assertThat(second).isFalse();
@@ -153,10 +153,10 @@ class AuthenticationServiceTest {
 
     @Test
     void db_createUser_whenExists_returnsFalse() {
-        when(repo.existsByUsernameIgnoreCase("charlie")).thenReturn(true);
+        when(repo.existsByUsernameIgnoreCase("hans")).thenReturn(true);
 
         AuthenticationService svc = new AuthenticationService(Optional.of(repo));
-        boolean created = svc.createUser("charlie", "password123");
+        boolean created = svc.createUser("hans", "password123");
 
         assertThat(created).isFalse();
         verify(repo, never()).save(any());
@@ -164,11 +164,11 @@ class AuthenticationServiceTest {
 
     @Test
     void db_createUser_raceConstraint_returnsFalse() {
-        when(repo.existsByUsernameIgnoreCase("dave")).thenReturn(false);
+        when(repo.existsByUsernameIgnoreCase("david")).thenReturn(false);
         when(repo.save(any())).thenThrow(new DataIntegrityViolationException("unique"));
 
         AuthenticationService svc = new AuthenticationService(Optional.of(repo));
-        boolean created = svc.createUser("dave", "password123");
+        boolean created = svc.createUser("david", "password123");
 
         assertThat(created).isFalse();
         verify(repo).save(any());
