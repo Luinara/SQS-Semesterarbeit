@@ -24,8 +24,10 @@ nav:
           - Risiken und technische Schulden: 02-architecture/arc42/11-risks-and-technical-debt.md
           - Glossar: 02-architecture/arc42/12-glossary.md
           - Frontend-Komponenten: 02-architecture/arc42/frontend-component-architecture.md
+          - Backend-Komponenten: 02-architecture/arc42/backend-component-architecture.md
+          - Datenbank Architektur: 02-architecture/arc42/database-architecture.md
       - Diagramme:
-          - C4-Diagramm: 02-architecture/diagrams/c4-diagram.md
+          - C4-Diagramm Beschreibung: 02-architecture/diagrams/c4-diagram-description.md
           - Mermaid-Quellen: 02-architecture/diagrams/mermaid/README.md
       - ADRs Englisch:
           - Übersicht: adr/README.md
@@ -64,7 +66,7 @@ nav:
       - Testkonzept: 04-quality/test-concept.md
       - Testpyramide: 04-quality/test-pyramid.md
       - Messung von Softwarequalität: 04-quality/metrics-and-static-analysis.md
-      - Daily-Reset-Testfälle: 04-quality/daily-reset-testfaelle.md
+      - Daily-Reset-Testfälle: 04-quality/daily-reset-testfälle.md
       - Frontend npm Security: 04-quality/frontend-npm-security.md
       - Security Hotspots: 04-quality/security-hotspots.md
       - Crypto Random IDs: 04-quality/crypto-random-ids.md

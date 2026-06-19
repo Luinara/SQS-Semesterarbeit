@@ -1,4 +1,4 @@
-# Datenbankarchitektur
+# Datenbank Architektur
 
 Diese Sicht ergänzt die arc42-Bausteinsicht um die Persistenzstruktur des
 Projekts. Sie beschreibt den aktuellen Stand der Abgabe: Die Anwendung speichert
@@ -7,7 +7,7 @@ in PostgreSQL. Für automatisierte Backend-Tests wird statt PostgreSQL eine
 H2-In-Memory-Datenbank verwendet.
 
 Die Persistenzstruktur ist zusätzlich in
-[Datenbankarchitektur](database-architecture.md)
+[Datenbank Architektur](database-architecture.md)
 dokumentiert.
 
 ## Zweck

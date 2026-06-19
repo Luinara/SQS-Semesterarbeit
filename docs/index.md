@@ -61,14 +61,14 @@ Standard-URLs:
 
 ## Wichtige Nachweise
 
-| Bereich                   | Dokumentation                                                                                                |
-| ------------------------- |--------------------------------------------------------------------------------------------------------------|
-| API-Verträge              | `03-api/`                                                                                                    |
-| Architektur               | `02-architecture/arc42/`                                                                                     |
-| Architekturentscheidungen | `adr/` und `ger-adr/`                                                                                        |
-| C4-Modell                 | `02-architecture/diagrams/c4-diagram.md` und `02-architecture/diagrams/structurizr/workspace.dsl`            |
-| Qualitätssicherung        | `04-quality/`, Quality Hub, JaCoCo, Vitest Coverage, Checkstyle, SpotBugs, ESLint, npm Audit, Playwright, H2 |
-| Präsentation              | `05-presentation/`                                                                                           |
+| Bereich                   | Dokumentation                                                                                                 |
+| ------------------------- |---------------------------------------------------------------------------------------------------------------|
+| API-Verträge              | `03-api/`                                                                                                     |
+| Architektur               | `02-architecture/arc42/`                                                                                      |
+| Architekturentscheidungen | `adr/` und `ger-adr/`                                                                                         |
+| C4-Modell                 | `02-architecture/diagrams/c4-diagram-description.md` und `02-architecture/diagrams/structurizr/workspace.dsl` |
+| Qualitätssicherung        | `04-quality/`, Quality Hub, JaCoCo, Vitest Coverage, Checkstyle, SpotBugs, ESLint, npm Audit, Playwright, H2  |
+| Präsentation              | `05-presentation/`                                                                                            |
 
 ## Abgabe-relevante Punkte
 
