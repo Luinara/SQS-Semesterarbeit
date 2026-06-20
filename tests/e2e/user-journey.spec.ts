@@ -1,21 +1,18 @@
 import { Page } from "@playwright/test";
 import { expect, test } from "../../frontend/testing/playwright-test";
+import {
+  berlinWeatherLocation,
+  berlinWeatherSnapshot,
+  clearBrowserStorage,
+  fulfillOpenMeteoForecast,
+  learningTask,
+  waterTask,
+} from "./mock-api";
 
 const ivysaurSpriteUrl =
   "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png";
 
-const tasks = [
-  {
-    id: 1,
-    title: "Wasser trinken",
-    description: "Trinke heute 3 Liter Wasser.",
-  },
-  {
-    id: 2,
-    title: "30 Minuten lernen",
-    description: "Ein fokussierter Lernblock für dein Pokémon.",
-  },
-];
+const tasks = [waterTask, learningTask];
 
 test.describe("PokeHabit", () => {
   test("führt vom Login durch Quest, Wasser, Training, Level-Up und Logout", async ({
@@ -108,12 +105,14 @@ test.describe("PokeHabit", () => {
       }
 
       if (url.pathname === "/api/weather/location") {
-        await route.fulfill({ json: weatherLocation() });
+        await route.fulfill({ json: berlinWeatherLocation() });
         return;
       }
 
       if (url.pathname === "/api/weather/current") {
-        await route.fulfill({ json: weatherSnapshot() });
+        await route.fulfill({
+          json: berlinWeatherSnapshot({ temperatureC: 22, weatherCode: 2 }),
+        });
         return;
       }
 
@@ -121,15 +120,9 @@ test.describe("PokeHabit", () => {
     });
 
     await page.route("https://api.open-meteo.com/**", async (route) => {
-      await route.fulfill({
-        json: {
-          current: {
-            temperature_2m: 22,
-            weather_code: 2,
-            is_day: 1,
-            time: "2026-06-15T10:00",
-          },
-        },
+      await fulfillOpenMeteoForecast(route, {
+        temperatureC: 22,
+        weatherCode: 2,
       });
     });
 
@@ -150,9 +143,7 @@ test.describe("PokeHabit", () => {
       });
     });
 
-    await page.addInitScript(() => {
-      globalThis.localStorage.clear();
-    });
+    await clearBrowserStorage(page);
 
     await page.goto("/auth", { waitUntil: "domcontentloaded", timeout: 10000 });
 
@@ -244,24 +235,4 @@ function motivationBadge(page: Page) {
 
 function questPointsBadge(page: Page) {
   return page.locator("sqs-stat-badge").filter({ hasText: "Quest-Punkte" });
-}
-
-function weatherLocation() {
-  return {
-    latitude: 52.52,
-    longitude: 13.41,
-    label: "Berlin, Berlin, Deutschland",
-  };
-}
-
-function weatherSnapshot() {
-  return {
-    condition: "cloudy",
-    timeOfDay: "day",
-    temperatureC: 22,
-    weatherCode: 2,
-    label: "Bewoelkt",
-    locationLabel: "Berlin, Berlin, Deutschland",
-    updatedAt: "2026-06-15T10:00:00Z",
-  };
 }
