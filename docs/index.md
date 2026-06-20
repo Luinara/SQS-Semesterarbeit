@@ -75,7 +75,7 @@ Standard-URLs:
 - Öffentlicher Endpunkt: `GET /api/tasks`.
 - Geschützte Endpunkte: User-Game-State, Wassertracking, Logout und Account-Löschung.
 - Drei Schichten: Frontend, Backend, Persistenz.
-- Externe API: Open-Meteo über `WeatherService` und `OpenMeteoWeatherAdapter`
+- Externe API: Open-Meteo über `WeatherService` und `BackendWeatherAdapter`
   für Geocoding, aktuelle Wetterdaten und die Dashboard-Wetter-Szene.
 - Testpyramide: Unit-, Integrations-, Architektur-, Security- und E2E-Tests.
 - Docker-Start mit maximal zwei Befehlen; für die Demo reicht der Quality-Profile-Start.

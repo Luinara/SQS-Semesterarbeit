@@ -73,12 +73,22 @@
   font-size: 0.9rem;
 }
 
+.splash-page__loader-progress {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .splash-page__loader {
   position: relative;
   overflow: hidden;
-  height: 0.8rem;
-  border-radius: var(--radius-pill);
-  background: rgba(221, 190, 180, 0.22);
+  height: 0.65rem;
+  border-radius: 0.25rem;
+  background: rgba(94, 106, 117, 0.18);
+  border: 1px solid rgba(94, 106, 117, 0.18);
 }
 
 .splash-page__loader span {
@@ -87,8 +97,8 @@
   height: 100%;
   transform-origin: left center;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--color-peach) 0%, var(--color-rose) 100%);
-  animation: loading-progress 2400ms ease-out forwards;
+  background: #4f8fdf;
+  animation: loading-progress 2400ms linear forwards;
 }
 
 .splash-page__scene {
