@@ -1,5 +1,7 @@
 # Testpyramide
 
+Diese Seite ist Teil des übergeordneten Testkonzepts. Das vollständige Testkonzept befindet sich unter `04 Quality / Testkonzept`.
+
 Die Testpyramide ist für PokeHabit der zentrale SQS-Nachweis. Wir trennen die
 Tests nach Zweck: viele schnelle Unit-Tests unten, weniger Integrations- und
 Controller-Tests in der Mitte, wenige browserbasierte E2E-Flows oben. Ergänzt

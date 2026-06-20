@@ -2,8 +2,11 @@
 
 PokeHabit ist unsere Web-App für die SQS-Semesterarbeit. Nutzer melden sich an,
 erledigen Tagesquests, trinken Wasser und sammeln Quest-Punkte für ein
-Pokémon-basiertes Begleittier. Die App besteht aus Angular-Frontend,
-Spring-Boot-Backend und PostgreSQL.
+Pokémon-basiertes Begleittier. 
+
+Die App besteht aus einem Angular-Frontend, einem Spring-Boot-Backend und einer
+PostgreSQL-Datenbank. Ergänzend dazu gibt es einen Docker-Quality-Hub, über den
+die Qualitätssicherung reproduzierbar ausgeführt und sichtbar gemacht wird.
 
 Für die Abgabe ist nicht nur die App selbst wichtig. Wir zeigen auch, dass die
 Qualitätssicherung wirklich ausgeführt wird: Backend-Tests, Frontend-Tests,
@@ -23,12 +26,13 @@ Docker-Quality-Hub und sind dort als Report sichtbar.
 ## Qualitätsziele
 
 | Priorität | Ziel                         | Nachweis                                                                                       |
-| --------- | ---------------------------- | ---------------------------------------------------------------------------------------------- |
+|-----------| ---------------------------- | ---------------------------------------------------------------------------------------------- |
 | 1         | Reproduzierbarer Start       | `docker compose up --build` startet App, Backend und Datenbank.                                |
 | 2         | Sichtbare Qualitätssicherung | `docker compose --profile quality up --build` startet den Quality Hub mit Logs und Reports.    |
 | 3         | Testpyramide                 | Unit-, Integrations-, Architektur-, Security- und E2E-Tests sind dokumentiert und ausführbar.  |
 | 4         | Stabile Demo                 | Demo-User, Starterdaten, Questfluss und E2E-Nutzerreise sind für die Präsentation abgesichert. |
-| 5         | Umgang mit externen Diensten | PokeAPI wird nur bei fehlenden Pokémon-Daten genutzt und hat Timeout/Fallback.                 |
+| 5         | Klare Architektur            | Frontend, Backend, Datenbank und Quality Hub sind getrennt beschrieben und nachvollziehbar.   |
+| 6         | Umgang mit externen Diensten | PokeAPI wird nur bei fehlenden Pokémon-Daten genutzt und hat Timeout/Fallback.                 |
 
 ## Stakeholder
 
