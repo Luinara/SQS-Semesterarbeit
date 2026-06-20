@@ -197,7 +197,7 @@ public class WeatherService {
         }
 
         if (result.population() != null) {
-            score += Math.min(result.population(), 10_000_000) / 10_000;
+            score += Math.min(result.population(), 10_000_000) / 10_000.0;
         }
 
         return score - index;

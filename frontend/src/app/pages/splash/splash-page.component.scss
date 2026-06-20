@@ -73,6 +73,15 @@
   font-size: 0.9rem;
 }
 
+.splash-page__loader-progress {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 .splash-page__loader {
   position: relative;
   overflow: hidden;
