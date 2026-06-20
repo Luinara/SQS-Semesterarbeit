@@ -58,6 +58,7 @@ test.describe("Daily reset", () => {
 
       if (url.pathname === "/api/auth/logout") {
         resetExpired = true;
+        await page.reload();
         completions.set(1, false);
         completions.set(2, false);
         gameState.waterLevel = 0;

@@ -5,11 +5,16 @@ flowchart LR
         FE["Frontend: Angular / TypeScript SPA"]
         BE["Backend API: Java 21 / Spring Boot"]
         DB[(Datenbank: PostgreSQL)]
+        SEED["Seed / Migration: Pokémon-Stammdaten"]
     end
 
-    POKEAPI["PokeAPI: Externe REST API"]
+    POKEAPI["PokeAPI: ursprüngliche Datenquelle"]
+    WEATHER["Open-Meteo: Externe Wetter-API"]
 
     USER -->|HTTPS / Browser| FE
     FE -->|REST JSON /api| BE
     BE -->|JDBC / JPA| DB
-    BE -->|HTTPS / JSON| POKEAPI
+    BE -->|HTTPS / JSON Runtime| WEATHER
+
+    POKEAPI -.->|Datenbasis, nicht Runtime| SEED
+    SEED -.->|befüllt pokemon-Tabellen| DB
