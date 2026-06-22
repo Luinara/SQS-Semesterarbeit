@@ -28,7 +28,7 @@ bereitstellt.
 | `POST` | `/api/tasks/{id}/complete` | Task abschliessen |
 | `GET` | `/api/user/game-state` | Spielstand laden |
 | `POST` | `/api/user/water` | Wasserstand speichern |
-| `POST` | `/api/user/feed` | Pokemon trainieren |
+| `POST` | `/api/user/feed` | Pal trainieren |
 | `DELETE` | `/api/user/account` | Account loeschen |
 
 Diese Endpunkte erwarten eine gueltige Session. Fehlende oder ungueltige

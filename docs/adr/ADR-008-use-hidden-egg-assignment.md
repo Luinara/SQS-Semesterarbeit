@@ -1,4 +1,4 @@
-# ADR-008: Let users choose a Pokémon egg at the beginning
+# ADR-008: Let users choose a Pal egg at the beginning
 
 ## Status
 
@@ -6,28 +6,28 @@ Accepted
 
 ## Context
 
-Each user starts the application with a Pokémon egg. This egg can be leveled up
+Each user starts the application with a Pal egg. This egg can be leveled up
 through completed tasks and visible progress. The egg is therefore a central
 motivation mechanic: users should build a conscious connection to their
 companion from the beginning and experience progress as personal development.
 
 Random assignment was deliberately not chosen. If one user receives a popular
-Pokémon such as Charmander and another user receives a less popular Pokémon
-such as Zubat or Rattata, this can feel unfair or frustrating. In a social
+Pal such as popular pal and another user receives a less popular Pal
+such as weniger beliebter Pal or less popular pal, this can feel unfair or frustrating. In a social
 context, such unequal assignment could even lead to teasing or bullying. This
 would reduce motivation and could cause users to avoid or stop using the
 application earlier.
 
 ## Alternatives
 
-* Random assignment of a Pokémon egg
-* Fixed starter Pokémon for all users
-* Random Pokémon is revealed immediately
-* User directly chooses a finished starter Pokémon
+* Random assignment of a Pal egg
+* Fixed starter Pal for all users
+* Random Pal is revealed immediately
+* User directly chooses a finished starter Pal
 
 ## Decision
 
-The user chooses a Pokémon egg at the beginning. This egg is assigned to the
+The user chooses a Pal egg at the beginning. This egg is assigned to the
 user account and can then be leveled up by using the application.
 
 The chosen egg remains part of the progression mechanic: the user accompanies

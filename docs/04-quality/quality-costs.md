@@ -8,7 +8,7 @@ der erst in der Demo, im Deployment oder durch manuelles Testen auffällt,
 verursacht dagegen deutlich mehr Aufwand, weil Ursache, betroffene Komponenten
 und Seiteneffekte erst nachträglich analysiert werden müssen.
 
-Für PokeHabit bedeutet das: Qualitätssicherung soll nicht erst am Ende der
+Für PalHabit bedeutet das: Qualitätssicherung soll nicht erst am Ende der
 Entwicklung stattfinden, sondern kontinuierlich während der Umsetzung. Dadurch
 werden technische Schulden reduziert und Fehler früher sichtbar gemacht.
 
@@ -16,7 +16,7 @@ werden technische Schulden reduziert und Fehler früher sichtbar gemacht.
 
 | Maßnahme | Vermeideter später Fehler | Nutzen |
 | --- | --- | --- |
-| Unit-Tests | Fehler in Businesslogik, z. B. bei Tagesquests, Wassertracking oder Pokémon-Fortschritt | Fehler werden direkt auf Methoden- oder Service-Ebene gefunden. |
+| Unit-Tests | Fehler in Businesslogik, z. B. bei Tagesquests, Wassertracking oder Pal-Fortschritt | Fehler werden direkt auf Methoden- oder Service-Ebene gefunden. |
 | Controller- und Integrationstests | Fehler im Zusammenspiel von API, Authentifizierung, Datenbank und Validierung | Kritische Nutzerflüsse werden vor der Demo automatisiert geprüft. |
 | Playwright-E2E-Tests | Fehler im echten Nutzerfluss zwischen Frontend und Backend | Zentrale Abläufe wie Login, Dashboard, Tasks, Wasser und Level-Up werden aus Nutzersicht geprüft. |
 | ArchUnit-Tests | Unklare Schichtentrennung und unkontrollierte Abhängigkeiten | Architekturverletzungen werden früh erkannt, bevor sie zu Wartungsproblemen werden. |
@@ -33,7 +33,7 @@ E2E-Tests prüfen zusätzlich, ob die zentralen Nutzerflüsse wirklich
 funktionieren. Dadurch entsteht ein ausgewogenes Verhältnis zwischen schneller
 Fehlererkennung und realitätsnaher Absicherung.
 
-Für PokeHabit ergibt sich daraus folgende Strategie:
+Für PalHabit ergibt sich daraus folgende Strategie:
 
 ```text
 früh prüfen → Fehler schneller finden → weniger Nacharbeit → weniger technische Schulden

@@ -1,4 +1,4 @@
-# ADR-008: Nutzer wählen zu Beginn ein Pokémon-Ei
+# ADR-008: Nutzer wählen zu Beginn ein Pal-Ei
 
 ## Status
 
@@ -6,15 +6,15 @@ Akzeptiert
 
 ## Kontext
 
-Jeder Nutzer startet die Anwendung mit einem Pokémon-Ei. Dieses Ei kann durch
+Jeder Nutzer startet die Anwendung mit einem Pal-Ei. Dieses Ei kann durch
 erledigte Aufgaben und Fortschritt hochgelevelt werden. Das Ei ist damit ein
 zentraler Motivationsmechanismus der Anwendung: Der Nutzer soll von Anfang an
 eine bewusste Bindung zu seinem Begleiter aufbauen und den Fortschritt als
 persönliche Entwicklung wahrnehmen.
 
 Eine zufällige Zuweisung wurde bewusst nicht gewählt. Wenn ein Nutzer ein
-beliebtes Pokémon wie Glumanda erhält und ein anderer Nutzer ein weniger
-beliebtes Pokémon wie Zubat oder Rattfratz, kann das als unfair oder
+beliebtes Pal wie beliebter Pal erhält und ein anderer Nutzer ein weniger
+beliebtes Pal wie weniger beliebter Pal oder weniger beliebter Pal, kann das als unfair oder
 frustrierend wahrgenommen werden. Im sozialen Kontext könnte eine solche
 ungleiche Zuweisung sogar zu Spott oder Mobbing führen. Dadurch würde die
 Motivation sinken und Nutzer könnten die Anwendung früher meiden oder nicht
@@ -22,14 +22,14 @@ weiterverwenden.
 
 ## Alternativen
 
-* Zufällige Zuweisung eines Pokémon-Eis
-* Festes Starter-Pokémon für alle Nutzer
-* Zufälliges Pokémon wird sofort sichtbar angezeigt
-* Nutzer wählt direkt ein fertiges Starter-Pokémon
+* Zufällige Zuweisung eines Pal-Eis
+* Festes Starter-Pal für alle Nutzer
+* Zufälliges Pal wird sofort sichtbar angezeigt
+* Nutzer wählt direkt ein fertiges Starter-Pal
 
 ## Entscheidung
 
-Der Nutzer wählt zu Beginn selbst ein Pokémon-Ei aus. Dieses Ei wird dem
+Der Nutzer wählt zu Beginn selbst ein Pal-Ei aus. Dieses Ei wird dem
 Nutzerkonto zugeordnet und kann anschließend durch Nutzung der Anwendung
 hochgelevelt werden.
 

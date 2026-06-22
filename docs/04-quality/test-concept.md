@@ -137,7 +137,7 @@ Der manuelle Demo-Test umfasst:
 4. Login durchführen
 5. Geschützten Bereich aufrufen
 6. Tägliche Aufgabe abschließen
-7. Fortschritt des virtuellen Pokémon prüfen
+7. Fortschritt des virtuellen Pal prüfen
 8. Logout durchführen
 9. Geschützten Bereich ohne gültige Authentifizierung aufrufen
 10. Verhalten bei externer Servicefunktion prüfen

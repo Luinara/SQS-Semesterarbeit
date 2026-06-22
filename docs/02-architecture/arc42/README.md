@@ -4,7 +4,7 @@ Die veröffentlichte Dokumentation ist unter
 [luinarasqs-semesterarbeit.readthedocs.io](https://luinarasqs-semesterarbeit.readthedocs.io/de/latest/)
 abrufbar.
 
-Dieser Ordner enthält die Architektur-Dokumentation für PokeHabit. Die Struktur
+Dieser Ordner enthält die Architektur-Dokumentation für PalHabit. Die Struktur
 folgt arc42, die Inhalte sind aber auf den aktuellen Abgabestand zugeschnitten:
 Angular-Frontend, Spring-Boot-Backend, PostgreSQL, externe Dienste und Quality
 Hub.
@@ -36,9 +36,9 @@ Hub.
 
 | Sicht aus der Vorlesung | Umsetzung in der Dokumentation | Inhalt im Projekt |
 | --- | --- | --- |
-| Kontextsicht | [03-context-and-scope.md](03-context-and-scope.md) | Nutzer, Angular-Frontend, Spring-Boot-Backend, PostgreSQL, PokeAPI und Open-Meteo als externe Systeme |
+| Kontextsicht | [03-context-and-scope.md](03-context-and-scope.md) | Nutzer, Angular-Frontend, Spring-Boot-Backend, PostgreSQL, PalAPI und Open-Meteo als externe Systeme |
 | Bausteinsicht | [05-building-block-view.md](05-building-block-view.md) | Frontend, Backend-API, Datenbank, externe Dienste und Quality Hub als zentrale Bausteine |
-| Laufzeitsicht | [06-runtime-view.md](06-runtime-view.md) | Login-Flow, Registrierung, Task-Erledigung, Wassertracking, Pokémon-Fortschritt und Fallback-Verhalten |
+| Laufzeitsicht | [06-runtime-view.md](06-runtime-view.md) | Login-Flow, Registrierung, Task-Erledigung, Wassertracking, Pal-Fortschritt und Fallback-Verhalten |
 | Verteilungssicht | [07-deployment-view.md](07-deployment-view.md) | Docker Compose mit Frontend, Backend, PostgreSQL und optionalem Quality Hub |
 | Implementierungssicht | [backend-component-architecture.md](backend-component-architecture.md) und [frontend-component-architecture.md](frontend-component-architecture.md) | Package-/Komponentenstruktur, Controller, Services, Repositories, DTOs, externe Clients, Angular-Komponenten und Services |
 | Persistenzsicht | [database-architecture.md](database-architecture.md) | Tabellen, Beziehungen, PostgreSQL-Docker-Setup, H2-Testdatenbank und Datenfluss |

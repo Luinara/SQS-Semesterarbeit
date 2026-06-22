@@ -1,7 +1,7 @@
 ﻿$ErrorActionPreference = "Stop"
 
 $repo = Split-Path -Parent $PSScriptRoot
-$outPath = Join-Path $repo "SQS_praesi_1_0.pptx"
+$outPath = Join-Path $repo "SQS_praesi_1_0_cover.pptx"
 $diagramDir = Join-Path $repo "docs\02-architecture\diagrams\mermaid"
 
 function Rgb($hex) {
@@ -187,14 +187,41 @@ $pres.PageSetup.SlideHeight = 540
 
 # 1
 $s = Add-Slide $pres 1
-Add-Text $s "PokeHabit" 78 118 520 58 48 $C.Ink $true | Out-Null
-Add-Text $s "Qualitätssicherung sichtbar nachgewiesen" 80 184 650 36 25 $C.Teal $true | Out-Null
-Add-Text $s "Gamifizierte Self-Care-App mit Angular, Spring Boot, PostgreSQL und Quality Hub" 82 236 620 44 16 $C.Muted | Out-Null
-Add-Text $s "Analena Freiberger · Caroline Kriebel · Sophie Gigl" 82 300 520 22 14 $C.Ink | Out-Null
-Add-CardText $s "Demo" 690 126 170 48 $C.BlueBg $C.Blue 18 $true | Out-Null
-Add-CardText $s "Security" 638 196 170 48 $C.RoseBg $C.Rose 18 $true | Out-Null
-Add-CardText $s "Architektur" 704 266 170 48 $C.GreenBg $C.Green 18 $true | Out-Null
-Add-CardText $s "Quality Gate" 638 336 206 48 $C.AmberBg $C.Amber 18 $true | Out-Null
+$cover = $s.Shapes.AddShape($msoShapeRectangle, 48, 0, 912, 540)
+Set-Fill $cover $C.Dark | Out-Null
+$cover.Line.Visible = $msoFalse
+
+for ($x = 96; $x -le 912; $x += 96) {
+    $line = $s.Shapes.AddLine($x, 0, $x, 540)
+    Set-Line $line (Rgb "#31505A") 1 0.56 | Out-Null
+}
+for ($y = 60; $y -le 480; $y += 60) {
+    $line = $s.Shapes.AddLine(48, $y, 960, $y)
+    Set-Line $line (Rgb "#31505A") 1 0.68 | Out-Null
+}
+
+$glow = $s.Shapes.AddShape($msoShapeOval, 620, 66, 360, 360)
+Set-Fill $glow $C.Teal 0.72 | Out-Null
+$glow.Line.Visible = $msoFalse
+$glow.Shadow.Visible = $msoTrue
+$glow.Shadow.ForeColor.RGB = $C.Cyan
+$glow.Shadow.Transparency = 0.45
+$glow.Shadow.Blur = 34
+
+Add-Text $s "// SOFTWARE QUALITÄTSSICHERHEIT" 86 56 360 18 10 $C.Cyan $true $msoAlignLeft "Cascadia Mono" | Out-Null
+Add-Text $s "PokeHabit" 84 124 520 66 52 $C.White $true | Out-Null
+Add-Text $s "Qualitätssicherung sichtbar nachgewiesen" 88 196 690 34 25 $C.Cyan $true | Out-Null
+Add-Text $s "Angular · Spring Boot · PostgreSQL · Quality Hub" 90 252 560 24 15 (Rgb "#B9C7CE") $false $msoAlignLeft "Cascadia Mono" | Out-Null
+Add-Text $s "Analena Freiberger · Caroline Kriebel · Sophie Gigl" 90 296 560 22 14 $C.White | Out-Null
+
+Add-CardText $s "DEMO" 676 126 160 44 (Rgb "#123E52") $C.Cyan 15 $true | Out-Null
+Add-CardText $s "SECURITY" 620 192 160 44 (Rgb "#4B1834") (Rgb "#FF8ABD") 15 $true | Out-Null
+Add-CardText $s "ARCHITEKTUR" 704 258 178 44 (Rgb "#17442A") (Rgb "#8EF0B3") 15 $true | Out-Null
+Add-CardText $s "QUALITY GATE" 632 324 204 44 (Rgb "#563A10") (Rgb "#FFD166") 15 $true | Out-Null
+
+Add-Text $s "BUILD 1.0 // MORGEN PRÄSENTIERBAR" 88 448 360 18 10 $C.Cyan $true $msoAlignLeft "Cascadia Mono" | Out-Null
+Add-Text $s "SQS // PokeHabit // Quality Evidence" 88 502 310 16 8 (Rgb "#B9C7CE") $false $msoAlignLeft "Cascadia Mono" | Out-Null
+Add-Text $s "SLIDE 01" 836 502 70 16 8 (Rgb "#B9C7CE") $false $msoAlignCenter "Cascadia Mono" | Out-Null
 
 # 2
 $s = Add-Slide $pres 2

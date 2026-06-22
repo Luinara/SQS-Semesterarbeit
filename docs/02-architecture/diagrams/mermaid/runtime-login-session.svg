@@ -60,7 +60,7 @@
 <line x1="430" y1="760" x2="760" y2="760" stroke="#334155" stroke-width="2.2"  marker-end="url(#arrow)" />
 <text x="595.0" y="748" text-anchor="middle" font-size="15" font-weight="500" fill="#0F172A" font-family="Inter, Arial, sans-serif">9. Dashboard-Daten laden</text>
 <line x1="760" y1="830" x2="1080" y2="830" stroke="#334155" stroke-width="2.2"  marker-end="url(#arrow)" />
-<text x="920.0" y="818" text-anchor="middle" font-size="15" font-weight="500" fill="#0F172A" font-family="Inter, Arial, sans-serif">10. Tasks, Spielstand und Pokémon-Fortschritt laden</text>
+<text x="920.0" y="818" text-anchor="middle" font-size="15" font-weight="500" fill="#0F172A" font-family="Inter, Arial, sans-serif">10. Tasks, Spielstand und Pal-Fortschritt laden</text>
 <line x1="1080" y1="900" x2="760" y2="900" stroke="#334155" stroke-width="2.2" stroke-dasharray="8 8" marker-end="url(#arrow)" />
 <text x="920.0" y="888" text-anchor="middle" font-size="15" font-weight="500" fill="#0F172A" font-family="Inter, Arial, sans-serif">11. Dashboard-Daten</text>
 <line x1="760" y1="970" x2="430" y2="970" stroke="#334155" stroke-width="2.2" stroke-dasharray="8 8" marker-end="url(#arrow)" />

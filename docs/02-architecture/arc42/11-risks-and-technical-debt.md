@@ -17,7 +17,7 @@ Gegenmassnahme und aktuellem Status dokumentiert.
 | Mittel | `npm audit` oder Docker-Pulls benoetigen Netzwerk. | Quality-Checks sind offline nur eingeschraenkt ausfuehrbar. | Offline-Lockfile-Test ergaenzt Live-Audit; Netzwerkabhaengigkeit ist dokumentiert. |
 | Niedrig | Tageshistorie ist noch vereinfacht. | Historische Auswertungen pro Tag sind nur begrenzt moeglich. | Als fachliche Erweiterung dokumentiert; aktueller Fokus liegt auf Tagesanzeige, Serverantworten und Kernfluss. |
 | Niedrig | Legacy-Dokumentation bleibt im Repository. | Alte Roadmaptexte koennen Pruefer verwirren. | Legacy-Dateien sind markiert; aktuelle Dokumentation verweist auf Angular, Docker und Quality Hub. |
-| Niedrig | PokeAPI ist nicht erreichbar. | Neue oder aktualisierte Pokemon-Daten koennen nicht automatisch nachgeladen werden. Die Kernfunktionen bleiben nutzbar, da die benoetigten Daten bereits in der Datenbank liegen. | Pokemon-Daten werden vorab in die Datenbank geladen; externe API ist nicht fuer den normalen App-Betrieb erforderlich. Tests nutzen Mocks oder lokale Daten. |
+| Niedrig | PalAPI ist nicht erreichbar. | Neue oder aktualisierte Pal-Daten koennen nicht automatisch nachgeladen werden. Die Kernfunktionen bleiben nutzbar, da die benoetigten Daten bereits in der Datenbank liegen. | Pal-Daten werden vorab in die Datenbank geladen; externe API ist nicht fuer den normalen App-Betrieb erforderlich. Tests nutzen Mocks oder lokale Daten. |
 
 ## Wichtigste technische Schulden
 
@@ -25,7 +25,7 @@ Gegenmassnahme und aktuellem Status dokumentiert.
 | --- | --- | --- |
 | Produkthaertung der Session-Cookies ist deploymentabhaengig. | Im lokalen Dev-Setup sind nicht alle produktiven Cookie-Flags sinnvoll nutzbar. | Fuer ein echtes Produktivdeployment muessten `Secure`, `SameSite`, HTTPS und CSRF-Policy final festgelegt werden. |
 | Tageshistorie ist nur vereinfacht umgesetzt. | Fuer die Semesterarbeit reicht der aktuelle Tagesfortschritt, aber langfristige Auswertungen waeren fachlich sinnvoll. | Erweiterung um persistente Tageshistorie und Auswertungsansicht. |
-| Externe API-Integration bleibt abhaengig von Drittanbietern. | PokeAPI und Wetterdaten liegen ausserhalb des eigenen Systems. | Fallbacks, Timeouts und Tests beibehalten; bei Produktivbetrieb Monitoring ergaenzen. |
+| Externe API-Integration bleibt abhaengig von Drittanbietern. | PalAPI und Wetterdaten liegen ausserhalb des eigenen Systems. | Fallbacks, Timeouts und Tests beibehalten; bei Produktivbetrieb Monitoring ergaenzen. |
 | Quality Hub ersetzt keine echte CI-Plattform. | Der Hub macht lokale Qualitaet sichtbar, ist aber kein Ersatz fuer GitHub Actions oder SonarQube. | Hub als lokaler Nachweis fuer die Abgabe nutzen; langfristig CI/CD-Pipeline ausbauen. |
 
 ## Bewertung

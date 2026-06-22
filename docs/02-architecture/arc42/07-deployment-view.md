@@ -14,7 +14,7 @@ konfiguriert werden müssen.
 Die Anwendung wird lokal als Container-System betrieben. Der Browser greift auf
 das Frontend zu. Das Frontend leitet API-Anfragen über den Nginx-Proxy an das
 Backend weiter. Das Backend kommuniziert mit der PostgreSQL-Datenbank und nutzt
-zusätzlich externe Dienste wie PokeAPI und eine Wetter-API.
+zusätzlich externe Dienste wie PalAPI und eine Wetter-API.
 
 | Service          | Image source                | Externer Port               | Interner Port      | Aufgabe                                                                                             |
 | ---------------- | --------------------------- | --------------------------- | ------------------ | --------------------------------------------------------------------------------------------------- |
@@ -35,7 +35,7 @@ belegt sind.
 | Browser        | Frontend           | HTTP                         | Nutzung der Weboberfläche.                              |
 | Frontend       | Backend            | HTTP über Nginx-Proxy `/api` | Zugriff auf REST-Endpunkte.                             |
 | Backend        | PostgreSQL         | JDBC                         | Lesen und Schreiben von Anwendungsdaten.                |
-| Backend        | PokeAPI            | HTTP                         | Abruf von Pokémon-Daten.                                |
+| Backend        | PalAPI            | HTTP                         | Abruf von Pal-Daten.                                |
 | Backend        | Weather API        | HTTP                         | Abruf von Wetterdaten für die Darstellung im Dashboard. |
 | Quality Runner | Backend / Frontend | HTTP / CLI                   | Ausführung von Tests und Qualitätsprüfungen.            |
 | Quality Hub    | `quality_output`   | Dateizugriff über Volume     | Anzeige der erzeugten Reports.                          |

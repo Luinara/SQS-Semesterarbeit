@@ -1,6 +1,6 @@
-# PokeHabit Wiki
+# PalHabit Wiki
 
-PokeHabit ist die SQS-Semesterarbeit als gamifizierte Self-Care-Web-App. Der
+PalHabit ist die SQS-Semesterarbeit als gamifizierte Self-Care-Web-App. Der
 Stack besteht aus Angular, Spring Boot, PostgreSQL, Docker Compose und einem
 lokalen Quality Hub fuer die Abgabe-Nachweise.
 
@@ -39,7 +39,7 @@ demo / password123
 - Dreischichtige Web-App: Frontend, Backend und Persistenz.
 - Oeffentlicher Endpunkt: `GET /api/tasks`.
 - Geschuetzte Nutzer-Endpunkte mit serverseitiger Session.
-- Externe Integrationen: PokeAPI und Open-Meteo.
+- Externe Integrationen: PalAPI und Open-Meteo.
 - Nachweise: Unit-, Controller-, Integrations-, Architektur-, Security- und
   E2E-Tests.
 - Quality Hub als sichtbares SQS-Dashboard.

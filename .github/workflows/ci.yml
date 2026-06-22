@@ -238,7 +238,7 @@ jobs:
     runs-on: ubuntu-latest
     # Needs the analyze jobs (so Checkstyle/SpotBugs/ESLint/Prettier pass first)
     # and the test jobs (which upload the coverage artifacts consumed below).
-    needs: [backend-analyze, frontend-analyze, frontend-test]
+    needs: [backend-test, backend-analyze, frontend-analyze, frontend-test]
 
     steps:
       - uses: actions/checkout@v6
@@ -287,36 +287,23 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      # Check if JaCoCo artifact exists before attempting to download it
-      - name: Check for backend JaCoCo artifact
-        id: check-artifact
-        run: |
-          echo "Checking repository artifacts for backend-jacoco-report..."
-          artifacts=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts")
-          echo "$artifacts" | jq '.' || true
-          if echo "$artifacts" | grep -q '"name": "backend-jacoco-report"'; then
-            echo "found=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "found=false" >> "$GITHUB_OUTPUT"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-
       # Download coverage reports produced by the test jobs.
       - name: Download JaCoCo coverage report
-        if: steps.check-artifact.outputs.found == 'true'
         uses: actions/download-artifact@v8
         with:
           name: backend-jacoco-report
           path: backend/target/site/jacoco
 
-      - name: Warn if JaCoCo artifact missing
-        if: steps.check-artifact.outputs.found != 'true'
+      - name: Download frontend coverage report
+        uses: actions/download-artifact@v8
+        with:
+          name: frontend-coverage-report
+          path: frontend/coverage
+
+      - name: Verify coverage reports
         run: |
-          echo '⚠️ JaCoCo artifact backend-jacoco-report not found for this run.'
-          echo 'SonarQube analysis will continue without coverage data.'
+          test -s backend/target/site/jacoco/jacoco.xml
+          test -s frontend/coverage/lcov.info
 
       # Runs the SonarQube Scanner using the root sonar-project.properties.
       # Analyses both the Java backend and the TypeScript frontend in one pass.

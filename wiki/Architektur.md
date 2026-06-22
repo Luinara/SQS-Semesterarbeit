@@ -1,6 +1,6 @@
 # Architektur
 
-PokeHabit besteht aus Angular-Frontend, Spring-Boot-Backend und PostgreSQL. Die
+PalHabit besteht aus Angular-Frontend, Spring-Boot-Backend und PostgreSQL. Die
 Architektur ist nach arc42 dokumentiert und wird durch Diagramme, ADRs und
 Architekturtests ergaenzt.
 
@@ -9,9 +9,9 @@ Architekturtests ergaenzt.
 | Bereich | Aufgabe |
 | --- | --- |
 | Frontend | UI, App-State, Wetter-Szene, API-Mapping |
-| Backend | Auth, Sessions, Tasks, Spielstand, Pokemon-Daten, Wetter-Adapter |
-| Datenbank | Nutzer, Tasks, User-Tasks, Pokemon und Spielstand |
-| Externe APIs | PokeAPI fuer Pokemon-Daten, Open-Meteo fuer Wetter |
+| Backend | Auth, Sessions, Tasks, Spielstand, Pal-Daten, Wetter-Adapter |
+| Datenbank | Nutzer, Tasks, User-Tasks, Pal und Spielstand |
+| Externe APIs | PalAPI fuer Pal-Daten, Open-Meteo fuer Wetter |
 | Quality Hub | Sichtbare Qualitaetsnachweise fuer Tests, Coverage und Security |
 
 ## Laufzeitfluss
@@ -19,7 +19,7 @@ Architekturtests ergaenzt.
 1. Nutzer registriert sich oder loggt sich ein.
 2. Backend setzt eine serverseitige Session.
 3. Frontend laedt Tasks und Game-State ueber `/api`.
-4. Nutzer erledigt Quests, speichert Wasser und trainiert das Pokemon.
+4. Nutzer erledigt Quests, speichert Wasser und trainiert das Pal.
 5. Backend persistiert Fortschritt und gibt den aktualisierten Game-State zurueck.
 6. Wetterdaten werden ueber das Backend aus Open-Meteo geladen.
 

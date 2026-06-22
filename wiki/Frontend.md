@@ -44,7 +44,7 @@ Im Docker-Build uebernimmt `frontend/nginx.conf` dieselbe Aufgabe.
 3. Tagesquests laden.
 4. Quest erledigen.
 5. Wasserstand speichern.
-6. Pokemon trainieren.
+6. Pal trainieren.
 7. Wetter-Szene ueber Stadt und Open-Meteo aktualisieren.
 8. Logout.
 

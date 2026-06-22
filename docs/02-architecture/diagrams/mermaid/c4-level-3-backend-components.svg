@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
   <title id="title">C4 Level 3 Backend Components</title>
-  <desc id="desc">Backend-Komponentendiagramm für das Spring Boot Backend mit Open-Meteo als Runtime-Integration und PokeAPI als ursprünglicher Datenquelle für Pokémon-Stammdaten.</desc>
+  <desc id="desc">Backend-Komponentendiagramm für das Spring Boot Backend mit Open-Meteo als Runtime-Integration und PalAPI als ursprünglicher Datenquelle für Pal-Stammdaten.</desc>
 
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -31,9 +31,9 @@
   <text x="117.5" y="198" text-anchor="middle" class="label">Angular Frontend</text>
   <text x="117.5" y="218" text-anchor="middle" class="small">REST JSON</text>
 
-  <!-- PokeAPI as non-runtime source -->
+  <!-- PalAPI as non-runtime source -->
   <rect x="40" y="370" width="155" height="65" class="external"/>
-  <text x="117.5" y="396" text-anchor="middle" class="label">PokeAPI</text>
+  <text x="117.5" y="396" text-anchor="middle" class="label">PalAPI</text>
   <text x="117.5" y="416" text-anchor="middle" class="small">ursprüngliche Datenquelle</text>
 
   <!-- Backend Group -->
@@ -53,7 +53,7 @@
   <text x="772.5" y="171" text-anchor="middle" class="label">Domain</text>
   <text x="772.5" y="191" text-anchor="middle" class="small">
     <tspan x="772.5" dy="0">User, Task,</tspan>
-    <tspan x="772.5" dy="14">Pokemon, Weather</tspan>
+    <tspan x="772.5" dy="14">Pal, Weather</tspan>
   </text>
 
   <rect x="300" y="270" width="135" height="70" class="box"/>
@@ -69,7 +69,7 @@
   <text x="772.5" y="312" text-anchor="middle" class="small">Open-Meteo Client</text>
 
   <rect x="500" y="365" width="165" height="36" class="seed"/>
-  <text x="582.5" y="388" text-anchor="middle" class="small">Seed / Migration · Pokémon</text>
+  <text x="582.5" y="388" text-anchor="middle" class="small">Seed / Migration · Pal</text>
 
   <!-- External systems -->
   <ellipse cx="572.5" cy="475" rx="80" ry="36" class="db"/>
@@ -104,5 +104,5 @@
   <text x="345" y="420" text-anchor="middle" class="small">Datenbasis, nicht Runtime</text>
 
   <path d="M582.5 401 V439" class="seedArrow"/>
-  <text x="665" y="423" text-anchor="middle" class="small">befüllt pokemon-Tabellen</text>
+  <text x="665" y="423" text-anchor="middle" class="small">befüllt pal-Tabellen</text>
 </svg>

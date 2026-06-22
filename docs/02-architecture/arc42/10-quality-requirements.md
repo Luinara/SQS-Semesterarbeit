@@ -1,6 +1,6 @@
 # Qualitätsanforderungen
 
-Dieses Kapitel beschreibt die wichtigsten Qualitätsanforderungen an PokeHabit.
+Dieses Kapitel beschreibt die wichtigsten Qualitätsanforderungen an PalHabit.
 Die Anforderungen orientieren sich an den in der Vorlesung behandelten
 Qualitätsmerkmalen nach ISO 25010 und werden durch konkrete Prüfszenarien,
 Tests und Reports nachgewiesen.
@@ -9,22 +9,22 @@ Tests und Reports nachgewiesen.
 
 | Qualitätsmerkmal | Qualitätsziel                                                            | Umsetzung im Projekt                                                                                                                            | Nachweis                                                                    |
 |------------------|--------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------|
-| Funktionalität   | Zentrale User-Flows funktionieren zuverlässig.                           | Registrierung, Login, Session-Restore, Tagesquests, Wassertracking, Pokémon-Fortschritt und Logout sind als fachliche Kernfunktionen umgesetzt. | Backend-Tests, Frontend-Tests und Playwright-E2E-Tests.                     |
+| Funktionalität   | Zentrale User-Flows funktionieren zuverlässig.                           | Registrierung, Login, Session-Restore, Tagesquests, Wassertracking, Pal-Fortschritt und Logout sind als fachliche Kernfunktionen umgesetzt. | Backend-Tests, Frontend-Tests und Playwright-E2E-Tests.                     |
 | Security         | Private Endpunkte und Nutzerdaten sind geschützt.                        | Serverseitige Sessions, gehashte Passwörter, geschützte API-Endpunkte und Prüfung von npm-Abhängigkeiten.                                       | Security-Tests, Auth-Tests, npm audit, Lockfile-Check.                      |
 | Wartbarkeit      | Code bleibt verständlich, änderbar und fachlich strukturiert.            | Feature-orientierte Packages, klare Trennung von Controller, Service, Repository, Angular-Komponenten und Services.                             | Checkstyle, SpotBugs, ESLint, ArchUnit.                                     |
 | Testbarkeit      | Fachlogik ist isoliert und automatisiert prüfbar.                        | Dependency Injection, ausgelagerte Services, testbare reine Funktionen, Mocking externer Schnittstellen und H2-Testprofil.                      | Unit-Tests, Integrationstests, Coverage-Reports.                            |
 | Portabilität     | Die Anwendung kann lokal reproduzierbar gestartet werden.                | Docker Compose startet Frontend, Backend, Datenbank und Quality-Umgebung.                                                                       | `docker compose up --build`, `docker compose --profile quality up --build`. |
 | Usability        | Nutzer können die Kernfunktionen ohne technische Vorkenntnisse bedienen. | Einfache Aufgabenverwaltung, sichtbares Feedback, verständliche Fehlermeldungen und klare Dashboard-Struktur.                                   | Frontend-Tests, Playwright-Flows, manuelle Abnahme.                         |
-| Zuverlässigkeit  | Externe API-Ausfälle blockieren die Kernfunktionen nicht.                | PokeAPI-Fallback, Wetter-Fallback, Timeouts und defensiver Umgang mit externen Diensten.                                                        | Tests für PokeAPI-Ausfall, Fallback-Tests, dokumentierte Fehlerbehandlung.  |
+| Zuverlässigkeit  | Externe API-Ausfälle blockieren die Kernfunktionen nicht.                | PalAPI-Fallback, Wetter-Fallback, Timeouts und defensiver Umgang mit externen Diensten.                                                        | Tests für PalAPI-Ausfall, Fallback-Tests, dokumentierte Fehlerbehandlung.  |
 
 ## Qualitätsziele mit Priorität
 
 | Priorität | Qualitätsziel                                                       | Begründung                                                                                                                      |
 |-----------|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
-| Hoch      | Zentrale User-Flows müssen funktionieren.                           | Ohne Registrierung, Login, Quests, Wassertracking und Pokémon-Fortschritt ist die Anwendung fachlich nicht nutzbar.             |
+| Hoch      | Zentrale User-Flows müssen funktionieren.                           | Ohne Registrierung, Login, Quests, Wassertracking und Pal-Fortschritt ist die Anwendung fachlich nicht nutzbar.             |
 | Hoch      | Geschützte Daten dürfen nur für angemeldete Nutzer erreichbar sein. | Die Anwendung arbeitet mit nutzerbezogenen Fortschrittsdaten und benötigt deshalb Zugriffsschutz.                               |
 | Hoch      | Tests und Quality Gate müssen reproduzierbar laufen.                | Für die Abgabe muss nachvollziehbar sein, dass Qualitätssicherung nicht nur beschrieben, sondern automatisiert ausgeführt wird. |
-| Mittel    | Externe Dienste dürfen die App nicht unbenutzbar machen.            | PokeAPI und Wetterdaten verbessern die Anwendung, dürfen aber keine harte Voraussetzung für die Kernfunktionen sein.            |
+| Mittel    | Externe Dienste dürfen die App nicht unbenutzbar machen.            | PalAPI und Wetterdaten verbessern die Anwendung, dürfen aber keine harte Voraussetzung für die Kernfunktionen sein.            |
 | Mittel    | Code muss wartbar und verständlich bleiben.                         | Die Anwendung wurde im Team entwickelt und soll auch nach Änderungen nachvollziehbar bleiben.                                   |
 | Mittel    | Die App muss lokal ohne Spezialsetup startbar sein.                 | Docker Compose reduziert Installationsaufwand und macht die Abgabe reproduzierbar.                                              |
 
@@ -36,7 +36,7 @@ Tests und Reports nachgewiesen.
 | Ein nicht angemeldeter Nutzer ruft einen geschützten Endpunkt auf. | Security                    | Der Zugriff wird abgelehnt.                                                              | Auth-/Security-Tests.                        |
 | Ein angemeldeter Nutzer erledigt eine Tagesquest.                  | Funktionalität              | Quest wird als erledigt gespeichert und Fortschritt wird aktualisiert.                   | Service-Tests, API-Tests, E2E-Test.          |
 | Ein Nutzer trägt Wasser ein.                                       | Funktionalität / Usability  | Wasserstand wird sichtbar aktualisiert und fachlich korrekt gespeichert.                 | Frontend-Tests, Backend-Tests.               |
-| PokeAPI ist beim Registrieren nicht erreichbar.                    | Zuverlässigkeit             | Registrierung funktioniert trotzdem mit lokalem Starter-Katalog.                         | Fallback-Test.                               |
+| PalAPI ist beim Registrieren nicht erreichbar.                    | Zuverlässigkeit             | Registrierung funktioniert trotzdem mit lokalem Starter-Katalog.                         | Fallback-Test.                               |
 | Wetterdaten können nicht geladen werden.                           | Zuverlässigkeit / Usability | Dashboard bleibt nutzbar und zeigt keinen technischen Fehlerzustand.                     | Frontend-Test, manuelle Prüfung.             |
 | Ein Entwickler ändert Backend-Code fehlerhaft.                     | Wartbarkeit / Testbarkeit   | Tests oder statische Analyse schlagen fehl.                                              | GitHub Actions, Quality Runner, Quality Hub. |
 | Coverage fällt unter den Grenzwert.                                | Testbarkeit                 | Das Quality Gate schlägt fehl und zeigt den Fehler im Hub.                               | JaCoCo-/Vitest-Coverage, Gate-Score.         |

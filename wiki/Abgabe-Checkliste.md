@@ -7,7 +7,7 @@
 - Demo-Login: `demo / password123`.
 - Oeffentlicher Endpunkt: `GET /api/tasks`.
 - Geschuetzte Endpunkte mit Session-Cookie.
-- PokeAPI-Anbindung im Backend mit Fallback.
+- PalAPI-Anbindung im Backend mit Fallback.
 - Open-Meteo-Anbindung fuer Wetterdaten.
 - Tests fuer Backend, Frontend, Security, Architektur und E2E.
 - Quality Hub fuer sichtbare Abgabe-Nachweise.
@@ -29,7 +29,7 @@
 2. Login mit `demo / password123`.
 3. Quest abschliessen.
 4. Wasser speichern.
-5. Pokemon trainieren.
+5. Pal trainieren.
 6. Wetter-Stadt laden.
 7. Quality Hub zeigen.
 8. C4, Testpyramide und API-Doku zeigen.

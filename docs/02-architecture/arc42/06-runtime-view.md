@@ -16,15 +16,15 @@ Nutzer ausgeführt werden. Registrierung und Login laufen über das Backend, dam
 Authentifizierung, Session-Verwaltung und Nutzerzustand zentral kontrolliert
 werden.
 
-## Quest abschließen und Pokémon-Fortschritt aktualisieren
+## Quest abschließen und Pal-Fortschritt aktualisieren
 
-![Quest abschliessen und Pokémon-Fortschritt aktualisieren](../diagrams/mermaid/quest-fortschritt.svg)
+![Quest abschliessen und Pal-Fortschritt aktualisieren](../diagrams/mermaid/quest-fortschritt.svg)
 
 [Mermaid-Quelle](../diagrams/mermaid/quest-fortschritt.mmd)
 
 Dieser Flow ist fachlich zentral, weil hier die Gamification-Logik sichtbar wird.
 Ein Klick im Frontend führt nicht nur zu einer UI-Änderung, sondern aktualisiert
-serverseitig Taskstatus, Questpunkte, Happiness und Pokémon-Fortschritt.
+serverseitig Taskstatus, Questpunkte, Happiness und Pal-Fortschritt.
 
 ## Wassertracking und automatische Quest-Aktualisierung
 

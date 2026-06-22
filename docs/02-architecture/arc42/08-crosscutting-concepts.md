@@ -18,7 +18,7 @@ Passwörter auch bei einem Datenbankzugriff geschützt.
 
 Geschützte Endpunkte prüfen, ob eine gültige Session vorhanden ist. Öffentliche
 Endpunkte wie Registrierung und Login sind ohne bestehende Session erreichbar.
-Fachliche Daten wie Tasks, Wasserstand, Punkte und Pokémon-Fortschritt sind an
+Fachliche Daten wie Tasks, Wasserstand, Punkte und Pal-Fortschritt sind an
 den angemeldeten Nutzer gebunden.
 
 ## Fehlerbehandlung
@@ -35,9 +35,9 @@ Die Nutzer sollen nicht mit Stacktraces oder internen Fehlermeldungen
 konfrontiert werden. Stattdessen werden klare Hinweise angezeigt, zum Beispiel
 bei fehlgeschlagenem Login, ungültigen Eingaben oder nicht erreichbaren Diensten.
 
-Externe Dienste werden defensiv angebunden. Der Zugriff auf die PokeAPI verwendet
+Externe Dienste werden defensiv angebunden. Der Zugriff auf die PalAPI verwendet
 kurze Verbindungs- und Request-Timeouts. Außerdem ist die Anwendung nicht davon
-abhängig, dass externe APIs dauerhaft verfügbar sind. Wenn PokeAPI beim
+abhängig, dass externe APIs dauerhaft verfügbar sind. Wenn PalAPI beim
 Registrieren nicht antwortet, wird der Nutzer trotzdem angelegt und die App nutzt
 lokale Starter-Daten als Fallback.
 
@@ -88,7 +88,7 @@ konkreten Darstellung im Browser.
 ## Zustandsverwaltung im Frontend
 
 Der zentrale UI-Zustand liegt im Angular-Service `AppStateService`. Dort werden
-Nutzer, Tasks, Wasserstand, Pokémon, Feedback und Session-Restore
+Nutzer, Tasks, Wasserstand, Pal, Feedback und Session-Restore
 zusammengeführt.
 
 Reine Fachlogik wird möglichst aus Komponenten ausgelagert. Dadurch bleiben
@@ -102,7 +102,7 @@ testbar zu machen.
 
 Im Backend werden Services, Repositories und Controller über Spring verwaltet.
 Dadurch können fachliche Services unabhängig von Controller-Logik getestet
-werden. Externe Zugriffe, zum Beispiel auf PokeAPI, sind gekapselt und können im
+werden. Externe Zugriffe, zum Beispiel auf PalAPI, sind gekapselt und können im
 Testprofil ersetzt oder deaktiviert werden.
 
 Im Frontend werden Angular-Services verwendet, um API-Zugriffe und
@@ -111,11 +111,11 @@ wissen, wie Daten technisch geladen oder gespeichert werden.
 
 ## Umgang mit externen Services
 
-Die Anwendung nutzt externe Dienste für Pokémon- und Wetterdaten. Diese Dienste
+Die Anwendung nutzt externe Dienste für Pal- und Wetterdaten. Diese Dienste
 werden als optionale Integrationen behandelt und dürfen die Kernfunktion der App
 nicht blockieren.
 
-Für PokeAPI existiert ein lokaler Fallback-Katalog. Dadurch kann die Registrierung
+Für PalAPI existiert ein lokaler Fallback-Katalog. Dadurch kann die Registrierung
 auch dann abgeschlossen werden, wenn der externe Dienst nicht erreichbar ist.
 Im Testprofil werden externe API-Aufrufe deaktiviert oder gegen lokale
 Testadressen ersetzt, damit Tests reproduzierbar und unabhängig vom Netzwerk
