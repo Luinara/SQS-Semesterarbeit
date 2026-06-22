@@ -20,8 +20,6 @@ const DEFAULT_POKEMON_SPRITE_URL =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PetCardComponent {
-  private static readonly MAX_AVAILABLE_POINTS = 250;
-
   readonly pet = input<PetState | null>(null);
   readonly completedTasks = input(0);
   readonly totalTasks = input(0);
@@ -62,14 +60,6 @@ export class PetCardComponent {
     this.pet()?.isEgg ? 'fallback' : (this.pokemon()?.source ?? 'fallback')
   );
   readonly canFeed = computed(() => (this.pet()?.availableFoodPoints ?? 0) >= this.feedCost());
-  readonly availablePointsLabel = computed(
-    () =>
-      `${clamp(
-        this.pet()?.availableFoodPoints ?? 0,
-        0,
-        PetCardComponent.MAX_AVAILABLE_POINTS
-      )} / ${PetCardComponent.MAX_AVAILABLE_POINTS}`
-  );
   readonly pokemonStatus = computed(() => {
     if (this.pet()?.isEgg) {
       return 'Ei bis Lvl. 10';
@@ -162,8 +152,4 @@ export function formatWeatherUpdatedAtTime(updatedAt: string): string | null {
 
 function formatPokemonName(name: string): string {
   return `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
-}
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, value));
 }

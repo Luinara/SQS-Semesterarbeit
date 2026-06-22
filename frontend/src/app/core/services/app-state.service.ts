@@ -267,7 +267,7 @@ export class AppStateService {
           this.showFeedback({
             id: createFeedbackId('feeding'),
             kind: 'feeding',
-            message: 'Quest-Punkte wurden für dein Pokémon eingesetzt.',
+            message: 'Fortschritt wurde fuer deinen Partner eingesetzt.',
           });
         }
       } catch (error) {
