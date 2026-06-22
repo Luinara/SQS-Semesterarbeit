@@ -363,7 +363,9 @@ describe("BackendApiService", () => {
         jsonResponse([{ id: 2, title: "30 Minuten lernen" }]),
       );
 
-    const snapshot = await new BackendApiService().testMotivationDecay("batman");
+    const snapshot = await new BackendApiService().testMotivationDecay(
+      "batman",
+    );
 
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
