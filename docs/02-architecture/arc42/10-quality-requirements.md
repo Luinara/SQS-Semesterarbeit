@@ -30,18 +30,18 @@ Tests und Reports nachgewiesen.
 
 ## Qualitätsszenarien
 
-| Szenario                                                           | Qualitätsmerkmal            | Erwartetes Ergebnis                                                                      | Nachweis                                     |
-|--------------------------------------------------------------------|-----------------------------|------------------------------------------------------------------------------------------|----------------------------------------------|
-| Ein neuer Nutzer registriert sich und meldet sich danach an.       | Funktionalität              | Nutzerkonto wird erstellt, Login funktioniert und Dashboard wird geladen.                | Backend-/Frontend-Tests, Playwright.         |
-| Ein nicht angemeldeter Nutzer ruft einen geschützten Endpunkt auf. | Security                    | Der Zugriff wird abgelehnt.                                                              | Auth-/Security-Tests.                        |
-| Ein angemeldeter Nutzer erledigt eine Tagesquest.                  | Funktionalität              | Quest wird als erledigt gespeichert und Fortschritt wird aktualisiert.                   | Service-Tests, API-Tests, E2E-Test.          |
-| Ein Nutzer trägt Wasser ein.                                       | Funktionalität / Usability  | Wasserstand wird sichtbar aktualisiert und fachlich korrekt gespeichert.                 | Frontend-Tests, Backend-Tests.               |
-| PokeAPI ist beim Registrieren nicht erreichbar.                    | Zuverlässigkeit             | Registrierung funktioniert trotzdem mit lokalem Starter-Katalog.                         | Fallback-Test.                               |
-| Wetterdaten können nicht geladen werden.                           | Zuverlässigkeit / Usability | Dashboard bleibt nutzbar und zeigt keinen technischen Fehlerzustand.                     | Frontend-Test, manuelle Prüfung.             |
-| Ein Entwickler ändert Backend-Code fehlerhaft.                     | Wartbarkeit / Testbarkeit   | Tests oder statische Analyse schlagen fehl.                                              | GitHub Actions, Quality Runner, Quality Hub. |
-| Coverage fällt unter den Grenzwert.                                | Testbarkeit                 | Das Quality Gate schlägt fehl und zeigt den Fehler im Hub.                               | JaCoCo-/Vitest-Coverage, Gate-Score.         |
-| Eine unsichere npm-Abhängigkeit wird erkannt.                      | Security                    | Der Security-Check schlägt fehl, bis Lockfile oder Dependency-Tree bereinigt sind.       | `npm audit`, Lockfile-Test.                  |
-| Die Anwendung wird auf einem anderen Rechner gestartet.            | Portabilität                | Docker Compose startet Frontend, Backend und Datenbank ohne manuelle Einzelinstallation. | Docker-Compose-Start.                        |
+| Szenario                                                           | Qualitätsmerkmal            | Erwartetes Ergebnis                                                                      | Nachweis                                  |
+|--------------------------------------------------------------------|-----------------------------|------------------------------------------------------------------------------------------|-------------------------------------------|
+| Ein neuer Nutzer registriert sich und meldet sich danach an.       | Funktionalität              | Nutzerkonto wird erstellt, Login funktioniert und Dashboard wird geladen.                | Backend-/Frontend-Tests, Playwright.      |
+| Ein nicht angemeldeter Nutzer ruft einen geschützten Endpunkt auf. | Security                    | Der Zugriff wird abgelehnt.                                                              | Auth-/Security-Tests.                     |
+| Ein angemeldeter Nutzer erledigt eine Tagesquest.                  | Funktionalität              | Quest wird als erledigt gespeichert und Fortschritt wird aktualisiert.                   | Service-Tests, API-Tests, E2E-Test.       |
+| Ein Nutzer trägt Wasser ein.                                       | Funktionalität / Usability  | Wasserstand wird sichtbar aktualisiert und fachlich korrekt gespeichert.                 | Frontend-Tests, Backend-Tests.            |
+| PokeAPI ist beim Registrieren nicht erreichbar.                    | Zuverlässigkeit             | Registrierung funktioniert trotzdem mit lokalem Starter-Katalog.                         | Fallback-Test.                            |
+| Wetterdaten können nicht geladen werden.                           | Zuverlässigkeit / Usability | Dashboard bleibt nutzbar und zeigt keinen technischen Fehlerzustand.                     | Frontend-Test, manuelle Prüfung.          |
+| Ein Entwickler ändert Backend-Code fehlerhaft.                     | Wartbarkeit / Testbarkeit   | Tests oder statische Analyse schlagen fehl.                                              | GitHub Actions, Quality Runner.           |
+| Coverage fällt unter den Grenzwert.                                | Testbarkeit                 | Das Quality Gate schlägt fehl                                                            | JaCoCo-/Vitest-Coverage, Gate-Score.      |
+| Eine unsichere npm-Abhängigkeit wird erkannt.                      | Security                    | Der Security-Check schlägt fehl, bis Lockfile oder Dependency-Tree bereinigt sind.       | `npm audit`, Lockfile-Test.               |
+| Die Anwendung wird auf einem anderen Rechner gestartet.            | Portabilität                | Docker Compose startet Frontend, Backend und Datenbank ohne manuelle Einzelinstallation. | Docker-Compose-Start.                     |
 
 ## Messbare Qualitätskriterien
 
@@ -58,7 +58,6 @@ Tests und Reports nachgewiesen.
 | ArchUnit          | Architekturregeln müssen eingehalten werden.                         |
 | npm Security      | Keine blockierenden npm-Audit-Funde im definierten Prüfprofil.       |
 | Docker-Start      | `docker compose up --build` muss reproduzierbar funktionieren.       |
-| Quality-Profil    | `docker compose --profile quality up --build` muss Reports erzeugen. |
 
 ## Aktuelle Nachweise
 
@@ -71,10 +70,7 @@ Artefakte im Projekt belegt:
 - Logs für jeden Quality-Gate-Schritt
 - Checkstyle-, SpotBugs-, ESLint- und ArchUnit-Ergebnisse
 - npm-audit- und Lockfile-Prüfung
-- Gate-Score mit Pflichtcheck-Zusammenfassung im Quality Hub
-
-Der Quality Hub bündelt diese Nachweise lokal und macht sichtbar, ob die
-definierten Qualitätsanforderungen aktuell erfüllt werden.
+- Gate-Score in SonarQube
 
 ## Weiterführende Qualitätsnachweise
 

@@ -50,10 +50,6 @@ Das Backend protokolliert relevante technische Ereignisse, zum Beispiel Fehler
 bei externen API-Aufrufen oder unerwartete Serverfehler. Sensible Informationen
 wie Passwörter, Session-Cookies oder personenbezogene Daten werden nicht geloggt.
 
-Für die lokale Qualitätssicherung werden Logs zusätzlich über den Quality Hub
-sichtbar gemacht. Dadurch können fehlgeschlagene Tests, Build-Probleme oder
-Laufzeitfehler bei der Abgabe nachvollzogen werden.
-
 ## Validierung
 
 Eingaben werden an mehreren Stellen validiert.
@@ -140,9 +136,6 @@ Zusätzlich werden statische Prüfungen eingesetzt:
 - ArchUnit zur Prüfung architektonischer Regeln
 - ESLint für TypeScript- und Angular-Code
 - npm audit und Lockfile-Tests zur Prüfung von Frontend-Abhängigkeiten
-
-Die Ergebnisse werden im Quality Hub gesammelt und dienen als Nachweis für die
-Abgabe.
 
 ## Code Style und Wartbarkeit
 
