@@ -1,7 +1,7 @@
 # Laufzeitsicht
 
 Die Laufzeitsicht beschreibt zentrale dynamische Abläufe der Anwendung. Sie zeigt,
-wie Frontend, Backend, Datenbank, externe Dienste und Quality Hub zur Laufzeit
+wie Frontend, Backend, Datenbank und externe Dienste zur Laufzeit
 zusammenarbeiten. Dokumentiert werden insbesondere fachlich wichtige User-Flows,
 externe Schnittstellen und qualitätsrelevante Abläufe.
 
@@ -57,13 +57,3 @@ Der Fehlerfall ist wichtig, weil externe Dienste nicht vollständig kontrolliert
 werden können. Bei Timeout oder Fehler liefert das Backend einen kontrollierten
 Fallback, sodass das Dashboard weiterhin benutzbar bleibt.
 
-## Quality-Hub-Lauf
-
-![Quality-Hub-Lauf](../diagrams/mermaid/quality-hub.svg)
-
-[Mermaid-Quelle](../diagrams/mermaid/quality-hub.mmd)
-
-Der Quality-Hub-Lauf macht die Qualitätssicherung reproduzierbar. Tests,
-Coverage, statische Analyse, Security-Prüfungen und E2E-Tests werden nicht nur
-lokal einzeln ausgeführt, sondern gebündelt im Docker-Profil gestartet und über
-den Hub sichtbar gemacht.

@@ -203,7 +203,7 @@ Alle Datumsvergleiche für Tagesgrenzen verwenden UTC.
 * Dabei werden Wasser auf `0` gesetzt, Quest-Completions zurückgesetzt und `lastDailyResetAt` aktualisiert.
 * `SelfCareApplicationTests` prüft Spring-Kontext, zentrale Beans, aktives `test`-Profil, H2-In-Memory-Datenbank und UTC-`Clock`-Bean.
 * Frontend-Service-Tests prüfen das Mapping der Backend-Payloads in UI-Modelle.
-* Der Docker Quality Hub führt Backend-, Frontend-, Security-, Coverage- und E2E-Checks gesammelt aus.
+* Der Quality Runner führt Backend-, Frontend-, Security-, Coverage- und E2E-Checks gesammelt aus.
 
 ## Dateiablage
 

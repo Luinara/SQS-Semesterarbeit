@@ -13,14 +13,14 @@ nachvollziehbar zusammenzuführen.
 
 ## Umsetzung im Projekt
 
-| Maßnahme | Umsetzung | Nutzen |
-| --- | --- | --- |
-| Docker Compose | Zentrale Orchestrierung der Projektcontainer über `docker-compose.yml` | Die Anwendung kann mit einem einheitlichen Befehl gestartet werden. |
-| Gepinnte Images | Es werden konkrete Image-Versionen verwendet, z. B. `postgres:16-alpine`, statt `latest`. | Builds bleiben reproduzierbarer und ändern sich nicht unbemerkt durch neue Image-Versionen. |
-| Service-Namen statt localhost | Container kommunizieren im Docker-Netzwerk über Servicenamen wie `db`, `backend` oder `frontend`. | Die Kommunikation funktioniert unabhängig vom Host-System. |
-| Setup- und Start-Skripte | `scripts/setup.sh` und `scripts/start.sh` unterstützen einen einheitlichen Projektstart. | Neue Entwickler oder Prüfer müssen nicht alle Befehle manuell zusammensuchen. |
-| Environment-Konfiguration | Beispielkonfigurationen werden über `.env.example` dokumentiert. | Benötigte Variablen sind nachvollziehbar, ohne echte Secrets zu committen. |
-| Quality Hub | Qualitätsprüfungen werden über Docker reproduzierbar gesammelt und sichtbar gemacht. | Tests, Reports und Analysen hängen weniger von lokalen IDE- oder Systemunterschieden ab. |
+| Maßnahme                      | Umsetzung                                                                                         | Nutzen                                                                                      |
+|-------------------------------|---------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| Docker Compose                | Zentrale Orchestrierung der Projektcontainer über `docker-compose.yml`                            | Die Anwendung kann mit einem einheitlichen Befehl gestartet werden.                         |
+| Gepinnte Images               | Es werden konkrete Image-Versionen verwendet, z. B. `postgres:16-alpine`, statt `latest`.         | Builds bleiben reproduzierbarer und ändern sich nicht unbemerkt durch neue Image-Versionen. |
+| Service-Namen statt localhost | Container kommunizieren im Docker-Netzwerk über Servicenamen wie `db`, `backend` oder `frontend`. | Die Kommunikation funktioniert unabhängig vom Host-System.                                  |
+| Setup- und Start-Skripte      | `scripts/setup.sh` und `scripts/start.sh` unterstützen einen einheitlichen Projektstart.          | Neue Entwickler oder Prüfer müssen nicht alle Befehle manuell zusammensuchen.               |
+| Environment-Konfiguration     | Beispielkonfigurationen werden über `.env.example` dokumentiert.                                  | Benötigte Variablen sind nachvollziehbar, ohne echte Secrets zu committen.                  |
+
 
 ## Vermeidung typischer Docker-Probleme
 
@@ -64,8 +64,9 @@ Frischer Clone
 → .env aus .env.example erstellen
 → scripts/setup.sh ausführen
 → scripts/start.sh oder docker compose up ausführen
-→ Anwendung und Quality Hub sind erreichbar
+→ Anwendung sind erreichbar
 ```
+
 Damit wird Docker nicht nur als technisches Hilfsmittel verwendet, sondern als
 konkreter Qualitätsnachweis für reproduzierbares Deployment.
 
