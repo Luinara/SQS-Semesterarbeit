@@ -13,6 +13,14 @@ Stack besteht aus Angular-Frontend, Spring-Boot-Backend und PostgreSQL.
 
 ### App starten
 
+# Variante 1
+
+```bash
+.\scripts\setup.ps1
+.\scripts\start.ps1
+```
+
+# Variante 2
 Der normale Demo-Start startet PostgreSQL, Backend und Frontend:
 
 ```bash

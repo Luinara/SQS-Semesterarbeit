@@ -16,13 +16,23 @@ bleiben.
 | [05 Präsentation](05-presentation/presentation-plan.md) | Ablaufplan und Sprechzettel für die Demo                            |
 | [06 Betrieb](06-operations/readthedocs-publish.md)      | ReadTheDocs-Veröffentlichung und operative Hinweise                 |
 
-## Schnellstart
-todo
+## Start
+
+# Variante 1: 
+
+```bash
+.\scripts\setup.ps1
+.\scripts\start.ps1
+```
+
+# Variante 2:
+
 App und Datenbank:
 
 ```bash
 docker compose up --build
 ```
+# Variante 3: 
 
 App, Datenbank und Quality Hub:
 

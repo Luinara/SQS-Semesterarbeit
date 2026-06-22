@@ -47,6 +47,22 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
 | 13:00 - 14:30 | Risiken und Grenzen     | arc42 Risiken                                                                    | "Wir benennen bewusst Grenzen: Deployment-Hardening, externe APIs, Tageshistorie."                                                        |
 | 14:30 - 15:00 | Abschluss               | Quality Hub oder App                                                             | "Das Projekt ist per Docker startbar und die Qualitätssicherung ist reproduzierbar."                                                      |
 
+## 30-Minuten-Ablauf
+
+| Zeit          | Inhalt                              | Was zeigen                                                                                                      | Kernaussage                                                                                                             |
+| ------------- | ----------------------------------- |-----------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| 0:00 - 2:00   | Einstieg und Ziel der App           | App-Startseite oder Dashboard                                                                                   | "PokeHabit verbindet tägliche Self-Care-Aufgaben mit einem Pokémon-Partner und macht Fortschritt spielerisch sichtbar." |
+| 2:00 - 7:00   | Live-Demo Nutzerfluss               | Registrierung oder Demo-Login, Dashboard, Quest abschließen, Wasser trinken, Logout                             | "Die App ist kein Mockup: Frontend, Backend und Datenbank arbeiten über echte REST-Endpunkte zusammen."                 |
+| 7:00 - 10:00  | Fachliche Logik                     | XP, Quest-Punkte, Wasser, Pokémon-Fortschritt, Tagesquests                                                      | "Die Kernlogik ist fachlich nachvollziehbar und wird serverseitig abgesichert."                                         |
+| 10:00 - 13:00 | API, Authentifizierung und Security | `/api/tasks`, geschützte Game-State-Endpunkte, Session-Cookie, Passwort-Hashing                                 | "Öffentliche und geschützte Endpunkte sind getrennt; nutzerbezogene Aktionen laufen über serverseitige Sessions."       |
+| 13:00 - 15:00 | Externer Service                    | Wetter-Szene im Dashboard oder Code `WeatherService` / `OpenMeteoWeatherAdapter`                                | "Open-Meteo wird als externer Dienst gekapselt; bei Fehlern bleibt die App nutzbar."                                    |
+| 15:00 - 19:00 | Architektur                         | C4-Diagramm, Frontend/Backend/DB/externe Dienste/Quality Hub, Feature-Packages                                  | "Das System ist klar geschnitten und die Architektur unterstützt Testbarkeit und Wartbarkeit."                          |
+| 19:00 - 23:30 | Testkonzept und Testpyramide        | `test-pyramid.md`, `test-concept.md`, Beispiele für Unit-, Integrations-, Security-, Architektur- und E2E-Tests | "Die Testpyramide ist nicht nur dokumentiert, sondern durch konkrete Tests und Reports belegt."                         |
+| 23:30 - 26:00 | Quality Hub und CI                  | Quality Hub, Reports, Coverage, Logs, GitHub Actions                                                            | "Qualität wird automatisiert geprüft und für Prüfer sichtbar gemacht."                                                  |
+| 26:00 - 28:00 | Dokumentation und ADRs              | arc42, C4, ADRs, ReadTheDocs                                                                                    | "Architekturentscheidungen und Grenzen sind nachvollziehbar dokumentiert."                                              |
+| 28:00 - 29:15 | Risiken und Grenzen                 | Risiken im arc42-Dokument oder Testkonzept                                                                      | "Wir benennen bewusst, was für Produktivbetrieb noch fehlt."                                                            |
+| 29:15 - 30:00 | Abschluss                           | App oder Quality Hub                                                                                            | "PokeHabit ist per Docker startbar, fachlich demonstrierbar und qualitätsgesichert nachvollziehbar."                    |
+
 ## Sprechtext pro Abschnitt
 
 ### Einstieg
