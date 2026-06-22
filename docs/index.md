@@ -24,9 +24,10 @@ App und Datenbank:
 docker compose up --build
 ```
 
-Altenativ:
+Alternativ:
 
 ```bash
+./script/setup.ps1
 ./script/start.ps1
 ```
 
