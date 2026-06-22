@@ -82,7 +82,7 @@ nicht produktiv implementiert. Das sagen wir bewusst ehrlich."
 ## Architektur
 
 "Im C4-Diagramm sieht man die Trennung: Angular-Frontend, Spring-Boot-Backend,
-PostgreSQL, externe Dienste und der Quality Hub. Im Backend sind die Pakete nach
+PostgreSQL und externe Dienste. Im Backend sind die Pakete nach
 Features getrennt. Controller greifen nicht direkt auf Repositories zu; das
 prüfen wir mit ArchUnit."
 "Auf C1 sieht man Nutzer und Fremdsysteme. Auf C2 sieht man die deploybaren Container: Angular-Frontend, 
@@ -140,11 +140,7 @@ Playwright-Flows."
 "Wir testen nicht alles über E2E, weil E2E-Tests langsamer und anfälliger sind. Fachlogik testen wir unten 
 schnell und stabil. E2E nutzen wir für die wichtigsten sichtbaren User-Flows."
 
-## Quality Hub
-
-"Qualitätssicherung sollte bei uns nicht nur als Liste in der Doku stehen.
-Darum gibt es den Quality Hub. Er startet über Docker, führt die Checks aus,
-sammelt Reports und zeigt direkt, ob das Gate grün oder rot ist."
+## Quality
 
 Checks nennen, nicht alle erklären:
 
@@ -257,16 +253,15 @@ Abschluss
 
 1. Kurz auf den konkreten Nachweis zeigen.
 2. Nicht anfangen zu raten.
-3. Lieber sagen: "Das ist bei uns so umgesetzt: ..." und dann Code, Doku oder
-   Quality Hub zeigen.
+3. Lieber sagen: "Das ist bei uns so umgesetzt: ..." und dann Code oder Doku zeigen.
 
 ## Sätze, die gut funktionieren
 
-- "Das ist nicht nur Doku, das läuft im Quality Hub wirklich durch."
+- "Das ist nicht nur Doku, das läuft im SonarQube wirklich durch."
 - "Der externe Service ist Open-Meteo: Geocoding plus Forecast-Daten für die Wetter-Szene."
 - "React wäre flexibler gewesen, Angular war für Struktur, Tests und Teamkonventionen passender."
 - "Wenn die Wetter-API ausfällt, bleibt die App nutzbar und zeigt einen lokalen Standardzustand."
-- "Die App ist per Docker startbar; der Quality Hub läuft im gleichen Profil."
+- "Die App ist per Docker startbar; "
 - "Wir haben bekannte Grenzen dokumentiert, statt sie in der Präsentation zu verstecken."
 - "Qualität ist bei uns nicht nur behauptet, sondern messbar gemacht."
 - "Open-Meteo ist Laufzeitabhängigkeit; PokeAPI ist nur ursprüngliche Quelle für Stammdaten."
