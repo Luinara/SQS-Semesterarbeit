@@ -1,18 +1,18 @@
 import { Page } from "@playwright/test";
 import { expect, test } from "../../frontend/testing/playwright-test";
+import {
+  berlinWeatherLocation,
+  berlinWeatherSnapshot,
+  clearBrowserStorage,
+  fulfillOpenMeteoForecast,
+  learningTask,
+  waterTask,
+} from "./mock-api";
 
-const tasks = [
-  {
-    id: 1,
-    title: "Wasser trinken",
-    description: "Trinke heute 3 Liter Wasser.",
-  },
-  {
-    id: 2,
-    title: "30 Minuten lernen",
-    description: "Ein fokussierter Lernblock für dein Pokémon.",
-  },
-];
+const ivysaurSpriteUrl =
+  "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png";
+
+const tasks = [waterTask, learningTask];
 
 test.describe("PokeHabit", () => {
   test("führt vom Login durch Quest, Wasser, Training, Level-Up und Logout", async ({
@@ -25,7 +25,7 @@ test.describe("PokeHabit", () => {
     const gameState = {
       waterLevel: 500,
       foodLevel: 0,
-      pokemonImageUrl: "/pet-placeholder.svg",
+      pokemonImageUrl: ivysaurSpriteUrl,
       pokemonLevel: 2,
       growth: 40,
       happiness: 75,
@@ -104,19 +104,25 @@ test.describe("PokeHabit", () => {
         return;
       }
 
+      if (url.pathname === "/api/weather/location") {
+        await route.fulfill({ json: berlinWeatherLocation() });
+        return;
+      }
+
+      if (url.pathname === "/api/weather/current") {
+        await route.fulfill({
+          json: berlinWeatherSnapshot({ temperatureC: 22, weatherCode: 2 }),
+        });
+        return;
+      }
+
       await route.fulfill({ status: 404, json: { error: "not mocked" } });
     });
 
     await page.route("https://api.open-meteo.com/**", async (route) => {
-      await route.fulfill({
-        json: {
-          current: {
-            temperature_2m: 22,
-            weather_code: 2,
-            is_day: 1,
-            time: "2026-06-15T10:00",
-          },
-        },
+      await fulfillOpenMeteoForecast(route, {
+        temperatureC: 22,
+        weatherCode: 2,
       });
     });
 
@@ -128,7 +134,7 @@ test.describe("PokeHabit", () => {
           sprites: {
             other: {
               "official-artwork": {
-                front_default: "/pet-placeholder.svg",
+                front_default: ivysaurSpriteUrl,
               },
             },
           },
@@ -137,9 +143,7 @@ test.describe("PokeHabit", () => {
       });
     });
 
-    await page.addInitScript(() => {
-      globalThis.localStorage.clear();
-    });
+    await clearBrowserStorage(page);
 
     await page.goto("/auth", { waitUntil: "domcontentloaded", timeout: 10000 });
 

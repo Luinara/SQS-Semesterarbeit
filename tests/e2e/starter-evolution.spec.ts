@@ -1,12 +1,13 @@
 import { expect, test } from "../../frontend/testing/playwright-test";
+import {
+  berlinWeatherLocation,
+  berlinWeatherSnapshot,
+  clearBrowserStorage,
+  fulfillOpenMeteoForecast,
+  waterTask,
+} from "./mock-api";
 
-const tasks = [
-  {
-    id: 1,
-    title: "Wasser trinken",
-    description: "Trinke heute 3 Liter Wasser.",
-  },
-];
+const tasks = [waterTask];
 
 const speciesByStarter = {
   1: ["bulbasaur", "ivysaur", "venusaur"],
@@ -96,19 +97,25 @@ for (const starterFlow of starterFlows) {
         return;
       }
 
+      if (url.pathname === "/api/weather/location") {
+        await route.fulfill({ json: berlinWeatherLocation() });
+        return;
+      }
+
+      if (url.pathname === "/api/weather/current") {
+        await route.fulfill({
+          json: berlinWeatherSnapshot({ temperatureC: 20, weatherCode: 1 }),
+        });
+        return;
+      }
+
       await route.fulfill({ status: 404, json: { error: "not mocked" } });
     });
 
     await page.route("https://api.open-meteo.com/**", async (route) => {
-      await route.fulfill({
-        json: {
-          current: {
-            temperature_2m: 20,
-            weather_code: 1,
-            is_day: 1,
-            time: "2026-06-15T10:00",
-          },
-        },
+      await fulfillOpenMeteoForecast(route, {
+        temperatureC: 20,
+        weatherCode: 1,
       });
     });
 
@@ -134,9 +141,7 @@ for (const starterFlow of starterFlows) {
       });
     });
 
-    await page.addInitScript(() => {
-      globalThis.localStorage.clear();
-    });
+    await clearBrowserStorage(page);
 
     await page.goto("/auth", { waitUntil: "domcontentloaded", timeout: 10000 });
     await page.getByRole("tab", { name: "Registrieren" }).click();

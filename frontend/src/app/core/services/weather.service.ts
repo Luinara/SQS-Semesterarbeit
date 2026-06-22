@@ -1,7 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { resolveWeatherScene } from '../state/weather-appearance.logic';
 import { WeatherLocation, WeatherSnapshot } from '../../shared/models/weather.model';
-import { OpenMeteoWeatherAdapter, WeatherAdapter } from './weather.adapter';
+import { BackendWeatherAdapter, WeatherAdapter } from './weather.adapter';
 
 const DEFAULT_LOCATION: WeatherLocation = {
   latitude: 52.52,
@@ -20,7 +20,7 @@ const WEATHER_REFRESH_INTERVAL_MS = 10 * 60 * 1000;
   providedIn: 'root',
 })
 export class WeatherService {
-  private readonly weatherAdapter: WeatherAdapter = new OpenMeteoWeatherAdapter();
+  private readonly weatherAdapter: WeatherAdapter = new BackendWeatherAdapter();
   readonly location = signal<WeatherLocation>(readStoredLocation());
   readonly snapshot = signal<WeatherSnapshot | null>(null);
   readonly isLoading = signal(false);

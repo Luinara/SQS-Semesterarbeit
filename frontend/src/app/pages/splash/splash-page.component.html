@@ -19,9 +19,10 @@
       <div class="splash-page__actions">
         <button sqsButton (click)="navigateForward()">{{ ctaLabel() }}</button>
 
-        <div class="splash-page__loader-block" aria-hidden="true">
+        <div class="splash-page__loader-block">
           <span>Lade dein Abenteuer</span>
-          <div class="splash-page__loader">
+          <progress class="splash-page__loader-progress" aria-label="App wird geladen"></progress>
+          <div class="splash-page__loader" aria-hidden="true">
             <span></span>
           </div>
         </div>
@@ -41,7 +42,7 @@
 
       <div class="splash-page__hero">
         <div class="splash-page__hero-halo" aria-hidden="true"></div>
-        <img src="pet-placeholder.svg" alt="Pokémon Partner" />
+        <img src="egg.svg" alt="Pokemon-Ei" />
       </div>
     </div>
   </div>

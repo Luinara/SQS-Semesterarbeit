@@ -79,6 +79,30 @@ test.describe("PokeHabit fullstack smoke", () => {
 });
 
 async function mockExternalBrowserApis(page: Page): Promise<void> {
+  await page.route("**/api/weather/location**", async (route) => {
+    await route.fulfill({
+      json: {
+        latitude: 52.52,
+        longitude: 13.41,
+        label: "Berlin, Berlin, Deutschland",
+      },
+    });
+  });
+
+  await page.route("**/api/weather/current**", async (route) => {
+    await route.fulfill({
+      json: {
+        condition: "cloudy",
+        timeOfDay: "day",
+        temperatureC: 21,
+        weatherCode: 1,
+        label: "Bewoelkt",
+        locationLabel: "Berlin, Berlin, Deutschland",
+        updatedAt: "2026-06-15T10:00:00Z",
+      },
+    });
+  });
+
   await page.route("https://api.open-meteo.com/**", async (route) => {
     await route.fulfill({
       json: {

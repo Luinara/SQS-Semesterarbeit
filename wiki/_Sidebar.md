@@ -1,4 +1,4 @@
-* [Home](Home)
+* [Welcome](Welcome)
 * [Architektur](Architektur)
 * [API](API)
 * [Frontend](Frontend)

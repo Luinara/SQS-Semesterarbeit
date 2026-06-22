@@ -108,6 +108,16 @@ test.describe("Daily reset", () => {
         return;
       }
 
+      if (url.pathname === "/api/weather/location") {
+        await route.fulfill({ json: weatherLocation() });
+        return;
+      }
+
+      if (url.pathname === "/api/weather/current") {
+        await route.fulfill({ json: weatherSnapshot() });
+        return;
+      }
+
       await route.fulfill({
         status: 404,
         json: { error: `not mocked: ${request.method()} ${url.pathname}` },
@@ -232,5 +242,25 @@ function createGameState(
       title: task.title,
       completed: completions.get(task.id) ?? false,
     })),
+  };
+}
+
+function weatherLocation() {
+  return {
+    latitude: 52.52,
+    longitude: 13.41,
+    label: "Berlin, Berlin, Deutschland",
+  };
+}
+
+function weatherSnapshot() {
+  return {
+    condition: "cloudy",
+    timeOfDay: "day",
+    temperatureC: 22,
+    weatherCode: 2,
+    label: "Bewoelkt",
+    locationLabel: "Berlin, Berlin, Deutschland",
+    updatedAt: "2026-06-16T10:00:00Z",
   };
 }
