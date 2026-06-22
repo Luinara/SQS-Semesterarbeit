@@ -115,7 +115,7 @@ describe("BackendApiService", () => {
     expect(flooredSnapshot.gameState.pet.availableFoodPoints).toBe(0);
   });
 
-  it("registriert den gewÃ¤hlten Starter und nutzt Backend-PokÃ©monnamen im Snapshot", async () => {
+  it("registriert den gewählten Starter und nutzt Backend-Pokémonnamen im Snapshot", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(jsonResponse({ message: "created" }))

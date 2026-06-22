@@ -10,7 +10,7 @@ const tasks = [
   {
     id: 2,
     title: "30 Minuten lernen",
-    description: "Ein fokussierter Lernblock fuer dein Pokemon.",
+    description: "Ein fokussierter Lernblock für dein Pokémon.",
   },
 ];
 

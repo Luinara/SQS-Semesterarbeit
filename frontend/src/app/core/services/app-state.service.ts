@@ -267,7 +267,7 @@ export class AppStateService {
           this.showFeedback({
             id: createFeedbackId('feeding'),
             kind: 'feeding',
-            message: 'Fortschritt wurde fuer deinen Partner eingesetzt.',
+            message: 'Fortschritt wurde für deinen Partner eingesetzt.',
           });
         }
       } catch (error) {
@@ -345,7 +345,7 @@ export class AppStateService {
         this.showFeedback({
           id: createFeedbackId('info'),
           kind: 'info',
-          message: getApiErrorMessage(error, 'Motivationstest konnte nicht ausgefÃ¼hrt werden.'),
+          message: getApiErrorMessage(error, 'Motivationstest konnte nicht ausgeführt werden.'),
         });
       }
     });
@@ -500,7 +500,7 @@ function createMotivationDecayFeedback(
   _nextGrowth: number
 ): string {
   if (nextHappiness < previousHappiness) {
-    return `Motivationstest ausgefuehrt: ${previousHappiness}% -> ${nextHappiness}%.`;
+    return `Motivationstest ausgeführt: ${previousHappiness}% -> ${nextHappiness}%.`;
   }
 
   return 'Motivation ist bereits bei 0%.';

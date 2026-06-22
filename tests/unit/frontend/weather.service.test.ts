@@ -58,7 +58,7 @@ describe("WeatherService", () => {
     vi.useRealTimers();
   });
 
-  it("speichert die gewaehlte Stadt und nutzt sie fuer weitere Aktualisierungen", async () => {
+  it("speichert die gewählte Stadt und nutzt sie für weitere Aktualisierungen", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(
         new Response(JSON.stringify(berlinWeatherResponse), { status: 200 }),
@@ -137,7 +137,7 @@ describe("WeatherService", () => {
     );
   });
 
-  it("nutzt den Backend-Treffer fuer ungenaue Stadteingaben", async () => {
+  it("nutzt den Backend-Treffer für ungenaue Stadteingaben", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(
         new Response(JSON.stringify(berlinWeatherResponse), { status: 200 }),

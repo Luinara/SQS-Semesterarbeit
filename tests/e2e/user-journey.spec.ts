@@ -162,12 +162,14 @@ test.describe("PokeHabit", () => {
     ).toBeVisible();
     await expect(page.getByText("500 / 3000 ml")).toBeVisible();
     await expect(motivationBadge(page)).toContainText("75%");
-    await expect(questPointsBadge(page)).toContainText("10 / 250");
+    await expect(
+      page.getByRole("button", { name: "Partner trainieren", exact: true }),
+    ).toBeEnabled();
 
     await page.getByRole("button", { name: "Motivation senken" }).click();
     await expect(motivationBadge(page)).toContainText("65%");
     await expect(
-      page.getByText("Motivationstest ausgefuehrt: 75% -> 65%."),
+      page.getByText("Motivationstest ausgeführt: 75% -> 65%."),
     ).toBeVisible();
 
     await page
@@ -184,12 +186,12 @@ test.describe("PokeHabit", () => {
     await expect(page.getByText("+500 ml Wasser getrunken.")).toBeVisible();
 
     await page
-      .getByRole("button", { name: "Pokémon trainieren", exact: true })
+      .getByRole("button", { name: "Partner trainieren", exact: true })
       .click();
     await expect(
-      page.getByText("Quest-Punkte wurden für dein Pokémon eingesetzt."),
+      page.getByText("Fortschritt wurde für deinen Partner eingesetzt."),
     ).toBeVisible();
-    await expect(questPointsBadge(page)).toContainText("20 / 250");
+    await expect(motivationBadge(page)).toContainText("66%");
 
     await page.getByRole("button", { name: "Level-Up testen" }).click();
     await expect(page.getByText("Level-Up auf 3.")).toBeVisible();
@@ -231,8 +233,4 @@ function createGameState(
 
 function motivationBadge(page: Page) {
   return page.locator("sqs-stat-badge").filter({ hasText: "Motivation" });
-}
-
-function questPointsBadge(page: Page) {
-  return page.locator("sqs-stat-badge").filter({ hasText: "Quest-Punkte" });
 }

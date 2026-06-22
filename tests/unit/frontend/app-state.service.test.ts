@@ -231,7 +231,7 @@ describe("AppStateService", () => {
     expect(service.pet()?.availableFoodPoints).toBe(0);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "feeding",
-      message: "Quest-Punkte wurden für dein Pokémon eingesetzt.",
+      message: "Fortschritt wurde für deinen Partner eingesetzt.",
     });
   });
 
@@ -300,7 +300,7 @@ describe("AppStateService", () => {
     expect(service.pet()?.happiness).toBe(50);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "info",
-      message: "Motivationstest ausgefuehrt: 60% -> 50%.",
+      message: "Motivationstest ausgeführt: 60% -> 50%.",
     });
   });
 

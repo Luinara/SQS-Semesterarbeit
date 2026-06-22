@@ -15,7 +15,7 @@ export const waterTask: TaskFixture = {
 export const learningTask: TaskFixture = {
   id: 2,
   title: "30 Minuten lernen",
-  description: "Ein fokussierter Lernblock fÃ¼r dein PokÃ©mon.",
+  description: "Ein fokussierter Lernblock für dein Pokémon.",
 };
 
 export async function clearBrowserStorage(page: Page): Promise<void> {
