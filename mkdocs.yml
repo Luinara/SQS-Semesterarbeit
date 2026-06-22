@@ -5,7 +5,6 @@ docs_dir: docs
 theme:
   name: readthedocs
   language: de
-  favicon: favicon.ico
 nav:
   - '01 Überblick': index.md
   - '02 Architektur':
@@ -75,6 +74,5 @@ nav:
   - '05 Präsentation':
       - Präsentationsablauf: 05-presentation/presentation-plan.md
       - Präsentations-Sprechzettel: 05-presentation/presentation-cheat-sheet.md
-      - Präsentationsplan: presentation-plan.md
   - '06 Betrieb':
       - ReadTheDocs: 06-operations/readthedocs-publish.md

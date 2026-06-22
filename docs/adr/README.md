@@ -18,7 +18,7 @@ Architecture decisions for this project are documented here using the
 # ADR-XXX: [Short title]
 
 ## Status
-[Proposed | Accepted | Deprecated | Superseded by ADR-YYY]
+[Proposed | Accepted]
 
 ## Context
 [Describe the situation that motivated the decision]

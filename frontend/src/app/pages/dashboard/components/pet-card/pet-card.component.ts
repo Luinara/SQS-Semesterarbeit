@@ -36,7 +36,9 @@ export class PetCardComponent {
   readonly pokemonLoading = input(false);
   readonly feedCost = input(10);
   readonly isLevelingUp = input(false);
-  readonly isBusy = input(false);
+  readonly isFeedBusy = input(false);
+  readonly isTestLevelUpBusy = input(false);
+  readonly isTestMotivationDecayBusy = input(false);
   readonly feedRequested = output<void>();
   readonly testLevelUpRequested = output<void>();
   readonly testMotivationDecayRequested = output<void>();
@@ -112,7 +114,7 @@ export class PetCardComponent {
   });
 
   requestFeeding(): void {
-    if (this.isBusy() || !this.canFeed()) {
+    if (this.isFeedBusy() || !this.canFeed()) {
       return;
     }
 
@@ -120,7 +122,7 @@ export class PetCardComponent {
   }
 
   requestTestLevelUp(): void {
-    if (this.isBusy()) {
+    if (this.isTestLevelUpBusy()) {
       return;
     }
 
@@ -128,7 +130,7 @@ export class PetCardComponent {
   }
 
   requestTestMotivationDecay(): void {
-    if (this.isBusy()) {
+    if (this.isTestMotivationDecayBusy()) {
       return;
     }
 

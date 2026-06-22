@@ -16,7 +16,7 @@ Gegenmassnahme und aktuellem Status dokumentiert.
 | Mittel | Zu hohe Service-Komplexitaet. | Aenderungen werden riskanter und Tests schwerer wartbar. | Trennung von Controller, Service und Repository; Refactoring; ArchUnit; statische Analyse. |
 | Mittel | `npm audit` oder Docker-Pulls benoetigen Netzwerk. | Quality-Checks sind offline nur eingeschraenkt ausfuehrbar. | Offline-Lockfile-Test ergaenzt Live-Audit; Netzwerkabhaengigkeit ist dokumentiert. |
 | Niedrig | Tageshistorie ist noch vereinfacht. | Historische Auswertungen pro Tag sind nur begrenzt moeglich. | Als fachliche Erweiterung dokumentiert; aktueller Fokus liegt auf Tagesanzeige, Serverantworten und Kernfluss. |
-| Niedrig | Legacy-Dokumentation bleibt im Repository. | Alte Roadmaptexte koennen Pruefer verwirren. | Legacy-Dateien sind markiert; aktuelle Dokumentation verweist auf Angular, Docker und Quality Hub. |
+| Niedrig | Oeffentliche Doku und interne Code-Namen weichen teilweise voneinander ab. | Pruefer koennten im Code noch technische Altbezeichnungen sehen, obwohl die Doku neutral formuliert ist. | Oeffentliche Doku nutzt neutrale Begriffe; interne Identifier bleiben stabil, damit keine unnötigen Code-Risiken entstehen. |
 | Niedrig | PalAPI ist nicht erreichbar. | Neue oder aktualisierte Pal-Daten koennen nicht automatisch nachgeladen werden. Die Kernfunktionen bleiben nutzbar, da die benoetigten Daten bereits in der Datenbank liegen. | Pal-Daten werden vorab in die Datenbank geladen; externe API ist nicht fuer den normalen App-Betrieb erforderlich. Tests nutzen Mocks oder lokale Daten. |
 
 ## Wichtigste technische Schulden

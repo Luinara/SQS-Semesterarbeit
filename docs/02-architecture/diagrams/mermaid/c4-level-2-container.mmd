@@ -8,7 +8,7 @@ flowchart LR
         SEED["Seed / Migration: Pal-Stammdaten"]
     end
 
-    POKEAPI["PalAPI: ursprüngliche Datenquelle"]
+    PALAPI["PalAPI: ursprüngliche Datenquelle"]
     WEATHER["Open-Meteo: Externe Wetter-API"]
 
     USER -->|HTTPS / Browser| FE
@@ -16,5 +16,5 @@ flowchart LR
     BE -->|JDBC / JPA| DB
     BE -->|HTTPS / JSON Runtime| WEATHER
 
-    POKEAPI -.->|Datenbasis, nicht Runtime| SEED
+    PALAPI -.->|Datenbasis, nicht Runtime| SEED
     SEED -.->|befüllt pal-Tabellen| DB

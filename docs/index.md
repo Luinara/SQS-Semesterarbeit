@@ -17,7 +17,9 @@ bleiben.
 | [06 Betrieb](06-operations/readthedocs-publish.md)      | ReadTheDocs-Veröffentlichung und operative Hinweise                 |
 
 ## Schnellstart
-todo
+
+Die Anwendung kann entweder als App-Stack oder mit zusätzlichem Quality Hub gestartet werden.
+
 App und Datenbank:
 
 ```bash
