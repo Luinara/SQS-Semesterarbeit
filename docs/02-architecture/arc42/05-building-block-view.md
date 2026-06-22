@@ -1,6 +1,6 @@
 # Bausteinsicht
 
-PokeHabit ist in fünf große Bausteine getrennt: Angular-Frontend,
+PalHabit ist in fünf große Bausteine getrennt: Angular-Frontend,
 Spring-Boot-Backend, PostgreSQL-Datenbank, externe Dienste und SonarQube.
 Die Trennung ist für die Abgabe wichtig, weil App-Funktion, externe Services,
 Persistenz und Qualitätssicherung getrennt gezeigt und getestet werden können.

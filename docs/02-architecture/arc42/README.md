@@ -4,7 +4,7 @@ Die veröffentlichte Dokumentation ist unter
 [luinarasqs-semesterarbeit.readthedocs.io](https://luinarasqs-semesterarbeit.readthedocs.io/de/latest/)
 abrufbar.
 
-Dieser Ordner enthält die Architektur-Dokumentation für PokeHabit. Die Struktur
+Dieser Ordner enthält die Architektur-Dokumentation für PalHabit. Die Struktur
 folgt arc42, die Inhalte sind aber auf den aktuellen Abgabestand zugeschnitten:
 Angular-Frontend, Spring-Boot-Backend, PostgreSQL und externe Dienste.
 

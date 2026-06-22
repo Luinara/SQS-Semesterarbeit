@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="980" viewBox="0 0 1400 980" role="img" aria-labelledby="title desc">
-  <title id="title">C4 Diagramm - PokeHabit</title>
+  <title id="title">C4 Diagramm - PalHabit</title>
   <desc id="desc">Visuelle C4-Übersicht mit System Context, Container, Komponenten und Deployment.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -27,7 +27,7 @@
   </defs>
 
   <rect class="bg" width="1400" height="980" />
-  <text x="60" y="55" class="title">C4 Diagramm - PokeHabit</text>
+  <text x="60" y="55" class="title">C4 Diagramm - PalHabit</text>
   <text x="60" y="82" class="small">Angular Frontend, Spring Boot Backend, PostgreSQL und PokeAPI</text>
 
   <rect x="50" y="115" width="620" height="220" class="panel" />
@@ -50,7 +50,7 @@
   <rect x="730" y="115" width="620" height="220" class="panel" />
   <text x="755" y="150" class="panelTitle">Level 2: Container</text>
   <rect x="760" y="178" width="540" height="130" class="group" />
-  <text x="780" y="202" class="small">PokeHabit</text>
+  <text x="780" y="202" class="small">PalHabit</text>
   <rect x="790" y="225" width="135" height="55" class="container" />
   <text x="857" y="247" text-anchor="middle" class="label">Frontend</text>
   <text x="857" y="266" text-anchor="middle" class="tiny">Angular</text>

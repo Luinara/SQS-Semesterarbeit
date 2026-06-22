@@ -6,7 +6,7 @@ Akzeptiert
 
 ## Kontext
 
-PokeHabit enthält Funktionen, die eindeutig zu einem bestimmten Benutzer gehören.
+PalHabit enthält Funktionen, die eindeutig zu einem bestimmten Benutzer gehören.
 Dazu zählen Tagesquests, Wassertracking, Quest-Punkte, Pokémon-Fortschritt und
 persönliche Fortschrittsdaten.
 

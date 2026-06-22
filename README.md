@@ -1,6 +1,6 @@
-# PokeHabit
+# PalHabit
 
-PokeHabit ist unsere gamifizierte Self-Care-App für die SQS-Semesterarbeit. Der
+PalHabit ist unsere gamifizierte Self-Care-App für die SQS-Semesterarbeit. Der
 Stack besteht aus Angular-Frontend, Spring-Boot-Backend und PostgreSQL.
 
 Dieses Projekt ist ein nicht-kommerzielles Studienprojekt im Rahmen der SQS-Semesterarbeit. Pokémon-Daten und -Sprites werden über 

@@ -1,6 +1,6 @@
-# PokeHabit Dokumentation
+# PalHabit Dokumentation
 
-PokeHabit ist die SQS-Semesterarbeit als Web-App mit Angular-Frontend,
+PalHabit ist die SQS-Semesterarbeit als Web-App mit Angular-Frontend,
 Spring-Boot-Backend und PostgreSQL. Diese Dokumentation ist
 kapitelweise geordnet, damit Abgabe, Review und Präsentation schnell prüfbar
 bleiben.

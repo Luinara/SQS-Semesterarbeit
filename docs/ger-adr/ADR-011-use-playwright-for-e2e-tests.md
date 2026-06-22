@@ -9,7 +9,7 @@ Akzeptiert
 Unit- und Integrationstests prüfen einzelne Bestandteile der Anwendung. Für die
 Qualität der Gesamtanwendung reicht das jedoch nicht aus.
 
-PokeHabit soll auch aus Benutzersicht getestet werden. Wichtige Abläufe sind zum
+PalHabit soll auch aus Benutzersicht getestet werden. Wichtige Abläufe sind zum
 Beispiel Registrierung, Login, Dashboard-Anzeige, Tagesquests, Wassertracking und
 Daily Reset.
 

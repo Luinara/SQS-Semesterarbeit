@@ -8,7 +8,7 @@ der erst in der Demo, im Deployment oder durch manuelles Testen auffällt,
 verursacht dagegen deutlich mehr Aufwand, weil Ursache, betroffene Komponenten
 und Seiteneffekte erst nachträglich analysiert werden müssen.
 
-Für PokeHabit bedeutet das: Qualitätssicherung soll nicht erst am Ende der
+Für PalHabit bedeutet das: Qualitätssicherung soll nicht erst am Ende der
 Entwicklung stattfinden, sondern kontinuierlich während der Umsetzung. Dadurch
 werden technische Schulden reduziert und Fehler früher sichtbar gemacht.
 
@@ -33,7 +33,7 @@ E2E-Tests prüfen zusätzlich, ob die zentralen Nutzerflüsse wirklich
 funktionieren. Dadurch entsteht ein ausgewogenes Verhältnis zwischen schneller
 Fehlererkennung und realitätsnaher Absicherung.
 
-Für PokeHabit ergibt sich daraus folgende Strategie:
+Für PalHabit ergibt sich daraus folgende Strategie:
 
 ```text
 früh prüfen → Fehler schneller finden → weniger Nacharbeit → weniger technische Schulden

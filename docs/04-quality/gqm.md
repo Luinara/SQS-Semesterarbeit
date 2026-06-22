@@ -1,6 +1,6 @@
 # Qualitätsmodell nach GQM
 
-PokeHabit ist keine Banking-Anwendung und kein sicherheitskritisches
+PalHabit ist keine Banking-Anwendung und kein sicherheitskritisches
 Medizinsystem, sondern eine Self-Care- und Habit-Tracking-App mit
 Gamification. Deshalb liegt der Qualitätsschwerpunkt nicht nur auf technischer
 Korrektheit, sondern auch auf zuverlässigen Nutzerflüssen, geschützten
@@ -40,7 +40,7 @@ Aus den GQM-Zielen werden konkrete Qualitätsmetriken abgeleitet. Diese Metriken
 
 ## Verbindung zur Testpyramide
 
-Das GQM-Modell definiert, welche Qualitätsfragen für PokeHabit relevant sind.
+Das GQM-Modell definiert, welche Qualitätsfragen für PalHabit relevant sind.
 Die Testpyramide beschreibt anschließend, mit welchen Testarten diese Fragen
 praktisch geprüft werden. Damit ist die Testpyramide kein Selbstzweck, sondern
 die konkrete Umsetzung der zuvor definierten Qualitätsziele.

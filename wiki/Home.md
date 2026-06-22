@@ -1,6 +1,6 @@
-# PokeHabit Wiki
+# PalHabit Wiki
 
-PokeHabit ist die SQS-Semesterarbeit als Web-App mit Angular-Frontend,
+PalHabit ist die SQS-Semesterarbeit als Web-App mit Angular-Frontend,
 Spring-Boot-Backend und PostgreSQL.
 
 Dieses Wiki ist der schnelle Einstieg für Review, Abgabe und Präsentation.

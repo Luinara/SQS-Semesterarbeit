@@ -1,6 +1,6 @@
 # Kontext und Abgrenzung
 
-PokeHabit ist die Web-App, die wir für die SQS-Semesterarbeit gebaut haben. Im
+PalHabit ist die Web-App, die wir für die SQS-Semesterarbeit gebaut haben. Im
 Kern geht es um tägliche Quests, Wassertracking und einen Pokémon-Partner, der
 durch erledigte Aufgaben Fortschritt bekommt.
 
@@ -11,8 +11,8 @@ Wetterdaten.
 
 ## Kontextdiagramm
 
-Die Kontextsicht grenzt PokeHabit von externen Kommunikationspartnern ab. Sie
-zeigt Nutzer, das eigene System und die externen Dienste, mit denen PokeHabit
+Die Kontextsicht grenzt PalHabit von externen Kommunikationspartnern ab. Sie
+zeigt Nutzer, das eigene System und die externen Dienste, mit denen PalHabit
 kommuniziert.
 
 ![C4 Level 1 - System Context](../diagrams/mermaid/c4-level-1-system-context.svg)
@@ -20,7 +20,7 @@ kommuniziert.
 Eine zusammengefasste Übersicht über Kontext-, Container-, Komponenten- und
 Deployment-Sicht befindet sich zusätzlich im C4-Gesamtdiagramm:
 
-![C4 Diagram - PokeHabit](../diagrams/c4-diagram.svg)
+![C4 Diagram - PalHabit](../diagrams/c4-diagram.svg)
 
 ## Fachlicher Kontext
 

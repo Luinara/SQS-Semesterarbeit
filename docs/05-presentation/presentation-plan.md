@@ -1,6 +1,6 @@
 # Präsentationsablauf
 
-Ziel: In 30 Minuten zeigen, dass PokeHabit als App funktioniert und dass die
+Ziel: In 30 Minuten zeigen, dass PalHabit als App funktioniert und dass die
 Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
 
 ## Vorbereitung vor der Präsentation
@@ -37,7 +37,7 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
 
 | Zeit          | Inhalt                  | Was zeigen                                                                     | Kernaussage                                                                                                                         |
 |---------------|-------------------------|--------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-| 0:00 - 1:00   | Einstieg                | App-Startseite oder Dashboard                                                  | "PokeHabit verbindet kleine Self-Care-Aufgaben mit einem Pokémon-Partner."                                                          |
+| 0:00 - 1:00   | Einstieg                | App-Startseite oder Dashboard                                                  | "PalHabit verbindet kleine Self-Care-Aufgaben mit einem Pokémon-Partner."                                                          |
 | 1:00 - 3:30   | Live-Demo Nutzerfluss   | Registrierung/Login, Dashboard, Quest, Wasser, Level-Up-Test, Logout           | "Die App ist nicht nur ein Mockup; Frontend und Backend sprechen über echte REST-Endpunkte."                                        |
 | 3:30 - 5:00   | API und Security        | `/api/tasks`, geschützter Game-State, Session-Cookie erklären                  | "Es gibt öffentliche und geschützte Endpunkte, Passwörter werden gehasht, Sessions laufen serverseitig."                            |
 | 5:00 - 6:30   | Externer Service        | Wetter-Szene im Dashboard oder Code `WeatherService` / `BackendWeatherAdapter` | "Die App nutzt Open-Meteo für echte Wetterdaten und passt die Dashboard-Szene daran an."                                            |
@@ -51,7 +51,7 @@ Softwarequalität nicht nur behauptet, sondern automatisiert nachgewiesen wird.
 
 ### Einstieg
 
-"Wir zeigen PokeHabit, eine kleine Self-Care-Web-App. Nutzer erledigen tägliche
+"Wir zeigen PalHabit, eine kleine Self-Care-Web-App. Nutzer erledigen tägliche
 Aufgaben, trinken Wasser und begleiten dadurch einen Pokémon-Partner. Für die
 Semesterarbeit war uns wichtig, nicht nur eine Oberfläche zu bauen, sondern den
 Qualitätsnachweis lokal sichtbar zu machen."

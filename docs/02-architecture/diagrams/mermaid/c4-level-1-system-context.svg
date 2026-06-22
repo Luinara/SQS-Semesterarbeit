@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1100" height="260" viewBox="0 0 1100 260" role="img" aria-labelledby="title desc">
   <title id="title">C4 Level 1 System Context</title>
-  <desc id="desc">System Context Diagramm für PokeHabit mit Open-Meteo als externem Laufzeitsystem. PokeAPI ist keine Laufzeitabhängigkeit.</desc>
+  <desc id="desc">System Context Diagramm für PalHabit mit Open-Meteo als externem Laufzeitsystem. PokeAPI ist keine Laufzeitabhängigkeit.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#344054" />
@@ -26,7 +26,7 @@
   <text x="150" y="156" text-anchor="middle" class="small">Nutzer der Self-Care App</text>
 
   <rect x="440" y="87" width="250" height="110" class="box system" />
-  <text x="565" y="124" text-anchor="middle" class="label">PokeHabit</text>
+  <text x="565" y="124" text-anchor="middle" class="label">PalHabit</text>
   <text x="565" y="147" text-anchor="middle" class="small">Aufgaben, Fortschritt und</text>
   <text x="565" y="167" text-anchor="middle" class="small">Pokemon-Gamification</text>
 

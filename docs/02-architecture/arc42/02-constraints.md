@@ -1,7 +1,7 @@
 # Randbedingungen
 
 Dieses Kapitel hält fest, welche Vorgaben und Grenzen die Architektur von
-PokeHabit beeinflusst haben. Es geht hier nicht um Wunscharchitektur, sondern
+PalHabit beeinflusst haben. Es geht hier nicht um Wunscharchitektur, sondern
 um den Stand, der für die Abgabe gebaut und geprüft wurde.
 
 ## Technische Randbedingungen

@@ -7,7 +7,7 @@ getrennt sind.
 
 ## Zweck
 
-Das Backend bildet die zentrale Anwendungsschicht von PokeHabit. Während das
+Das Backend bildet die zentrale Anwendungsschicht von PalHabit. Während das
 Frontend Benutzeraktionen auslöst und den aktuellen Zustand anzeigt, verarbeitet
 das Backend Authentifizierung, Questabschluss, Wassertracking, Pokémon-Fortschritt
 und Datenpersistenz.

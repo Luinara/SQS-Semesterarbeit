@@ -1,6 +1,6 @@
 # Qualitätsanforderungen
 
-Dieses Kapitel beschreibt die wichtigsten Qualitätsanforderungen an PokeHabit.
+Dieses Kapitel beschreibt die wichtigsten Qualitätsanforderungen an PalHabit.
 Die Anforderungen orientieren sich an den in der Vorlesung behandelten
 Qualitätsmerkmalen nach ISO 25010 und werden durch konkrete Prüfszenarien,
 Tests und Reports nachgewiesen.

@@ -1,6 +1,6 @@
 # Einführung und Ziele
 
-PokeHabit ist unsere Web-App für die SQS-Semesterarbeit. Nutzer melden sich an,
+PalHabit ist unsere Web-App für die SQS-Semesterarbeit. Nutzer melden sich an,
 erledigen Tagesquests, trinken Wasser und sammeln Quest-Punkte für ein
 Pokémon-basiertes Begleittier. 
 

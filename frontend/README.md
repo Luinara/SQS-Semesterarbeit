@@ -1,6 +1,6 @@
-# PokeHabit Frontend
+# PalHabit Frontend
 
-Diese README beschreibt unser Frontend für PokeHabit. Die App ist keine klassische To-do-Liste, sondern eine kleine Game-App: Man erledigt Tagesquests, sammelt Punkte, trinkt Wasser, begleitet sein Pokémon und bekommt eine Wetter-Szene, die aus echten Wetterdaten kommt.
+Diese README beschreibt unser Frontend für PalHabit. Die App ist keine klassische To-do-Liste, sondern eine kleine Game-App: Man erledigt Tagesquests, sammelt Punkte, trinkt Wasser, begleitet sein Pokémon und bekommt eine Wetter-Szene, die aus echten Wetterdaten kommt.
 
 Wichtig für die Abgabe: Im sichtbaren UI soll die App nicht nach Technik-Demo aussehen. Begriffe wie API, Backend oder Abgabe gehören nicht auf Buttons und Karten. Technisch ist das Frontend aber sauber an das Spring-Backend angebunden.
 
