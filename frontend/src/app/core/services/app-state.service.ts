@@ -496,11 +496,11 @@ function createRandomIdPart(): string {
 function createMotivationDecayFeedback(
   previousHappiness: number,
   nextHappiness: number,
-  _previousGrowth: number,
-  _nextGrowth: number
+  previousGrowth: number,
+  nextGrowth: number
 ): string {
   if (nextHappiness < previousHappiness) {
-    return `Motivationstest ausgeführt: ${previousHappiness}% -> ${nextHappiness}%.`;
+    return `Motivationstest ausgeführt: ${previousHappiness}% -> ${nextHappiness}%, Wachstum ${previousGrowth} -> ${nextGrowth}.`;
   }
 
   return 'Motivation ist bereits bei 0%.';

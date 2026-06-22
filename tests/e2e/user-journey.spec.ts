@@ -99,7 +99,11 @@ test.describe("PokeHabit", () => {
       }
 
       if (url.pathname === "/api/user/test-motivation-decay") {
-        gameState.happiness = Math.max(0, gameState.happiness - 10);
+        const previousHappiness = gameState.happiness;
+        gameState.happiness = Math.max(0, gameState.happiness - 25);
+        if (previousHappiness > 0) {
+          gameState.growth = Math.max(0, gameState.growth - 10);
+        }
         await route.fulfill({ json: createGameState(gameState, completions) });
         return;
       }
@@ -167,9 +171,9 @@ test.describe("PokeHabit", () => {
     ).toBeEnabled();
 
     await page.getByRole("button", { name: "Motivation senken" }).click();
-    await expect(motivationBadge(page)).toContainText("65%");
+    await expect(motivationBadge(page)).toContainText("50%");
     await expect(
-      page.getByText("Motivationstest ausgeführt: 75% -> 65%."),
+      page.getByText("Motivationstest ausgeführt: 75% -> 50%, Wachstum 40 -> 30."),
     ).toBeVisible();
 
     await page
@@ -191,7 +195,7 @@ test.describe("PokeHabit", () => {
     await expect(
       page.getByText("Fortschritt wurde für deinen Partner eingesetzt."),
     ).toBeVisible();
-    await expect(motivationBadge(page)).toContainText("66%");
+    await expect(motivationBadge(page)).toContainText("51%");
 
     await page.getByRole("button", { name: "Level-Up testen" }).click();
     await expect(page.getByText("Level-Up auf 3.")).toBeVisible();

@@ -280,9 +280,9 @@ describe("AppStateService", () => {
     const initialSnapshot = createSnapshot(3, 40);
     initialSnapshot.gameState.pet.happiness = 60;
     initialSnapshot.backendGameState.happiness = 60;
-    const decayedSnapshot = createSnapshot(3, 40);
-    decayedSnapshot.gameState.pet.happiness = 50;
-    decayedSnapshot.backendGameState.happiness = 50;
+    const decayedSnapshot = createSnapshot(3, 30);
+    decayedSnapshot.gameState.pet.happiness = 35;
+    decayedSnapshot.backendGameState.happiness = 35;
 
     const backendApi = createBackendApiMock({
       login: initialSnapshot,
@@ -297,10 +297,11 @@ describe("AppStateService", () => {
       "mira",
       "bulbasaur",
     );
-    expect(service.pet()?.happiness).toBe(50);
+    expect(service.pet()?.happiness).toBe(35);
+    expect(service.pet()?.growthProgress).toBe(30);
     expect(service.lastGameFeedback()).toMatchObject({
       kind: "info",
-      message: "Motivationstest ausgeführt: 60% -> 50%.",
+      message: "Motivationstest ausgeführt: 60% -> 35%, Wachstum 40 -> 30.",
     });
   });
 
