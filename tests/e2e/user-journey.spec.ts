@@ -173,7 +173,9 @@ test.describe("PokeHabit", () => {
     await page.getByRole("button", { name: "Motivation senken" }).click();
     await expect(motivationBadge(page)).toContainText("50%");
     await expect(
-      page.getByText("Motivationstest ausgeführt: 75% -> 50%, Wachstum 40 -> 30."),
+      page.getByText(
+        "Motivationstest ausgeführt: 75% -> 50%, Wachstum 40 -> 30.",
+      ),
     ).toBeVisible();
 
     await page
