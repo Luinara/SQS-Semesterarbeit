@@ -29,7 +29,7 @@
 
 ## Demo-Reihenfolge
 
-1. App mit Quality Hub starten.
+1. App starten.
 2. Login mit `demo / password123`.
 3. Quest abschließen.
 4. Wasser speichern.
