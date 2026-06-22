@@ -3,6 +3,15 @@
 PokeHabit ist unsere gamifizierte Self-Care-App für die SQS-Semesterarbeit. Der
 Stack besteht aus Angular-Frontend, Spring-Boot-Backend und PostgreSQL.
 
+Dieses Projekt ist ein nicht-kommerzielles Studienprojekt im Rahmen der SQS-Semesterarbeit. Pokémon-Daten und -Sprites werden über 
+die öffentliche PokeAPI eingebunden. Pokémon, Pokémon-Namen, Figuren und zugehörige Bilder/Marken sind Eigentum der jeweiligen 
+Rechteinhaber. Dieses Projekt steht in keiner Verbindung zu Nintendo, Game Freak, Creatures Inc. oder The Pokémon Company und wird 
+von diesen weder unterstützt noch autorisiert. Die PokeAPI wird ausschließlich als externe Datenquelle zu Demonstrations- und 
+Ausbildungszwecken verwendet.
+
+Für eine kommerzielle Nutzung, öffentliche Produktvermarktung oder App-Store-Veröffentlichung wäre eine gesonderte rechtliche 
+Prüfung beziehungsweise eine Erlaubnis der Rechteinhaber erforderlich.
+
 ## One-Click-Start
 
 ### Voraussetzungen
