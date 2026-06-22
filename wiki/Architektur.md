@@ -1,6 +1,6 @@
 # Architektur
 
-PokeHabit besteht aus Angular-Frontend, Spring-Boot-Backend und PostgreSQL.
+PalHabit besteht aus Angular-Frontend, Spring-Boot-Backend und PostgreSQL.
 Die Architektur ist in `docs/02-architecture/arc42/` nach arc42 dokumentiert.
 
 ## Bausteine

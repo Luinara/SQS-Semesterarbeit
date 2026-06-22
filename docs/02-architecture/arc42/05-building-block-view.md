@@ -1,7 +1,7 @@
 # Bausteinsicht
 
-PokeHabit ist in fünf große Bausteine getrennt: Angular-Frontend,
-Spring-Boot-Backend, PostgreSQL-Datenbank, externe Dienste und Quality Hub.
+PalHabit ist in fünf große Bausteine getrennt: Angular-Frontend,
+Spring-Boot-Backend, PostgreSQL-Datenbank, externe Dienste und SonarQube.
 Die Trennung ist für die Abgabe wichtig, weil App-Funktion, externe Services,
 Persistenz und Qualitätssicherung getrennt gezeigt und getestet werden können.
 
@@ -18,7 +18,6 @@ dokumentiert.
 | PostgreSQL-Datenbank | Speichert Nutzer, Tasks, Taskstatus, Spielstand und Pokémon-Fortschritt.                                                  |
 | PokeAPI              | Externer Dienst für Starter-Pokémon und Evolutionsdaten; bei Ausfall greift das Backend auf lokale Fallback-Daten zurück. |
 | Open-Meteo           | Externer Wetterdienst für die Wetterdaten der Dashboard-Szene; wird über das Backend angebunden.                          |
-| Quality Hub          | Dockerisiertes Dashboard mit Runner für Tests, Coverage, Lint, statische Analyse, Security und E2E-Reports.               |
 
 ## Ebene 2 - Frontend
 
@@ -54,13 +53,3 @@ Die folgende Zuordnung beschreibt die wichtigsten Backend-Bausteine und ihre Rol
 | Externe API-Clients | Sekundäre Adapter für Fremdsysteme       | PokeAPI-Client, Open-Meteo-Client                                    |
 | Datenbank           | Externes Persistenzsystem                | PostgreSQL                                                           |
 | Externe Dienste     | Externe Fremdsysteme                     | PokeAPI, Open-Meteo                                                  |
-| Quality Hub         | Querschnittlicher Unterstützungsbaustein | Unit-, Integration-, E2E- und Coverage-Reports                       |
-
-## Ebene 2 - Quality Hub
-
-| Baustein       | Verantwortung                                                              |
-| -------------- | -------------------------------------------------------------------------- |
-| Quality Runner | Führt Maven-, npm- und Playwright-Checks im Docker-Profil `quality` aus.   |
-| Report JSON    | Maschinenlesbarer Status für alle Checks.                                  |
-| Nginx Hub      | Zeigt Score, Checkliste, Logs und HTML-Reports auf Port `8088`.            |
-| Docker Volume  | Hält Reports nach Runner-Ende für Browser-Refresh und Präsentation bereit. |

@@ -1,6 +1,6 @@
 # C4 Diagramm - PokeHabit
 
-Dieses Dokument beschreibt die Architektur der PokeHabit-Webanwendung im
+Dieses Dokument beschreibt die Architektur der PalHabit-Webanwendung im
 C4-Stil. Es geht um den aktuellen Stand der Abgabe: Angular-Frontend,
 Spring-Boot-Backend, PostgreSQL, Open-Meteo als externe Laufzeitabhängigkeit,
 initiale Pokémon-Stammdaten aus Seed-/Migrationsdaten und der lokale Quality Hub.
@@ -14,7 +14,7 @@ ursprüngliche Datenquelle für diese Seed-/Migrationsdaten.
 | Datei                                                    | Zweck                                                                                 |
 |----------------------------------------------------------| ------------------------------------------------------------------------------------- |
 | [structurizr/workspace.dsl](./structurizr/workspace.dsl) | Bearbeitbare Structurizr-DSL für System Context, Container und Backend-Komponenten.   |
-| [c4-diagram-pokehabit.svg](./c4-diagram-pokehabit.svg)   | Kompakte gerenderte Übersicht für Markdown-Preview und Präsentation.                  |
+| [c4-diagram-palhabit.svg](./c4-diagram-pokehabit.svg)    | Kompakte gerenderte Übersicht für Markdown-Preview und Präsentation.                  |
 | [mermaid/README.md](./mermaid/README.md)                 | Zusätzliche Mermaid-Quellen und SVGs, falls keine Structurizr-Umgebung verfügbar ist. |
 
 ## Level 1: System Context
@@ -26,7 +26,7 @@ Mermaid-Quelle: [c4-level-1-system-context.mmd](./mermaid/c4-level-1-system-cont
 | Element    | Typ                       | Verantwortung                                                                                                                  |
 | ---------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Nutzer     | Person                    | Registriert sich, meldet sich an, erledigt Quests, trinkt Wasser und begleitet den Pokémon-Partner.                            |
-| PokeHabit  | Softwaresystem            | Stellt UI, Authentifizierung, Aufgabenverwaltung, Fortschritt und Gamification bereit.                                         |
+| PalHabit  | Softwaresystem            | Stellt UI, Authentifizierung, Aufgabenverwaltung, Fortschritt und Gamification bereit.                                         |
 | Open-Meteo | Externes System           | Liefert Wetterdaten für die Dashboard-Szene.                                                                                   |
 | PokeAPI    | Ursprüngliche Datenquelle | Ist keine Laufzeitabhängigkeit. Diente als Quelle für Pokémon-Stammdaten, die über Seed-/Migrationsdaten in PostgreSQL liegen. |
 

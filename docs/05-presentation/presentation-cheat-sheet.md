@@ -5,7 +5,7 @@ Reihenfolge sicher können und die Begriffe sauber treffen.
 
 ## Einstieg
 
-"Wir zeigen PokeHabit. Das ist eine kleine Self-Care-App, in der Nutzer
+"Wir zeigen PalHabit. Das ist eine kleine Self-Care-App, in der Nutzer
 tägliche Aufgaben erledigen, Wasser tracken und dadurch einen Pokémon-Partner
 begleiten. Wichtig war uns, dass das Projekt nicht nur hübsch aussieht,
 sondern auch technisch nachweisbar funktioniert."
@@ -40,7 +40,7 @@ Standardzustand."
 ## Architektur
 
 "Im C4-Diagramm sieht man die Trennung: Angular-Frontend, Spring-Boot-Backend,
-PostgreSQL, externe Dienste und der Quality Hub. Im Backend sind die Pakete nach
+PostgreSQL und externe Dienste. Im Backend sind die Pakete nach
 Features getrennt. Controller greifen nicht direkt auf Repositories zu; das
 prüfen wir mit ArchUnit."
 
@@ -59,11 +59,7 @@ Projektaufbau. Der Nachteil ist, dass Angular schwergewichtiger ist und Updates
 mehr Anpassungsaufwand haben können. Für uns war die feste Struktur aber ein
 bewusster Vorteil."
 
-## Quality Hub
-
-"Qualitätssicherung sollte bei uns nicht nur als Liste in der Doku stehen.
-Darum gibt es den Quality Hub. Er startet über Docker, führt die Checks aus,
-sammelt Reports und zeigt direkt, ob das Gate grün oder rot ist."
+## Quality
 
 Vorher kurz die Testpyramide nennen:
 
@@ -98,14 +94,13 @@ funktionierender App und reproduzierbaren Quality Checks."
 
 1. Kurz auf den konkreten Nachweis zeigen.
 2. Nicht anfangen zu raten.
-3. Lieber sagen: "Das ist bei uns so umgesetzt: ..." und dann Code, Doku oder
-   Quality Hub zeigen.
+3. Lieber sagen: "Das ist bei uns so umgesetzt: ..." und dann Code oder Doku zeigen.
 
 ## Sätze, die gut funktionieren
 
-- "Das ist nicht nur Doku, das läuft im Quality Hub wirklich durch."
+- "Das ist nicht nur Doku, das läuft im SonarQube wirklich durch."
 - "Der externe Service ist Open-Meteo: Geocoding plus Forecast-Daten für die Wetter-Szene."
 - "React wäre flexibler gewesen, Angular war für Struktur, Tests und Teamkonventionen passender."
 - "Wenn die Wetter-API ausfällt, bleibt die App nutzbar und zeigt einen lokalen Standardzustand."
-- "Die App ist per Docker startbar; der Quality Hub läuft im gleichen Profil."
+- "Die App ist per Docker startbar; "
 - "Wir haben bekannte Grenzen dokumentiert, statt sie in der Präsentation zu verstecken."

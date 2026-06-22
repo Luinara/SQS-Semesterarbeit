@@ -38,9 +38,9 @@
   <text x="107" y="313" text-anchor="middle" class="label">PokeAPI</text>
   <text x="107" y="333" text-anchor="middle" class="small">Datenquelle</text>
 
-  <!-- PokeHabit boundary -->
+  <!-- PalHabit boundary -->
   <rect x="245" y="85" width="690" height="285" class="group"/>
-  <text x="270" y="115" class="label">PokeHabit</text>
+  <text x="270" y="115" class="label">PalHabit</text>
 
   <!-- Frontend -->
   <rect x="290" y="180" width="145" height="70" class="box frontend"/>

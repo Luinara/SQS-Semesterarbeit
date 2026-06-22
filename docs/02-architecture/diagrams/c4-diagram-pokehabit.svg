@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="980" viewBox="0 0 1400 980" role="img" aria-labelledby="title desc">
-    <title id="title">C4 Diagram - PokeHabit</title>
-    <desc id="desc">Kombiniertes C4-Diagramm für PokeHabit mit Kontext-, Container-, Backend-Komponenten-, Frontend-Komponenten- und Deployment-Sicht. PokeAPI ist keine Laufzeitabhängigkeit, sondern ursprüngliche Datenquelle für Pokémon-Stammdaten.</desc>
+    <title id="title">C4 Diagram - PalHabit</title>
+    <desc id="desc">Kombiniertes C4-Diagramm für PalHabit mit Kontext-, Container-, Backend-Komponenten-, Frontend-Komponenten- und Deployment-Sicht. PokeAPI ist keine Laufzeitabhängigkeit, sondern ursprüngliche Datenquelle für Pokémon-Stammdaten.</desc>
 
     ```
     <defs>
@@ -34,7 +34,7 @@
 
     <rect class="bg" width="1400" height="980"/>
 
-    <text x="55" y="55" class="title">C4 Diagram - PokeHabit</text>
+    <text x="55" y="55" class="title">C4 Diagram - PalHabit</text>
     <text x="55" y="78" class="subtitle">Angular Frontend, Spring Boot Backend, PostgreSQL, Open-Meteo, Docker Compose und initiale Pokémon-Stammdaten</text>
 
     <!-- Level 1 -->
@@ -46,7 +46,7 @@
     <text x="147.5" y="226" text-anchor="middle" class="small">Browser</text>
 
     <rect x="285" y="165" width="180" height="95" class="system"/>
-    <text x="375" y="196" text-anchor="middle" class="label">PokeHabit</text>
+    <text x="375" y="196" text-anchor="middle" class="label">PalHabit</text>
     <text x="375" y="216" text-anchor="middle" class="small">Aufgaben, Fortschritt</text>
     <text x="375" y="234" text-anchor="middle" class="small">und Pokemon-Gamification</text>
 
@@ -72,7 +72,7 @@
     <text x="775" y="224" text-anchor="middle" class="tiny">Datenbasis, nicht Runtime</text>
 
     <rect x="855" y="150" width="395" height="145" class="group"/>
-    <text x="875" y="174" class="tiny">PokeHabit</text>
+    <text x="875" y="174" class="tiny">PalHabit</text>
 
     <rect x="885" y="205" width="90" height="50" class="frontend"/>
     <text x="930" y="226" text-anchor="middle" class="label">Frontend</text>
@@ -280,7 +280,7 @@
     <path d="M1150 852 C1210 846,1255 825,1262 813" class="seedArrow"/>
     <text x="1235" y="845" text-anchor="middle" class="tiny">befüllt pokemon-Tabellen</text>
 
-    <text x="55" y="950" class="tiny">Hinweis: PokeAPI ist nur ursprüngliche Datenquelle für Pokémon-Stammdaten. Im normalen Betrieb liest PokeHabit diese Daten aus PostgreSQL.</text>
+    <text x="55" y="950" class="tiny">Hinweis: PokeAPI ist nur ursprüngliche Datenquelle für Pokémon-Stammdaten. Im normalen Betrieb liest PalHabit diese Daten aus PostgreSQL.</text>
     ```
 
 </svg>
