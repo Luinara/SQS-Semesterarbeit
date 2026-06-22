@@ -198,7 +198,7 @@ vorbereitet. Wichtige Einstiegspunkte:
 
 ReadTheDocs nutzt `.readthedocs.yaml`, `mkdocs.yml` und
 `docs/requirements.txt`. Nach dem Verbinden des öffentlichen Repositorys ist
-die Doku dort direkt gebaut: https://luinarasqs-semesterarbeit.readthedocs.io/de/unlimitedgaming_soph/. 
+die Doku dort direkt gebaut: https://luinarasqs-semesterarbeit.readthedocs.io/de/latest/. 
 Die Schritte stehen in `docs/06-operations/readthedocs-publish.md`.
 
 Zusätzlich liegt unter `wiki/` eine schlankere Wiki-Fassung mit `Home.md`,
