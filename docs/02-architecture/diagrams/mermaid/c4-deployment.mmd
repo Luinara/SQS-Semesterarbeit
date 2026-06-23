@@ -7,8 +7,8 @@ flowchart LR
         PG["PostgreSQL Container: Port 5432, Volume db_data"]
     end
 
-    SEED["Seed / Migration: Pokémon-Stammdaten"]
-    POKEAPI["PokeAPI: ursprüngliche Datenquelle"]
+    SEED["Seed / Migration: Pal-Stammdaten"]
+    PALAPI["PalAPI: ursprüngliche Datenquelle"]
     WEATHER["Open-Meteo: Internet"]
 
     DEV -->|localhost:3000| FE
@@ -16,5 +16,5 @@ flowchart LR
     BE -->|JDBC / postgresql://db:5432/sqs_db| PG
     BE -->|HTTPS JSON / Runtime| WEATHER
 
-    POKEAPI -.->|Datenbasis, nicht Runtime| SEED
-    SEED -.->|befüllt pokemon-Tabellen| PG
+    PALAPI -.->|Datenbasis, nicht Runtime| SEED
+    SEED -.->|befüllt pal-Tabellen| PG

@@ -2,7 +2,7 @@
 
 Diese Sicht ergänzt die arc42-Bausteinsicht um die Persistenzstruktur des
 Projekts. Sie beschreibt den aktuellen Stand der Abgabe: Die Anwendung speichert
-Benutzer, Pokémon-Fortschritt, Tagesaufgaben, Wassertracking und Statistikdaten
+Benutzer, Pal-Fortschritt, Tagesaufgaben, Wassertracking und Statistikdaten
 in PostgreSQL. Für automatisierte Backend-Tests wird statt PostgreSQL eine
 H2-In-Memory-Datenbank verwendet.
 
@@ -20,12 +20,12 @@ Aufgaben dauerhaft gespeichert werden.
 Persistiert werden vor allem:
 
 - Benutzerkonten mit Passwort-Hash
-- aktuelles Pokémon bzw. Ei-Zustand eines Benutzers
+- aktuelles Pal bzw. Ei-Zustand eines Benutzers
 - Level, Erfahrungspunkte, Glücklichkeit, Hunger und Streak
 - täglicher Wasserstand
 - Tagesaufgaben und deren Abschlussstatus
 - einfache Nutzungsstatistiken
-- Pokémon-Stammdaten inklusive Evolutionsbeziehungen
+- Pal-Stammdaten inklusive Evolutionsbeziehungen
 
 ## Hauptmuster
 
@@ -47,7 +47,7 @@ Das Backend ist in klar getrennte Verantwortungsbereiche gegliedert:
 - Controller: HTTP-Endpunkte und Request-/Response-Verarbeitung
 - Services: fachliche Abläufe und Anwendungslogik
 - Repositories: Zugriff auf persistente Daten
-- Externe Clients: Zugriff auf PokeAPI und Wetter-API
+- Externe Clients: Zugriff auf PalAPI und Wetter-API
 - DTOs: Datentransfer zwischen API und Anwendung
 
 Diese Struktur unterstützt die Testbarkeit, da Services isoliert getestet werden können und externe Systeme über Adapter beziehungsweise Clients gekapselt sind.
@@ -96,7 +96,7 @@ das Backend im Container die Datenbank über `db:5432` anspricht.
 | Tabelle      | Zweck                                                                  |
 | ------------ | ---------------------------------------------------------------------- |
 | `users`      | Speichert Benutzerkonto, Passwort-Hash und aktuellen Spielfortschritt. |
-| `pokemon`    | Enthält Pokémon-Stammdaten, Sprite-URL und Evolutionsbeziehungen.      |
+| `pal`    | Enthält Pal-Stammdaten, Sprite-URL und Evolutionsbeziehungen.      |
 | `tasks`      | Enthält die verfügbaren Tagesaufgaben.                                 |
 | `user_tasks` | Verknüpft Benutzer mit Aufgaben und speichert den Abschlussstatus.      |
 | `user_stats` | Speichert einfache Nutzungsstatistiken pro Benutzer.                   |
@@ -105,9 +105,9 @@ das Backend im Container die Datenbank über `db:5432` anspricht.
 
 | Beziehung                                | Bedeutung                                       |
 | ---------------------------------------- | ----------------------------------------------- |
-| `users.current_pokemon_id -> pokemon.id` | Aktuelles Pokémon eines Benutzers.              |
-| `users.egg_pokemon_id -> pokemon.id`     | Pokémon, das sich noch im Ei-Zustand befindet.  |
-| `pokemon.evolution_id -> pokemon.id`     | Selbstreferenz für Pokémon-Entwicklungen.       |
+| `users.current_pal_id -> pal.id` | Aktuelles Pal eines Benutzers.              |
+| `users.egg_pal_id -> pal.id`     | Pal, das sich noch im Ei-Zustand befindet.  |
+| `pal.evolution_id -> pal.id`     | Selbstreferenz für Pal-Entwicklungen.       |
 | `user_stats.user_id -> users.id`         | 1:1-Statistikdaten zu einem Benutzer.           |
 | `user_tasks.user_id -> users.id`         | Aufgabenstatus gehört zu einem Benutzer.        |
 | `user_tasks.task_id -> tasks.id`         | Aufgabenstatus verweist auf eine Aufgabe.       |
@@ -158,13 +158,13 @@ einer zentralen Stelle.
 | -------------------- | ---------------------------------------------------------------------- |
 | Benutzerkonto        | `users.username`, `users.password_hash`                                |
 | Session-/Login-Bezug | Persistenter Benutzerstand; aktive Session wird vom Backend/Client behandelt. |
-| Pokémon-Zustand      | `current_pokemon_id`, `egg_pokemon_id`, `is_egg`                       |
-| Fortschritt          | `pokemon_level`, `pokemon_xp`, `happiness`, `streak`                   |
+| Pal-Zustand      | `current_pal_id`, `egg_pal_id`, `is_egg`                       |
+| Fortschritt          | `pal_level`, `pal_xp`, `happiness`, `streak`                   |
 | Pflegewerte          | `hydration_ml`, `hunger`, `pending_feed_points`                        |
 | Tageslogik           | `last_task_completion_date`, `last_daily_reset_at`                     |
 | Aufgaben             | `tasks` und `user_tasks.completed`                                     |
 | Statistik            | `user_stats.total_logins`, `total_happiness_gained`, `last_login`      |
-| Pokémon-Stammdaten   | `pokemon.name`, `image_url`, `evolution_id`, `evolution_stage`         |
+| Pal-Stammdaten   | `pal.name`, `image_url`, `evolution_id`, `evolution_stage`         |
 
 ## Testbetrieb
 

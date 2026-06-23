@@ -1,11 +1,10 @@
 site_name: PalHabit SQS Semesterarbeit
-site_description: Dokumentation der SQS-Semesterarbeit PokeHabit
+site_description: Dokumentation der SQS-Semesterarbeit PalHabit
 docs_dir: docs
 
 theme:
   name: readthedocs
   language: de
-  favicon: favicon.ico
 nav:
   - '01 Überblick': index.md
   - '02 Architektur':
@@ -34,7 +33,7 @@ nav:
           - ADR-001 Spring Boot: adr/ADR-001-use-spring-boot.md
           - ADR-002 Angular TypeScript: adr/ADR-002-use-angular-typescript.md
           - ADR-003 PostgreSQL: adr/ADR-003-use-postgresql.md
-          - ADR-004 PokeAPI: adr/ADR-004-use-pokeapi.md
+          - ADR-004 PalAPI: adr/ADR-004-use-palapi.md
           - ADR-005 Feature-Packages: adr/ADR-005-use-feature-specific-folder-structure.md
           - ADR-006 TypeScript: adr/ADR-006-use-typescript.md
           - ADR-007 Prisma: adr/ADR-007-use-prisma.md
@@ -44,11 +43,11 @@ nav:
           - ADR-001 Spring Boot: ger-adr/ADR-001-use-spring-boot.md
           - ADR-002 Angular TypeScript: ger-adr/ADR-002-use-angular-typescript.md
           - ADR-003 PostgreSQL: ger-adr/ADR-003-use-postgresql.md
-          - ADR-004 PokeAPI: ger-adr/ADR-004-use-pokeapi.md
+          - ADR-004 PalAPI: ger-adr/ADR-004-use-palapi.md
           - ADR-005 Feature-Packages: ger-adr/ADR-005-use-feature-specific-folder-structure.md
           - ADR-006 TypeScript: ger-adr/ADR-006-use-typescript.md
           - ADR-007 Prisma: ger-adr/ADR-007-use-prisma.md
-          - ADR-008 Ei-Pokémon: ger-adr/ADR-008-use-hidden-egg-assignment.md
+          - ADR-008 Ei-Pal: ger-adr/ADR-008-use-hidden-egg-assignment.md
           - ADR-009 Authentifizierung: ger-adr/ADR-009-authentication-strategy.md
           - ADR-010 H2 für Backend-Tests: ger-adr/ADR-010-use-h2-for-backend-tests.md
           - ADR-011 Playwright für End-to-End-Tests: ger-adr/ADR-011-use-playwright-for-e2e-tests.md
@@ -75,6 +74,5 @@ nav:
   - '05 Präsentation':
       - Präsentationsablauf: 05-presentation/presentation-plan.md
       - Präsentations-Sprechzettel: 05-presentation/presentation-cheat-sheet.md
-      - Präsentationsplan: presentation-plan.md
   - '06 Betrieb':
       - ReadTheDocs: 06-operations/readthedocs-publish.md

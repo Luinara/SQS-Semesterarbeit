@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1280" viewBox="0 0 1500 1280" role="img" aria-label="Sequenzdiagramm Quest abschließen und Pokémon-Fortschritt aktualisieren">
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1280" viewBox="0 0 1500 1280" role="img" aria-label="Sequenzdiagramm Quest abschließen und Pal-Fortschritt aktualisieren">
     <defs>
         <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
             <path d="M2,2 L10,6 L2,10 Z" fill="#334155"/>
@@ -9,7 +9,7 @@
     </defs>
     <rect width="1500" height="1280" fill="#FFFFFF"/>
 
-    <text x="750.0" y="50" text-anchor="middle" font-size="28" font-weight="700" fill="#0F172A" font-family="Inter, Arial, sans-serif">Quest abschließen und Pokémon-Fortschritt aktualisieren</text>
+    <text x="750.0" y="50" text-anchor="middle" font-size="28" font-weight="700" fill="#0F172A" font-family="Inter, Arial, sans-serif">Quest abschließen und Pal-Fortschritt aktualisieren</text>
     <text x="750.0" y="82" text-anchor="middle" font-size="16" font-weight="400" fill="#475569" font-family="Inter, Arial, sans-serif">Laufzeitsicht: Nutzeraktion, Backend-Fachlogik, Persistenz und UI-Feedback</text>
     <rect x="45" y="135" width="1410" height="295" rx="20" fill="#F0FDF4" stroke="#E2E8F0" stroke-width="1.2" />
     <text x="95" y="163" text-anchor="start" font-size="14" font-weight="700" fill="#475569" font-family="Inter, Arial, sans-serif">Questabschluss im Frontend auslösen</text>
@@ -77,7 +77,7 @@
     <line x1="600" y1="1075" x2="350" y2="1075" stroke="#334155" stroke-width="2.2" stroke-dasharray="8 8" marker-end="url(#arrow)" />
     <text x="475.0" y="1063" text-anchor="middle" font-size="14" font-weight="500" fill="#0F172A" font-family="Inter, Arial, sans-serif">13. UI-Zustand aktualisieren</text>
     <line x1="350" y1="1140" x2="105" y2="1140" stroke="#334155" stroke-width="2.2" stroke-dasharray="8 8" marker-end="url(#arrow)" />
-    <text x="227.5" y="1128" text-anchor="middle" font-size="14" font-weight="500" fill="#0F172A" font-family="Inter, Arial, sans-serif">14. Feedback und Pokémon-Fortschritt anzeigen</text>
+    <text x="227.5" y="1128" text-anchor="middle" font-size="14" font-weight="500" fill="#0F172A" font-family="Inter, Arial, sans-serif">14. Feedback und Pal-Fortschritt anzeigen</text>
     <rect x="360" y="1187" width="780" height="48" rx="14" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5" />
-    <text x="750" y="1217" text-anchor="middle" font-size="15" font-weight="600" fill="#334155" font-family="Inter, Arial, sans-serif">Die Fortschrittsberechnung liegt im Backend, damit Spielstand und Pokémon-Fortschritt konsistent bleiben.</text>
+    <text x="750" y="1217" text-anchor="middle" font-size="15" font-weight="600" fill="#334155" font-family="Inter, Arial, sans-serif">Die Fortschrittsberechnung liegt im Backend, damit Spielstand und Pal-Fortschritt konsistent bleiben.</text>
 </svg>

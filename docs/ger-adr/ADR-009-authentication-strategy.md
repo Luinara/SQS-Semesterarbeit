@@ -7,7 +7,7 @@ Akzeptiert
 ## Kontext
 
 PalHabit enthält Funktionen, die eindeutig zu einem bestimmten Benutzer gehören.
-Dazu zählen Tagesquests, Wassertracking, Quest-Punkte, Pokémon-Fortschritt und
+Dazu zählen Tagesquests, Wassertracking, Quest-Punkte, Pal-Fortschritt und
 persönliche Fortschrittsdaten.
 
 Diese Daten dürfen nicht öffentlich abrufbar sein. Gleichzeitig soll die

@@ -16,7 +16,7 @@ werden technische Schulden reduziert und Fehler früher sichtbar gemacht.
 
 | Maßnahme | Vermeideter später Fehler | Nutzen |
 | --- | --- | --- |
-| Unit-Tests | Fehler in Businesslogik, z. B. bei Tagesquests, Wassertracking oder Pokémon-Fortschritt | Fehler werden direkt auf Methoden- oder Service-Ebene gefunden. |
+| Unit-Tests | Fehler in Businesslogik, z. B. bei Tagesquests, Wassertracking oder Pal-Fortschritt | Fehler werden direkt auf Methoden- oder Service-Ebene gefunden. |
 | Controller- und Integrationstests | Fehler im Zusammenspiel von API, Authentifizierung, Datenbank und Validierung | Kritische Nutzerflüsse werden vor der Demo automatisiert geprüft. |
 | Playwright-E2E-Tests | Fehler im echten Nutzerfluss zwischen Frontend und Backend | Zentrale Abläufe wie Login, Dashboard, Tasks, Wasser und Level-Up werden aus Nutzersicht geprüft. |
 | ArchUnit-Tests | Unklare Schichtentrennung und unkontrollierte Abhängigkeiten | Architekturverletzungen werden früh erkannt, bevor sie zu Wartungsproblemen werden. |

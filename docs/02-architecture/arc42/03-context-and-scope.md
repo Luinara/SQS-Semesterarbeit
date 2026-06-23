@@ -1,12 +1,12 @@
 # Kontext und Abgrenzung
 
 PalHabit ist die Web-App, die wir für die SQS-Semesterarbeit gebaut haben. Im
-Kern geht es um tägliche Quests, Wassertracking und einen Pokémon-Partner, der
+Kern geht es um tägliche Quests, Wassertracking und einen Pal-Partner, der
 durch erledigte Aufgaben Fortschritt bekommt.
 
-Zum eigenen System zählen das Angular-Frontend, das Spring-Boot-Backend und die
-PostgreSQL-Datenbank für die lokale Qualitätssicherung.
-Externe Nachbarsysteme sind die PokeAPI für Pokémon-Daten und Open-Meteo für
+Zum eigenen System zählen das Angular-Frontend, das Spring-Boot-Backend, die
+PostgreSQL-Datenbank und der Quality Hub für die lokale Qualitätssicherung.
+Externe Nachbarsysteme sind die PalAPI für Pal-Daten und Open-Meteo für
 Wetterdaten.
 
 ## Kontextdiagramm
@@ -26,22 +26,22 @@ Deployment-Sicht befindet sich zusätzlich im C4-Gesamtdiagramm:
 
 | Nachbar                  | Beziehung                                                                                                                              |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Nutzer                   | Nutzt die Browseroberfläche für Login, Registrierung, Quests, Wassertracking, Wetteranzeige, Pokémon-Fortschritt und Account-Löschung. |
-| PokeAPI / Pokémon-Bilder | Liefert Pokémon-Daten, Namen und Bildquellen für den Pokémon-Partner.                                                                  |
+| Nutzer                   | Nutzt die Browseroberfläche für Login, Registrierung, Quests, Wassertracking, Wetteranzeige, Pal-Fortschritt und Account-Löschung. |
+| PalAPI / Pal-Bilder | Liefert Pal-Daten, Namen und Bildquellen für den Pal-Partner.                                                                  |
 | Open-Meteo               | Liefert Wetterdaten für die Szene im Dashboard.                                                                                        |
-| SQS-Bewertung            | Prüft den Stand über Dokumentation, Docker-Start, Tests, C4-Diagramme und Architekturentscheidungen.                      |
+| SQS-Bewertung            | Prüft den Stand über Dokumentation, Docker-Start, Tests, Quality Hub, C4-Diagramme und Architekturentscheidungen.                      |
 
 ## Technischer Kontext
 
 | Schnittstelle                           | Beschreibung                                                                                                                                        |
-|-----------------------------------------| --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Browser -> Angular-Frontend             | Lädt die Angular-App; im Docker-Setup wird das Frontend über Nginx bereitgestellt.                                                                  |
-| Angular-Frontend -> Spring-Boot-Backend | Ruft REST-Endpunkte für Authentifizierung, Tasks, User-Daten, Wassertracking, Wetterdaten und Pokémon-Fortschritt auf.                              |
-| Spring-Boot-Backend -> PostgreSQL       | Speichert Benutzer, Tasks, Aufgabenstatus, Fortschritt, Wasserstand, Streak, Starter-Pokémon und Pokémon-Zustand.                                   |
-| Spring-Boot-Backend -> PokeAPI          | Holt bei Bedarf Pokémon-Daten, Namen und Artwork. Bei Timeout oder Fehlern greift ein lokaler Fallback.                                             |
+| Angular-Frontend -> Spring-Boot-Backend | Ruft REST-Endpunkte für Authentifizierung, Tasks, User-Daten, Wassertracking, Wetterdaten und Pal-Fortschritt auf.                              |
+| Spring-Boot-Backend -> PostgreSQL       | Speichert Benutzer, Tasks, Aufgabenstatus, Fortschritt, Wasserstand, Streak, Starter-Pal und Pal-Zustand.                                   |
+| Spring-Boot-Backend -> PalAPI          | Holt bei Bedarf Pal-Daten, Namen und Artwork. Bei Timeout oder Fehlern greift ein lokaler Fallback.                                             |
 | Spring-Boot-Backend -> Open-Meteo       | Holt Wetterdaten für die Dashboard-Szene. Bei Fehlern liefert das Backend einen Fallback-Zustand oder die App bleibt mit lokalem Zustand benutzbar. |
-| SonarQube -> Projekt                    | Führt Maven-, npm-, Vitest-, ESLint-, SpotBugs-, Checkstyle-, npm-audit- und Playwright-Checks aus.                                                 |
-
+| Quality Runner -> Projekt               | Führt Maven-, npm-, Vitest-, ESLint-, SpotBugs-, Checkstyle-, npm-audit- und Playwright-Checks aus.                                                 |
+| Quality Hub -> Quality Output           | Liest `report.json`, Logs und HTML-Reports aus dem Docker-Volume und stellt sie im Browser dar.                                                     |
 
 ## Abgrenzung des Systems
 
@@ -50,13 +50,14 @@ Innerhalb des Systems liegen:
 * Angular-Frontend
 * Spring-Boot-Backend
 * PostgreSQL-Datenbank
+* Quality Hub und Quality Runner
 * Docker-Compose-Konfiguration
 * lokale Demo- und Testdaten
 
 Außerhalb des Systems liegen:
 
 * Nutzerbrowser als Zugriffsumgebung
-* PokeAPI als externer Pokémon-Dienst
+* PalAPI als externer Pal-Dienst
 * Open-Meteo als externer Wetterdienst
 * GitHub als Repository- und CI-Plattform
 * ReadTheDocs als Veröffentlichungsplattform der Dokumentation

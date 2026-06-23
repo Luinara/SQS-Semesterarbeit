@@ -5,10 +5,10 @@ flowchart LR
         FE["Frontend: Angular / TypeScript SPA"]
         BE["Backend API: Java 21 / Spring Boot"]
         DB[(Datenbank: PostgreSQL)]
-        SEED["Seed / Migration: Pokémon-Stammdaten"]
+        SEED["Seed / Migration: Pal-Stammdaten"]
     end
 
-    POKEAPI["PokeAPI: ursprüngliche Datenquelle"]
+    PALAPI["PalAPI: ursprüngliche Datenquelle"]
     WEATHER["Open-Meteo: Externe Wetter-API"]
 
     USER -->|HTTPS / Browser| FE
@@ -16,5 +16,5 @@ flowchart LR
     BE -->|JDBC / JPA| DB
     BE -->|HTTPS / JSON Runtime| WEATHER
 
-    POKEAPI -.->|Datenbasis, nicht Runtime| SEED
-    SEED -.->|befüllt pokemon-Tabellen| DB
+    PALAPI -.->|Datenbasis, nicht Runtime| SEED
+    SEED -.->|befüllt pal-Tabellen| DB
